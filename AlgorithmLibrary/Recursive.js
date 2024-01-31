@@ -26,13 +26,13 @@
 
 
 
-function Recursive(am, w, h)
+function Recursive(am)
 {
     // this shouldn't happen if subclassing is done properly
     if (!am)
         throw "this shouldn't happen";
 
-    this.init(am, w, h);
+    this.init(am);
 }
 Recursive.inheritFrom(Algorithm);
 
@@ -87,9 +87,9 @@ Recursive.prototype.addCodeToCanvas  = function(code)
 }
 
 
-Recursive.prototype.init = function(am, w, h)
+Recursive.prototype.init = function(am)
 {
-    Recursive.superclass.init.call(this, am, w, h);
+    Recursive.superclass.init.call(this, am);
 }
 
 

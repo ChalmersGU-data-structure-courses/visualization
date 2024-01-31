@@ -49,21 +49,23 @@ Ternary.PRINT_HORIZONTAL_GAP = 50;
 
 
 
-function Ternary(am, w, h)
+function Ternary(am)
 {
-    this.init(am, w, h);
+    this.init(am);
 }
 Ternary.inheritFrom(Algorithm);
 
-Ternary.prototype.init = function(am, w, h)
+
+Ternary.prototype.init = function(am)
 {
-    var sc = Ternary.superclass;
+    Ternary.superclass.init.call(this, am);
+    var w = this.canvasWidth;
+    var h = this.canvasHeight;
+
     this.startingX =  w / 2;
     this.first_print_pos_y  = h - 2 * Ternary.PRINT_VERTICAL_GAP;
     this.print_max  = w - 10;
 
-    var fn = sc.init;
-    fn.call(this,am);
     this.addControls();
     this.nextIndex = 0;
     this.commands = [];
@@ -411,6 +413,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new Ternary(animManag, canvas.width, canvas.height);
-
+    currentAlg = new Ternary(animManag);
 }

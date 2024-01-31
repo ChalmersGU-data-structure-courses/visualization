@@ -25,10 +25,9 @@
 // or implied, of the University of San Francisco
 
 
-function CountingSort(am, w, h)
+function CountingSort(am)
 {
-    this.init(am, w, h);
-
+    this.init(am);
 }
 
 
@@ -52,21 +51,18 @@ CountingSort.ARRAY_SIZE  = 30;
 
 CountingSort.inheritFrom(Algorithm);
 
-CountingSort.prototype.init = function(am, w, h)
+CountingSort.prototype.init = function(am)
 {
+    CountingSort.superclass.init.call(this, am);
+    var h = this.canvasHeight;
+
     this.ARRAY_ELEM_Y =  3 * CountingSort.COUNTER_ARRAY_ELEM_HEIGHT;
     this.COUNTER_ARRAY_ELEM_Y = Math.floor(h / 2);
     this.SWAP_ARRAY_ELEM_Y =  h - 3 * CountingSort.COUNTER_ARRAY_ELEM_HEIGHT
 
-    var sc = CountingSort.superclass;
-    var fn = sc.init;
-    fn.call(this,am,w,h);
     this.addControls();
     this.nextIndex = 0;
     this.setup();
-
-
-
 }
 
 
@@ -318,6 +314,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-
-    currentAlg = new CountingSort(animManag, canvas.width, canvas.height);
+    currentAlg = new CountingSort(animManag);
 }

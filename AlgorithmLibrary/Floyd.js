@@ -26,10 +26,10 @@
 
 
 
-function Floyd(am, w, h, dir)
+function Floyd(am, dir)
 {
     // call superclass' constructor, which calls init
-    Floyd.superclass.constructor.call(this, am, w, h, dir);
+    Floyd.superclass.constructor.call(this, am, dir);
 }
 
 Floyd.inheritFrom(Graph);
@@ -76,7 +76,7 @@ Floyd.LARGE_NODE_3_Y_POS = 500;
 Floyd.LARGE_MESSAGE_X = 300;
 Floyd.LARGE_MESSAGE_Y = 450;
 
-Floyd.prototype.addControls =  function()
+Floyd.prototype.addControls = function()
 {
 
     this.startButton = this.addControlToAlgorithmBar("Button", "Run Floyd-Warshall");
@@ -88,10 +88,10 @@ Floyd.prototype.addControls =  function()
 }
 
 
-Floyd.prototype.init = function(am, w, h, dir)
+Floyd.prototype.init = function(am, dir)
 {
     this.showEdgeCosts = true;
-    Floyd.superclass.init.call(this, am, w, h, dir, false); // TODO:  add no edge label flag to this?
+    Floyd.superclass.init.call(this, am, dir, false); // TODO:  add no edge label flag to this?
     // Setup called in base class init function
 }
 
@@ -408,5 +408,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new Floyd(animManag, canvas.width, canvas.height);
+    currentAlg = new Floyd(animManag);
 }

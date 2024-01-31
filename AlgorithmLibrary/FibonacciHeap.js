@@ -53,9 +53,9 @@ FibonacciHeap.INDEGREE_ARRAY_START_Y = 50;
 
 FibonacciHeap.TMP_PTR_Y = 60;
 
-function FibonacciHeap(am, w, h)
+function FibonacciHeap(am)
 {
-    this.init(am, w, h);
+    this.init(am);
 
 }
 
@@ -63,9 +63,9 @@ FibonacciHeap.inheritFrom(Algorithm);
 
 
 
-FibonacciHeap.prototype.init = function(am, w, h)
+FibonacciHeap.prototype.init = function(am)
 {
-    FibonacciHeap.superclass.init.call(this, am, w, h);
+    FibonacciHeap.superclass.init.call(this, am);
     this.addControls();
     this.treeRoot = null;
     this.currentLayer = 1;
@@ -853,7 +853,7 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new FibonacciHeap(animManag, canvas.width, canvas.height);
+    currentAlg = new FibonacciHeap(animManag);
 }
 
 

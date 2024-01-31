@@ -26,9 +26,9 @@
 
 
 
-function RotateScale2D(am, w, h)
+function RotateScale2D(am)
 {
-    this.init(am, w, h);
+    this.init(am);
 }
 
 
@@ -80,9 +80,9 @@ RotateScale2D.VECTOR_COLOR = "#FF0000";
 RotateScale2D.VERTEX_WIDTH = 3;
 RotateScale2D.VERTEX_HEIGHT = RotateScale2D.VERTEX_WIDTH;
 
-RotateScale2D.prototype.init = function(am, w, h)
+RotateScale2D.prototype.init = function(am)
 {
-    var sc = RotateScale2D.superclass.init.call(this, am, w, h);
+    var sc = RotateScale2D.superclass.init.call(this, am);
     this.rowMajor = true;
     this.posYUp = true;
     this.rotateFirst = true;
@@ -982,7 +982,7 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new RotateScale2D(animManag, canvas.width, canvas.height);
+    currentAlg = new RotateScale2D(animManag);
 }
 
 function Matrix(contents, x, y)

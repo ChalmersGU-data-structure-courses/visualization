@@ -25,10 +25,9 @@
 // or implied, of the University of San Francisco
 
 
-function RadixSort(am, w, h)
+function RadixSort(am)
 {
-    this.init(am, w, h);
-
+    this.init(am);
 }
 
 
@@ -53,15 +52,15 @@ RadixSort.MAX_DATA_VALUE = 999;
 
 RadixSort.inheritFrom(Algorithm);
 
-RadixSort.prototype.init = function(am, w, h)
+RadixSort.prototype.init = function(am)
 {
+    RadixSort.superclass.init.call(this, am);
+    var h = this.canvasHeight;
+
     this.ARRAY_ELEM_Y =  3 * RadixSort.COUNTER_ARRAY_ELEM_HEIGHT;
     this.COUNTER_ARRAY_ELEM_Y = Math.floor(h / 2);
     this.SWAP_ARRAY_ELEM_Y =  h - 3 * RadixSort.COUNTER_ARRAY_ELEM_HEIGHT
 
-    var sc = RadixSort.superclass;
-    var fn = sc.init;
-    fn.call(this,am,w,h);
     this.addControls();
     this.nextIndex = 0;
     this.setup();
@@ -380,6 +379,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-
-    currentAlg = new RadixSort(animManag, canvas.width, canvas.height);
+    currentAlg = new RadixSort(animManag);
 }

@@ -101,12 +101,10 @@ Search.SIZE_SMALL = 32;
 Search.SIZE_LARGE = 180;
 var SIZE = Search.SIZE_SMALL;
 
-function Search(am, w, h)
+function Search(am)
 {
-    this.init(am, w, h);
-
+    this.init(am);
 }
-
 Search.inheritFrom(Algorithm);
 
 
@@ -132,9 +130,9 @@ Search.BINARY_CODE = [ ["def ", "binarySearch(listData, value)"],
 
 
 
-Search.prototype.init = function(am, w, h)
+Search.prototype.init = function(am)
 {
-    Search.superclass.init.call(this, am, w, h);
+    Search.superclass.init.call(this, am);
     this.addControls();
     this.nextIndex = 0;
     this.commands = [];
@@ -728,5 +726,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new Search(animManag, canvas.width, canvas.height);
+    currentAlg = new Search(animManag);
 }

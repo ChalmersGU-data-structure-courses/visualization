@@ -26,9 +26,9 @@
 
 
 
-function DPMatrixMultiply(am, w, h)
+function DPMatrixMultiply(am)
 {
-    this.init(am, w, h);
+    this.init(am);
 
 }
 DPMatrixMultiply.inheritFrom(Algorithm);
@@ -64,9 +64,9 @@ DPMatrixMultiply.MAX_VALUE = 20;
 
 DPMatrixMultiply.MESSAGE_ID = 0;
 
-DPMatrixMultiply.prototype.init = function(am, w, h)
+DPMatrixMultiply.prototype.init = function(am)
 {
-    DPMatrixMultiply.superclass.init.call(this, am, w, h);
+    DPMatrixMultiply.superclass.init.call(this, am);
     this.nextIndex = 0;
     this.addControls();
     this.code = [["def ","MatrixMultiply(x, y, P)",":"],
@@ -754,7 +754,7 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new DPMatrixMultiply(animManag, canvas.width, canvas.height);
+    currentAlg = new DPMatrixMultiply(animManag);
 }
 
 

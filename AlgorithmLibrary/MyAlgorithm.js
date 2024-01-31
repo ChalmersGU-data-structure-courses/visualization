@@ -26,17 +26,17 @@
 
 
 
-function MyAlgorithm(am, w, h)
+function MyAlgorithm(am)
 {
-    this.init(am, w, h);
+    this.init(am);
 }
 MyAlgorithm.inheritFrom(Algorithm);
 
-MyAlgorithm.prototype.init = function(am, w, h)
+MyAlgorithm.prototype.init = function(am)
 {
     // Call the unit function of our "superclass", which adds a couple of
     // listeners, and sets up the undo stack
-    MyAlgorithm.superclass.init.call(this, am, w, h);
+    MyAlgorithm.superclass.init.call(this, am);
 
     this.addControls();
 
@@ -199,6 +199,6 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new MyAlgorithm(animManag, canvas.width, canvas.height);
+    currentAlg = new MyAlgorithm(animManag);
 
 }

@@ -50,21 +50,23 @@ Ternary.PRINT_HORIZONTAL_GAP = 50;
 
 
 
-function Ternary(am, w, h)
+function Ternary(am)
 {
-        this.init(am, w, h);
+        this.init(am);
 }
 Ternary.inheritFrom(Algorithm);
 
-Ternary.prototype.init = function(am, w, h)
-{
-    var sc = Ternary.superclass;
-    this.startingX =  w / 2;
-    this.first_print_pos_y  = h - 2 * Ternary.PRINT_VERTICAL_GAP;
-    this.print_max  = w - 10;
 
-    var fn = sc.init;
-    fn.call(this,am);
+Ternary.prototype.init = function(am)
+{
+    Ternary.superclass.init.call(this, am);
+    var w = this.canvasWidth;
+    var h = this.canvasHeight;
+
+    this.startingX = w / 2;
+    this.first_print_pos_y  = h - 2 * Ternary.PRINT_VERTICAL_GAP;
+    this.print_max = w - 10;
+
     this.addControls();
     this.nextIndex = 0;
     this.commands = [];

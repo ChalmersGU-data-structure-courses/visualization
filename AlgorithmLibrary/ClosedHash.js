@@ -25,10 +25,10 @@
 // or implied, of the University of San Francisco
 
 
-function ClosedHash(am, w, h)
+function ClosedHash(am)
 {
     // call superclass' constructor, which calls init
-    ClosedHash.superclass.constructor.call(this, am, w, h);
+    ClosedHash.superclass.constructor.call(this, am);
 }
 ClosedHash.inheritFrom(Hash);
 
@@ -60,13 +60,13 @@ ClosedHash.INDEX_COLOR = "#0000FF";
 
 
 
-ClosedHash.prototype.init = function(am, w, h)
+ClosedHash.prototype.init = function(am)
 {
-    var sc = ClosedHash.superclass;
-    var fn = sc.init;
+    ClosedHash.superclass.init.call(this, am);
+    var w = this.canvasWidth;
+
     this.elements_per_row = Math.floor(w / ClosedHash.ARRAY_ELEM_WIDTH);
 
-    fn.call(this,am, w, h);
 
     //Change me!
     this.nextIndex = 0;
@@ -410,5 +410,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new ClosedHash(animManag, canvas.width, canvas.height);
+    currentAlg = new ClosedHash(animManag);
 }

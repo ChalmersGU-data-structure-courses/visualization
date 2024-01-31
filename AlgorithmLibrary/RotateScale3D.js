@@ -26,9 +26,9 @@
 
 
 
-function RotateScale3D(am, w, h)
+function RotateScale3D(am)
 {
-    this.init(am, w, h);
+    this.init(am);
 }
 
 
@@ -119,9 +119,9 @@ RotateScale3D.VECTOR_COLOR = "#FF0000";
 RotateScale3D.VERTEX_WIDTH = 3;
 RotateScale3D.VERTEX_HEIGHT = RotateScale3D.VERTEX_WIDTH;
 
-RotateScale3D.prototype.init = function(am, w, h)
+RotateScale3D.prototype.init = function(am)
 {
-    var sc = RotateScale3D.superclass.init.call(this, am, w, h);
+    RotateScale3D.superclass.init.call(this, am);
     this.cameraTransform = RotateScale3D.CAMERA_TRANSFORM;
 //     this.cameraTransform = this.multiply(RotateScale3D.CAMERA_TRANSFORM1, RotateScale3D.CAMERA_TRANSFORM2);
 
@@ -1121,7 +1121,7 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new RotateScale3D(animManag, canvas.width, canvas.height);
+    currentAlg = new RotateScale3D(animManag);
 }
 
 function Matrix(contents, x, y)

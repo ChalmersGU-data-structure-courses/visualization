@@ -24,9 +24,9 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
-function StackArray(am, w, h)
+function StackArray(am)
 {
-    this.init(am, w, h);
+    this.init(am);
 
 }
 StackArray.inheritFrom(Algorithm);
@@ -53,9 +53,9 @@ StackArray.PUSH_ELEMENT_Y = 30;
 StackArray.SIZE = 30;
 
 
-StackArray.prototype.init = function(am, w, h)
+StackArray.prototype.init = function(am)
 {
-    StackArray.superclass.init.call(this, am, w, h);
+    StackArray.superclass.init.call(this, am);
     this.addControls();
     this.nextIndex = 0;
     this.commands = [];
@@ -295,5 +295,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new StackArray(animManag, canvas.width, canvas.height);
+    currentAlg = new StackArray(animManag);
 }

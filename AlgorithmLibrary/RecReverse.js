@@ -26,10 +26,10 @@
 
 
 
-function Reverse(am, w, h)
+function Reverse(am)
 {
     // call superclass' constructor, which calls init
-    Reverse.superclass.constructor.call(this, am, w, h);
+    Reverse.superclass.constructor.call(this, am);
 }
 Reverse.inheritFrom(Recursive);
 
@@ -53,9 +53,9 @@ Reverse.ACTIVATION_RECORT_START_Y = 20;
 
 
 
-Reverse.prototype.init = function(am, w, h)
+Reverse.prototype.init = function(am)
 {
-    Reverse.superclass.init.call(this, am, w, h);
+    Reverse.superclass.init.call(this, am);
     this.nextIndex = 0;
     this.addControls();
     this.code = Reverse.CODE;
@@ -219,7 +219,7 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new Reverse(animManag, canvas.width, canvas.height);
+    currentAlg = new Reverse(animManag);
 }
 
 

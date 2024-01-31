@@ -26,10 +26,10 @@
 
 
 
-function OpenHash(am, w, h)
+function OpenHash(am)
 {
     // call superclass' constructor, which calls init
-    OpenHash.superclass.constructor.call(this, am, w, h);
+    OpenHash.superclass.constructor.call(this, am);
 }
 OpenHash.inheritFrom(Hash);
 
@@ -57,11 +57,11 @@ OpenHash.INDEX_COLOR = "#0000FF";
 
 
 
-OpenHash.prototype.init = function(am, w, h)
+OpenHash.prototype.init = function(am)
 {
-    var sc = OpenHash.superclass;
-    var fn = sc.init;
-    fn.call(this,am, w, h);
+    OpenHash.superclass.init.call(this, am);
+    var h = this.canvasHeight;
+
     this.nextIndex = 0;
     this.POINTER_ARRAY_ELEM_Y = h - OpenHash.POINTER_ARRAY_ELEM_WIDTH;
     this.setup();
@@ -355,5 +355,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new OpenHash(animManag, canvas.width, canvas.height);
+    currentAlg = new OpenHash(animManag);
 }

@@ -24,9 +24,9 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
-function AVL(am, w, h)
+function AVL(am)
 {
-    this.init(am, w, h);
+    this.init(am);
 
 }
 AVL.inheritFrom(Algorithm);
@@ -59,14 +59,14 @@ AVL.EXPLANITORY_TEXT_Y = 10;
 
 
 
-AVL.prototype.init = function(am, w, h)
+AVL.prototype.init = function(am)
 {
-    var sc = AVL.superclass;
-    var fn = sc.init;
+    AVL.superclass.init.call(this, am);
+    var w = this.canvasWidth;
+    var h = this.canvasHeight;
+
     this.first_print_pos_y  = h - 2 * AVL.PRINT_VERTICAL_GAP;
     this.print_max = w - 10;
-
-    fn.call(this, am, w, h);
     this.startingX = w / 2;
     this.addControls();
     this.nextIndex = 1;
@@ -1215,5 +1215,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new AVL(animManag, canvas.width, canvas.height);
+    currentAlg = new AVL(animManag);
 }

@@ -26,10 +26,9 @@
 
 
 
-function LeftistHeap(am, w, h)
+function LeftistHeap(am)
 {
-    this.init(am, w, h);
-
+    this.init(am);
 }
 
 LeftistHeap.inheritFrom(Algorithm);
@@ -57,9 +56,9 @@ LeftistHeap.NPL_COLOR = "#0000FF";
 
 LeftistHeap.MESSAGE_ID = 0;
 
-LeftistHeap.prototype.init = function(am, w, h)
+LeftistHeap.prototype.init = function(am)
 {
-    LeftistHeap.superclass.init.call(this, am, w, h);
+    LeftistHeap.superclass.init.call(this, am);
     this.addControls();
     this.treeRoot = null;
     this.secondaryRoot = null;
@@ -525,7 +524,7 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new LeftistHeap(animManag, canvas.width, canvas.height);
+    currentAlg = new LeftistHeap(animManag);
 }
 
 

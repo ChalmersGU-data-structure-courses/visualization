@@ -24,15 +24,12 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
-function TopoSortIndegree(am, w, h)
+function TopoSortIndegree(am)
 {
     // call superclass' constructor, which calls init
-    TopoSortIndegree.superclass.constructor.call(this, am, w, h);
+    TopoSortIndegree.superclass.constructor.call(this, am);
 }
-
 TopoSortIndegree.inheritFrom(Graph);
-
-
 
 
 TopoSortIndegree.INDEGREE_ARRAY_ELEM_WIDTH = 25;
@@ -62,7 +59,7 @@ TopoSortIndegree.HIGHLIGHT_CIRCLE_COLOR = "#000000";
 TopoSortIndegree.MESSAGE_COLOR = "#0000FF";
 
 
-TopoSortIndegree.prototype.addControls =  function()
+TopoSortIndegree.prototype.addControls = function()
 {
     this.startButton = this.addControlToAlgorithmBar("Button", "Do Topological Sort");
     this.startButton.onclick = this.startCallback.bind(this);
@@ -70,10 +67,10 @@ TopoSortIndegree.prototype.addControls =  function()
 }
 
 
-TopoSortIndegree.prototype.init = function(am, w, h)
+TopoSortIndegree.prototype.init = function(am)
 {
     this.showEdgeCosts = false;
-    TopoSortIndegree.superclass.init.call(this, am, w, h, true, true); // TODO:  add no edge label flag to this?
+    TopoSortIndegree.superclass.init.call(this, am, true, true); // TODO:  add no edge label flag to this?
     // Setup called in base class init function
 }
 
@@ -455,5 +452,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new TopoSortIndegree(animManag, canvas.width, canvas.height);
+    currentAlg = new TopoSortIndegree(animManag);
 }

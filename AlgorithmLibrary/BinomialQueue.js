@@ -47,9 +47,9 @@ BinomialQueue.INSERT_X = 30;
 BinomialQueue.INSERT_Y = 25
 
 
-function BinomialQueue(am, w, h)
+function BinomialQueue(am)
 {
-    this.init(am, w, h);
+    this.init(am);
 
 }
 
@@ -57,9 +57,9 @@ BinomialQueue.inheritFrom(Algorithm);
 
 
 
-BinomialQueue.prototype.init = function(am, w, h)
+BinomialQueue.prototype.init = function(am)
 {
-    BinomialQueue.superclass.init.call(this, am, w, h);
+    BinomialQueue.superclass.init.call(this, am);
     this.addControls();
     this.treeRoot = null;
     this.currentLayer = 1;
@@ -618,7 +618,7 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new BinomialQueue(animManag, canvas.width, canvas.height);
+    currentAlg = new BinomialQueue(animManag);
 }
 
 

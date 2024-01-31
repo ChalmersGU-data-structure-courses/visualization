@@ -26,13 +26,13 @@
 
 
 
-function SkewHeap(am, w, h)
+function SkewHeap(am)
 {
-    this.init(am, w, h);
+    this.init(am);
 
 }
-
 SkewHeap.inheritFrom(Algorithm);
+
 
 SkewHeap.LINK_COLOR = "#007700";
 SkewHeap.HIGHLIGHT_CIRCLE_COLOR = "#007700";
@@ -54,9 +54,9 @@ SkewHeap.MESSAGE_Y = 10;
 
 SkewHeap.MESSAGE_ID = 0;
 
-SkewHeap.prototype.init = function(am, w, h)
+SkewHeap.prototype.init = function(am)
 {
-    SkewHeap.superclass.init.call(this, am, w, h);
+    SkewHeap.superclass.init.call(this, am);
     this.addControls();
     this.treeRoot = null;
     this.secondaryRoot = null;
@@ -473,7 +473,7 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new SkewHeap(animManag, canvas.width, canvas.height);
+    currentAlg = new SkewHeap(animManag);
 }
 
 

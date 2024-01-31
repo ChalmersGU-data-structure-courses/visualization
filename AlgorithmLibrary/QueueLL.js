@@ -24,9 +24,9 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
-function QueueLL(am, w, h)
+function QueueLL(am)
 {
-    this.init(am, w, h);
+    this.init(am);
 }
 QueueLL.inheritFrom(Algorithm);
 
@@ -63,9 +63,11 @@ QueueLL.PUSH_ELEMENT_Y = 30;
 QueueLL.SIZE = 32;
 
 
-QueueLL.prototype.init = function(am, w, h)
+QueueLL.prototype.init = function(am)
 {
-    QueueLL.superclass.init.call(this, am, w, h);
+    QueueLL.superclass.init.call(this, am);
+    var h = this.canvasHeight;
+
     this.addControls();
     this.nextIndex = 0;
     this.commands = [];
@@ -323,5 +325,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new QueueLL(animManag, canvas.width, canvas.height);
+    currentAlg = new QueueLL(animManag);
 }

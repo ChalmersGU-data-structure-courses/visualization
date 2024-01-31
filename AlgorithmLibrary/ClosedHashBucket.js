@@ -25,10 +25,10 @@
 // or implied, of the University of San Francisco
 
 
-function ClosedHashBucket(am, w, h)
+function ClosedHashBucket(am)
 {
     // call superclass' constructor, which calls init
-    ClosedHashBucket.superclass.constructor.call(this, am, w, h);
+    ClosedHashBucket.superclass.constructor.call(this, am);
 }
 ClosedHashBucket.inheritFrom(Hash);
 
@@ -67,11 +67,10 @@ ClosedHashBucket.INDEX_COLOR = "#0000FF";
 
 
 
-ClosedHashBucket.prototype.init = function(am, w, h)
+ClosedHashBucket.prototype.init = function(am)
 {
-    var sc = ClosedHashBucket.superclass;
-    var fn = sc.init;
-    fn.call(this,am, w, h);
+    ClosedHashBucket.superclass.init.call(this, am);
+    var w = this.canvasWidth;
 
     this.elements_per_row = Math.floor(w / ClosedHashBucket.ARRAY_ELEM_WIDTH) ;
 
@@ -357,5 +356,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new ClosedHashBucket(animManag, canvas.width, canvas.height);
+    currentAlg = new ClosedHashBucket(animManag);
 }

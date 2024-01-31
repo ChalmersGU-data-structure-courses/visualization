@@ -41,20 +41,21 @@ DisjointSet.FOREGROUND_COLOR = "#007700";
 DisjointSet.BACKGROUND_COLOR = "#EEFFEE";
 DisjointSet.PRINT_COLOR = DisjointSet.FOREGROUND_COLOR;
 
-function DisjointSet(am, w, h)
+function DisjointSet(am)
 {
-    this.array_start_y = h - 2 * DisjointSet.ARRAY_HEIGHT;
-    this.tree_start_y = this.array_start_y - 50;
     this.init(am);
-
 }
 
 DisjointSet.inheritFrom(Algorithm);
 
-DisjointSet.prototype.init = function(am, w, h)
+DisjointSet.prototype.init = function(am)
 {
-    var sc = DisjointSet.superclass.init.call(this, am, w, h);
+    DisjointSet.superclass.init.call(this, am);
+    var h = this.canvasHeight;
     this.addControls();
+
+    this.array_start_y = h - 2 * DisjointSet.ARRAY_HEIGHT;
+    this.tree_start_y = this.array_start_y - 50;
 
     this.commands = [];
     this.nextIndex = 0;
@@ -688,6 +689,6 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new DisjointSet(animManag, canvas.width, canvas.height);
+    currentAlg = new DisjointSet(animManag);
 }
 

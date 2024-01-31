@@ -25,18 +25,18 @@
 // or implied, of the University of San Francisco
 
 
-function Heap(am, w, h, compare)
+function Heap(am, compare)
 {
     this.compare = compare ? window[compare] : function(a, b) { return a < b ? -1 : a > b ? 1 : 0; };
 
-    this.init(am, w, h);
+    this.init(am);
 
 }
 Heap.inheritFrom(Algorithm);
 
 
 
-Heap.ARRAY_SIZE  = 32;
+Heap.ARRAY_SIZE = 32;
 Heap.ARRAY_ELEM_WIDTH = 30;
 Heap.ARRAY_ELEM_HEIGHT = 25;
 Heap.ARRAY_INITIAL_X = 30;
@@ -47,9 +47,7 @@ Heap.ARRAY_LABEL_Y_POS = 70;
 
 Heap.prototype.init = function(am)
 {
-    var sc = Heap.superclass;
-    var fn = sc.init;
-    fn.call(this,am);
+    Heap.superclass.init.call(this, am);
     this.addControls();
     this.nextIndex = 0;
     this.HeapXPositions = [0, 450, 250, 650, 150, 350, 550, 750, 100, 200, 300, 400, 500, 600,
@@ -411,5 +409,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new Heap(animManag, canvas.width, canvas.height);
+    currentAlg = new Heap(animManag);
 }

@@ -24,12 +24,11 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
-function TopoSortDFS(am, w, h)
+function TopoSortDFS(am)
 {
     // call superclass' constructor, which calls init
-    TopoSortDFS.superclass.constructor.call(this, am, w, h);
+    TopoSortDFS.superclass.constructor.call(this, am);
 }
-
 TopoSortDFS.inheritFrom(Graph);
 
 
@@ -86,10 +85,10 @@ TopoSortDFS.prototype.addControls =  function()
 }
 
 
-TopoSortDFS.prototype.init = function(am, w, h)
+TopoSortDFS.prototype.init = function(am)
 {
     this.showEdgeCosts = false;
-    TopoSortDFS.superclass.init.call(this, am, w, h, true, true); // TODO:  add no edge label flag to this?
+    TopoSortDFS.superclass.init.call(this, am, true, true); // TODO:  add no edge label flag to this?
     // Setup called in base class init function
 }
 
@@ -392,5 +391,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new TopoSortDFS(animManag, canvas.width, canvas.height);
+    currentAlg = new TopoSortDFS(animManag);
 }

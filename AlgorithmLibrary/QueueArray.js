@@ -24,9 +24,9 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
-function QueueArray(am, w, h)
+function QueueArray(am)
 {
-    this.init(am, w, h);
+    this.init(am);
 
 }
 QueueArray.inheritFrom(Algorithm);
@@ -60,9 +60,9 @@ QueueArray.INDEX_COLOR = "#0000FF"
 QueueArray.SIZE = 15;
 
 
-QueueArray.prototype.init = function(am, w, h)
+QueueArray.prototype.init = function(am)
 {
-    QueueArray.superclass.init.call(this, am, w, h);
+    QueueArray.superclass.init.call(this, am);
     this.addControls();
     this.nextIndex = 0;
     this.commands = [];
@@ -317,5 +317,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new QueueArray(animManag, canvas.width, canvas.height);
+    currentAlg = new QueueArray(animManag);
 }

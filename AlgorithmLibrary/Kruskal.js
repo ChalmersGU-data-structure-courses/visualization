@@ -26,10 +26,10 @@
 
 
 
-function Kruskal(am, w, h)
+function Kruskal(am)
 {
     // call superclass' constructor, which calls init
-    Kruskal.superclass.constructor.call(this, am, w, h);
+    Kruskal.superclass.constructor.call(this, am);
 }
 
 Kruskal.inheritFrom(Graph);
@@ -38,30 +38,30 @@ Kruskal.inheritFrom(Graph);
 
 Kruskal.HIGHLIGHT_CIRCLE_COLOR = "#000000";
 
- Kruskal.SET_ARRAY_ELEM_WIDTH = 25;
- Kruskal.SET_ARRAY_ELEM_HEIGHT = 25;
- Kruskal.SET_ARRAY_START_X = 50;
- Kruskal.SET_ARRAY_START_Y = 130;
+Kruskal.SET_ARRAY_ELEM_WIDTH = 25;
+Kruskal.SET_ARRAY_ELEM_HEIGHT = 25;
+Kruskal.SET_ARRAY_START_X = 50;
+Kruskal.SET_ARRAY_START_Y = 130;
 
- Kruskal.EDGE_LIST_ELEM_WIDTH = 40;
- Kruskal.EDGE_LIST_ELEM_HEIGHT = 40;
- Kruskal.EDGE_LIST_COLUMN_WIDTH = 100;
- Kruskal.EDGE_LIST_MAX_PER_COLUMN = 10;
+Kruskal.EDGE_LIST_ELEM_WIDTH = 40;
+Kruskal.EDGE_LIST_ELEM_HEIGHT = 40;
+Kruskal.EDGE_LIST_COLUMN_WIDTH = 100;
+Kruskal.EDGE_LIST_MAX_PER_COLUMN = 10;
 
- Kruskal.EDGE_LIST_START_X = 150;
- Kruskal.EDGE_LIST_START_Y = 130;
+Kruskal.EDGE_LIST_START_X = 150;
+Kruskal.EDGE_LIST_START_Y = 130;
 
 
- Kruskal.FIND_LABEL_1_X = 30;
- Kruskal.FIND_LABEL_2_X = 100;
- Kruskal.FIND_LABEL_1_Y = 30;
- Kruskal.FIND_LABEL_2_Y = Kruskal.FIND_LABEL_1_Y;
+Kruskal.FIND_LABEL_1_X = 30;
+Kruskal.FIND_LABEL_2_X = 100;
+Kruskal.FIND_LABEL_1_Y = 30;
+Kruskal.FIND_LABEL_2_Y = Kruskal.FIND_LABEL_1_Y;
 
- Kruskal.MESSAGE_LABEL_X = 30;
- Kruskal.MESSAGE_LABEL_Y = 50;
+Kruskal.MESSAGE_LABEL_X = 30;
+Kruskal.MESSAGE_LABEL_Y = 50;
 
- Kruskal.HIGHLIGHT_CIRCLE_COLOR_1 = "#FFAAAA";
- Kruskal.HIGHLIGHT_CIRCLE_COLOR_2 = "#FF0000";
+Kruskal.HIGHLIGHT_CIRCLE_COLOR_1 = "#FFAAAA";
+Kruskal.HIGHLIGHT_CIRCLE_COLOR_2 = "#FF0000";
 
 
 Kruskal.prototype.addControls =  function()
@@ -74,10 +74,10 @@ Kruskal.prototype.addControls =  function()
 }
 
 
-Kruskal.prototype.init = function(am, w, h)
+Kruskal.prototype.init = function(am)
 {
     this.showEdgeCosts = true;
-    Kruskal.superclass.init.call(this, am, w, h, false, false); // TODO:  add no edge label flag to this?
+    Kruskal.superclass.init.call(this, am, false, false); // TODO:  add no edge label flag to this?
     // Setup called in base class init function
 }
 
@@ -352,5 +352,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new Kruskal(animManag, canvas.width, canvas.height);
+    currentAlg = new Kruskal(animManag);
 }

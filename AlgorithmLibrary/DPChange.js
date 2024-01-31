@@ -26,9 +26,9 @@
 
 
 
-function DPChange(am, w, h)
+function DPChange(am)
 {
-    this.init(am, w, h);
+    this.init(am);
 
 }
 
@@ -140,9 +140,9 @@ DPChange.prototype.setCodeAlpha = function(codeArray, alpha)
 
 
 
-DPChange.prototype.init = function(am, w, h)
+DPChange.prototype.init = function(am)
 {
-    DPChange.superclass.init.call(this, am, w, h);
+    DPChange.superclass.init.call(this, am);
     this.nextIndex = 0;
     this.addControls();
     // HACK!!
@@ -976,7 +976,7 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new DPChange(animManag, canvas.width, canvas.height);
+    currentAlg = new DPChange(animManag);
 }
 
 

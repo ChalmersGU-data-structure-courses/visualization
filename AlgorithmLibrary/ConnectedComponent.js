@@ -72,10 +72,10 @@ ConnectedComponent.HIGHLIGHT_CIRCLE_COLOR = "#000000";
 ConnectedComponent.DFS_TREE_COLOR = "#0000FF";
 
 
-function ConnectedComponent(am, w, h)
+function ConnectedComponent(am)
 {
     // call superclass' constructor, which calls init
-    ConnectedComponent.superclass.constructor.call(this, am, w, h);
+    ConnectedComponent.superclass.constructor.call(this, am);
 }
 
 ConnectedComponent.inheritFrom(Graph);
@@ -88,10 +88,10 @@ ConnectedComponent.prototype.addControls =  function()
 }
 
 
-ConnectedComponent.prototype.init = function(am, w, h)
+ConnectedComponent.prototype.init = function(am)
 {
     this.showEdgeCosts = false;
-    ConnectedComponent.superclass.init.call(this, am, w, h, true, false); // TODO:  add no edge label flag to this?
+    ConnectedComponent.superclass.init.call(this, am, true, false); // TODO:  add no edge label flag to this?
     // Setup called in base class init function
 }
 
@@ -478,5 +478,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new ConnectedComponent(animManag, canvas.width, canvas.height);
+    currentAlg = new ConnectedComponent(animManag);
 }

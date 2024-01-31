@@ -26,9 +26,9 @@
 
 
 
-function DPFib(am, w, h)
+function DPFib(am)
 {
-    this.init(am, w, h);
+    this.init(am);
 
 }
 
@@ -62,9 +62,9 @@ DPFib.MAX_VALUE = 20;
 
 DPFib.MESSAGE_ID = 0;
 
-DPFib.prototype.init = function(am, w, h)
+DPFib.prototype.init = function(am)
 {
-    DPFib.superclass.init.call(this, am, w, h);
+    DPFib.superclass.init.call(this, am);
     this.nextIndex = 0;
     this.addControls();
     this.code = [["def ","fib(n)",":"],
@@ -513,7 +513,7 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new DPFib(animManag, canvas.width, canvas.height);
+    currentAlg = new DPFib(animManag);
 }
 
 

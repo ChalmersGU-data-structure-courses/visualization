@@ -49,9 +49,9 @@ BPlusTree.PRINT_COLOR = BPlusTree.FOREGROUND_COLOR;
 
 
 
-function BPlusTree(am, w, h)
+function BPlusTree(am)
 {
-    this.init(am, w, h);
+    this.init(am);
 
 }
 
@@ -61,9 +61,12 @@ BPlusTree.inheritFrom(Algorithm);
 
 
 
-BPlusTree.prototype.init = function(am, w, h)
+BPlusTree.prototype.init = function(am)
 {
-    BPlusTree.superclass.init.call(this, am, w, h);
+    BPlusTree.superclass.init.call(this, am);
+    var w = this.canvasWidth;
+    var h = this.canvasHeight;
+
     this.nextIndex = 0;
 
     this.preemptiveSplit = false
@@ -1413,5 +1416,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new BPlusTree(animManag, canvas.width, canvas.height);
+    currentAlg = new BPlusTree(animManag);
 }

@@ -44,21 +44,22 @@ BST.PRINT_HORIZONTAL_GAP = 50;
 
 
 
-function BST(am, w, h)
+function BST(am)
 {
-    this.init(am, w, h);
+    this.init(am);
 }
 BST.inheritFrom(Algorithm);
 
-BST.prototype.init = function(am, w, h)
+BST.prototype.init = function(am)
 {
-    var sc = BST.superclass;
-    this.startingX =  w / 2;
-    this.first_print_pos_y  = h - 2 * BST.PRINT_VERTICAL_GAP;
-    this.print_max  = w - 10;
+    BST.superclass.init.call(this, am);
+    var w = this.canvasWidth;
+    var h = this.canvasHeight;
 
-    var fn = sc.init;
-    fn.call(this,am);
+    this.startingX = w / 2;
+    this.first_print_pos_y  = h - 2 * BST.PRINT_VERTICAL_GAP;
+    this.print_max = w - 10;
+
     this.addControls();
     this.nextIndex = 0;
     this.commands = [];
@@ -667,6 +668,6 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new BST(animManag, canvas.width, canvas.height);
+    currentAlg = new BST(animManag);
 
 }

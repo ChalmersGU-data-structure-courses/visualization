@@ -51,11 +51,11 @@ BTree.PRINT_COLOR = BTree.FOREGROUND_COLOR;
 
 
 
-function BTree(am, w, h, max_degree)
+function BTree(am, max_degree)
 {
     this.initial_max_degree = this.max_degree = max_degree || 3;
 
-    this.init(am, w, h);
+    this.init(am);
 
 }
 
@@ -65,9 +65,12 @@ BTree.inheritFrom(Algorithm);
 
 
 
-BTree.prototype.init = function(am, w, h)
+BTree.prototype.init = function(am)
 {
-    BTree.superclass.init.call(this, am, w, h);
+    BTree.superclass.init.call(this, am);
+    var w = this.canvasWidth;
+    var h = this.canvasHeight;
+
     this.nextIndex = 0;
 
     this.starting_x = w / 2;
@@ -1577,5 +1580,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new BTree(animManag, canvas.width, canvas.height);
+    currentAlg = new BTree(animManag);
 }

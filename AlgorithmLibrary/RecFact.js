@@ -26,10 +26,10 @@
 
 
 
-function RecFact(am, w, h)
+function RecFact(am)
 {
     // call superclass' constructor, which calls init
-    RecFact.superclass.constructor.call(this, am, w, h);
+    RecFact.superclass.constructor.call(this, am);
 }
 RecFact.inheritFrom(Recursive);
 
@@ -53,9 +53,9 @@ RecFact.ACTIVATION_RECORT_START_Y = 20;
 
 
 
-RecFact.prototype.init = function(am, w, h)
+RecFact.prototype.init = function(am)
 {
-    RecFact.superclass.init.call(this, am, w, h);
+    RecFact.superclass.init.call(this, am);
     this.nextIndex = 0;
     this.addControls();
     this.code = RecFact.CODE;
@@ -210,7 +210,7 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new RecFact(animManag, canvas.width, canvas.height);
+    currentAlg = new RecFact(animManag);
 }
 
 

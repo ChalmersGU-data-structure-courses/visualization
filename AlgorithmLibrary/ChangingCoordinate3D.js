@@ -26,9 +26,9 @@
 
 
 
-function ChangeCoordinate3D(am, w, h)
+function ChangeCoordinate3D(am)
 {
-    this.init(am, w, h);
+    this.init(am);
 }
 
 
@@ -157,9 +157,9 @@ ChangeCoordinate3D.VECTOR_COLOR = "#FF0000";
 ChangeCoordinate3D.VERTEX_WIDTH = 3;
 ChangeCoordinate3D.VERTEX_HEIGHT = ChangeCoordinate3D.VERTEX_WIDTH;
 
-ChangeCoordinate3D.prototype.init = function(am, w, h)
+ChangeCoordinate3D.prototype.init = function(am)
 {
-    var sc = ChangeCoordinate3D.superclass.init.call(this, am, w, h);
+    ChangeCoordinate3D.superclass.init.call(this, am);
     this.rowMajor = true;
     this.posYUp = true;
     this.rotateFirst = true;
@@ -1736,7 +1736,7 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new ChangeCoordinate3D(animManag, canvas.width, canvas.height);
+    currentAlg = new ChangeCoordinate3D(animManag);
 }
 
 function Matrix(contents, x, y)

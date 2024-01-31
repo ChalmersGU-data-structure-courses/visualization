@@ -27,13 +27,13 @@
 // TODO:  UNDO (all the way) is BROKEN.  Redo reset ...
 
 
-function Graph(am, w, h, dir, dag)
+function Graph(am, dir, dag)
 {
     // this shouldn't happen if subclassing is done properly
     if (!am)
         throw "this shouldn't happen";
 
-    this.init(am, w, h, dir, dag);
+    this.init(am, dir, dag);
 }
 
 Graph.inheritFrom(Algorithm);
@@ -161,12 +161,12 @@ Graph.HIGHLIGHT_COLOR = "#0000FF";
 
 
 
-Graph.prototype.init = function(am, w, h, directed, dag)
+Graph.prototype.init = function(am, directed, dag)
 {
     directed = (directed ==  undefined) ? true : directed;
     dag = (dag == undefined) ? false : dag;
 
-    Graph.superclass.init.call(this, am, w, h);
+    Graph.superclass.init.call(this, am);
     this.nextIndex = 0;
 
     this.currentLayer = 1;
@@ -707,13 +707,11 @@ Graph.prototype.enableUI = function(event)
 
 
 
-/* no init, this is only a base class! */
- var currentAlg;
- function init()
- {
- var animManag = initCanvas();
- currentAlg = new Graph(animManag, canvas.width, canvas.height);
+/* no init, this is only a base class! 
+var currentAlg;
+function init()
+{
+    var animManag = initCanvas();
+    currentAlg = new Graph(animManag);
 }
-
-
-
+*/

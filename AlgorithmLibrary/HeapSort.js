@@ -45,9 +45,7 @@ HeapSort.ARRAY_LABEL_Y_POS = 70;
 
 HeapSort.prototype.init = function(am)
 {
-    var sc = HeapSort.superclass;
-    var fn = sc.init;
-    fn.call(this,am);
+    HeapSort.superclass.init.call(this, am);
     this.addControls();
     this.nextIndex = 0;
     this.HeapXPositions = [0, 450, 250, 650, 150, 350, 550, 750, 100, 200, 300, 400, 500, 600,
@@ -298,5 +296,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new HeapSort(animManag, canvas.width, canvas.height);
+    currentAlg = new HeapSort(animManag);
 }

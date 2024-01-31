@@ -42,15 +42,15 @@ DFS.QUEUE_START_Y = 50;
 DFS.QUEUE_SPACING = 30;
 
 
-function DFS(am, w, h, dir)
+function DFS(am, dir)
 {
     // call superclass' constructor, which calls init
-    DFS.superclass.constructor.call(this, am, w, h, dir);
+    DFS.superclass.constructor.call(this, am, dir);
 }
 
 DFS.inheritFrom(Graph);
 
-DFS.prototype.addControls =  function()
+DFS.prototype.addControls = function()
 {
     this.addLabelToAlgorithmBar("Start Vertex: ");
     this.startField = this.addControlToAlgorithmBar("Text", "");
@@ -61,10 +61,10 @@ DFS.prototype.addControls =  function()
 }
 
 
-DFS.prototype.init = function(am, w, h, dir)
+DFS.prototype.init = function(am, dir)
 {
     showEdgeCosts = false;
-    DFS.superclass.init.call(this, am, w, h, dir); // TODO:  add no edge label flag to this?
+    DFS.superclass.init.call(this, am, dir); // TODO:  add no edge label flag to this?
     // Setup called in base class constructor
 }
 
@@ -256,5 +256,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new DFS(animManag, canvas.width, canvas.height);
+    currentAlg = new DFS(animManag);
 }

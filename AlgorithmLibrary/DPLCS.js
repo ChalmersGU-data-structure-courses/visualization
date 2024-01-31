@@ -26,9 +26,9 @@
 
 
 
-function DPLCS(am, w, h)
+function DPLCS(am)
 {
-    this.init(am, w, h);
+    this.init(am);
 
 }
 DPLCS.inheritFrom(Algorithm);
@@ -67,9 +67,9 @@ DPLCS.MAX_VALUE = 20;
 
 DPLCS.MESSAGE_ID = 0;
 
-DPLCS.prototype.init = function(am, w, h)
+DPLCS.prototype.init = function(am)
 {
-    DPLCS.superclass.init.call(this, am, w, h);
+    DPLCS.superclass.init.call(this, am);
     this.nextIndex = 0;
     this.addControls();
     this.code = [["def ","LCS(S1, S2, x, y)",":"],
@@ -819,7 +819,7 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new DPLCS(animManag, canvas.width, canvas.height);
+    currentAlg = new DPLCS(animManag);
 }
 
 

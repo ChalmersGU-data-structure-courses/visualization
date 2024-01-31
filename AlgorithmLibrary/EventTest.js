@@ -25,7 +25,7 @@
 // or implied, of the University of San Francisco
 
 
-function.prototype.bind = function(scope) {
+Function.prototype.bind = function(scope) {
     var _function = this;
 
     return function() {
@@ -46,7 +46,7 @@ EventListener.prototype.removeListener = function(kind, scope, func)
     {
         return;
     }
-    var scopeFunctions == null;
+    var scopeFunctions = null;
     var i;
     for (i = 0; i < this.events[kind].length; i++)
     {

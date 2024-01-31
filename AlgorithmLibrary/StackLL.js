@@ -24,10 +24,9 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
-function StackLL(am, w, h)
+function StackLL(am)
 {
-    this.init(am, w, h);
-
+    this.init(am);
 }
 StackLL.inheritFrom(Algorithm);
 
@@ -61,9 +60,9 @@ StackLL.PUSH_ELEMENT_Y = 30;
 StackLL.SIZE = 32;
 
 
-StackLL.prototype.init = function(am, w, h)
+StackLL.prototype.init = function(am)
 {
-    StackLL.superclass.init.call(this, am, w, h);
+    StackLL.superclass.init.call(this, am);
     this.addControls();
     this.nextIndex = 0;
     this.commands = [];
@@ -295,5 +294,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new StackLL(animManag, canvas.width, canvas.height);
+    currentAlg = new StackLL(animManag);
 }

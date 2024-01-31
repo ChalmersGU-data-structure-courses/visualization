@@ -48,21 +48,23 @@ RadixTree.PRINT_HORIZONTAL_GAP = 50;
 
 
 
-function RadixTree(am, w, h)
+function RadixTree(am)
 {
-    this.init(am, w, h);
+    this.init(am);
 }
 RadixTree.inheritFrom(Algorithm);
 
-RadixTree.prototype.init = function(am, w, h)
-{
-    var sc = RadixTree.superclass;
-    this.startingX =  w / 2;
-    this.first_print_pos_y  = h - 2 * RadixTree.PRINT_VERTICAL_GAP;
-    this.print_max  = w - 10;
 
-    var fn = sc.init;
-    fn.call(this,am);
+RadixTree.prototype.init = function(am)
+{
+    RadixTree.superclass.init.call(this, am);
+    var w = this.canvasWidth;
+    var h = this.canvasHeight;
+
+    this.startingX = w / 2;
+    this.first_print_pos_y = h - 2 * RadixTree.PRINT_VERTICAL_GAP;
+    this.print_max = w - 10;
+
     this.addControls();
     this.nextIndex = 0;
     this.commands = [];
@@ -832,6 +834,6 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new RadixTree(animManag, canvas.width, canvas.height);
+    currentAlg = new RadixTree(animManag);
 
 }

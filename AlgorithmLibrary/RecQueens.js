@@ -26,10 +26,10 @@
 
 
 
-function Queens(am, w, h)
+function Queens(am)
 {
     // call superclass' constructor, which calls init
-    Queens.superclass.constructor.call(this, am, w, h);
+    Queens.superclass.constructor.call(this, am);
 }
 
 Queens.inheritFrom(Recursive);
@@ -85,9 +85,9 @@ Queens.ACTIVATION_RECORD_SPACING = 400;
 
 Queens.INDEX_COLOR = "#0000FF";
 
-Queens.prototype.init = function(am, w, h)
+Queens.prototype.init = function(am)
 {
-    Queens.superclass.init.call(this, am, w, h);
+    Queens.superclass.init.call(this, am);
     this.nextIndex = 0;
     this.addControls();
     this.code = Queens.CODE;
@@ -444,7 +444,7 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new Queens(animManag, canvas.width, canvas.height);
+    currentAlg = new Queens(animManag);
 }
 
 

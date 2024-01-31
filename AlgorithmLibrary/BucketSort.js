@@ -26,9 +26,9 @@
 
 
 
-function BucketSort(am, w, h)
+function BucketSort(am)
 {
-    this.init(am,w,h);
+    this.init(am);
 
 }
 
@@ -58,13 +58,13 @@ BucketSort.ARRAY_Y_POS = 350;
 
 BucketSort.inheritFrom(Algorithm);
 
-BucketSort.prototype.init = function(am, w, h)
+BucketSort.prototype.init = function(am)
 {
-    var sc = BucketSort.superclass;
-    var fn = sc.init;
-    fn.call(this,am, w, h);
+    BucketSort.superclass.init.call(this, am);
+    var h = this.canvasHeight;
+
     this.addControls();
-    this.pointer_array_elem_y_small = h -    50;
+    this.pointer_array_elem_y_small = h - 50;
 
     this.nextIndex = 0;
     this.setup();
@@ -343,5 +343,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new BucketSort(animManag, canvas.width, canvas.height);
+    currentAlg = new BucketSort(animManag);
 }

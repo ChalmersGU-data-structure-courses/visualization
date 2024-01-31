@@ -26,9 +26,9 @@
 
 
 
-function SimpleStack(am, w, h)
+function SimpleStack(am)
 {
-    this.init(am, w, h);
+    this.init(am);
 }
 SimpleStack.inheritFrom(Algorithm);
 
@@ -43,11 +43,11 @@ SimpleStack.FOREGROUND_COLOR = "#000055"
 SimpleStack.BACKGROUND_COLOR = "#AAAAFF"
 
 
-SimpleStack.prototype.init = function(am, w, h)
+SimpleStack.prototype.init = function(am)
 {
     // Call the unit function of our "superclass", which adds a couple of
     // listeners, and sets up the undo stack
-    SimpleStack.superclass.init.call(this, am, w, h);
+    SimpleStack.superclass.init.call(this, am);
 
     this.addControls();
 
@@ -192,6 +192,6 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new SimpleStack(animManag, canvas.width, canvas.height);
+    currentAlg = new SimpleStack(animManag);
 
 }

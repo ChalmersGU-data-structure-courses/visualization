@@ -26,9 +26,9 @@
 
 
 
-function ChangeCoordinate2D(am, w, h)
+function ChangeCoordinate2D(am)
 {
-    this.init(am, w, h);
+    this.init(am);
 }
 
 
@@ -125,9 +125,9 @@ ChangeCoordinate2D.VECTOR_COLOR = "#FF0000";
 ChangeCoordinate2D.VERTEX_WIDTH = 3;
 ChangeCoordinate2D.VERTEX_HEIGHT = ChangeCoordinate2D.VERTEX_WIDTH;
 
-ChangeCoordinate2D.prototype.init = function(am, w, h)
+ChangeCoordinate2D.prototype.init = function(am)
 {
-    var sc = ChangeCoordinate2D.superclass.init.call(this, am, w, h);
+    ChangeCoordinate2D.superclass.init.call(this, am);
     this.rowMajor = true;
     this.posYUp = true;
     this.rotateFirst = true;
@@ -1630,7 +1630,7 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new ChangeCoordinate2D(animManag, canvas.width, canvas.height);
+    currentAlg = new ChangeCoordinate2D(animManag);
 }
 
 function Matrix(contents, x, y)

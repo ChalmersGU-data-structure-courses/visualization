@@ -39,17 +39,17 @@ DijkstraPrim.HIGHLIGHT_CIRCLE_COLOR = "#000000";
 
 
 
-function DijkstraPrim(am, w, h, runningDijkstra, dir)
+function DijkstraPrim(am, runningDijkstra, dir)
 {
     this.runningDijkstra = runningDijkstra;
 
     // call superclass' constructor, which calls init
-    DijkstraPrim.superclass.constructor.call(this, am, w, h, dir, false);
+    DijkstraPrim.superclass.constructor.call(this, am, dir, false);
 }
 
 DijkstraPrim.inheritFrom(Graph);
 
-DijkstraPrim.prototype.addControls =  function()
+DijkstraPrim.prototype.addControls = function()
 {
     this.addLabelToAlgorithmBar("Start Vertex: ");
     this.startField = this.addControlToAlgorithmBar("Text", "");
@@ -70,10 +70,10 @@ DijkstraPrim.prototype.addControls =  function()
 }
 
 
-DijkstraPrim.prototype.init = function(am, w, h, dir)
+DijkstraPrim.prototype.init = function(am, dir)
 {
     this.showEdgeCosts = true;
-    DijkstraPrim.superclass.init.call(this, am, w, h, dir, false); // TODO:  add no edge label flag to this?
+    DijkstraPrim.superclass.init.call(this, am, dir, false); // TODO:  add no edge label flag to this?
     // Setup called in base class init function
 }
 
@@ -396,9 +396,9 @@ DijkstraPrim.prototype.startCallback = function(event)
 
     if (this.startField.value != "")
     {
-        startvalue = this.startField.value;
+        startValue = this.startField.value;
         this.startField.value = "";
-        if (parseInt(startvalue) < this.size)
+        if (parseInt(startValue) < this.size)
             this.implementAction(this.doDijkstraPrim.bind(this),startvalue);
     }
 }
@@ -428,5 +428,5 @@ var currentAlg;
 function init(runDijkstra)
 {
     var animManag = initCanvas();
-    currentAlg = new DijkstraPrim(animManag, canvas.width, canvas.height, runDijkstra);
+    currentAlg = new DijkstraPrim(animManag, runDijkstra);
 }

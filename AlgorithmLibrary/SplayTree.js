@@ -44,21 +44,22 @@ SplayTree.PRINT_HORIZONTAL_GAP = 50;
 
 
 
-function SplayTree(am, w, h)
+function SplayTree(am)
 {
-    this.init(am, w, h);
+    this.init(am);
 }
 SplayTree.inheritFrom(Algorithm);
 
-SplayTree.prototype.init = function(am, w, h)
+SplayTree.prototype.init = function(am)
 {
-    var sc = SplayTree.superclass;
+    SplayTree.superclass.init.call(this, am);
+    var w = this.canvasWidth;
+    var h = this.canvasHeight;
+
     this.startingX =  w / 2;
     this.first_print_pos_y  = h - 2 * SplayTree.PRINT_VERTICAL_GAP;
     this.print_max  = w - 10;
 
-    var fn = sc.init;
-    fn.call(this,am);
     this.addControls();
     this.nextIndex = 0;
     this.commands = [];
@@ -1094,6 +1095,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new SplayTree(animManag, canvas.width, canvas.height);
-
+    currentAlg = new SplayTree(animManag);
 }

@@ -26,13 +26,12 @@
 
 
 
-function RotateTranslate2D(am, w, h)
+function RotateTranslate2D(am)
 {
-    this.init(am, w, h);
+    this.init(am);
 }
-
-
 RotateTranslate2D.inheritFrom(Algorithm);
+
 
 RotateTranslate2D.XAxisYPos = 300;
 RotateTranslate2D.XAxisStart = 100;
@@ -86,9 +85,9 @@ RotateTranslate2D.VECTOR_COLOR = "#FF0000";
 RotateTranslate2D.VERTEX_WIDTH = 3;
 RotateTranslate2D.VERTEX_HEIGHT = RotateTranslate2D.VERTEX_WIDTH;
 
-RotateTranslate2D.prototype.init = function(am, w, h)
+RotateTranslate2D.prototype.init = function(am)
 {
-    var sc = RotateTranslate2D.superclass.init.call(this, am, w, h);
+    RotateTranslate2D.superclass.init.call(this, am);
     this.rowMajor = true;
     this.posYUp = true;
     this.rotateFirst = true;
@@ -923,7 +922,7 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new RotateTranslate2D(animManag, canvas.width, canvas.height);
+    currentAlg = new RotateTranslate2D(animManag);
 }
 
 function Matrix(contents, x, y)

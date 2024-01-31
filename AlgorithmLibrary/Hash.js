@@ -25,13 +25,13 @@
 // or implied, of the University of San Francisco
 
 
-function Hash(am, w, h)
+function Hash(am)
 {
     // this shouldn't happen if subclassing is done properly
     if (!am)
         throw "this shouldn't happen";
 
-    this.init(am, w, h);
+    this.init(am);
 }
 Hash.inheritFrom(Algorithm);
 
@@ -57,11 +57,9 @@ Hash.HIGHLIGHT_COLOR = "#0000FF";
 
 
 
-Hash.prototype.init = function(am, w, h)
+Hash.prototype.init = function(am)
 {
-    var sc = Hash.superclass;
-    var fn = sc.init;
-    fn.call(this,am, w, h);
+    Hash.superclass.init.call(this, am);
     this.addControls();
     this.nextIndex = 0;
     this.hashingIntegers = true;
@@ -452,6 +450,6 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new Hash(animManag, canvas.width, canvas.height);
+    currentAlg = new Hash(animManag);
 }
 */

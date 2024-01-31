@@ -24,18 +24,19 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
-function RedBlack(am, w, h)
+function RedBlack(am)
 {
-    this.init(am, w, h);
-
+    this.init(am);
 }
 RedBlack.inheritFrom(Algorithm);
 
-RedBlack.prototype.init = function(am, w, h)
+
+RedBlack.prototype.init = function(am)
 {
-    var sc = RedBlack.superclass;
-    var fn = sc.init;
-    fn.call(this,am);
+    RedBlack.superclass.init.call(this, am);
+    var w = this.canvasWidth;
+    var h = this.canvasHeight;
+
     this.addControls();
     this.nextIndex = 1;
     this.commands = [];
@@ -43,12 +44,10 @@ RedBlack.prototype.init = function(am, w, h)
     this.print_max  = w - RedBlack.PRINT_HORIZONTAL_GAP;
     this.first_print_pos_y  = h - 2 * RedBlack.PRINT_VERTICAL_GAP;
 
-
     this.cmd("CreateLabel", 0, "", RedBlack.EXPLANITORY_TEXT_X, RedBlack.EXPLANITORY_TEXT_Y, 0);
     this.animationManager.StartNewAnimation(this.commands);
     this.animationManager.skipForward();
     this.animationManager.clearHistory();
-
 }
 
 RedBlack.prototype.addControls =  function()
@@ -1495,5 +1494,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new RedBlack(animManag, canvas.width, canvas.height);
+    currentAlg = new RedBlack(animManag);
 }

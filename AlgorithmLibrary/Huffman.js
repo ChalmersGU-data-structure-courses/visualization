@@ -45,21 +45,22 @@ Huffman.PRINT_HORIZONTAL_GAP = 50;
 
 
 
-function Huffman(am, w, h)
+function Huffman(am)
 {
-    this.init(am, w, h);
+    this.init(am);
 }
 Huffman.inheritFrom(Algorithm);
 
-Huffman.prototype.init = function(am, w, h)
+Huffman.prototype.init = function(am)
 {
-    var sc = Huffman.superclass;
+    Huffman.superclass.init.call(this, am);
+    var w = this.canvasWidth;
+    var h = this.canvasHeight;
+
     this.startingX =  w / 2;
     this.first_print_pos_y  = h - 2 * Huffman.PRINT_VERTICAL_GAP;
     this.print_max  = w - 10;
 
-    var fn = sc.init;
-    fn.call(this,am);
     this.addControls();
     this.nextIndex = 0;
     this.commands = [];
@@ -174,6 +175,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new Huffman(animManag, canvas.width, canvas.height);
-
+    currentAlg = new Huffman(animManag);
 }

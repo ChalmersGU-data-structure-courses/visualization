@@ -67,14 +67,14 @@ Algorithm.prototype.addCodeToCanvasBase  = function(code, start_x, start_y, line
 }
 
 
-Algorithm.prototype.init = function(am, w, h)
+Algorithm.prototype.init = function(am)
 {
     this.animationManager = am;
     am.addListener("AnimationStarted", this, this.disableUI);
     am.addListener("AnimationEnded", this, this.enableUI);
     am.addListener("AnimationUndo", this, this.undo);
-    this.canvasWidth = w;
-    this.canvasHeight = h;
+    this.canvasWidth = am.canvas.width;
+    this.canvasHeight = am.canvas.height;
 
     this.actionHistory = [];
     this.recordAnimation = true;

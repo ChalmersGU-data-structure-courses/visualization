@@ -25,10 +25,9 @@
 // or implied, of the University of San Francisco
 
 
-function ComparisonSort(am, w, h)
+function ComparisonSort(am)
 {
-    this.init(am, w, h);
-
+    this.init(am);
 }
 
 
@@ -62,11 +61,9 @@ ComparisonSort.QUICKSORT_LINE_COLOR = "#FF0000";
 
 ComparisonSort.inheritFrom(Algorithm);
 
-ComparisonSort.prototype.init = function(am, w, h)
+ComparisonSort.prototype.init = function(am)
 {
-    var sc = ComparisonSort.superclass;
-    var fn = sc.init;
-    fn.call(this,am);
+    ComparisonSort.superclass.init.call(this, am);
     this.addControls();
     this.nextIndex = 0;
 
@@ -678,5 +675,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new ComparisonSort(animManag, canvas.width, canvas.height);
+    currentAlg = new ComparisonSort(animManag);
 }
