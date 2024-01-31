@@ -38,15 +38,15 @@ Search.LARGE_SIZE = 1;
 Search.EXTRA_FIELD_WIDTH = 50;
 Search.EXTRA_FIELD_HEIGHT = 50;
 
-Search.SEARCH_FOR_X = 450;  
+Search.SEARCH_FOR_X = 450;
 Search.SEARCH_FOR_Y = 30;
 
 
-Search.RESULT_X = 550;  
+Search.RESULT_X = 550;
 Search.RESULT_Y = 30;
 
 
-Search.INDEX_X = 450;  
+Search.INDEX_X = 450;
 Search.INDEX_Y = 130;
 
 
@@ -104,7 +104,7 @@ var SIZE = Search.SIZE_SMALL;
 function Search(am, w, h)
 {
     this.init(am, w, h);
-    
+
 }
 
 Search.inheritFrom(Algorithm);
@@ -122,9 +122,9 @@ Search.BINARY_CODE = [ ["def ", "binarySearch(listData, value)"],
                        ["    high = len(listData) - 1"],
                        ["    while (","low <= high",")"],
                        ["        mid = (low + high) / 2"] ,
-                       ["        if (","listData[mid] == value","):"], 
-                       ["            return mid"], 
-                       ["        elif (","listData[mid] < value",")"], 
+                       ["        if (","listData[mid] == value","):"],
+                       ["            return mid"],
+                       ["        elif (","listData[mid] < value",")"],
                        ["            low = mid + 1"],
                        ["        else:"],
                        ["            high = mid - 1"],
@@ -157,36 +157,36 @@ Search.prototype.addControls =  function()
     this.binarySearchButton = this.addControlToAlgorithmBar("Button", "Binary Search");
     this.binarySearchButton.onclick = this.binarySearchCallback.bind(this);
     this.controls.push(this.binarySearchButton);
-    
 
-	var radioButtonList = this.addRadioButtonGroupToAlgorithmBar(["Small", "Large"], "List Size");
-	this.smallListButton = radioButtonList[0];
-	this.smallListButton.onclick = this.smallListCallback.bind(this);
-	this.largeListButton = radioButtonList[1];
-	this.largeListButton.onclick = this.largeListCallback.bind(this);
-	this.smallListButton.checked = true;
-    
+
+    var radioButtonList = this.addRadioButtonGroupToAlgorithmBar(["Small", "Large"], "List Size");
+    this.smallListButton = radioButtonList[0];
+    this.smallListButton.onclick = this.smallListCallback.bind(this);
+    this.largeListButton = radioButtonList[1];
+    this.largeListButton.onclick = this.largeListCallback.bind(this);
+    this.smallListButton.checked = true;
+
 }
 
 
 
 Search.prototype.smallListCallback = function (event)
 {
-	if (this.size != Search.SMALL_SIZE)
-	{
-		this.animationManager.resetAll();
-		this.setup_small();		
-	}
+    if (this.size != Search.SMALL_SIZE)
+    {
+        this.animationManager.resetAll();
+        this.setup_small();
+    }
 }
 
 
 Search.prototype.largeListCallback = function (event)
 {
-	if (this.size != Search.LARGE_SIZE)
-	{
-		this.animationManager.resetAll();
-		this.setup_large();		
-	}
+    if (this.size != Search.LARGE_SIZE)
+    {
+        this.animationManager.resetAll();
+        this.setup_large();
+    }
 }
 
 
@@ -195,16 +195,16 @@ Search.prototype.enableUI = function(event)
 {
     for (var i = 0; i < this.controls.length; i++)
     {
-	this.controls[i].disabled = false;
+    this.controls[i].disabled = false;
     }
-    
-    
+
+
 }
 Search.prototype.disableUI = function(event)
 {
     for (var i = 0; i < this.controls.length; i++)
     {
-	this.controls[i].disabled = true;
+    this.controls[i].disabled = true;
     }
 }
 
@@ -234,9 +234,9 @@ Search.prototype.setup = function()
     this.arrayLabelID = new Array(SIZE);
     for (var i = 0; i < SIZE; i++)
     {
-	this.arrayData[i] = Math.floor(1+Math.random()*999);
-	this.arrayID[i]= this.nextIndex++;
-	this.arrayLabelID[i]= this.nextIndex++;
+    this.arrayData[i] = Math.floor(1+Math.random()*999);
+    this.arrayID[i]= this.nextIndex++;
+    this.arrayLabelID[i]= this.nextIndex++;
     }
 
     for (var i = 1; i < SIZE; i++) {
@@ -252,21 +252,21 @@ Search.prototype.setup = function()
     this.leftoverLabelID = this.nextIndex++;
     this.commands = new Array();
 
-    
+
     for (var i = 0; i < SIZE; i++)
     {
-	var xLabelpos = this.getIndexX(i);
-	var yLabelpos = this.getIndexY(i);
-	this.cmd("CreateRectangle", this.arrayID[i],this.arrayData[i], Search.ARRAY_ELEM_WIDTH, Search.ARRAY_ELEM_HEIGHT,xLabelpos, yLabelpos - Search.ARRAY_ELEM_HEIGHT);
-	this.cmd("CreateLabel",this.arrayLabelID[i],  i,  xLabelpos, yLabelpos);
-	this.cmd("SetForegroundColor", this.arrayLabelID[i], "#0000FF");
-	
+    var xLabelpos = this.getIndexX(i);
+    var yLabelpos = this.getIndexY(i);
+    this.cmd("CreateRectangle", this.arrayID[i],this.arrayData[i], Search.ARRAY_ELEM_WIDTH, Search.ARRAY_ELEM_HEIGHT,xLabelpos, yLabelpos - Search.ARRAY_ELEM_HEIGHT);
+    this.cmd("CreateLabel",this.arrayLabelID[i],  i,  xLabelpos, yLabelpos);
+    this.cmd("SetForegroundColor", this.arrayLabelID[i], "#0000FF");
+
     }
 
     this.movingLabelID = this.nextIndex++;
     this.cmd("CreateLabel",this.movingLabelID,  "", 0, 0);
 
-   //	this.cmd("CreateLabel", this.leftoverLabelID, "", Search.PUSH_LABEL_X, Search.PUSH_LABEL_Y);
+   //    this.cmd("CreateLabel", this.leftoverLabelID, "", Search.PUSH_LABEL_X, Search.PUSH_LABEL_Y);
 
 
     this.searchForBoxID = this.nextIndex++;
@@ -349,7 +349,7 @@ Search.prototype.setup = function()
 
     this.cmd("SetALpha", this.indexBoxID, 0);
     this.cmd("SetALpha", this.indexBoxLabel, 0);
-    
+
     this.highlight1ID = this.nextIndex++;
     this.highlight2ID = this.nextIndex++;
 
@@ -463,52 +463,52 @@ Search.prototype.binarySearch = function(searchVal)
     var keepGoing = true;
 
     while (keepGoing)  {
-	this.cmd("SetHighlight", this.highBoxID, 1)
-	this.cmd("SetHighlight", this.lowBoxID, 1)
-	this.cmd("SetForegroundColor", this.binaryCodeID[3][1], Search.CODE_HIGHLIGHT_COLOR);
-	this.cmd("step");
-	this.cmd("SetHighlight", this.highBoxID, 0)
-	this.cmd("SetHighlight", this.lowBoxID, 0)
-	this.cmd("SetForegroundColor", this.binaryCodeID[3][1], Search.CODE_STANDARD_COLOR);
-	if (low > high)
-	{
+    this.cmd("SetHighlight", this.highBoxID, 1)
+    this.cmd("SetHighlight", this.lowBoxID, 1)
+    this.cmd("SetForegroundColor", this.binaryCodeID[3][1], Search.CODE_HIGHLIGHT_COLOR);
+    this.cmd("step");
+    this.cmd("SetHighlight", this.highBoxID, 0)
+    this.cmd("SetHighlight", this.lowBoxID, 0)
+    this.cmd("SetForegroundColor", this.binaryCodeID[3][1], Search.CODE_STANDARD_COLOR);
+    if (low > high)
+    {
             keepGoing = false;
-	} else {
-	    var mid = Math.floor((high + low) / 2);
+    } else {
+        var mid = Math.floor((high + low) / 2);
             this.cmd("SetForegroundColor", this.binaryCodeID[4][0], Search.CODE_HIGHLIGHT_COLOR);
-	    this.cmd("SetHighlight", this.highBoxID, 1)
-	    this.cmd("SetHighlight", this.lowBoxID, 1)
-	    this.cmd("SetHighlight", this.midBoxID, 1)
-	    this.cmd("SetText", this.midBoxID, mid)
+        this.cmd("SetHighlight", this.highBoxID, 1)
+        this.cmd("SetHighlight", this.lowBoxID, 1)
+        this.cmd("SetHighlight", this.midBoxID, 1)
+        this.cmd("SetText", this.midBoxID, mid)
             this.cmd("Move", this.midCircleID, this.getIndexX(mid), this.getIndexY(mid));
 
             this.cmd("step");
             this.cmd("SetForegroundColor", this.binaryCodeID[4][0], Search.CODE_STANDARD_COLOR);
-	    this.cmd("SetHighlight", this.midBoxID, 0)
-	    this.cmd("SetHighlight", this.highBoxID, 0)
-	    this.cmd("SetHighlight", this.lowBoxID, 0)
-	    this.cmd("SetHighlight", this.searchForBoxID, 1)
+        this.cmd("SetHighlight", this.midBoxID, 0)
+        this.cmd("SetHighlight", this.highBoxID, 0)
+        this.cmd("SetHighlight", this.lowBoxID, 0)
+        this.cmd("SetHighlight", this.searchForBoxID, 1)
             this.cmd("SetHighlight", this.arrayID[mid],1);
             this.cmd("SetForegroundColor", this.binaryCodeID[5][1], Search.CODE_HIGHLIGHT_COLOR);
             this.cmd("step");
-	    this.cmd("SetHighlight", this.searchForBoxID, 0)
+        this.cmd("SetHighlight", this.searchForBoxID, 0)
             this.cmd("SetHighlight", this.arrayID[mid],0);
             this.cmd("SetForegroundColor", this.binaryCodeID[5][1], Search.CODE_STANDARD_COLOR);
             if (this.arrayData[mid] == searchVal) {
 // HIGHLIGHT CODE!
-		keepGoing = false;
+        keepGoing = false;
 
             }
             else {
 
-		this.cmd("SetForegroundColor", this.binaryCodeID[7][1], Search.CODE_HIGHLIGHT_COLOR);
-		this.cmd("SetHighlight", this.searchForBoxID, 1)
-		this.cmd("SetHighlight", this.arrayID[mid],1);
-		this.cmd("step")
-		this.cmd("SetForegroundColor", this.binaryCodeID[7][1], Search.CODE_STANDARD_COLOR);
-		this.cmd("SetHighlight", this.searchForBoxID, 0)
-		this.cmd("SetHighlight", this.arrayID[mid],0);
-		if (this.arrayData[mid]  < searchVal) {
+        this.cmd("SetForegroundColor", this.binaryCodeID[7][1], Search.CODE_HIGHLIGHT_COLOR);
+        this.cmd("SetHighlight", this.searchForBoxID, 1)
+        this.cmd("SetHighlight", this.arrayID[mid],1);
+        this.cmd("step")
+        this.cmd("SetForegroundColor", this.binaryCodeID[7][1], Search.CODE_STANDARD_COLOR);
+        this.cmd("SetHighlight", this.searchForBoxID, 0)
+        this.cmd("SetHighlight", this.arrayID[mid],0);
+        if (this.arrayData[mid]  < searchVal) {
                     this.cmd("SetForegroundColor", this.binaryCodeID[8][0], Search.CODE_HIGHLIGHT_COLOR);
                     this.cmd("SetHighlight", this.lowID,1);
                     this.cmd("SetText", this.lowBoxID,mid+1);
@@ -521,7 +521,7 @@ Search.prototype.binarySearch = function(searchVal)
                     this.cmd("Step");
                     this.cmd("SetForegroundColor", this.binaryCodeID[8][0], Search.CODE_STANDARD_COLOR);
                     this.cmd("SetHighlight", this.lowBoxID,0);
-		}  else {
+        }  else {
                     this.cmd("SetForegroundColor", this.binaryCodeID[10][0], Search.CODE_HIGHLIGHT_COLOR);
                     this.cmd("SetHighlight", this.highBoxID,1);
                     high  = mid - 1;
@@ -537,10 +537,10 @@ Search.prototype.binarySearch = function(searchVal)
                     this.cmd("SetHighlight", this.midBoxID,0);
 
 
-		}
-	    }
+        }
+        }
 
-	}
+    }
 
     }
     if (high < low) {
@@ -564,7 +564,7 @@ Search.prototype.binarySearch = function(searchVal)
         this.cmd("SetForegroundColor", this.binaryCodeID[6][0], Search.CODE_STANDARD_COLOR);
 
     }
-	
+
     for (var i = 0; i < SIZE; i++) {
         this.cmd("SetAlpha", this.arrayID[i],1);
     }
@@ -617,21 +617,21 @@ Search.prototype.linearSearch = function(searchVal)
     this.cmd("SetForegroundColor", this.linearCodeID[1][0], Search.CODE_STANDARD_COLOR);
     this.cmd("SetHighlight", this.indexBoxID,0);
 
-    
+
     var foundIndex = 0
     while (goOn) {
         if (foundIndex == SIZE) {
-    	    this.cmd("SetForegroundColor", this.linearCodeID[2][1], Search.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.linearCodeID[2][1], Search.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
-    	    this.cmd("SetForegroundColor", this.linearCodeID[2][1], Search.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.linearCodeID[2][1], Search.CODE_STANDARD_COLOR);
             goOn = false;
 
         } else {
             this.cmd("SetHighlight", this.arrayID[foundIndex],1);
             this.cmd("SetHighlight", this.searchForBoxID,1);
-    	    this.cmd("SetForegroundColor", this.linearCodeID[2][3], Search.CODE_HIGHLIGHT_COLOR);
-	    this.cmd("Step")
-    	    this.cmd("SetForegroundColor", this.linearCodeID[2][3], Search.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.linearCodeID[2][3], Search.CODE_HIGHLIGHT_COLOR);
+        this.cmd("Step")
+            this.cmd("SetForegroundColor", this.linearCodeID[2][3], Search.CODE_STANDARD_COLOR);
             this.cmd("SetHighlight", this.arrayID[foundIndex],0);
             this.cmd("SetHighlight", this.searchForBoxID,0);
             goOn =  this.arrayData[foundIndex] < searchVal
@@ -659,7 +659,7 @@ Search.prototype.linearSearch = function(searchVal)
         this.cmd("Step");
         this.cmd("SetForegroundColor", this.linearCodeID[5][0], Search.CODE_STANDARD_COLOR);
 
-	
+
     }
 
     else if (this.arrayData[foundIndex] == searchVal)
@@ -693,7 +693,7 @@ Search.prototype.linearSearch = function(searchVal)
 
 
     }
-    else 
+    else
     {
         this.cmd("SetHighlight", this.arrayID[foundIndex],1);
         this.cmd("SetHighlight", this.searchForBoxID,1);

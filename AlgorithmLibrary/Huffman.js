@@ -47,108 +47,108 @@ Huffman.PRINT_HORIZONTAL_GAP = 50;
 
 function Huffman(am, w, h)
 {
-	this.init(am, w, h);
+    this.init(am, w, h);
 }
 Huffman.inheritFrom(Algorithm);
 
 Huffman.prototype.init = function(am, w, h)
 {
-	var sc = Huffman.superclass;
-	this.startingX =  w / 2;
-	this.first_print_pos_y  = h - 2 * Huffman.PRINT_VERTICAL_GAP;
-	this.print_max  = w - 10;
+    var sc = Huffman.superclass;
+    this.startingX =  w / 2;
+    this.first_print_pos_y  = h - 2 * Huffman.PRINT_VERTICAL_GAP;
+    this.print_max  = w - 10;
 
-	var fn = sc.init;
-	fn.call(this,am);
-	this.addControls();
-	this.nextIndex = 0;
-	this.commands = [];
-	this.cmd("CreateLabel", 0, "", 20, 10, 0);
-	this.cmd("SetHeight", 0,20);
-	this.nextIndex = 1;
-	this.animationManager.StartNewAnimation(this.commands);
-	this.animationManager.skipForward();
-	this.animationManager.clearHistory();	
+    var fn = sc.init;
+    fn.call(this,am);
+    this.addControls();
+    this.nextIndex = 0;
+    this.commands = [];
+    this.cmd("CreateLabel", 0, "", 20, 10, 0);
+    this.cmd("SetHeight", 0,20);
+    this.nextIndex = 1;
+    this.animationManager.StartNewAnimation(this.commands);
+    this.animationManager.skipForward();
+    this.animationManager.clearHistory();
 }
 
 Huffman.prototype.addControls =  function()
 {
-	this.encodeField = this.addControlToAlgorithmBar("Text", "");
-	this.encodeField.onkeydown = this.returnSubmit(this.encodeField,  this.encodeCallback.bind(this), 50);
-	this.encodeButton = this.addControlToAlgorithmBar("Button", "Encode");
-	this.encodeButton.onclick = this.encodeCallback.bind(this);
+    this.encodeField = this.addControlToAlgorithmBar("Text", "");
+    this.encodeField.onkeydown = this.returnSubmit(this.encodeField,  this.encodeCallback.bind(this), 50);
+    this.encodeButton = this.addControlToAlgorithmBar("Button", "Encode");
+    this.encodeButton.onclick = this.encodeCallback.bind(this);
 }
 
 Huffman.prototype.reset = function()
 {
-	this.nextIndex = 1;
-	this.treeRoot = null;
+    this.nextIndex = 1;
+    this.treeRoot = null;
 }
 
 Huffman.prototype.encodeCallback = function(event)
 {
-	var encodingValue = this.encodeField.value;
-	// Get text value
+    var encodingValue = this.encodeField.value;
+    // Get text value
 
-	if (encodingValue != "")
-	{
-		// set text value
-		this.encodeField.value = "";
-		this.implementAction(this.encode.bind(this),encodingValue);
-	}
+    if (encodingValue != "")
+    {
+        // set text value
+        this.encodeField.value = "";
+        this.implementAction(this.encode.bind(this),encodingValue);
+    }
 }
 
 
 
 Huffman.prototype.encode = function(encodeValue)
 {
-    this.commands = new Array();	
+    this.commands = new Array();
     this.cmd("SetText", 0, "Encoding: ");
     this.encodedString = this.nextIndex++;
     this.highlightID = this.nextIndex++;
     this.cmd("CreateLabel", this.encodedString, encodeValue, 0, 0, 0);
     this.cmd("SetHeight", this.encodedString, 20);
-    this.cmd("AlignRight", this.encodedString, 0); 
-    this.cmd("step");  
+    this.cmd("AlignRight", this.encodedString, 0);
+    this.cmd("step");
     var freq = new Array(256);
     for (var i = 0; i < 256; i++)
-	freq[i] = 0;
+    freq[i] = 0;
     for (var i = 0; i < encodeValue.length; i++) {
-	 var index = encodeValue.charCodeAt(i);
+     var index = encodeValue.charCodeAt(i);
          freq[index]++;
     }
     var nodes = new Array(0);
     var pos = Huffman.NODE_START;
     for (var i = 0; i < 256; i++) {
-	if (freq[i] != 0)   {
-	    var nextNode = {freq : freq[i], ch : String.fromCharCode(i), id : this.nextIndex++, x : pos, y:Huffman.LEAF_DEPTH, depth : 0}
-	    nodes.push(nextNode);
+    if (freq[i] != 0)   {
+        var nextNode = {freq : freq[i], ch : String.fromCharCode(i), id : this.nextIndex++, x : pos, y:Huffman.LEAF_DEPTH, depth : 0}
+        nodes.push(nextNode);
             this.cmd("CreateCircle", nextNode.id, nextNode.freq.toString() + "\n" + nextNode.ch,  nextNode.x, nextNode.y);
             this.cmd("SetWidth", nextNode.id, Huffman.WIDTH);
-	    this.cmd("SetForegroundColor", nextNode.id, Huffman.FOREGROUND_COLOR)
-	    this.cmd("SetBackgroundColor", nextNode.id, Huffman.BACKGROUND_COLOR)
-	    pos = pos + Huffman.WIDTH;
-	}
+        this.cmd("SetForegroundColor", nextNode.id, Huffman.FOREGROUND_COLOR)
+        this.cmd("SetBackgroundColor", nextNode.id, Huffman.BACKGROUND_COLOR)
+        pos = pos + Huffman.WIDTH;
+    }
     }
    this.cmd("step");
 
      for (var i = 1; i < nodes.length; i++) {
-	    tmp = nodes[i];
-	    var j = i-1;
-	    while (j >= 0 && nodes[j].freq > tmp.freq) {
-		nodes[j+1] = nodes[j];
-		j = j - 1;
-	    }
-	    nodes[j+1] = tmp;
-	}
-	for (var i = 0; i < nodes.length; i++) {
-	    nodes[i].x = i*Huffman.WIDTH + Huffman.NODE_START;
-	    this.cmd("Move", nodes[i].id, nodes[i].x, nodes[i].y);
-	}
-	this.cmd("step");
+        tmp = nodes[i];
+        var j = i-1;
+        while (j >= 0 && nodes[j].freq > tmp.freq) {
+        nodes[j+1] = nodes[j];
+        j = j - 1;
+        }
+        nodes[j+1] = tmp;
+    }
+    for (var i = 0; i < nodes.length; i++) {
+        nodes[i].x = i*Huffman.WIDTH + Huffman.NODE_START;
+        this.cmd("Move", nodes[i].id, nodes[i].x, nodes[i].y);
+    }
+    this.cmd("step");
 
-	    
-    
+
+
 
     this.cmd("delete", this.encodedString);
     return this.commands;
@@ -158,14 +158,14 @@ Huffman.prototype.encode = function(encodeValue)
 
 Huffman.prototype.disableUI = function(event)
 {
-	this.encodeField.disabled = true;
-	this.encodeButton.disabled = true;
+    this.encodeField.disabled = true;
+    this.encodeButton.disabled = true;
 }
 
 Huffman.prototype.enableUI = function(event)
 {
-	this.encodeField.disabled = false;
-	this.encodeButton.disabled = false;
+    this.encodeField.disabled = false;
+    this.encodeButton.disabled = false;
 }
 
 
@@ -173,7 +173,7 @@ var currentAlg;
 
 function init()
 {
-	var animManag = initCanvas();
-	currentAlg = new Huffman(animManag, canvas.width, canvas.height);
-	
+    var animManag = initCanvas();
+    currentAlg = new Huffman(animManag, canvas.width, canvas.height);
+
 }

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>AVL + BST Visualization</title>
+
+<!-- css sheet for how the page is laid out -->
+<link rel="stylesheet" href="visualizationPageStyle.css">
+
+<!-- jqueury stuff.  Only used for the animation speed slider. -->
+<link rel="stylesheet" href="ThirdParty/jquery-ui-1.8.11.custom.css">
+
+<script src="ThirdParty/jquery-1.5.2.min.js"></script>
+<script src="ThirdParty/jquery-ui-1.8.11.custom.min.js"></script>
+
+<!-- Javascript for the actual visualization code -->
+<script type="text/javascript" src="AnimationLibrary/CustomEvents.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/UndoFunctions.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/AnimatedObject.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/AnimatedLabel.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/AnimatedCircle.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/AnimatedRectangle.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/AnimatedLinkedList.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/HighlightCircle.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/Line.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/ObjectManager.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/AnimationMain.js"> </script>
+<script type="text/javascript" src="AlgorithmLibrary/Algorithm.js"> </script>
+<script type="text/javascript" src="AlgorithmLibrary/AVL.js"> </script>
+<script type="text/javascript" src="AlgorithmLibrary/BST.js"> </script>
+
+<script>
+function initVar() {
+    var bstCanvas              = document.getElementById("bstCanvas");
+    var bstGeneralControlBar   = document.getElementById('bstGeneralAnimationControls');
+    var bstAlgorithmControlBar = document.getElementById("bstAlgorithmSpecificControls");
+    var bstAnimManag = initCanvas(bstCanvas, bstGeneralControlBar, bstAlgorithmControlBar);
+    var bstAlgo = new BST(bstAnimManag, bstCanvas.width, bstCanvas.height);
+
+    var avlCanvas              = document.getElementById("avlCanvas");
+    var avlGeneralControlBar   = document.getElementById('avlGeneralAnimationControls');
+    var avlAlgorithmControlBar = document.getElementById("avlAlgorithmSpecificControls");
+    var avlAnimManag = initCanvas(avlCanvas, avlGeneralControlBar, avlAlgorithmControlBar);
+    var avlAlgo = new AVL(avlAnimManag, avlCanvas.width, avlCanvas.height);
+}
+</script>
+
+</head>
+
+<body onload="initVar();" class="VisualizationMainPage">
+<div id="container">
+
+<div id="header">
+    <h1>AVL + BST</h1>
+</div>
+
+<div id="bstContent">
+    <div id="bstAlgoControlSection">
+        <!-- Table for buttons to control specific animation (insert/find/etc) -->
+        <!-- (filled in by javascript code specific to the animtion) -->
+        <table id="bstAlgorithmSpecificControls"> </table>
+    </div>
+
+    <!-- Drawing canvas where all animation is done.  Note:  can be resized in code -->
+    <canvas id="bstCanvas" width="500" height="300"></canvas>
+
+    <div id="bstGeneralAnimationControlSection">
+        <!-- Table for buttons to control general animation (play/pause/undo/etc) ->
+        <!-- (filled in by javascript code, specifically AnimationMain.js)  -->
+        <table id="bstGeneralAnimationControls">  </table>
+    </div>
+</div>
+
+<div id="avlContent">
+    <div id="avlAlgoControlSection">
+        <!-- Table for buttons to control specific animation (insert/find/etc) -->
+        <!-- (filled in by javascript code specific to the animtion) -->
+        <table id="avlAlgorithmSpecificControls"> </table>
+    </div>
+
+    <!-- Drawing canvas where all animation is done.  Note:  can be resized in code -->
+    <canvas id="avlCanvas" width="700" height="300"></canvas>
+
+    <div id="avlGeneralAnimationControlSection">
+        <!-- Table for buttons to control general animation (play/pause/undo/etc) ->
+        <!-- (filled in by javascript code, specifically AnimationMain.js)  -->
+        <table id="avlGeneralAnimationControls">  </table>
+    </div>
+</div>
+
+<div id="footer">
+    <p><a href="Algorithms.html">Algorithm Visualizations</a></p>
+</div>
+
+</div>
+</body>
+</html>

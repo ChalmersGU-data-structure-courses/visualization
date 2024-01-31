@@ -41,385 +41,385 @@ DijkstraPrim.HIGHLIGHT_CIRCLE_COLOR = "#000000";
 
 function DijkstraPrim(am, w, h, runningDijkstra, dir)
 {
-	this.runningDijkstra = runningDijkstra;
+    this.runningDijkstra = runningDijkstra;
 
-	// call superclass' constructor, which calls init
-	DijkstraPrim.superclass.constructor.call(this, am, w, h, dir, false);
+    // call superclass' constructor, which calls init
+    DijkstraPrim.superclass.constructor.call(this, am, w, h, dir, false);
 }
 
 DijkstraPrim.inheritFrom(Graph);
 
 DijkstraPrim.prototype.addControls =  function()
-{		
-	this.addLabelToAlgorithmBar("Start Vertex: ");
-	this.startField = this.addControlToAlgorithmBar("Text", "");
-	this.startField.onkeydown = this.returnSubmit(this.startField,  this.startCallback.bind(this), 2, true);
-	this.startField.size = 2
-	if (this.runningDijkstra)
-	{
-		this.startButton = this.addControlToAlgorithmBar("Button", "Run Dijkstra");
-		
-	}
-	else
-	{
-		this.startButton = this.addControlToAlgorithmBar("Button", "Run Prim");
-		
-	}
-	this.startButton.onclick = this.startCallback.bind(this);
-	DijkstraPrim.superclass.addControls.call(this, this.runningDijkstra);
-}	
+{
+    this.addLabelToAlgorithmBar("Start Vertex: ");
+    this.startField = this.addControlToAlgorithmBar("Text", "");
+    this.startField.onkeydown = this.returnSubmit(this.startField,  this.startCallback.bind(this), 2, true);
+    this.startField.size = 2
+    if (this.runningDijkstra)
+    {
+        this.startButton = this.addControlToAlgorithmBar("Button", "Run Dijkstra");
+
+    }
+    else
+    {
+        this.startButton = this.addControlToAlgorithmBar("Button", "Run Prim");
+
+    }
+    this.startButton.onclick = this.startCallback.bind(this);
+    DijkstraPrim.superclass.addControls.call(this, this.runningDijkstra);
+}
 
 
 DijkstraPrim.prototype.init = function(am, w, h, dir)
 {
-	this.showEdgeCosts = true;
-	DijkstraPrim.superclass.init.call(this, am, w, h, dir, false); // TODO:  add no edge label flag to this?
-	// Setup called in base class init function
+    this.showEdgeCosts = true;
+    DijkstraPrim.superclass.init.call(this, am, w, h, dir, false); // TODO:  add no edge label flag to this?
+    // Setup called in base class init function
 }
 
-		
-DijkstraPrim.prototype.setup = function() 
+
+DijkstraPrim.prototype.setup = function()
 {
-	this.message1ID = this.nextIndex++;
-	DijkstraPrim.superclass.setup.call(this);
+    this.message1ID = this.nextIndex++;
+    DijkstraPrim.superclass.setup.call(this);
 
-	this.commands = new Array();
-	this.cmd("CreateLabel", this.message1ID, "", DijkstraPrim.MESSAGE_LABEL_1_X, DijkstraPrim.MESSAGE_LABEL_1_Y, 0);
-	
-	
-	this.vertexID = new Array(this.size);
-	this.knownID = new Array(this.size);
-	this.distanceID = new Array(this.size);
-	this.pathID = new Array(this.size);
-	this.known = new Array(this.size);
-	this.distance = new Array(this.size);
-	this.path = new Array(this.size);
-	
-	this.messageID = null;
+    this.commands = new Array();
+    this.cmd("CreateLabel", this.message1ID, "", DijkstraPrim.MESSAGE_LABEL_1_X, DijkstraPrim.MESSAGE_LABEL_1_Y, 0);
 
-	for (var i = 0; i < this.size; i++)
-	{
-		this.vertexID[i] = this.nextIndex++;
-		this.knownID[i] = this.nextIndex++;
-		this.distanceID[i] = this.nextIndex++;
-		this.pathID[i] = this.nextIndex++;
-		this.cmd("CreateRectangle", this.vertexID[i], i, DijkstraPrim.TABLE_ENTRY_WIDTH, DijkstraPrim.TABLE_ENTRY_HEIGHT, DijkstraPrim.TABLE_START_X, DijkstraPrim.TABLE_START_Y + i*DijkstraPrim.TABLE_ENTRY_HEIGHT);
-		this.cmd("CreateRectangle", this.knownID[i], "", DijkstraPrim.TABLE_ENTRY_WIDTH, DijkstraPrim.TABLE_ENTRY_HEIGHT, DijkstraPrim.TABLE_START_X + DijkstraPrim.TABLE_ENTRY_WIDTH, DijkstraPrim.TABLE_START_Y + i*DijkstraPrim.TABLE_ENTRY_HEIGHT);
-		this.cmd("CreateRectangle", this.distanceID[i], "", DijkstraPrim.TABLE_ENTRY_WIDTH, DijkstraPrim.TABLE_ENTRY_HEIGHT, DijkstraPrim.TABLE_START_X + 2 * DijkstraPrim.TABLE_ENTRY_WIDTH, DijkstraPrim.TABLE_START_Y + i*DijkstraPrim.TABLE_ENTRY_HEIGHT);
-		this.cmd("CreateRectangle", this.pathID[i], "", DijkstraPrim.TABLE_ENTRY_WIDTH, DijkstraPrim.TABLE_ENTRY_HEIGHT, DijkstraPrim.TABLE_START_X+ 3 * DijkstraPrim.TABLE_ENTRY_WIDTH, DijkstraPrim.TABLE_START_Y + i*DijkstraPrim.TABLE_ENTRY_HEIGHT);
-		this.cmd("SetTextColor",  this.vertexID[i], DijkstraPrim.VERTEX_INDEX_COLOR);
-		
-	}
-	this.cmd("CreateLabel", this.nextIndex++, "Vertex", DijkstraPrim.TABLE_START_X, DijkstraPrim.TABLE_START_Y  - DijkstraPrim.TABLE_ENTRY_HEIGHT);
-	this.cmd("CreateLabel", this.nextIndex++, "Known", DijkstraPrim.TABLE_START_X + DijkstraPrim.TABLE_ENTRY_WIDTH, DijkstraPrim.TABLE_START_Y  - DijkstraPrim.TABLE_ENTRY_HEIGHT);
-	this.cmd("CreateLabel", this.nextIndex++, "Cost", DijkstraPrim.TABLE_START_X + 2 * DijkstraPrim.TABLE_ENTRY_WIDTH, DijkstraPrim.TABLE_START_Y  - DijkstraPrim.TABLE_ENTRY_HEIGHT);
-	this.cmd("CreateLabel", this.nextIndex++, "Path", DijkstraPrim.TABLE_START_X + 3 * DijkstraPrim.TABLE_ENTRY_WIDTH, DijkstraPrim.TABLE_START_Y  - DijkstraPrim.TABLE_ENTRY_HEIGHT);
-	
-	this.animationManager.setAllLayers([0, this.currentLayer]);
-	this.animationManager.StartNewAnimation(this.commands);
-	this.animationManager.skipForward();
-	this.animationManager.clearHistory();
-	this.comparisonMessageID = this.nextIndex++;
+
+    this.vertexID = new Array(this.size);
+    this.knownID = new Array(this.size);
+    this.distanceID = new Array(this.size);
+    this.pathID = new Array(this.size);
+    this.known = new Array(this.size);
+    this.distance = new Array(this.size);
+    this.path = new Array(this.size);
+
+    this.messageID = null;
+
+    for (var i = 0; i < this.size; i++)
+    {
+        this.vertexID[i] = this.nextIndex++;
+        this.knownID[i] = this.nextIndex++;
+        this.distanceID[i] = this.nextIndex++;
+        this.pathID[i] = this.nextIndex++;
+        this.cmd("CreateRectangle", this.vertexID[i], i, DijkstraPrim.TABLE_ENTRY_WIDTH, DijkstraPrim.TABLE_ENTRY_HEIGHT, DijkstraPrim.TABLE_START_X, DijkstraPrim.TABLE_START_Y + i*DijkstraPrim.TABLE_ENTRY_HEIGHT);
+        this.cmd("CreateRectangle", this.knownID[i], "", DijkstraPrim.TABLE_ENTRY_WIDTH, DijkstraPrim.TABLE_ENTRY_HEIGHT, DijkstraPrim.TABLE_START_X + DijkstraPrim.TABLE_ENTRY_WIDTH, DijkstraPrim.TABLE_START_Y + i*DijkstraPrim.TABLE_ENTRY_HEIGHT);
+        this.cmd("CreateRectangle", this.distanceID[i], "", DijkstraPrim.TABLE_ENTRY_WIDTH, DijkstraPrim.TABLE_ENTRY_HEIGHT, DijkstraPrim.TABLE_START_X + 2 * DijkstraPrim.TABLE_ENTRY_WIDTH, DijkstraPrim.TABLE_START_Y + i*DijkstraPrim.TABLE_ENTRY_HEIGHT);
+        this.cmd("CreateRectangle", this.pathID[i], "", DijkstraPrim.TABLE_ENTRY_WIDTH, DijkstraPrim.TABLE_ENTRY_HEIGHT, DijkstraPrim.TABLE_START_X+ 3 * DijkstraPrim.TABLE_ENTRY_WIDTH, DijkstraPrim.TABLE_START_Y + i*DijkstraPrim.TABLE_ENTRY_HEIGHT);
+        this.cmd("SetTextColor",  this.vertexID[i], DijkstraPrim.VERTEX_INDEX_COLOR);
+
+    }
+    this.cmd("CreateLabel", this.nextIndex++, "Vertex", DijkstraPrim.TABLE_START_X, DijkstraPrim.TABLE_START_Y  - DijkstraPrim.TABLE_ENTRY_HEIGHT);
+    this.cmd("CreateLabel", this.nextIndex++, "Known", DijkstraPrim.TABLE_START_X + DijkstraPrim.TABLE_ENTRY_WIDTH, DijkstraPrim.TABLE_START_Y  - DijkstraPrim.TABLE_ENTRY_HEIGHT);
+    this.cmd("CreateLabel", this.nextIndex++, "Cost", DijkstraPrim.TABLE_START_X + 2 * DijkstraPrim.TABLE_ENTRY_WIDTH, DijkstraPrim.TABLE_START_Y  - DijkstraPrim.TABLE_ENTRY_HEIGHT);
+    this.cmd("CreateLabel", this.nextIndex++, "Path", DijkstraPrim.TABLE_START_X + 3 * DijkstraPrim.TABLE_ENTRY_WIDTH, DijkstraPrim.TABLE_START_Y  - DijkstraPrim.TABLE_ENTRY_HEIGHT);
+
+    this.animationManager.setAllLayers([0, this.currentLayer]);
+    this.animationManager.StartNewAnimation(this.commands);
+    this.animationManager.skipForward();
+    this.animationManager.clearHistory();
+    this.comparisonMessageID = this.nextIndex++;
 }
 
 
 
-DijkstraPrim.prototype.findCheapestUnknown = function() 
+DijkstraPrim.prototype.findCheapestUnknown = function()
 {
     var bestIndex = -1;
     this.cmd("SetText", this.message1ID,"Finding Cheapest Uknown Vertex");
 
-	for (var i = 0; i < this.size; i++)
-	{
-	    if (!this.known[i])
-	    {
-		this.cmd("SetHighlight", this.distanceID[i], 1);
-	    }
-	   
-		if (!this.known[i] && this.distance[i] != -1 && (bestIndex == -1 ||
-											   (this.distance[i] < this.distance[bestIndex])))
-		{
-			bestIndex = i;
-		}
-	}
-	if (bestIndex == -1)
-	{
-		var x = 3;
-		x = x + 2;
-	}
+    for (var i = 0; i < this.size; i++)
+    {
+        if (!this.known[i])
+        {
+        this.cmd("SetHighlight", this.distanceID[i], 1);
+        }
+
+        if (!this.known[i] && this.distance[i] != -1 && (bestIndex == -1 ||
+                                               (this.distance[i] < this.distance[bestIndex])))
+        {
+            bestIndex = i;
+        }
+    }
+    if (bestIndex == -1)
+    {
+        var x = 3;
+        x = x + 2;
+    }
     this.cmd("Step");
     for (var i = 0; i < this.size; i++)
     {
-	    if (!this.known[i])
-	    {
-		this.cmd("SetHighlight", this.distanceID[i], 0);
-	    }
+        if (!this.known[i])
+        {
+        this.cmd("SetHighlight", this.distanceID[i], 0);
+        }
 
     }
-	return bestIndex;
+    return bestIndex;
 }
 
 
 DijkstraPrim.prototype.doDijkstraPrim = function(startVertex)
 {
-	this.commands = new Array();
-	
-	if (!this.runningDijkstra)
-	{
-		this.recolorGraph();
-	}
-	
-	
-	var current = parseInt(startVertex);
-	
-	for (var i = 0; i < this.size; i++)
-	{
-		this.known[i] = false;
-		this.distance[i] = -1;
-		this.path[i] = -1;
-		this.cmd("SetText", this.knownID[i], "F");
-		this.cmd("SetText", this.distanceID[i], "INF");
-		this.cmd("SetText", this.pathID[i], "-1");
-		this.cmd("SetTextColor", this.knownID[i], "#000000");
-		
-	}
-	if (this.messageID != null)
-	{
-		for (i = 0; i < this.messageID.length; i++)
-		{
-			this.cmd("Delete", this.messageID[i]);
-		}				
-	}
-	this.messageID = new Array();
-	
-	this.distance[current] = 0;
-	this.cmd("SetText", this.distanceID[current], 0);
-	
-	for (i = 0; i < this.size; i++)
-	{ 
-		current = this.findCheapestUnknown();
-		if (current < 0)
-		{
-			break;
-		}
-		this.cmd("SetText",this.message1ID, "Cheapest Unknown Vertex: " + current); // Gotta love Auto Conversion
-		this.cmd("SetHighlight", this.distanceID[current], 1);
+    this.commands = new Array();
 
-		this.cmd("SetHighlight", this.circleID[current], 1);
-	        this.cmd("Step");
-		this.cmd("SetHighlight", this.distanceID[current], 0);
-	        this.cmd("SetText", this.message1ID,"Setting known field to True");
-		this.cmd("SetHighlight", this.knownID[current], 1);
-		this.known[current] = true;
-		this.cmd("SetText", this.knownID[current], "T");
-		this.cmd("SetTextColor", this.knownID[current], "#AAAAAA");
-	        this.cmd("Step");
-		this.cmd("SetHighlight", this.knownID[current], 0);
-		this.cmd("SetText",this.message1ID, "Updating neighbors of vertex " + current); // Gotta love Auto Conversion
-		for (var neighbor = 0; neighbor < this.size; neighbor++)
-		{
-			if (this.adj_matrix[current][neighbor] >= 0)
-			{
-				this.highlightEdge(current, neighbor, 1);
-				if (this.known[neighbor])
-				{
-					
-					this.cmd("CreateLabel",  this.comparisonMessageID,"Vertex " + String(neighbor) + " known", 
-						DijkstraPrim.TABLE_START_X + 5 * DijkstraPrim.TABLE_ENTRY_WIDTH,DijkstraPrim.TABLE_START_Y + neighbor*DijkstraPrim.TABLE_ENTRY_HEIGHT);
-					this.cmd("SetHighlight", this.knownID[neighbor], 1);
-				}
-				else
-				{	this.cmd("SetHighlight", this.distanceID[current], 1);
-					this.cmd("SetHighlight", this.distanceID[neighbor], 1);
-					var distString = String(this.distance[neighbor]);
-					if (this.distance[neighbor] < 0)
-					{
-						distString = "INF";
-					}
-					
-					if (this.runningDijkstra)
-					{
-						if (this.distance[neighbor] < 0 || this.distance[neighbor] > this.distance[current] + this.adj_matrix[current][neighbor])
-						{
-							this.cmd("CreateLabel", this.comparisonMessageID, distString + " > " + String(this.distance[current]) + " + " + String(this.adj_matrix[current][neighbor]), 
-								DijkstraPrim.TABLE_START_X + 4.3 * DijkstraPrim.TABLE_ENTRY_WIDTH,DijkstraPrim.TABLE_START_Y + neighbor*DijkstraPrim.TABLE_ENTRY_HEIGHT);
-						}
-						else
-						{
-							this.cmd("CreateLabel",  this.comparisonMessageID,"!(" + String(this.distance[neighbor])  + " > " + String(this.distance[current]) + " + " + String(this.adj_matrix[current][neighbor]) + ")", 
-								DijkstraPrim.TABLE_START_X + 4.3 * DijkstraPrim.TABLE_ENTRY_WIDTH,DijkstraPrim.TABLE_START_Y + neighbor*DijkstraPrim.TABLE_ENTRY_HEIGHT);							
-						}								
-						
-					}
-					else
-					{
-						if (this.distance[neighbor] < 0 || this.distance[neighbor] > this.adj_matrix[current][neighbor])
-						{
-							this.cmd("CreateLabel", this.comparisonMessageID, distString + " > " + String(this.adj_matrix[current][neighbor]), 
-								DijkstraPrim.TABLE_START_X + 4.3 * DijkstraPrim.TABLE_ENTRY_WIDTH,DijkstraPrim.TABLE_START_Y + neighbor*DijkstraPrim.TABLE_ENTRY_HEIGHT);
-						}
-						else
-						{
-							this.cmd("CreateLabel",  this.comparisonMessageID,"!(" + String(this.distance[neighbor])  + " > " + String(this.adj_matrix[current][neighbor]) + ")", 
-								DijkstraPrim.TABLE_START_X + 4.3 * DijkstraPrim.TABLE_ENTRY_WIDTH,DijkstraPrim.TABLE_START_Y + neighbor*DijkstraPrim.TABLE_ENTRY_HEIGHT);							
-						}
-						
-						
-					}
-					
-					
-				}
-				
-				this.cmd("Step");
-				this.cmd("Delete", this.comparisonMessageID);
-				this.highlightEdge(current, neighbor, 0);
-				if (this.known[neighbor])
-				{
-					this.cmd("SetHighlight", this.knownID[neighbor], 0);
-					
-				}
-				else
-				{
-					this.cmd("SetHighlight", this.distanceID[current], 0);
-					this.cmd("SetHighlight", this.distanceID[neighbor], 0);
-					var compare;
-					if (this.runningDijkstra)
-					{
-						compare = this.distance[current] + this.adj_matrix[current][neighbor];
-					}
-					else
-					{
-						compare = this.adj_matrix[current][neighbor];
-					}
-					if (this.distance[neighbor] < 0 || this.distance[neighbor] > compare)
-					{
-						this.distance[neighbor] =  compare;
-						this.path[neighbor] = current;
-						this.cmd("SetText", this.distanceID[neighbor],this.distance[neighbor] );
-						this.cmd("SetText", this.pathID[neighbor],this.path[neighbor]);
-					}
-				}
-				
-			}
-		}
-		this.cmd("SetHighlight", this.circleID[current], 0);
-		
-	}
-	// Running Dijkstra's algorithm, create the paths
-	if (this.runningDijkstra)
-	{
-		this.cmd("SetText",this.message1ID, "Finding Paths in Table"); 
-		this.createPaths();
-	}
-	// Running Prim's algorithm, highlight the tree
-	else
-	{
-		this.cmd("SetText",this.message1ID, "Creating tree from table"); 
-		this.highlightTree();
-	}
-	
-       this.cmd("SetText",this.message1ID, ""); 
-	return this.commands
+    if (!this.runningDijkstra)
+    {
+        this.recolorGraph();
+    }
+
+
+    var current = parseInt(startVertex);
+
+    for (var i = 0; i < this.size; i++)
+    {
+        this.known[i] = false;
+        this.distance[i] = -1;
+        this.path[i] = -1;
+        this.cmd("SetText", this.knownID[i], "F");
+        this.cmd("SetText", this.distanceID[i], "INF");
+        this.cmd("SetText", this.pathID[i], "-1");
+        this.cmd("SetTextColor", this.knownID[i], "#000000");
+
+    }
+    if (this.messageID != null)
+    {
+        for (i = 0; i < this.messageID.length; i++)
+        {
+            this.cmd("Delete", this.messageID[i]);
+        }
+    }
+    this.messageID = new Array();
+
+    this.distance[current] = 0;
+    this.cmd("SetText", this.distanceID[current], 0);
+
+    for (i = 0; i < this.size; i++)
+    {
+        current = this.findCheapestUnknown();
+        if (current < 0)
+        {
+            break;
+        }
+        this.cmd("SetText",this.message1ID, "Cheapest Unknown Vertex: " + current); // Gotta love Auto Conversion
+        this.cmd("SetHighlight", this.distanceID[current], 1);
+
+        this.cmd("SetHighlight", this.circleID[current], 1);
+            this.cmd("Step");
+        this.cmd("SetHighlight", this.distanceID[current], 0);
+            this.cmd("SetText", this.message1ID,"Setting known field to True");
+        this.cmd("SetHighlight", this.knownID[current], 1);
+        this.known[current] = true;
+        this.cmd("SetText", this.knownID[current], "T");
+        this.cmd("SetTextColor", this.knownID[current], "#AAAAAA");
+            this.cmd("Step");
+        this.cmd("SetHighlight", this.knownID[current], 0);
+        this.cmd("SetText",this.message1ID, "Updating neighbors of vertex " + current); // Gotta love Auto Conversion
+        for (var neighbor = 0; neighbor < this.size; neighbor++)
+        {
+            if (this.adj_matrix[current][neighbor] >= 0)
+            {
+                this.highlightEdge(current, neighbor, 1);
+                if (this.known[neighbor])
+                {
+
+                    this.cmd("CreateLabel",  this.comparisonMessageID,"Vertex " + String(neighbor) + " known",
+                        DijkstraPrim.TABLE_START_X + 5 * DijkstraPrim.TABLE_ENTRY_WIDTH,DijkstraPrim.TABLE_START_Y + neighbor*DijkstraPrim.TABLE_ENTRY_HEIGHT);
+                    this.cmd("SetHighlight", this.knownID[neighbor], 1);
+                }
+                else
+                {    this.cmd("SetHighlight", this.distanceID[current], 1);
+                    this.cmd("SetHighlight", this.distanceID[neighbor], 1);
+                    var distString = String(this.distance[neighbor]);
+                    if (this.distance[neighbor] < 0)
+                    {
+                        distString = "INF";
+                    }
+
+                    if (this.runningDijkstra)
+                    {
+                        if (this.distance[neighbor] < 0 || this.distance[neighbor] > this.distance[current] + this.adj_matrix[current][neighbor])
+                        {
+                            this.cmd("CreateLabel", this.comparisonMessageID, distString + " > " + String(this.distance[current]) + " + " + String(this.adj_matrix[current][neighbor]),
+                                DijkstraPrim.TABLE_START_X + 4.3 * DijkstraPrim.TABLE_ENTRY_WIDTH,DijkstraPrim.TABLE_START_Y + neighbor*DijkstraPrim.TABLE_ENTRY_HEIGHT);
+                        }
+                        else
+                        {
+                            this.cmd("CreateLabel",  this.comparisonMessageID,"!(" + String(this.distance[neighbor])  + " > " + String(this.distance[current]) + " + " + String(this.adj_matrix[current][neighbor]) + ")",
+                                DijkstraPrim.TABLE_START_X + 4.3 * DijkstraPrim.TABLE_ENTRY_WIDTH,DijkstraPrim.TABLE_START_Y + neighbor*DijkstraPrim.TABLE_ENTRY_HEIGHT);
+                        }
+
+                    }
+                    else
+                    {
+                        if (this.distance[neighbor] < 0 || this.distance[neighbor] > this.adj_matrix[current][neighbor])
+                        {
+                            this.cmd("CreateLabel", this.comparisonMessageID, distString + " > " + String(this.adj_matrix[current][neighbor]),
+                                DijkstraPrim.TABLE_START_X + 4.3 * DijkstraPrim.TABLE_ENTRY_WIDTH,DijkstraPrim.TABLE_START_Y + neighbor*DijkstraPrim.TABLE_ENTRY_HEIGHT);
+                        }
+                        else
+                        {
+                            this.cmd("CreateLabel",  this.comparisonMessageID,"!(" + String(this.distance[neighbor])  + " > " + String(this.adj_matrix[current][neighbor]) + ")",
+                                DijkstraPrim.TABLE_START_X + 4.3 * DijkstraPrim.TABLE_ENTRY_WIDTH,DijkstraPrim.TABLE_START_Y + neighbor*DijkstraPrim.TABLE_ENTRY_HEIGHT);
+                        }
+
+
+                    }
+
+
+                }
+
+                this.cmd("Step");
+                this.cmd("Delete", this.comparisonMessageID);
+                this.highlightEdge(current, neighbor, 0);
+                if (this.known[neighbor])
+                {
+                    this.cmd("SetHighlight", this.knownID[neighbor], 0);
+
+                }
+                else
+                {
+                    this.cmd("SetHighlight", this.distanceID[current], 0);
+                    this.cmd("SetHighlight", this.distanceID[neighbor], 0);
+                    var compare;
+                    if (this.runningDijkstra)
+                    {
+                        compare = this.distance[current] + this.adj_matrix[current][neighbor];
+                    }
+                    else
+                    {
+                        compare = this.adj_matrix[current][neighbor];
+                    }
+                    if (this.distance[neighbor] < 0 || this.distance[neighbor] > compare)
+                    {
+                        this.distance[neighbor] =  compare;
+                        this.path[neighbor] = current;
+                        this.cmd("SetText", this.distanceID[neighbor],this.distance[neighbor] );
+                        this.cmd("SetText", this.pathID[neighbor],this.path[neighbor]);
+                    }
+                }
+
+            }
+        }
+        this.cmd("SetHighlight", this.circleID[current], 0);
+
+    }
+    // Running Dijkstra's algorithm, create the paths
+    if (this.runningDijkstra)
+    {
+        this.cmd("SetText",this.message1ID, "Finding Paths in Table");
+        this.createPaths();
+    }
+    // Running Prim's algorithm, highlight the tree
+    else
+    {
+        this.cmd("SetText",this.message1ID, "Creating tree from table");
+        this.highlightTree();
+    }
+
+       this.cmd("SetText",this.message1ID, "");
+    return this.commands
 }
 
 DijkstraPrim.prototype.createPaths = function()
 {
-	for (var vertex = 0; vertex < this.size; vertex++)
-	{
-		var nextLabelID = this.nextIndex++;
-		if (this.distance[vertex] < 0)
-		{
-			this.cmd("CreateLabel", nextLabelID, "No Path",  DijkstraPrim.TABLE_START_X + 4.3 * DijkstraPrim.TABLE_ENTRY_WIDTH,DijkstraPrim.TABLE_START_Y + vertex*DijkstraPrim.TABLE_ENTRY_HEIGHT);
-			this.messageID.push(nextLabelID);
-		}
-		else
-		{
-			this.cmd("CreateLabel", nextLabelID, vertex,  DijkstraPrim.TABLE_START_X + 4.3 * DijkstraPrim.TABLE_ENTRY_WIDTH,DijkstraPrim.TABLE_START_Y + vertex*DijkstraPrim.TABLE_ENTRY_HEIGHT);
-			this.messageID.push(nextLabelID);
-			var pathList = [nextLabelID];
-			var nextInPath = vertex;
-			while (nextInPath >= 0)
-			{
-				this.cmd("SetHighlight", this.pathID[nextInPath], 1);
-				this.cmd("Step");
-				if (this.path[nextInPath] != -1)
-				{
-					nextLabelID = this.nextIndex++;
-					this.cmd("CreateLabel", nextLabelID, this.path[nextInPath],  DijkstraPrim.TABLE_START_X + 3 * DijkstraPrim.TABLE_ENTRY_WIDTH,DijkstraPrim.TABLE_START_Y + nextInPath*DijkstraPrim.TABLE_ENTRY_HEIGHT);
-					this.cmd("Move", nextLabelID,  DijkstraPrim.TABLE_START_X + 4.3 * DijkstraPrim.TABLE_ENTRY_WIDTH,DijkstraPrim.TABLE_START_Y + vertex*DijkstraPrim.TABLE_ENTRY_HEIGHT);
-					this.messageID.push(nextLabelID);
-					for (var i = pathList.length - 1; i >= 0; i--)
-					{
-						this.cmd("Move", pathList[i], DijkstraPrim.TABLE_START_X + 4.3 * DijkstraPrim.TABLE_ENTRY_WIDTH + (pathList.length - i) * 17,DijkstraPrim.TABLE_START_Y + vertex*DijkstraPrim.TABLE_ENTRY_HEIGHT)
-						
-					}
-					this.cmd("Step");
-					pathList.push(nextLabelID);
-				}
-				this.cmd("SetHighlight", this.pathID[nextInPath], 0);
-				nextInPath = this.path[nextInPath];
-				
-			}					
-		}
-	}
+    for (var vertex = 0; vertex < this.size; vertex++)
+    {
+        var nextLabelID = this.nextIndex++;
+        if (this.distance[vertex] < 0)
+        {
+            this.cmd("CreateLabel", nextLabelID, "No Path",  DijkstraPrim.TABLE_START_X + 4.3 * DijkstraPrim.TABLE_ENTRY_WIDTH,DijkstraPrim.TABLE_START_Y + vertex*DijkstraPrim.TABLE_ENTRY_HEIGHT);
+            this.messageID.push(nextLabelID);
+        }
+        else
+        {
+            this.cmd("CreateLabel", nextLabelID, vertex,  DijkstraPrim.TABLE_START_X + 4.3 * DijkstraPrim.TABLE_ENTRY_WIDTH,DijkstraPrim.TABLE_START_Y + vertex*DijkstraPrim.TABLE_ENTRY_HEIGHT);
+            this.messageID.push(nextLabelID);
+            var pathList = [nextLabelID];
+            var nextInPath = vertex;
+            while (nextInPath >= 0)
+            {
+                this.cmd("SetHighlight", this.pathID[nextInPath], 1);
+                this.cmd("Step");
+                if (this.path[nextInPath] != -1)
+                {
+                    nextLabelID = this.nextIndex++;
+                    this.cmd("CreateLabel", nextLabelID, this.path[nextInPath],  DijkstraPrim.TABLE_START_X + 3 * DijkstraPrim.TABLE_ENTRY_WIDTH,DijkstraPrim.TABLE_START_Y + nextInPath*DijkstraPrim.TABLE_ENTRY_HEIGHT);
+                    this.cmd("Move", nextLabelID,  DijkstraPrim.TABLE_START_X + 4.3 * DijkstraPrim.TABLE_ENTRY_WIDTH,DijkstraPrim.TABLE_START_Y + vertex*DijkstraPrim.TABLE_ENTRY_HEIGHT);
+                    this.messageID.push(nextLabelID);
+                    for (var i = pathList.length - 1; i >= 0; i--)
+                    {
+                        this.cmd("Move", pathList[i], DijkstraPrim.TABLE_START_X + 4.3 * DijkstraPrim.TABLE_ENTRY_WIDTH + (pathList.length - i) * 17,DijkstraPrim.TABLE_START_Y + vertex*DijkstraPrim.TABLE_ENTRY_HEIGHT)
+
+                    }
+                    this.cmd("Step");
+                    pathList.push(nextLabelID);
+                }
+                this.cmd("SetHighlight", this.pathID[nextInPath], 0);
+                nextInPath = this.path[nextInPath];
+
+            }
+        }
+    }
 }
 
 DijkstraPrim.prototype.highlightTree = function()
 {
-	for (var vertex = 0; vertex < this.size; vertex++)
-	{
-		if (this.path[vertex] >= 0)
-		{
-			this.cmd("SetHighlight", this.vertexID[vertex], 1)
-			this.cmd("SetHighlight", this.pathID[vertex], 1);
-			this.highlightEdge(vertex, this.path[vertex], 1)
-			this.highlightEdge(this.path[vertex], vertex, 1)
-			this.cmd("Step");
-			this.cmd("SetHighlight", this.vertexID[vertex], 0)
-			this.cmd("SetHighlight", this.pathID[vertex], 0);
-			this.highlightEdge(vertex, this.path[vertex], 0)
-			this.highlightEdge(this.path[vertex], vertex, 0)
-			this.setEdgeColor(vertex, this.path[vertex], "#FF0000");				
-			this.setEdgeColor(this.path[vertex], vertex,"#FF0000");				
-		}
-	}			
+    for (var vertex = 0; vertex < this.size; vertex++)
+    {
+        if (this.path[vertex] >= 0)
+        {
+            this.cmd("SetHighlight", this.vertexID[vertex], 1)
+            this.cmd("SetHighlight", this.pathID[vertex], 1);
+            this.highlightEdge(vertex, this.path[vertex], 1)
+            this.highlightEdge(this.path[vertex], vertex, 1)
+            this.cmd("Step");
+            this.cmd("SetHighlight", this.vertexID[vertex], 0)
+            this.cmd("SetHighlight", this.pathID[vertex], 0);
+            this.highlightEdge(vertex, this.path[vertex], 0)
+            this.highlightEdge(this.path[vertex], vertex, 0)
+            this.setEdgeColor(vertex, this.path[vertex], "#FF0000");
+            this.setEdgeColor(this.path[vertex], vertex,"#FF0000");
+        }
+    }
 }
 
 DijkstraPrim.prototype.reset = function()
 {
-	this.messageID = new Array();
+    this.messageID = new Array();
 }
 
 DijkstraPrim.prototype.startCallback = function(event)
 {
-	var startValue;
-	
-	if (this.startField.value != "")
-	{
-		startvalue = this.startField.value;
-		this.startField.value = "";
-		if (parseInt(startvalue) < this.size)
-			this.implementAction(this.doDijkstraPrim.bind(this),startvalue);
-	}
+    var startValue;
+
+    if (this.startField.value != "")
+    {
+        startvalue = this.startField.value;
+        this.startField.value = "";
+        if (parseInt(startvalue) < this.size)
+            this.implementAction(this.doDijkstraPrim.bind(this),startvalue);
+    }
 }
 
 
 DijkstraPrim.prototype.enableUI = function(event)
-{			
-	this.startField.disabled = false;
-	this.startButton.disabled = false;
-	this.startButton
-	
-	
-	DijkstraPrim.superclass.enableUI.call(this,event);
+{
+    this.startField.disabled = false;
+    this.startButton.disabled = false;
+    this.startButton
+
+
+    DijkstraPrim.superclass.enableUI.call(this,event);
 }
 DijkstraPrim.prototype.disableUI = function(event)
 {
-	
-	this.startField.disabled = true;
-	this.startButton.disabled = true;
-	
-	DijkstraPrim.superclass.disableUI.call(this, event);
+
+    this.startField.disabled = true;
+    this.startButton.disabled = true;
+
+    DijkstraPrim.superclass.disableUI.call(this, event);
 }
 
 
@@ -427,6 +427,6 @@ var currentAlg;
 
 function init(runDijkstra)
 {
-	var animManag = initCanvas();
-	currentAlg = new DijkstraPrim(animManag, canvas.width, canvas.height, runDijkstra);
+    var animManag = initCanvas();
+    currentAlg = new DijkstraPrim(animManag, canvas.width, canvas.height, runDijkstra);
 }

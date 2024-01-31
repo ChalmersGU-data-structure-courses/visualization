@@ -27,8 +27,8 @@
 
 function ClosedHashBucket(am, w, h)
 {
-	// call superclass' constructor, which calls init
-	ClosedHashBucket.superclass.constructor.call(this, am, w, h);
+    // call superclass' constructor, which calls init
+    ClosedHashBucket.superclass.constructor.call(this, am, w, h);
 }
 ClosedHashBucket.inheritFrom(Hash);
 
@@ -69,26 +69,26 @@ ClosedHashBucket.INDEX_COLOR = "#0000FF";
 
 ClosedHashBucket.prototype.init = function(am, w, h)
 {
-	var sc = ClosedHashBucket.superclass;
-	var fn = sc.init;
-	fn.call(this,am, w, h);
-	
-	this.elements_per_row = Math.floor(w / ClosedHashBucket.ARRAY_ELEM_WIDTH) ;
+    var sc = ClosedHashBucket.superclass;
+    var fn = sc.init;
+    fn.call(this,am, w, h);
 
-	
-	//Change me!
-	this.nextIndex = 0;
-	//this.POINTER_ARRAY_ELEM_Y = h - ClosedHashBucket.POINTER_ARRAY_ELEM_WIDTH;
-	this.setup();
+    this.elements_per_row = Math.floor(w / ClosedHashBucket.ARRAY_ELEM_WIDTH) ;
+
+
+    //Change me!
+    this.nextIndex = 0;
+    //this.POINTER_ARRAY_ELEM_Y = h - ClosedHashBucket.POINTER_ARRAY_ELEM_WIDTH;
+    this.setup();
 }
 
 ClosedHashBucket.prototype.addControls = function()
 {
-	ClosedHashBucket.superclass.addControls.call(this);
+    ClosedHashBucket.superclass.addControls.call(this);
 
 
-	
-	// Add new controls
+
+    // Add new controls
 
 }
 
@@ -98,137 +98,137 @@ ClosedHashBucket.prototype.addControls = function()
 
 ClosedHashBucket.prototype.insertElement = function(elem)
 {
-	this.commands = new Array();
-	this.cmd("SetText", this.ExplainLabel, "Inserting element: " + String(elem));
-	var index = this.doHash(elem);
-	
-	var foundIndex = -1;
-	for (var candidateIndex = index * ClosedHashBucket.BUCKET_SIZE; candidateIndex < index * ClosedHashBucket.BUCKET_SIZE + ClosedHashBucket.BUCKET_SIZE; candidateIndex++)
-	{
-		this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 1);
-		this.cmd("Step");
-		this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 0);
-		if (this.empty[candidateIndex])
-		{
-			foundIndex = candidateIndex;
-			break;
-		}	
-	}
-	if (foundIndex == -1)
-	{
-		for (candidateIndex = ClosedHashBucket.BUCKET_SIZE * ClosedHashBucket.NUM_BUCKETS; candidateIndex < ClosedHashBucket.CLOSED_HASH_TABLE_SIZE; candidateIndex++)
-		{
-			this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 1);
-			this.cmd("Step");
-			this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 0);
-			
-			if (this.empty[candidateIndex])
-			{
-				foundIndex = candidateIndex;
-				break;
-			}					
-			
-		}
-	}
-	
-	if (foundIndex != -1)
-	{
-		var labID = this.nextIndex++;
-		this.cmd("CreateLabel", labID, elem, 20, 25);
-		this.cmd("Move", labID, this.indexXPos2[foundIndex], this.indexYPos2[foundIndex] - ClosedHashBucket.ARRAY_ELEM_HEIGHT);
-		this.cmd("Step");
-		this.cmd("Delete", labID);
-		this.cmd("SetText", this.hashTableVisual[foundIndex], elem);
-		this.hashTableValues[foundIndex] = elem;
-		this.empty[foundIndex] = false;
-		this.deleted[foundIndex] = false;
-	}
-	
-	
-	this.cmd("SetText", this.ExplainLabel, "");
-	
-	return this.commands;
-	
+    this.commands = new Array();
+    this.cmd("SetText", this.ExplainLabel, "Inserting element: " + String(elem));
+    var index = this.doHash(elem);
+
+    var foundIndex = -1;
+    for (var candidateIndex = index * ClosedHashBucket.BUCKET_SIZE; candidateIndex < index * ClosedHashBucket.BUCKET_SIZE + ClosedHashBucket.BUCKET_SIZE; candidateIndex++)
+    {
+        this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 1);
+        this.cmd("Step");
+        this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 0);
+        if (this.empty[candidateIndex])
+        {
+            foundIndex = candidateIndex;
+            break;
+        }
+    }
+    if (foundIndex == -1)
+    {
+        for (candidateIndex = ClosedHashBucket.BUCKET_SIZE * ClosedHashBucket.NUM_BUCKETS; candidateIndex < ClosedHashBucket.CLOSED_HASH_TABLE_SIZE; candidateIndex++)
+        {
+            this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 1);
+            this.cmd("Step");
+            this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 0);
+
+            if (this.empty[candidateIndex])
+            {
+                foundIndex = candidateIndex;
+                break;
+            }
+
+        }
+    }
+
+    if (foundIndex != -1)
+    {
+        var labID = this.nextIndex++;
+        this.cmd("CreateLabel", labID, elem, 20, 25);
+        this.cmd("Move", labID, this.indexXPos2[foundIndex], this.indexYPos2[foundIndex] - ClosedHashBucket.ARRAY_ELEM_HEIGHT);
+        this.cmd("Step");
+        this.cmd("Delete", labID);
+        this.cmd("SetText", this.hashTableVisual[foundIndex], elem);
+        this.hashTableValues[foundIndex] = elem;
+        this.empty[foundIndex] = false;
+        this.deleted[foundIndex] = false;
+    }
+
+
+    this.cmd("SetText", this.ExplainLabel, "");
+
+    return this.commands;
+
 }
 
 
 
 
-ClosedHashBucket.prototype.getElemIndex  = function(elem) 
+ClosedHashBucket.prototype.getElemIndex  = function(elem)
 {
-	var foundIndex = -1;
-	var initialIndex = this.doHash(elem);
-	
-	for (var candidateIndex = initialIndex * ClosedHashBucket.BUCKET_SIZE; candidateIndex < initialIndex* ClosedHashBucket.BUCKET_SIZE + ClosedHashBucket.BUCKET_SIZE; candidateIndex++)
-	{
-		this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 1);
-		this.cmd("Step");
-		this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 0);
-		if (!this.empty[candidateIndex] && this.hashTableValues[candidateIndex] == elem)
-		{
-			return candidateIndex;		
-		}
-		else if (this.empty[candidateIndex] && !this.deleted[candidateIndex])
-		{
-			return -1;
-		}
-	}
-	// Can only get this far if we didn't find the element we are looking for,
-	//  *and* the bucekt was full -- look at overflow bucket.
-	for (candidateIndex = ClosedHashBucket.BUCKET_SIZE * ClosedHashBucket.NUM_BUCKETS; candidateIndex < ClosedHashBucket.CLOSED_HASH_TABLE_SIZE; candidateIndex++)
-	{
-		this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 1);
-		this.cmd("Step");
-		this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 0);
-		
-		if (!this.empty[candidateIndex] && this.hashTableValues[candidateIndex] == elem)
-		{
-			return candidateIndex;		
-		}
-		else if (this.empty[candidateIndex] && !this.deleted[candidateIndex])
-		{
-			return -1;
-		}
-	}
-	return -1;			
+    var foundIndex = -1;
+    var initialIndex = this.doHash(elem);
+
+    for (var candidateIndex = initialIndex * ClosedHashBucket.BUCKET_SIZE; candidateIndex < initialIndex* ClosedHashBucket.BUCKET_SIZE + ClosedHashBucket.BUCKET_SIZE; candidateIndex++)
+    {
+        this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 1);
+        this.cmd("Step");
+        this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 0);
+        if (!this.empty[candidateIndex] && this.hashTableValues[candidateIndex] == elem)
+        {
+            return candidateIndex;
+        }
+        else if (this.empty[candidateIndex] && !this.deleted[candidateIndex])
+        {
+            return -1;
+        }
+    }
+    // Can only get this far if we didn't find the element we are looking for,
+    //  *and* the bucekt was full -- look at overflow bucket.
+    for (candidateIndex = ClosedHashBucket.BUCKET_SIZE * ClosedHashBucket.NUM_BUCKETS; candidateIndex < ClosedHashBucket.CLOSED_HASH_TABLE_SIZE; candidateIndex++)
+    {
+        this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 1);
+        this.cmd("Step");
+        this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 0);
+
+        if (!this.empty[candidateIndex] && this.hashTableValues[candidateIndex] == elem)
+        {
+            return candidateIndex;
+        }
+        else if (this.empty[candidateIndex] && !this.deleted[candidateIndex])
+        {
+            return -1;
+        }
+    }
+    return -1;
 }
 
 
 ClosedHashBucket.prototype.deleteElement = function(elem)
 {
-	this.commands = new Array();
-	this.cmd("SetText", this.ExplainLabel, "Deleting element: " + elem);
-	var index = this.getElemIndex(elem);
-	
-	if (index == -1)
-	{
-		this.cmd("SetText", this.ExplainLabel, "Deleting element: " + elem + "  Element not in table");				
-	}
-	else
-	{
-		this.cmd("SetText", this.ExplainLabel, "Deleting element: " + elem + "  Element this.deleted");
-		this.empty[index] = true;
-		this.deleted[index] = true;
-		this.cmd("SetText", this.hashTableVisual[index], "<deleted>");
-	}
-	
-	return this.commands;
-	
+    this.commands = new Array();
+    this.cmd("SetText", this.ExplainLabel, "Deleting element: " + elem);
+    var index = this.getElemIndex(elem);
+
+    if (index == -1)
+    {
+        this.cmd("SetText", this.ExplainLabel, "Deleting element: " + elem + "  Element not in table");
+    }
+    else
+    {
+        this.cmd("SetText", this.ExplainLabel, "Deleting element: " + elem + "  Element this.deleted");
+        this.empty[index] = true;
+        this.deleted[index] = true;
+        this.cmd("SetText", this.hashTableVisual[index], "<deleted>");
+    }
+
+    return this.commands;
+
 }
 ClosedHashBucket.prototype.findElement = function(elem)
 {
-	this.commands = new Array();
-	this.cmd("SetText", this.ExplainLabel, "Finding Element: " + elem);
-	var index = this.getElemIndex(elem);
-	if (index == -1)
-	{
-		this.cmd("SetText", this.ExplainLabel, "Element " + elem + " not found");
-	}
-	else
-	{
-		this.cmd("SetText", this.ExplainLabel, "Element " + elem + " found");
-	}
-	return this.commands;
+    this.commands = new Array();
+    this.cmd("SetText", this.ExplainLabel, "Finding Element: " + elem);
+    var index = this.getElemIndex(elem);
+    if (index == -1)
+    {
+        this.cmd("SetText", this.ExplainLabel, "Element " + elem + " not found");
+    }
+    else
+    {
+        this.cmd("SetText", this.ExplainLabel, "Element " + elem + " found");
+    }
+    return this.commands;
 }
 
 
@@ -236,68 +236,68 @@ ClosedHashBucket.prototype.findElement = function(elem)
 
 ClosedHashBucket.prototype.setup = function()
 {
-	this.table_size = ClosedHashBucket.NUM_BUCKETS;
-	this.hashTableVisual = new Array(ClosedHashBucket.CLOSED_HASH_TABLE_SIZE);
-	this.hashTableIndices = new Array(ClosedHashBucket.CLOSED_HASH_TABLE_SIZE);
-	this.hashTableValues = new Array(ClosedHashBucket.CLOSED_HASH_TABLE_SIZE);
-	
-	this.indexXPos = new Array(ClosedHashBucket.NUM_BUCKETS);
-	this.indexYPos = new Array(ClosedHashBucket.NUM_BUCKETS);
-	
-	this.indexXPos2 = new Array(ClosedHashBucket.CLOSED_HASH_TABLE_SIZE);
-	this.indexYPos2 = new Array(ClosedHashBucket.CLOSED_HASH_TABLE_SIZE);
-	
-	
-	this.empty = new Array(ClosedHashBucket.CLOSED_HASH_TABLE_SIZE);
-	this.deleted = new Array(ClosedHashBucket.CLOSED_HASH_TABLE_SIZE);
-	
-	this.ExplainLabel = this.nextIndex++;
-	
-	this.commands = [];
-	
-	for (var i = 0; i < ClosedHashBucket.CLOSED_HASH_TABLE_SIZE; i++)
-	{
-		var nextID  = this.nextIndex++;
-		this.empty[i] = true;
-		this.deleted[i] = false;
-		
-		var nextXPos =  ClosedHashBucket.ARRAY_ELEM_START_X + (i % this.elements_per_row) * ClosedHashBucket.ARRAY_ELEM_WIDTH;
-		var nextYPos =  ClosedHashBucket.ARRAY_ELEM_START_Y + Math.floor(i / this.elements_per_row) * ClosedHashBucket.ARRAY_VERTICAL_SEPARATION;
-		this.cmd("CreateRectangle", nextID, "", ClosedHashBucket.ARRAY_ELEM_WIDTH, ClosedHashBucket.ARRAY_ELEM_HEIGHT,nextXPos, nextYPos)
-		this.hashTableVisual[i] = nextID;
-		nextID = this.nextIndex++;
-		this.hashTableIndices[i] = nextID;
-		this.indexXPos2[i] = nextXPos;
-		this.indexYPos2[i] = nextYPos + ClosedHashBucket.ARRAY_ELEM_HEIGHT
-		
-		this.cmd("CreateLabel", nextID, i,this.indexXPos2[i],this.indexYPos2[i]);
-		this.cmd("SetForegroundColor", nextID, ClosedHashBucket.INDEX_COLOR);
-	}
-	
-	for (i = 0; i <= ClosedHashBucket.NUM_BUCKETS; i++)
-	{
-		nextID = this.nextIndex++;
-		nextXPos =  ClosedHashBucket.ARRAY_ELEM_START_X + (i * 3 % this.elements_per_row) * ClosedHashBucket.ARRAY_ELEM_WIDTH - ClosedHashBucket.ARRAY_ELEM_WIDTH / 2;
-		nextYPos =  ClosedHashBucket.ARRAY_ELEM_START_Y + Math.floor((i * 3) / this.elements_per_row) * ClosedHashBucket.ARRAY_VERTICAL_SEPARATION + ClosedHashBucket.ARRAY_ELEM_HEIGHT;
-		this.cmd("CreateRectangle", nextID, "", 0, ClosedHashBucket.ARRAY_ELEM_HEIGHT * 2,nextXPos, nextYPos)
-		nextID = this.nextIndex++;
-		if (i == ClosedHashBucket.NUM_BUCKETS)
-		{
-			this.cmd("CreateLabel", nextID, "Overflow", nextXPos + 3, nextYPos + ClosedHashBucket.ARRAY_ELEM_HEIGHT / 2 , 0);
-		}
-		else
-		{
-			this.indexXPos[i] =  nextXPos + 5;
-			this.indexYPos[i] = nextYPos + ClosedHashBucket.ARRAY_ELEM_HEIGHT / 2;
-			this.cmd("CreateLabel", nextID, i, this.indexXPos[i],this.indexYPos[i], 0);					
-		}
-	}
-	
-	this.cmd("CreateLabel", this.ExplainLabel, "", 10, 25, 0);
-	this.animationManager.StartNewAnimation(this.commands);
-	this.animationManager.skipForward();
-	this.animationManager.clearHistory();
-	this.resetIndex  = this.nextIndex;
+    this.table_size = ClosedHashBucket.NUM_BUCKETS;
+    this.hashTableVisual = new Array(ClosedHashBucket.CLOSED_HASH_TABLE_SIZE);
+    this.hashTableIndices = new Array(ClosedHashBucket.CLOSED_HASH_TABLE_SIZE);
+    this.hashTableValues = new Array(ClosedHashBucket.CLOSED_HASH_TABLE_SIZE);
+
+    this.indexXPos = new Array(ClosedHashBucket.NUM_BUCKETS);
+    this.indexYPos = new Array(ClosedHashBucket.NUM_BUCKETS);
+
+    this.indexXPos2 = new Array(ClosedHashBucket.CLOSED_HASH_TABLE_SIZE);
+    this.indexYPos2 = new Array(ClosedHashBucket.CLOSED_HASH_TABLE_SIZE);
+
+
+    this.empty = new Array(ClosedHashBucket.CLOSED_HASH_TABLE_SIZE);
+    this.deleted = new Array(ClosedHashBucket.CLOSED_HASH_TABLE_SIZE);
+
+    this.ExplainLabel = this.nextIndex++;
+
+    this.commands = [];
+
+    for (var i = 0; i < ClosedHashBucket.CLOSED_HASH_TABLE_SIZE; i++)
+    {
+        var nextID  = this.nextIndex++;
+        this.empty[i] = true;
+        this.deleted[i] = false;
+
+        var nextXPos =  ClosedHashBucket.ARRAY_ELEM_START_X + (i % this.elements_per_row) * ClosedHashBucket.ARRAY_ELEM_WIDTH;
+        var nextYPos =  ClosedHashBucket.ARRAY_ELEM_START_Y + Math.floor(i / this.elements_per_row) * ClosedHashBucket.ARRAY_VERTICAL_SEPARATION;
+        this.cmd("CreateRectangle", nextID, "", ClosedHashBucket.ARRAY_ELEM_WIDTH, ClosedHashBucket.ARRAY_ELEM_HEIGHT,nextXPos, nextYPos)
+        this.hashTableVisual[i] = nextID;
+        nextID = this.nextIndex++;
+        this.hashTableIndices[i] = nextID;
+        this.indexXPos2[i] = nextXPos;
+        this.indexYPos2[i] = nextYPos + ClosedHashBucket.ARRAY_ELEM_HEIGHT
+
+        this.cmd("CreateLabel", nextID, i,this.indexXPos2[i],this.indexYPos2[i]);
+        this.cmd("SetForegroundColor", nextID, ClosedHashBucket.INDEX_COLOR);
+    }
+
+    for (i = 0; i <= ClosedHashBucket.NUM_BUCKETS; i++)
+    {
+        nextID = this.nextIndex++;
+        nextXPos =  ClosedHashBucket.ARRAY_ELEM_START_X + (i * 3 % this.elements_per_row) * ClosedHashBucket.ARRAY_ELEM_WIDTH - ClosedHashBucket.ARRAY_ELEM_WIDTH / 2;
+        nextYPos =  ClosedHashBucket.ARRAY_ELEM_START_Y + Math.floor((i * 3) / this.elements_per_row) * ClosedHashBucket.ARRAY_VERTICAL_SEPARATION + ClosedHashBucket.ARRAY_ELEM_HEIGHT;
+        this.cmd("CreateRectangle", nextID, "", 0, ClosedHashBucket.ARRAY_ELEM_HEIGHT * 2,nextXPos, nextYPos)
+        nextID = this.nextIndex++;
+        if (i == ClosedHashBucket.NUM_BUCKETS)
+        {
+            this.cmd("CreateLabel", nextID, "Overflow", nextXPos + 3, nextYPos + ClosedHashBucket.ARRAY_ELEM_HEIGHT / 2 , 0);
+        }
+        else
+        {
+            this.indexXPos[i] =  nextXPos + 5;
+            this.indexYPos[i] = nextYPos + ClosedHashBucket.ARRAY_ELEM_HEIGHT / 2;
+            this.cmd("CreateLabel", nextID, i, this.indexXPos[i],this.indexYPos[i], 0);
+        }
+    }
+
+    this.cmd("CreateLabel", this.ExplainLabel, "", 10, 25, 0);
+    this.animationManager.StartNewAnimation(this.commands);
+    this.animationManager.skipForward();
+    this.animationManager.clearHistory();
+    this.resetIndex  = this.nextIndex;
 }
 
 
@@ -308,16 +308,16 @@ ClosedHashBucket.prototype.setup = function()
 
 ClosedHashBucket.prototype.resetAll = function()
 {
-	this.commands = ClosedHashBucket.superclass.resetAll.call(this);
-	
-	for (var i = 0; i < ClosedHashBucket.CLOSED_HASH_TABLE_SIZE; i++)
-	{
-		this.empty[i] = true;
-		this.deleted[i] = false;
-		this.cmd("SetText", this.hashTableVisual[i], "");		
-	}
-	return this.commands;
-	// Clear array, etc
+    this.commands = ClosedHashBucket.superclass.resetAll.call(this);
+
+    for (var i = 0; i < ClosedHashBucket.CLOSED_HASH_TABLE_SIZE; i++)
+    {
+        this.empty[i] = true;
+        this.deleted[i] = false;
+        this.cmd("SetText", this.hashTableVisual[i], "");
+    }
+    return this.commands;
+    // Clear array, etc
 }
 
 
@@ -325,13 +325,13 @@ ClosedHashBucket.prototype.resetAll = function()
 // NEED TO OVERRIDE IN PARENT
 ClosedHashBucket.prototype.reset = function()
 {
-	for (var i = 0; i < ClosedHashBucket.CLOSED_HASH_TABLE_SIZE; i++)
-	{
-		this.empty[i]= true;
-		this.deleted[i] = false;				
-	}
-	this.nextIndex = this.resetIndex ;
-	ClosedHashBucket.superclass.reset.call(this);
+    for (var i = 0; i < ClosedHashBucket.CLOSED_HASH_TABLE_SIZE; i++)
+    {
+        this.empty[i]= true;
+        this.deleted[i] = false;
+    }
+    this.nextIndex = this.resetIndex ;
+    ClosedHashBucket.superclass.reset.call(this);
 
 }
 
@@ -340,12 +340,12 @@ ClosedHashBucket.prototype.reset = function()
 
 ClosedHashBucket.prototype.disableUI = function(event)
 {
-	ClosedHashBucket.superclass.disableUI.call(this);
+    ClosedHashBucket.superclass.disableUI.call(this);
 }
 
 ClosedHashBucket.prototype.enableUI = function(event)
 {
-	ClosedHashBucket.superclass.enableUI.call(this);
+    ClosedHashBucket.superclass.enableUI.call(this);
 
 }
 
@@ -356,6 +356,6 @@ var currentAlg;
 
 function init()
 {
-	var animManag = initCanvas();
-	currentAlg = new ClosedHashBucket(animManag, canvas.width, canvas.height);
+    var animManag = initCanvas();
+    currentAlg = new ClosedHashBucket(animManag, canvas.width, canvas.height);
 }

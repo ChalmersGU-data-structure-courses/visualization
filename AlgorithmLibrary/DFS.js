@@ -44,179 +44,179 @@ DFS.QUEUE_SPACING = 30;
 
 function DFS(am, w, h, dir)
 {
-	// call superclass' constructor, which calls init
-	DFS.superclass.constructor.call(this, am, w, h, dir);
+    // call superclass' constructor, which calls init
+    DFS.superclass.constructor.call(this, am, w, h, dir);
 }
 
 DFS.inheritFrom(Graph);
 
 DFS.prototype.addControls =  function()
-{		
-	this.addLabelToAlgorithmBar("Start Vertex: ");
-	this.startField = this.addControlToAlgorithmBar("Text", "");
-	this.startField.onkeydown = this.returnSubmit(this.startField,  this.startCallback.bind(this), 2, true);
-	this.startButton = this.addControlToAlgorithmBar("Button", "Run DFS");
-	this.startButton.onclick = this.startCallback.bind(this);
-	DFS.superclass.addControls.call(this);
-}	
+{
+    this.addLabelToAlgorithmBar("Start Vertex: ");
+    this.startField = this.addControlToAlgorithmBar("Text", "");
+    this.startField.onkeydown = this.returnSubmit(this.startField,  this.startCallback.bind(this), 2, true);
+    this.startButton = this.addControlToAlgorithmBar("Button", "Run DFS");
+    this.startButton.onclick = this.startCallback.bind(this);
+    DFS.superclass.addControls.call(this);
+}
 
 
 DFS.prototype.init = function(am, w, h, dir)
 {
-	showEdgeCosts = false;
-	DFS.superclass.init.call(this, am, w, h, dir); // TODO:  add no edge label flag to this?
-	// Setup called in base class constructor
+    showEdgeCosts = false;
+    DFS.superclass.init.call(this, am, w, h, dir); // TODO:  add no edge label flag to this?
+    // Setup called in base class constructor
 }
 
 
-DFS.prototype.setup = function() 
+DFS.prototype.setup = function()
 {
-	DFS.superclass.setup.call(this);
-	this.messageID = new Array();
-	this.commands = new Array();
-	this.visitedID = new Array(this.size);
-	this.visitedIndexID = new Array(this.size);
-	this.parentID = new Array(this.size);
-	this.parentIndexID = new Array(this.size);
-	for (var i = 0; i < this.size; i++)
-	{
-		this.visitedID[i] = this.nextIndex++;
-		this.visitedIndexID[i] = this.nextIndex++;
-		this.parentID[i] = this.nextIndex++;
-		this.parentIndexID[i] = this.nextIndex++;
-		this.cmd("CreateRectangle", this.visitedID[i], "f", DFS.AUX_ARRAY_WIDTH, DFS.AUX_ARRAY_HEIGHT, DFS.VISITED_START_X, DFS.AUX_ARRAY_START_Y + i*DFS.AUX_ARRAY_HEIGHT);
-		this.cmd("CreateLabel", this.visitedIndexID[i], i, DFS.VISITED_START_X - DFS.AUX_ARRAY_WIDTH , DFS.AUX_ARRAY_START_Y + i*DFS.AUX_ARRAY_HEIGHT);
-		this.cmd("SetForegroundColor",  this.visitedIndexID[i], DFS.VERTEX_INDEX_COLOR);
-		this.cmd("CreateRectangle", this.parentID[i], "", DFS.AUX_ARRAY_WIDTH, DFS.AUX_ARRAY_HEIGHT, DFS.PARENT_START_X, DFS.AUX_ARRAY_START_Y + i*DFS.AUX_ARRAY_HEIGHT);
-		this.cmd("CreateLabel", this.parentIndexID[i], i, DFS.PARENT_START_X - DFS.AUX_ARRAY_WIDTH , DFS.AUX_ARRAY_START_Y + i*DFS.AUX_ARRAY_HEIGHT);
-		this.cmd("SetForegroundColor",  this.parentIndexID[i], DFS.VERTEX_INDEX_COLOR);
-		
-	}
-	this.cmd("CreateLabel", this.nextIndex++, "Parent", DFS.PARENT_START_X - DFS.AUX_ARRAY_WIDTH, DFS.AUX_ARRAY_START_Y - DFS.AUX_ARRAY_HEIGHT * 1.5, 0);
-	this.cmd("CreateLabel", this.nextIndex++, "Visited", DFS.VISITED_START_X - DFS.AUX_ARRAY_WIDTH, DFS.AUX_ARRAY_START_Y - DFS.AUX_ARRAY_HEIGHT * 1.5, 0);
-	this.animationManager.setAllLayers([0, this.currentLayer]);
-	this.animationManager.StartNewAnimation(this.commands);
-	this.animationManager.skipForward();
-	this.animationManager.clearHistory();
-	this.highlightCircleL = this.nextIndex++;
-	this.highlightCircleAL = this.nextIndex++;
-	this.highlightCircleAM= this.nextIndex++
+    DFS.superclass.setup.call(this);
+    this.messageID = new Array();
+    this.commands = new Array();
+    this.visitedID = new Array(this.size);
+    this.visitedIndexID = new Array(this.size);
+    this.parentID = new Array(this.size);
+    this.parentIndexID = new Array(this.size);
+    for (var i = 0; i < this.size; i++)
+    {
+        this.visitedID[i] = this.nextIndex++;
+        this.visitedIndexID[i] = this.nextIndex++;
+        this.parentID[i] = this.nextIndex++;
+        this.parentIndexID[i] = this.nextIndex++;
+        this.cmd("CreateRectangle", this.visitedID[i], "f", DFS.AUX_ARRAY_WIDTH, DFS.AUX_ARRAY_HEIGHT, DFS.VISITED_START_X, DFS.AUX_ARRAY_START_Y + i*DFS.AUX_ARRAY_HEIGHT);
+        this.cmd("CreateLabel", this.visitedIndexID[i], i, DFS.VISITED_START_X - DFS.AUX_ARRAY_WIDTH , DFS.AUX_ARRAY_START_Y + i*DFS.AUX_ARRAY_HEIGHT);
+        this.cmd("SetForegroundColor",  this.visitedIndexID[i], DFS.VERTEX_INDEX_COLOR);
+        this.cmd("CreateRectangle", this.parentID[i], "", DFS.AUX_ARRAY_WIDTH, DFS.AUX_ARRAY_HEIGHT, DFS.PARENT_START_X, DFS.AUX_ARRAY_START_Y + i*DFS.AUX_ARRAY_HEIGHT);
+        this.cmd("CreateLabel", this.parentIndexID[i], i, DFS.PARENT_START_X - DFS.AUX_ARRAY_WIDTH , DFS.AUX_ARRAY_START_Y + i*DFS.AUX_ARRAY_HEIGHT);
+        this.cmd("SetForegroundColor",  this.parentIndexID[i], DFS.VERTEX_INDEX_COLOR);
+
+    }
+    this.cmd("CreateLabel", this.nextIndex++, "Parent", DFS.PARENT_START_X - DFS.AUX_ARRAY_WIDTH, DFS.AUX_ARRAY_START_Y - DFS.AUX_ARRAY_HEIGHT * 1.5, 0);
+    this.cmd("CreateLabel", this.nextIndex++, "Visited", DFS.VISITED_START_X - DFS.AUX_ARRAY_WIDTH, DFS.AUX_ARRAY_START_Y - DFS.AUX_ARRAY_HEIGHT * 1.5, 0);
+    this.animationManager.setAllLayers([0, this.currentLayer]);
+    this.animationManager.StartNewAnimation(this.commands);
+    this.animationManager.skipForward();
+    this.animationManager.clearHistory();
+    this.highlightCircleL = this.nextIndex++;
+    this.highlightCircleAL = this.nextIndex++;
+    this.highlightCircleAM= this.nextIndex++
 }
 
 DFS.prototype.startCallback = function(event)
 {
-	var startValue;
-	
-	if (this.startField.value != "")
-	{
-		startvalue = this.startField.value;
-		this.startField.value = "";
-		if (parseInt(startvalue) < this.size)
-			this.implementAction(this.doDFS.bind(this),startvalue);
-	}
+    var startValue;
+
+    if (this.startField.value != "")
+    {
+        startvalue = this.startField.value;
+        this.startField.value = "";
+        if (parseInt(startvalue) < this.size)
+            this.implementAction(this.doDFS.bind(this),startvalue);
+    }
 }
 
 
 
 DFS.prototype.doDFS = function(startVetex)
 {
-	this.visited = new Array(this.size);
-	this.commands = new Array();
-	if (this.messageID != null)
-	{
-		for (var i = 0; i < this.messageID.length; i++)
-		{
-			this.cmd("Delete", this.messageID[i]);
-		}
-	}
-	this.rebuildEdges();
-	this.messageID = new Array();
-	for (i = 0; i < this.size; i++)
-	{
-		this.cmd("SetText", this.visitedID[i], "f");
-		this.cmd("SetText", this.parentID[i], "");
-		this.visited[i] = false;
-	}
-	var vertex = parseInt(startVetex);
-	this.cmd("CreateHighlightCircle", this.highlightCircleL, DFS.HIGHLIGHT_CIRCLE_COLOR, this.x_pos_logical[vertex], this.y_pos_logical[vertex]);
-	this.cmd("SetLayer", this.highlightCircleL, 1);
-	this.cmd("CreateHighlightCircle", this.highlightCircleAL, DFS.HIGHLIGHT_CIRCLE_COLOR,this.adj_list_x_start - this.adj_list_width, this.adj_list_y_start + vertex*this.adj_list_height);
-	this.cmd("SetLayer", this.highlightCircleAL, 2);
-	
-	this.cmd("CreateHighlightCircle", this.highlightCircleAM, DFS.HIGHLIGHT_CIRCLE_COLOR,this.adj_matrix_x_start  - this.adj_matrix_width, this.adj_matrix_y_start + vertex*this.adj_matrix_height);
-	this.cmd("SetLayer", this.highlightCircleAM, 3);
-	
-	this.messageY = 30;
-	this.dfsVisit(vertex, 10);
-	this.cmd("Delete", this.highlightCircleL);
-	this.cmd("Delete", this.highlightCircleAL);
-	this.cmd("Delete", this.highlightCircleAM);
-	return this.commands
-	
+    this.visited = new Array(this.size);
+    this.commands = new Array();
+    if (this.messageID != null)
+    {
+        for (var i = 0; i < this.messageID.length; i++)
+        {
+            this.cmd("Delete", this.messageID[i]);
+        }
+    }
+    this.rebuildEdges();
+    this.messageID = new Array();
+    for (i = 0; i < this.size; i++)
+    {
+        this.cmd("SetText", this.visitedID[i], "f");
+        this.cmd("SetText", this.parentID[i], "");
+        this.visited[i] = false;
+    }
+    var vertex = parseInt(startVetex);
+    this.cmd("CreateHighlightCircle", this.highlightCircleL, DFS.HIGHLIGHT_CIRCLE_COLOR, this.x_pos_logical[vertex], this.y_pos_logical[vertex]);
+    this.cmd("SetLayer", this.highlightCircleL, 1);
+    this.cmd("CreateHighlightCircle", this.highlightCircleAL, DFS.HIGHLIGHT_CIRCLE_COLOR,this.adj_list_x_start - this.adj_list_width, this.adj_list_y_start + vertex*this.adj_list_height);
+    this.cmd("SetLayer", this.highlightCircleAL, 2);
+
+    this.cmd("CreateHighlightCircle", this.highlightCircleAM, DFS.HIGHLIGHT_CIRCLE_COLOR,this.adj_matrix_x_start  - this.adj_matrix_width, this.adj_matrix_y_start + vertex*this.adj_matrix_height);
+    this.cmd("SetLayer", this.highlightCircleAM, 3);
+
+    this.messageY = 30;
+    this.dfsVisit(vertex, 10);
+    this.cmd("Delete", this.highlightCircleL);
+    this.cmd("Delete", this.highlightCircleAL);
+    this.cmd("Delete", this.highlightCircleAM);
+    return this.commands
+
 }
 
 
 DFS.prototype.dfsVisit = function(startVertex, messageX)
 {
-	var nextMessage = this.nextIndex++;
-	this.messageID.push(nextMessage);
-	
-	this.cmd("CreateLabel",nextMessage, "DFS(" +  String(startVertex) +  ")", messageX, this.messageY, 0);
-	this.messageY = this.messageY + 20;
-	if (!this.visited[startVertex])
-	{
-		this.visited[startVertex] = true;
-		this.cmd("SetText", this.visitedID[startVertex], "T");
-		this.cmd("Step");
-		for (var neighbor = 0; neighbor < this.size; neighbor++)
-		{
-			if (this.adj_matrix[startVertex][neighbor] > 0)
-			{
-				this.highlightEdge(startVertex, neighbor, 1);
-				this.cmd("SetHighlight", this.visitedID[neighbor], 1);
-				if (this.visited[neighbor])
-				{
-					nextMessage = this.nextIndex;
-					this.cmd("CreateLabel", nextMessage, "Vertex " + String(neighbor) + " already visited.", messageX, this.messageY, 0);
-				}
-				this.cmd("Step");
-				this.highlightEdge(startVertex, neighbor, 0);
-				this.cmd("SetHighlight", this.visitedID[neighbor], 0);
-				if (this.visited[neighbor])
-				{
-					this.cmd("Delete", nextMessage);
-				}
-				
-				if (!this.visited[neighbor])
-				{
-					this.cmd("Disconnect", this.circleID[startVertex], this.circleID[neighbor]);
-					this.cmd("Connect", this.circleID[startVertex], this.circleID[neighbor], DFS.DFS_TREE_COLOR, this.curve[startVertex][neighbor], 1, "");
-					this.cmd("Move", this.highlightCircleL, this.x_pos_logical[neighbor], this.y_pos_logical[neighbor]);
-					this.cmd("Move", this.highlightCircleAL, this.adj_list_x_start - this.adj_list_width, this.adj_list_y_start + neighbor*this.adj_list_height);
-					this.cmd("Move", this.highlightCircleAM, this.adj_matrix_x_start - this.adj_matrix_width, this.adj_matrix_y_start + neighbor*this.adj_matrix_height);
-					
-					this.cmd("SetText", this.parentID[neighbor], startVertex);
-					this.cmd("Step");
-					this.dfsVisit(neighbor, messageX + 20);							
-					nextMessage = this.nextIndex;
-					this.cmd("CreateLabel", nextMessage, "Returning from recursive call: DFS(" + String(neighbor) + ")", messageX + 20, this.messageY, 0);
-					
-					this.cmd("Move", this.highlightCircleAL, this.adj_list_x_start - this.adj_list_width, this.adj_list_y_start + startVertex*this.adj_list_height);
-					this.cmd("Move", this.highlightCircleL, this.x_pos_logical[startVertex], this.y_pos_logical[startVertex]);
-					this.cmd("Move", this.highlightCircleAM, this.adj_matrix_x_start - this.adj_matrix_width, this.adj_matrix_y_start + startVertex*this.adj_matrix_height);
-					this.cmd("Step");
-					this.cmd("Delete", nextMessage);
-				}
-				this.cmd("Step");
-				
-				
-				
-			}
-			
-		}
-		
-	}
-	
+    var nextMessage = this.nextIndex++;
+    this.messageID.push(nextMessage);
+
+    this.cmd("CreateLabel",nextMessage, "DFS(" +  String(startVertex) +  ")", messageX, this.messageY, 0);
+    this.messageY = this.messageY + 20;
+    if (!this.visited[startVertex])
+    {
+        this.visited[startVertex] = true;
+        this.cmd("SetText", this.visitedID[startVertex], "T");
+        this.cmd("Step");
+        for (var neighbor = 0; neighbor < this.size; neighbor++)
+        {
+            if (this.adj_matrix[startVertex][neighbor] > 0)
+            {
+                this.highlightEdge(startVertex, neighbor, 1);
+                this.cmd("SetHighlight", this.visitedID[neighbor], 1);
+                if (this.visited[neighbor])
+                {
+                    nextMessage = this.nextIndex;
+                    this.cmd("CreateLabel", nextMessage, "Vertex " + String(neighbor) + " already visited.", messageX, this.messageY, 0);
+                }
+                this.cmd("Step");
+                this.highlightEdge(startVertex, neighbor, 0);
+                this.cmd("SetHighlight", this.visitedID[neighbor], 0);
+                if (this.visited[neighbor])
+                {
+                    this.cmd("Delete", nextMessage);
+                }
+
+                if (!this.visited[neighbor])
+                {
+                    this.cmd("Disconnect", this.circleID[startVertex], this.circleID[neighbor]);
+                    this.cmd("Connect", this.circleID[startVertex], this.circleID[neighbor], DFS.DFS_TREE_COLOR, this.curve[startVertex][neighbor], 1, "");
+                    this.cmd("Move", this.highlightCircleL, this.x_pos_logical[neighbor], this.y_pos_logical[neighbor]);
+                    this.cmd("Move", this.highlightCircleAL, this.adj_list_x_start - this.adj_list_width, this.adj_list_y_start + neighbor*this.adj_list_height);
+                    this.cmd("Move", this.highlightCircleAM, this.adj_matrix_x_start - this.adj_matrix_width, this.adj_matrix_y_start + neighbor*this.adj_matrix_height);
+
+                    this.cmd("SetText", this.parentID[neighbor], startVertex);
+                    this.cmd("Step");
+                    this.dfsVisit(neighbor, messageX + 20);
+                    nextMessage = this.nextIndex;
+                    this.cmd("CreateLabel", nextMessage, "Returning from recursive call: DFS(" + String(neighbor) + ")", messageX + 20, this.messageY, 0);
+
+                    this.cmd("Move", this.highlightCircleAL, this.adj_list_x_start - this.adj_list_width, this.adj_list_y_start + startVertex*this.adj_list_height);
+                    this.cmd("Move", this.highlightCircleL, this.x_pos_logical[startVertex], this.y_pos_logical[startVertex]);
+                    this.cmd("Move", this.highlightCircleAM, this.adj_matrix_x_start - this.adj_matrix_width, this.adj_matrix_y_start + startVertex*this.adj_matrix_height);
+                    this.cmd("Step");
+                    this.cmd("Delete", nextMessage);
+                }
+                this.cmd("Step");
+
+
+
+            }
+
+        }
+
+    }
+
 }
 
 
@@ -224,30 +224,30 @@ DFS.prototype.dfsVisit = function(startVertex, messageX)
 // NEED TO OVERRIDE IN PARENT
 DFS.prototype.reset = function()
 {
-	// Throw an error?
+    // Throw an error?
 
-	this.messageID = new Array();
+    this.messageID = new Array();
 }
 
 
 
 
 DFS.prototype.enableUI = function(event)
-{			
-	this.startField.disabled = false;
-	this.startButton.disabled = false;
-	this.startButton
-	
-	
-	DFS.superclass.enableUI.call(this,event);
+{
+    this.startField.disabled = false;
+    this.startButton.disabled = false;
+    this.startButton
+
+
+    DFS.superclass.enableUI.call(this,event);
 }
 DFS.prototype.disableUI = function(event)
 {
-	
-	this.startField.disabled = true;
-	this.startButton.disabled = true;
-	
-	DFS.superclass.disableUI.call(this, event);
+
+    this.startField.disabled = true;
+    this.startButton.disabled = true;
+
+    DFS.superclass.disableUI.call(this, event);
 }
 
 
@@ -255,6 +255,6 @@ var currentAlg;
 
 function init()
 {
-	var animManag = initCanvas();
-	currentAlg = new DFS(animManag, canvas.width, canvas.height);
+    var animManag = initCanvas();
+    currentAlg = new DFS(animManag, canvas.width, canvas.height);
 }

@@ -31,52 +31,52 @@ body {
 
 .VisualizationMainPage #algoControlSection
 {
-	background: #DDEEDD; 
-	color:#000000; 
+	background: #DDEEDD;
+	color:#000000;
 
 }
 
 
 .VisualizationMainPage #generalAnimationControlSection
 {
-	background: #DDEEDD; 
-	color:#006600; 
+	background: #DDEEDD;
+	color:#006600;
 
 }
 
-.VisualizationMainPage  #header { 
-	background: #006633; 
+.VisualizationMainPage  #header {
+	background: #006633;
 	color:#ffCC33;
-	padding: 0 10px 0 20px; 
-  
-} 
- 
-.VisualizationMainPage #header  A:visited 
+	padding: 0 10px 0 20px;
+
+}
+
+.VisualizationMainPage #header  A:visited
 	  { text-decoration:none;
-        color:#ffCC33; 
+        color:#ffCC33;
 	   }
-	   
-	   
+
+
 .VisualizationMainPage #header h1 {
-	margin: 0; 
-	padding: 10px 0; 
+	margin: 0;
+	padding: 10px 0;
 	}
-	   
+
 .VisualizationMainPage #header A:link {
     text-decoration:none;
     color:#ffCC33;
 	}
-	
-	
+
+
 .VisualizationMainPage #container {
 	background: #FFFFFF;
 	margin: 0 auto; /* the auto margins (in conjunction with a width) center the page */
 	text-align: left; /* this overrides the text-align: center on the body element. */
-}	
-	
-	
+}
+
+
 .VisualizationMainPage #footer  A:visited { text-decoration:none;
-        color:ffcc33; 
+        color:ffcc33;
 }
 
 .VisualizationMainPage #footer A:link {
@@ -85,37 +85,37 @@ body {
 }
 
 
-	
+
 
 .VisualizationMainPage #mainContent h1{
-	padding: 0 20px; 
+	padding: 0 20px;
 	background: #FFFFFF;
 	color:#006633
 }
 
 .VisualizationMainPage #mainContent h2{
-	padding: 0 20px; 
+	padding: 0 20px;
 	background: #FFFFFF;
 	color:#006633
 }
 
 .VisualizationMainPage #mainContent h3{
-	padding: 0 20px; 
+	padding: 0 20px;
 	background: #FFFFFF;
 	color:#006633
 }
 
 
 
-.VisualizationMainPage #footer { 
+.VisualizationMainPage #footer {
 	padding: 0 10px;
-    background: #006633; 
+    background: #006633;
 	color:#ffcc33;
-} 
+}
 .VisualizationMainPage #footer p {
-	margin: 0; 	padding: 10px 0; 
+	margin: 0; 	padding: 10px 0;
 }
 
 EM {text-decoration: bold;}
 
-	
+

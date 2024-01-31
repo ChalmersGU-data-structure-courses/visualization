@@ -29,17 +29,17 @@
 
 function UndoBlock()
 {
-	
+
 }
 
 UndoBlock.prototype.addUndoAnimation = function(animationList)
 {
-	return false;
+    return false;
 }
 
-UndoBlock.prototype.undoInitialStep = function(world) 
+UndoBlock.prototype.undoInitialStep = function(world)
 {
-	
+
 }
 
 ////////////////////////////////////////////////////////////
@@ -48,11 +48,11 @@ UndoBlock.prototype.undoInitialStep = function(world)
 
 function UndoMove(id, fmX, fmy, tx, ty)
 {
-	this.objectID = id;
-	this.fromX = fmX;
-	this.fromY = fmy;
-	this.toX = tx;
-	this.toY = ty;
+    this.objectID = id;
+    this.fromX = fmX;
+    this.fromY = fmy;
+    this.toX = tx;
+    this.toY = ty;
 }
 
 
@@ -60,9 +60,9 @@ UndoMove.inheritFrom(UndoBlock);
 
 UndoMove.prototype.addUndoAnimation = function (animationList)
 {
-	var nextAnim = new SingleAnimation(this.objectID, this.fromX, this.fromY, this.toX, this.toY);
-	animationList.push(nextAnim);
-	return true;
+    var nextAnim = new SingleAnimation(this.objectID, this.fromX, this.fromY, this.toX, this.toY);
+    animationList.push(nextAnim);
+    return true;
 }
 
 ////////////////////////////////////////////////////////////
@@ -71,15 +71,15 @@ UndoMove.prototype.addUndoAnimation = function (animationList)
 
 function UndoCreate(id)
 {
-	this.objectID = id;
+    this.objectID = id;
 }
 
 UndoCreate.inheritFrom(UndoBlock);
 
-	
+
 UndoCreate.prototype.undoInitialStep = function(world)
 {
-			world.removeObject(this.objectID);
+            world.removeObject(this.objectID);
 }
 
 ////////////////////////////////////////////////////////////
@@ -88,15 +88,15 @@ UndoCreate.prototype.undoInitialStep = function(world)
 
 function UndoHighlight(id, val)
 {
-	this.objectID = id;
-	this.highlightValue = val;
+    this.objectID = id;
+    this.highlightValue = val;
 }
 
 UndoHighlight.inheritFrom(UndoBlock);
 
 UndoHighlight.prototype.undoInitialStep = function(world)
 {
-	world.setHighlight(this.objectID, this.highlightValue);
+    world.setHighlight(this.objectID, this.highlightValue);
 }
 
 
@@ -106,15 +106,15 @@ UndoHighlight.prototype.undoInitialStep = function(world)
 
 function UndoSetHeight(id, val)
 {
-	this.objectID = id;
-	this.height = val;
+    this.objectID = id;
+    this.height = val;
 }
 
 UndoSetHeight.inheritFrom(UndoBlock);
 
 UndoSetHeight.prototype.undoInitialStep = function(world)
 {
-	world.setHeight(this.objectID, this.height);
+    world.setHeight(this.objectID, this.height);
 }
 
 ////////////////////////////////////////////////////////////
@@ -123,15 +123,15 @@ UndoSetHeight.prototype.undoInitialStep = function(world)
 
 function UndoSetWidth(id, val)
 {
-	this.objectID = id;
-	this.width = val;
+    this.objectID = id;
+    this.width = val;
 }
 
 UndoSetWidth.inheritFrom(UndoBlock);
 
 UndoSetWidth.prototype.undoInitialStep = function(world)
 {
-	world.setWidth(this.objectID, this.width);
+    world.setWidth(this.objectID, this.width);
 }
 
 
@@ -140,20 +140,20 @@ UndoSetWidth.prototype.undoInitialStep = function(world)
 ////////////////////////////////////////////////////////////
 function UndoSetNumElements(obj, newNumElems)
 {
-	this.objectID = obj.objectID;
-	this.sizeBeforeChange = obj.getNumElements();
-	this.sizeAfterChange = newNumElems;
-	if (this.sizeBeforeChange > this.sizeAfterChange)
-	{
-		this.labels = new Array(this.sizeBeforeChange - this.sizeAfterChange);
-		this.colors = new Array(this.sizeBeforeChange - this.sizeAfterChange);
-		for (var i = 0; i < this.sizeBeforeChange - this.sizeAfterChange; i++)
-		{
-			this.labels[i] = obj.getText(i+this.sizeAfterChange);
-			this.colors[i] = obj.getTextColor(i+this.sizeAfterChange);
-		}
-		
-	}	
+    this.objectID = obj.objectID;
+    this.sizeBeforeChange = obj.getNumElements();
+    this.sizeAfterChange = newNumElems;
+    if (this.sizeBeforeChange > this.sizeAfterChange)
+    {
+        this.labels = new Array(this.sizeBeforeChange - this.sizeAfterChange);
+        this.colors = new Array(this.sizeBeforeChange - this.sizeAfterChange);
+        for (var i = 0; i < this.sizeBeforeChange - this.sizeAfterChange; i++)
+        {
+            this.labels[i] = obj.getText(i+this.sizeAfterChange);
+            this.colors[i] = obj.getTextColor(i+this.sizeAfterChange);
+        }
+
+    }
 }
 
 UndoSetNumElements.inheritFrom(UndoBlock);
@@ -161,15 +161,15 @@ UndoSetNumElements.inheritFrom(UndoBlock);
 
 UndoSetNumElements.prototype.undoInitialStep = function(world)
 {
-	world.setNumElements(this.objectID, this.sizeBeforeChange);
-	if (this.sizeBeforeChange > this.sizeAfterChange)
-	{
-		for (var i = 0; i < this.sizeBeforeChange - this.sizeAfterChange; i++)
-		{
-			world.setText(this.objectID, this.labels[i], i+this.sizeAfterChange);
-			world.setTextColor(this.objectID, this.colors[i], i+this.sizeAfterChange);
-		}
-	}
+    world.setNumElements(this.objectID, this.sizeBeforeChange);
+    if (this.sizeBeforeChange > this.sizeAfterChange)
+    {
+        for (var i = 0; i < this.sizeBeforeChange - this.sizeAfterChange; i++)
+        {
+            world.setText(this.objectID, this.labels[i], i+this.sizeAfterChange);
+            world.setTextColor(this.objectID, this.colors[i], i+this.sizeAfterChange);
+        }
+    }
 }
 
 
@@ -179,15 +179,15 @@ UndoSetNumElements.prototype.undoInitialStep = function(world)
 
 function UndoSetAlpha(id, alph)
 {
-	this.objectID = id;
-	this.alphaVal = alph;
+    this.objectID = id;
+    this.alphaVal = alph;
 }
 
 UndoSetAlpha.inheritFrom(UndoBlock);
 
-UndoSetAlpha.prototype.undoInitialStep = function(world) 
+UndoSetAlpha.prototype.undoInitialStep = function(world)
 {
-	world.setAlpha(this.objectID, this.alphaVal);
+    world.setAlpha(this.objectID, this.alphaVal);
 }
 
 ////////////////////////////////////////////////////////////
@@ -196,15 +196,15 @@ UndoSetAlpha.prototype.undoInitialStep = function(world)
 
 function UndoSetNull(id, nv)
 {
-	this.objectID = id;
-	this.nullVal = nv;
+    this.objectID = id;
+    this.nullVal = nv;
 }
 
 UndoSetNull.inheritFrom(UndoBlock);
 
-UndoSetNull.prototype.undoInitialStep = function(world) 
+UndoSetNull.prototype.undoInitialStep = function(world)
 {
-	world.setNull(this.objectID, this.nullVal);
+    world.setNull(this.objectID, this.nullVal);
 }
 
 ////////////////////////////////////////////////////////////
@@ -213,15 +213,15 @@ UndoSetNull.prototype.undoInitialStep = function(world)
 
 function UndoSetForegroundColor(id, color)
 {
-	this.objectID = id;
-	this.color = color;
+    this.objectID = id;
+    this.color = color;
 }
 
 UndoSetForegroundColor.inheritFrom(UndoBlock);
 
 UndoSetForegroundColor.prototype.undoInitialStep =  function (world)
 {
-	world.setForegroundColor(this.objectID, this.color);
+    world.setForegroundColor(this.objectID, this.color);
 }
 
 ////////////////////////////////////////////////////////////
@@ -230,15 +230,15 @@ UndoSetForegroundColor.prototype.undoInitialStep =  function (world)
 
 function UndoSetBackgroundColor(id, color)
 {
-	this.objectID = id;
-	this.color = color;
+    this.objectID = id;
+    this.color = color;
 }
 
 UndoSetBackgroundColor.inheritFrom(UndoBlock);
 
 UndoSetBackgroundColor.prototype.undoInitialStep =  function (world)
 {
-	world.setBackgroundColor(this.objectID, this.color);
+    world.setBackgroundColor(this.objectID, this.color);
 }
 
 
@@ -249,15 +249,15 @@ UndoSetBackgroundColor.prototype.undoInitialStep =  function (world)
 
 function UndoSetHighlightIndex(id, index)
 {
-	this.objectID = id;
-	this.index = index;
+    this.objectID = id;
+    this.index = index;
 }
 
 UndoSetHighlightIndex.inheritFrom(UndoBlock);
 
 UndoSetHighlightIndex.prototype.undoInitialStep =  function (world)
 {
-	world.setHighlightIndex(this.objectID, this.index);
+    world.setHighlightIndex(this.objectID, this.index);
 }
 
 
@@ -270,16 +270,16 @@ UndoSetHighlightIndex.prototype.undoInitialStep =  function (world)
 
 function UndoSetText(id, str, index)
 {
-	this.objectID = id;
-	this.newText = str;
-	this.labelIndex = index;
+    this.objectID = id;
+    this.newText = str;
+    this.labelIndex = index;
 }
 
 UndoSetText.inheritFrom(UndoBlock);
 
 UndoSetText.prototype.undoInitialStep = function(world)
 {
-	world.setText(this.objectID, this.newText, this.labelIndex);
+    world.setText(this.objectID, this.newText, this.labelIndex);
 }
 ////////////////////////////////////////////////////////////
 // UndoSetTextColor
@@ -289,16 +289,16 @@ UndoSetText.prototype.undoInitialStep = function(world)
 
 function UndoSetTextColor(id, color, index)
 {
-	this.objectID = id;
-	this.color = color;
-	this.index = index;
+    this.objectID = id;
+    this.color = color;
+    this.index = index;
 }
 
 UndoSetTextColor.inheritFrom(UndoBlock);
 
 UndoSetTextColor.prototype.undoInitialStep = function(world)
 {
-	world.setTextColor(this.objectID, this.color, this.index);
+    world.setTextColor(this.objectID, this.color, this.index);
 }
 
 
@@ -309,16 +309,16 @@ UndoSetTextColor.prototype.undoInitialStep = function(world)
 
 function UndoHighlightEdge(from, to, val)
 {
-	this.fromID = from;
-	this.toID = to;
-	this.highlightValue = val;
+    this.fromID = from;
+    this.toID = to;
+    this.highlightValue = val;
 }
 
 UndoHighlightEdge.inheritFrom(UndoBlock);
 
 UndoHighlightEdge.prototype.undoInitialStep = function(world)
 {
-	world.setEdgeHighlight(this.fromID, this.toID, this.highlightValue);
+    world.setEdgeHighlight(this.fromID, this.toID, this.highlightValue);
 }
 
 
@@ -328,16 +328,16 @@ UndoHighlightEdge.prototype.undoInitialStep = function(world)
 
 function UndoSetEdgeColor(from, to, oldColor)
 {
-	this.fromID = from;
-	this.toID = to;
-	this.color = oldColor;
+    this.fromID = from;
+    this.toID = to;
+    this.color = oldColor;
 }
 
 UndoSetEdgeColor.inheritFrom(UndoBlock);
 
 UndoSetEdgeColor.prototype.undoInitialStep = function(world)
 {
-	world.setEdgeColor(this.fromID, this.toID, this.color);
+    world.setEdgeColor(this.fromID, this.toID, this.color);
 }
 
 
@@ -347,16 +347,16 @@ UndoSetEdgeColor.prototype.undoInitialStep = function(world)
 
 function UndoSetEdgeAlpha(from, to, oldAplha)
 {
-	this.fromID = from;
-	this.toID = to;
-	this.alpha  = oldAplha;
+    this.fromID = from;
+    this.toID = to;
+    this.alpha  = oldAplha;
 }
 
 UndoSetEdgeAlpha.inheritFrom(UndoBlock);
 
 UndoSetEdgeAlpha.prototype.undoInitialStep = function(world)
 {
-	world.setEdgeAlpha(this.fromID, this.toID, this.alpha);
+    world.setEdgeAlpha(this.fromID, this.toID, this.alpha);
 }
 
 ////////////////////////////////////////////////////////////
@@ -365,9 +365,9 @@ UndoSetEdgeAlpha.prototype.undoInitialStep = function(world)
 
 function UndoSetPosition(id, x, y)
 {
-	this.objectID = id;
-	this.x = x; 
-	this.y = y;
+    this.objectID = id;
+    this.x = x;
+    this.y = y;
 }
 
 UndoSetPosition.inheritFrom(UndoBlock);
@@ -375,7 +375,7 @@ UndoSetPosition.inheritFrom(UndoBlock);
 
 UndoSetPosition.prototype.undoInitialStep = function(world)
 {
-	world.setNodePosition(this.objectID, this.x, this.y);
+    world.setNodePosition(this.objectID, this.x, this.y);
 }
 
 

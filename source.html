@@ -25,7 +25,7 @@
 <div class="about">
 <a href="http://www.cs.usfca.edu/galles"> David Galles </a> <br>
 <a href="http://www.cs.usfca.edu"> Computer Science </a> <br>
-<a href="http://www.usfca.edu"> University of San Francisco </a>  
+<a href="http://www.usfca.edu"> University of San Francisco </a>
 </div>
 
 </div>
@@ -39,11 +39,11 @@ You can download the complete source for the HTML5/Javascript version of the vis
 <br>
 
 <ul>
-<li> <a href = "visualization1.5.tar.gz">visualization1.5.tar.gz</a>, <a href = "visualization1.5.tar">visualization.1.5.tar</a></li>
-<li> <a href = "visualization1.4.tar.gz">visualization1.4.tar.gz</a>, <a href = "visualization1.4.tar">visualization.1.4.tar</a></li>
-<li> <a href = "visualization1.3.tar.gz">visualization1.3.tar.gz</a>, <a href = "visualization1.3.tar">visualization.1.3.tar</a></li>
-<li> <a href = "visualization1.2.tar.gz">visualization1.2.tar.gz</a>, <a href = "visualization1.2.tar">visualization.1.2.tar</a></li>
-<li> <a href = "visualization1.1.tar.gz">visualization1.1.tar.gz</a>, <a href = "visualization1.1.tar">visualization.1.1.tar</a> </li>
+<li> <a href="visualization1.5.tar.gz">visualization1.5.tar.gz</a>, <a href="visualization1.5.tar">visualization.1.5.tar</a></li>
+<li> <a href="visualization1.4.tar.gz">visualization1.4.tar.gz</a>, <a href="visualization1.4.tar">visualization.1.4.tar</a></li>
+<li> <a href="visualization1.3.tar.gz">visualization1.3.tar.gz</a>, <a href="visualization1.3.tar">visualization.1.3.tar</a></li>
+<li> <a href="visualization1.2.tar.gz">visualization1.2.tar.gz</a>, <a href="visualization1.2.tar">visualization.1.2.tar</a></li>
+<li> <a href="visualization1.1.tar.gz">visualization1.1.tar.gz</a>, <a href="visualization1.1.tar">visualization.1.1.tar</a> </li>
 </ul>
 
 <br>
@@ -51,21 +51,21 @@ You can download the complete source for the HTML5/Javascript version of the vis
 A few notes / warnings:
 
 <ol>
-<li> <em>Do not</em> try to look at the code to understand the algorithms.  I have done one or two tricky 
+<li> <em>Do not</em> try to look at the code to understand the algorithms.  I have done one or two tricky
 things to get the visualizations to work property that rather obscure the algorithms themselves.  Your
 favorte textbook, or even wikipedia, is a better bet for appropriate source code.</li>
-<li> Like all software projects, this one is a bit of a living thing -- it started life as a Java project, 
-was rewritten in ActionScript3 (that is, flash), and then ported to Javascript.  It was also my opportunity to 
+<li> Like all software projects, this one is a bit of a living thing -- it started life as a Java project,
+was rewritten in ActionScript3 (that is, flash), and then ported to Javascript.  It was also my opportunity to
 learn flash and javascript, so by the time I figured out the best way to do things, half of the software was
 already written.  I've done some going back to clean stuff up, but there is still a quite a lot of ugliness.
-<em>Next time</em> all my code will be pretty :).</li> 
+<em>Next time</em> all my code will be pretty :).</li>
 </ol>
 
 
 <h1>Visualization Creation Tutorial</h1>
 
 To creeate a new visualization, you need to create a javascript file and an HTML file. The HTML file should
- just be copied from a template, changing only one or two items (like the name of the javascript file).  
+ just be copied from a template, changing only one or two items (like the name of the javascript file).
  Examples of the HTML template and how to change it are at the end of this tutorial.
 
  In the javascript file, you will create a function (an object, really, but functions are objects in javascript) that:
@@ -73,7 +73,7 @@ To creeate a new visualization, you need to create a javascript file and an HTML
 <ol>
 <li> Creates any appropriate controls to control you visualization (inserting elements, deletig elements, etc)</li>
 <li> Creates callbacks for these controls that implement the visualizations.  The visualizations are implemented
-by sending an array of strings to the animation manager -- the animation manager will then implement the animation, and 
+by sending an array of strings to the animation manager -- the animation manager will then implement the animation, and
 handle all of the animation controls for you </li>
 <li> Listen for an undo event from the animation manager.  When an undo event is detected, roll back the last operation</li>
 </ol>
@@ -85,11 +85,11 @@ handle all of the animation controls for you </li>
 Creating the javascript function is stil farily complicated, even when using the rest of the library.
 
 Many of the ugly details can be automated if your function "subclasses" the Algorithm function (located
-in <a href = "AlgorithmLibrary/Algorithm.js">AlgorithmLibrary/Algorithm.js</a> 
+in <a href="AlgorithmLibrary/Algorithm.js">AlgorithmLibrary/Algorithm.js</a>
 (which is sort of a faux "class").  Consider the skeleton "MyAlgorithm" function included in the tarfile:
 
 <ul>
-<li> <a href = "AlgorithmLibrary/MyAlgorithm.js">AlgorithmLibrary/MyAlgorithm.js</a>
+<li> <a href="AlgorithmLibrary/MyAlgorithm.js">AlgorithmLibrary/MyAlgorithm.js</a>
 </ul>
 
 Looking at various pieces of the file in turn:
@@ -97,7 +97,7 @@ Looking at various pieces of the file in turn:
 <br>
 Copyright:  Code is released under in a FreeBSD license.
 
-<div  class = "code">
+<div  class="code">
 <pre>
 // Copyright 2011 David Galles, University of San Francisco. All rights reserved.
 //
@@ -130,16 +130,16 @@ Copyright:  Code is released under in a FreeBSD license.
 Next, the algorithm definition.  We are doing a sort of "faked" inheritance within javascript.
 We define our function, set the prototype of our function to the prototype of our superclass,
 reset the constructor to be our own constructor, and then cache the superclass prototype,
-for simulating a java-style "super" call.  Notice that to make inheritance work well on 
+for simulating a java-style "super" call.  Notice that to make inheritance work well on
 counstructors, we don't do anything in the main constructor function other than call an init
 function (that way we can have our init function call the init function of the superclass.
 Yes, this is a bit of a hack.)
 
-<div class = "code">
+<div class="code">
 <pre>
 function MyAlgorithm(am, w, h)
 {
-	this.init(am, w, h);
+    this.init(am, w, h);
 }
 MyAlgorithm.inheritFrom(Algorithm);
 </pre>
@@ -153,42 +153,42 @@ in our counstructor:
 but we are forcing javascript into an tradtional object-oriented paradigm, so it will
 complain a little at us. </li>
 <li> Add necessary controls<li>
-<li> Initialize our "Memory Manager".  For the most part, we will use a very 
-simple memory manager -- the old Pascal-style "Never free" memory manager. Start the 
+<li> Initialize our "Memory Manager".  For the most part, we will use a very
+simple memory manager -- the old Pascal-style "Never free" memory manager. Start the
 free list at 0, and then increment it every time you need a new piece of memory. </li>
 <li> Initialize any data structures we will be using</li>
 </li>
 </ul>
 
-<div class = "code">
+<div class="code">
 <pre>
 MyAlgorithm.prototype.init = function(am, w, h)
 {
-	// Call the unit function of our "superclass", which adds a couple of
-	// listeners, and sets up the undo stack
-	MyAlgorithm.superclass.init.call(this, am, w, h);
-	
-	this.addControls();
-	
-	// Useful for memory management
-	this.nextIndex = 0;
+    // Call the unit function of our "superclass", which adds a couple of
+    // listeners, and sets up the undo stack
+    MyAlgorithm.superclass.init.call(this, am, w, h);
 
-	// TODO:  Add any code necessary to set up your own algorithm.  Initialize data
-	// structures, etc.
+    this.addControls();
+
+    // Useful for memory management
+    this.nextIndex = 0;
+
+    // TODO:  Add any code necessary to set up your own algorithm.  Initialize data
+    // structures, etc.
 }
 </pre>
 </div>
 
 Next we have the function to add controls.  There are several helper functions to add
-controls.  See the <a href = "AlgorithmLibrary/Algorithm.js">Algorithm.js</a> file for more 
+controls.  See the <a href="AlgorithmLibrary/Algorithm.js">Algorithm.js</a> file for more
 information on these helper functions.
 
-<div class = "code">
+<div class="code">
 <pre>
 MyAlgorithm.prototype.addControls =  function()
 {
-	this.controls = [];
-	
+    this.controls = [];
+
     // Add any necessary controls for your algorithm.
     //   There are libraries that help with text entry, buttons, check boxes, radio groups
     //
@@ -200,21 +200,21 @@ MyAlgorithm.prototype.addControls =  function()
     //
     // To add a text field myField:
     //    this.myField = this.addControlToAlgorithmBar("Text", "");
-    //    this.myField.onkeydown = this.returnSubmit(this.myField,  
+    //    this.myField.onkeydown = this.returnSubmit(this.myField,
     //                                               this.anotherCallback.bind(this), // callback to make when return is pressed
     //                                               maxFieldLen,                     // integer, max number of characters allowed in field
     //                                               intOnly);                        // boolean, true of only digits can be entered.
     //    this.controls.push(this.myField);
     //
     // To add a textbox:
-    //   	this.myCheckbox = this.addCheckboxToAlgorithmBar("Checkbox Label");
+    //       this.myCheckbox = this.addCheckboxToAlgorithmBar("Checkbox Label");
     //      this.myCheckbox.onclick = this.checkboxCallback.bind(this);
     //      this.controls.push(myCheckbox);
     //
     // To add a radio button group:
-    //	  this.radioButtonList = this.addRadioButtonGroupToAlgorithmBar(["radio button label 1", 
-    //                                                              "radio button label 2", 
-    //                                                              "radio button label 3"], 
+    //      this.radioButtonList = this.addRadioButtonGroupToAlgorithmBar(["radio button label 1",
+    //                                                              "radio button label 2",
+    //                                                              "radio button label 3"],
     //                                                             "MyButtonGroupName");
     //    this.radioButtonList[0].onclick = this.firstRadioButtonCallback.bind(this);
     //    this.controls.push(this.radioButtonList[0]);
@@ -240,25 +240,25 @@ thrown away </li>
 <li>We end up in the same state that we were in right before the last operation was done</li>
 </ul>
 
-<div class = "code">
+<div class="code">
 <pre>
 MyAlgorithm.prototype.reset = function()
 {
-	// Reset all of your data structures to *exactly* the state they have immediately after the init
-	// function is called.  This method is called whenever an "undo" is performed.  Your data
-	// structures are completely cleaned, and then all of the actions *up to but not including* the
-	// last action are then redone.  If you implement all of your actions through the "implementAction"
-	// method below, then all of this work is done for you in the Animation "superclass"
-	
-	// Reset the (very simple) memory manager
-	this.nextIndex = 0;
+    // Reset all of your data structures to *exactly* the state they have immediately after the init
+    // function is called.  This method is called whenever an "undo" is performed.  Your data
+    // structures are completely cleaned, and then all of the actions *up to but not including* the
+    // last action are then redone.  If you implement all of your actions through the "implementAction"
+    // method below, then all of this work is done for you in the Animation "superclass"
+
+    // Reset the (very simple) memory manager
+    this.nextIndex = 0;
 }
 </pre>
 </div>
 
 Callbacks, doing actual work
 
-<div class = "code">
+<div class="code">
 <pre>
 //////////////////////////////////////////////
 // Callbacks:
@@ -271,20 +271,20 @@ Callbacks, doing actual work
 //
 //MyAlgorithm.prototype.insertCallback = function(event)
 //{
-//	// Get value to insert from textfield (created in addControls above)
-//	var insertedValue = this.insertField.value;
+//    // Get value to insert from textfield (created in addControls above)
+//    var insertedValue = this.insertField.value;
 //
 //  // If you want numbers to all have leading zeroes, you can add them like this:
-//	insertedValue = this.normalizeNumber(insertedValue, 4);
+//    insertedValue = this.normalizeNumber(insertedValue, 4);
 //
 //  // Only do insertion if the text field is not empty ...
-//	if (insertedValue != "")
-//	{
-//		// Clear text field after operation
-//		this.insertField.value = "";
+//    if (insertedValue != "")
+//    {
+//        // Clear text field after operation
+//        this.insertField.value="";
 //      // Do the actual work.  The function implementAction is defined in the algorithm superclass
-//		this.implementAction(this.insertElement.bind(this), insertedValue);
-//	}
+//        this.implementAction(this.insertElement.bind(this), insertedValue);
+//    }
 //}
 //  Note that implementAction takes as parameters a function and an argument, and then calls that
 //  function using that argument (while also storing the function/argument pair for future undos)
@@ -304,28 +304,28 @@ Callbacks, doing actual work
 //
 //MyAlgorithm.simpleAction(input)
 //{
-//	this.commands = [];  // Empty out our commands variable, so it isn't corrupted by previous actions
+//    this.commands = [];  // Empty out our commands variable, so it isn't corrupted by previous actions
 //
-//	// Get a new memory ID for the circle that we are going to create
-//	var circleID = nextIndex++;
-//	var circleX = 50;
-//	var circleY = 50;
-//	
-//	// Create a circle
-//	this.cmd("CreateCircle", circleID, "Label",  circleX, circleY);
-//	circleX = 100; 
-//	// Move the circle
-//	this.cmd("Move", circleID, circleX, circleY);
-//	// First Animation step done
-//	this.cmd("Step");
-//	circleX = 50; 
-//	circleY = 100; 
-//	// Move the circle again
-//	this.cmd("Move", circleID, circleX, circleY);
-//	// Next Animation step done
-//	this.cmd("Step");
-//	// Return the commands that were generated by the "cmd" calls:
-//	return this.commands;
+//    // Get a new memory ID for the circle that we are going to create
+//    var circleID = nextIndex++;
+//    var circleX = 50;
+//    var circleY = 50;
+//
+//    // Create a circle
+//    this.cmd("CreateCircle", circleID, "Label",  circleX, circleY);
+//    circleX = 100;
+//    // Move the circle
+//    this.cmd("Move", circleID, circleX, circleY);
+//    // First Animation step done
+//    this.cmd("Step");
+//    circleX = 50;
+//    circleY = 100;
+//    // Move the circle again
+//    this.cmd("Move", circleID, circleX, circleY);
+//    // Next Animation step done
+//    this.cmd("Step");
+//    // Return the commands that were generated by the "cmd" calls:
+//    return this.commands;
 //}
 
 </pre>
@@ -334,33 +334,33 @@ Callbacks, doing actual work
 
 Enabling, disabling UI
 
-<div class = "code">
+<div class="code">
 <pre>
 // Called by our superclass when we get an animation started event -- need to wait for the
 // event to finish before we start doing anything
 MyAlgorithm.prototype.disableUI = function(event)
 {
-	for (var i = 0; i < this.controls.length; i++)
-	{
-		this.controls[i].disabled = true;
-	}
+    for (var i = 0; i < this.controls.length; i++)
+    {
+        this.controls[i].disabled = true;
+    }
 }
 
 // Called by our superclass when we get an animation completed event -- we can
 /// now interact again.
 MyAlgorithm.prototype.enableUI = function(event)
 {
-	for (var i = 0; i < this.controls.length; i++)
-	{
-		this.controls[i].disabled = true;
-	}
+    for (var i = 0; i < this.controls.length; i++)
+    {
+        this.controls[i].disabled = true;
+    }
 }
 </pre>
 </div>
 
 Script to start everything
 
-<div class = "code">
+<div class="code">
 <pre>
 ////////////////////////////////////////////////////////////
 // Script to start up your function, called from the webapge:
@@ -370,12 +370,12 @@ var currentAlg;
 
 function init()
 {
-	var animManag = initCanvas();
-	currentAlg = new MyAlgorithm(animManag, canvas.width, canvas.height);
-	
+    var animManag = initCanvas();
+    currentAlg = new MyAlgorithm(animManag, canvas.width, canvas.height);
+
 }
 </pre>
-</div> 
+</div>
 
 <h2> Animation Commands </h2>
 
@@ -388,13 +388,13 @@ to Move element 37 to position (100, 120) would be:
 <li> "Move&lt;;&gt;37&lt;;&gt;100&lt;;&gt;120"</li>
 </ul>
 Commands can be separated into two groups:  Commands that create animated objects, and commands
-that manipulate previously created objects. 
+that manipulate previously created objects.
 
 <h3> Object Creation and Deletion Commands </h3>
 
 Object creation commands take as a first argument an integer
 representing the index of the object to create.  This integer must <em>not</em> be the same as another
-object that is currently active in the system (though you can reuse numbers once the objects have been 
+object that is currently active in the system (though you can reuse numbers once the objects have been
 deleted).  Like all commands, the creation commands have some required and some optional parameters.
 
 <br>
@@ -419,7 +419,7 @@ which allows you to place a multi-line label in the rectangle.  Labels are cente
 <li> height: The height of the rectangle, in pixels </li>
 <li> initial_x: (optional, defaults to 0) the initial x position of the rectangle</li>
 <li> initial_y: (optional, defaults to 0) the initial u position of the rectangle</li>
-<li> xJustify: (optional, defaults to "center").  One of "center", "left", "right" -- If the rectangle is at location (x, y), 
+<li> xJustify: (optional, defaults to "center").  One of "center", "left", "right" -- If the rectangle is at location (x, y),
 does x stand for the left, center, or right of the rectangle </li>
 <li> yJustify: (optional, defaults to "center").  One of "center", "top", "bottom" -- If the rectangle is at location (x,y0 does
  y stand for the top, center, or bottom of the rectangle </li>
@@ -427,7 +427,7 @@ does x stand for the left, center, or right of the rectangle </li>
  and so on).  Defaults to black
  <li> backgroundColor:  The initial color of the background of the rectangle, using HTML colors (#FF0000 for red, #00FF00 for green,
  and so on).  Defaults to white.
-</ul>    
+</ul>
 
 <li> CreateHighlightCircle: objectID, color, [initial_x, initial_y, radius] <br>
 A highlight circle is much like a standard circle, except that it has no label, and no background color, so that
@@ -466,9 +466,9 @@ ID currently active.  Should be as small as posslbe for better performance.</li>
 <li> initial_y: (optional, defaults to 0) the initial y position of the linked list element</li>
 <li> linkPercent: (optional, defaults to 0.25) The percentage of the linked list element that the outgoing pointer takes up. </li>
 <li> verticalOrientation: (optional, defaults to true).  Should the linked list element be vertial (true) or horizontal (false) </li>
-<li> linkPosEnd: (optional, defaults to false).  Should the poiner appear at the bottom or left of the linked list element (true), or the 
+<li> linkPosEnd: (optional, defaults to false).  Should the poiner appear at the bottom or left of the linked list element (true), or the
 top or right of the linked list element (false) </li>
-<li> numLabels:  (optional, defaults to 1).  The number of labels that the linked lists element can hold.  See the adjacency 
+<li> numLabels:  (optional, defaults to 1).  The number of labels that the linked lists element can hold.  See the adjacency
 list implementat of a  graph visualization  for an example of a linked list element with more than 1 label.
 </ul>
 
@@ -492,8 +492,8 @@ ID currently active.  Should be as small as posslbe for better performance.</li>
 
 <li> Delete: objectID </li>
 <ul>
-<li> objectID:  The ID of the object to delete.  All edges incident on this object will be removed. (If the delete is undone, then 
-all such edges will be restored).  Once an Animated Element has been deleted, its ID is free to be used again. 
+<li> objectID:  The ID of the object to delete.  All edges incident on this object will be removed. (If the delete is undone, then
+all such edges will be restored).  Once an Animated Element has been deleted, its ID is free to be used again.
 Note that overly complicated ID management (which is really memory management, since IDs are just indicies into a
 "memory array" of active animated objects) is not necessarily recommended, since it can lead to some subtle bugs.
 </ul>
@@ -507,7 +507,7 @@ Deleting an ID that is not currently in use will also throw an exception.
 
 <ul>
 <li> Move: objectID, toX, toY</li>
-Move the object smoothly over the next step from the current position to 
+Move the object smoothly over the next step from the current position to
 the new position
 <ul>
 <li> objectID:  The ID of the object to move.  The object must exists, or an exception will be
@@ -547,11 +547,11 @@ thrown </li>
 </ul>
 
 <li> SetHighlight: objectID, highlightVal</li>
-Mark an object as either highlighted or unhighlighted, based on the value of highlightVal.  
+Mark an object as either highlighted or unhighlighted, based on the value of highlightVal.
 Objects that are highlighted will pulse red.  Any object can be highlighted (thought labels
 are slightly harder to read when highlighted)  Note that if an object is left highlighted
 after an animation is ended, it will not pulse until the animation starts again.  Edges
-can be highlighted using the highlight edge command. 
+can be highlighted using the highlight edge command.
 <ul>
 <li> objectID:  The ID of the object to modify.  The object must exists, or an exception will be
 thrown </li>
@@ -560,7 +560,7 @@ thrown </li>
 
 
 <li> SetText: objectID, newText, [textIndex]</li>
-Sets the value of the label associated with the object (the printing withing a circle, for instance). 
+Sets the value of the label associated with the object (the printing withing a circle, for instance).
 <ul>
 <li> objectID:  The ID of the object to modify.  The object must exists, or an exception will be
 thrown </li>
@@ -604,7 +604,7 @@ Sets the color of the label associated with the object
 thrown </li>
 <li> newColor:  The new color to set.  As with all colors, should be a html color string </li>
 <li> textIndex:  (optional, defaults to 0)  If the object contain multiple labels (such as a linked-list node,
-or a B-Tree node) determine which label to change the color of.  If the object only has one label, this parameter 
+or a B-Tree node) determine which label to change the color of.  If the object only has one label, this parameter
 is ignored. </li>
 </ul>
 
@@ -679,7 +679,7 @@ thrown </li>
 Edges are manipulated by giving the two objects associated with the edge.  While edges
 can be graphically directed or undirected, all edges under the hood have a direction,
 which is the direction that they were given when the edge was created.   There can
-only be <em> one </em> edge from any object to any other object (though there can be 
+only be <em> one </em> edge from any object to any other object (though there can be
 an edge from object1 to object2, and a different edge from object2 to object1.)  Edges
 are always referred to by two IDs - the objectID of the "from" object, followed by the
 objectID of the "to" object.  Any object can be connected to any other object.
@@ -704,7 +704,7 @@ do not have multiple attachment positions </li>
 </ul>
 
 <li> Disconnect: fromID, toID</li>
-Removes an edge between two elements.  If there is no edge, then this operation is a no-op. 
+Removes an edge between two elements.  If there is no edge, then this operation is a no-op.
 <ul>
 <li> fromID: The ID of the "From" direction of the edge </li>
 <li> toID:  The ID of the "To" direction of the edge </li>
@@ -720,8 +720,8 @@ thrown </li>
 </ul>
 
 <li> SetEdgeHighlight: fromID, toID, highlightVal</li>
-Mark an edge as either highlighted or unhighlighted, based on the value of highlightVal.  
-Edges that are highlighted will pulse red. 
+Mark an edge as either highlighted or unhighlighted, based on the value of highlightVal.
+Edges that are highlighted will pulse red.
 <ul>
 <li> fromID: The ID of the "From" direction of the edge </li>
 <li> toID:  The ID of the "To" direction of the edge </li>
@@ -754,7 +754,7 @@ while an animation is running, the global set of visible layers can be changed w
 thrown </li>
 <li> layer:  The new layer for this object.  Each object must live in one and only one layer
 (though any combination of layers can be shown at any given time) </li>
-</ul> 
+</ul>
 </ul>
 
 <h2> Simple Stack Example </h2>
@@ -762,14 +762,14 @@ thrown </li>
 Everything make sense so far?  Time for a simple, complete example. A simple stack visualization can be found at:
 
 <ul>
-<li> <a href = "AlgorithmLibrary/SimpleStack.js">AlgorithmLibrary/SimpleStack.js</a>
-<li> <a href = "SimpleStack.html"> See the the visualization in action </a>
+<li> <a href="AlgorithmLibrary/SimpleStack.js">AlgorithmLibrary/SimpleStack.js</a>
+<li> <a href="SimpleStack.html"> See the the visualization in action </a>
 </ul>
 
 Looking at the complete SimpleStack.js file in its entirety:
 <br><br>
 All code released under a FreeBSD license
-<div class = "code">
+<div class="code">
 <pre>
 // Copyright 2011 David Galles, University of San Francisco. All rights reserved.
 //
@@ -803,11 +803,11 @@ All code released under a FreeBSD license
 Next up is the Initial setup.  The first several lines of any visualization javascript will look like this, with
 SimpleStack replaced by whatever function you are writing
 
-<div class = "code">
+<div class="code">
 <pre>
 function SimpleStack(am, w, h)
 {
-	this.init(am, w, h);
+    this.init(am, w, h);
 }
 SimpleStack.inheritFrom(Algorithm);
 </div>
@@ -817,7 +817,7 @@ The next items in the file are some constants.  We placed them in the function's
 to avoid symbol clashes:
 
 
-<div class = "code">
+<div class="code">
 <pre>
 SimpleStack.ELEMENT_WIDTH = 30;
 SimpleStack.ELEMENT_HEIGHT = 30;
@@ -825,8 +825,8 @@ SimpleStack.INSERT_X = 30;
 SimpleStack.INSERT_Y = 30;
 SimpleStack.STARTING_X = 30;
 SimpleStack.STARTING_Y = 100;
-SimpleStack.FOREGROUND_COLOR = "#000055"
-SimpleStack.BACKGROUND_COLOR = "#AAAAFF"
+SimpleStack.FOREGROUND_COLOR="#000055"
+SimpleStack.BACKGROUND_COLOR="#AAAAFF"
 </div>
 </pre>
 
@@ -840,26 +840,26 @@ However, all of the <em>work</em> of the constructor is done in the init functio
 way constructors of subclass can effectively call the constructors of their superclasses.
 For the init function in this case, we need to do very little work.  In this simple example
 we are not adding any elements to the canvas at load time.  All we need to do is set up our own
-internal data structures.  We are keeping track of two arrays -- an array that stores the actual 
+internal data structures.  We are keeping track of two arrays -- an array that stores the actual
 stack (stackValues), and an array that stores the objectIDs of the elements of the stack (stackID)
 
-<div class = "code">
+<div class="code">
 <pre>
 SimpleStack.prototype.init = function(am, w, h)
 {
-	// Call the unit function of our "superclass", which adds a couple of
-	// listeners, and sets up the undo stack
-	SimpleStack.superclass.init.call(this, am, w, h);
-	
-	this.addControls();
-	
-	// Useful for memory management
-	this.nextIndex = 0;
+    // Call the unit function of our "superclass", which adds a couple of
+    // listeners, and sets up the undo stack
+    SimpleStack.superclass.init.call(this, am, w, h);
 
-	this.stackID = [];
-	this.stackValues = [];
-	
-	this.stackTop = 0;
+    this.addControls();
+
+    // Useful for memory management
+    this.nextIndex = 0;
+
+    this.stackID = [];
+    this.stackValues = [];
+
+    this.stackTop = 0;
 }
 </div>
 </pre>
@@ -870,32 +870,32 @@ Next up is the method to add algorithm controls and callbacks.  The tricky bit h
 this.popButton.onclick = this.popCallback
 </pre>
 
-to add our callbacks.  Why not?  This would pass in the proper function, but <em>not</em> the 
+to add our callbacks.  Why not?  This would pass in the proper function, but <em>not</em> the
 proper <em>contex</em> -- essentially, it would be passing a pointer to the code of the function,
 without saving the "this" pointer.  So we need to bind the "this" pointer to our function before
-we store it.  
+we store it.
 
-<div class = "code">
+<div class="code">
 <pre>
 SimpleStack.prototype.addControls =  function()
 {
-	this.controls = [];
+    this.controls = [];
 
-	
+
     this.pushField = this.addControlToAlgorithmBar("Text", "");
-    this.pushField.onkeydown = this.returnSubmit(this.pushField,  
+    this.pushField.onkeydown = this.returnSubmit(this.pushField,
                                                this.pushCallback.bind(this), // callback to make when return is pressed
                                                4,                           // integer, max number of characters allowed in field
                                                false);                      // boolean, true of only digits can be entered.
-	this.controls.push(this.pushField);
-	
-	this.pushButton = this.addControlToAlgorithmBar("Button", "Push");
-	this.pushButton.onclick = this.pushCallback.bind(this);
-	this.controls.push(this.pushButton);
-	
-	this.popButton = this.addControlToAlgorithmBar("Button", "Pop");
-	this.popButton.onclick = this.popCallback.bind(this);
-	this.controls.push(this.popButton);	
+    this.controls.push(this.pushField);
+
+    this.pushButton = this.addControlToAlgorithmBar("Button", "Push");
+    this.pushButton.onclick = this.pushCallback.bind(this);
+    this.controls.push(this.pushButton);
+
+    this.popButton = this.addControlToAlgorithmBar("Button", "Pop");
+    this.popButton.onclick = this.popCallback.bind(this);
+    this.controls.push(this.popButton);
 }
 </div>
 </pre>
@@ -904,38 +904,38 @@ As a side note, here's the code for the bind function, located in CustomEvents.j
 
 <pre>
 Function.prototype.bind = function() {
-	var _function = this;
-	
-	var args = Array.prototype.slice.call(arguments);
-	var scope = args.shift()
-	return function() {
-		for (var i = 0; i &lt; arguments.length; i++)
-		{
-			args.push(arguments[i]);
-		}
-		return _function.apply(scope, args);
-	}
+    var _function = this;
+
+    var args = Array.prototype.slice.call(arguments);
+    var scope = args.shift()
+    return function() {
+        for (var i = 0; i &lt; arguments.length; i++)
+        {
+            args.push(arguments[i]);
+        }
+        return _function.apply(scope, args);
+    }
 }
 </pre>
 
-Moving on ... Next up is the reset function.  <em>All visualizations must implement the reset method</em>.  The reset 
+Moving on ... Next up is the reset function.  <em>All visualizations must implement the reset method</em>.  The reset
 method needs to restore <em>all</em> of our variables to the state that they were in right after the call to init.
 In our case, we only have 2 variables of importance.  We could have recreated the arrays stackID and stackValues, but
-that is not necessary in this case, since we don't care about the current values in those arrays -- we will write over any 
+that is not necessary in this case, since we don't care about the current values in those arrays -- we will write over any
 value before we read it, once the stack top is 0.
 
-<div class = "code">
+<div class="code">
 <pre>
 SimpleStack.prototype.reset = function()
 {
-	// Reset the (very simple) memory manager.
-	//  NOTE:  If we had added a number of objects to the scene *before* any user
-	//         input, then we would want to set this to the appropriate value based
-	//         on objects added to the scene before the first user input
-	this.nextIndex = 0;
-	
-	// Reset our data structure.  (Simple in this case)
-	this.stackTop = 0;
+    // Reset the (very simple) memory manager.
+    //  NOTE:  If we had added a number of objects to the scene *before* any user
+    //         input, then we would want to set this to the appropriate value based
+    //         on objects added to the scene before the first user input
+    this.nextIndex = 0;
+
+    // Reset our data structure.  (Simple in this case)
+    this.stackTop = 0;
 }
 </div>
 </pre>
@@ -945,102 +945,102 @@ implementAction method, which takes a bound function (using the bind method) and
 calls that function using that parameter.  implementAction also saves a list of all actions that have been
 performed, so that undo will work nicely.
 
-<div class = "code">
+<div class="code">
 <pre>
 SimpleStack.prototype.pushCallback = function()
 {
-	var pushedValue = this.pushField.value;
-	
-	if (pushedValue != "")
-	{
-		this.pushField.value = "";
-		this.implementAction(this.push.bind(this), pushedValue);
-	}
-	
+    var pushedValue = this.pushField.value;
+
+    if (pushedValue != "")
+    {
+        this.pushField.value="";
+        this.implementAction(this.push.bind(this), pushedValue);
+    }
+
 }
 
 SimpleStack.prototype.popCallback = function()
 {
-	this.implementAction(this.pop.bind(this), "");
+    this.implementAction(this.pop.bind(this), "");
 }
 </div>
 </pre>
 
 Finally, we get to the actual meat of our visualization -- the code that does the work.  Note that we are mostly
 just implementing the action, using some calls to cmd to document what we are doing.
-<div class = "code">
+<div class="code">
 <pre>
 SimpleStack.prototype.push = function(pushedValue)
 {
-	this.commands = [];
-	
-	this.stackID[this.stackTop] = this.nextIndex++;
-	
-	this.cmd("CreateRectangle", this.stackID[this.stackTop], 
-			                    pushedValue, 
-								SimpleStack.ELEMENT_WIDTH,
-								SimpleStack.ELEMENT_HEIGHT,
-								SimpleStack.INSERT_X, 
-			                    SimpleStack.INSERT_Y);
-	this.cmd("SetForegroundColor", this.stackID[this.stackTop], SimpleStack.FOREGROUND_COLOR);
-	this.cmd("SetBackgroundColor", this.stackID[this.stackTop], SimpleStack.BACKGROUND_COLOR);
-	this.cmd("Step");
-	var nextXPos = SimpleStack.STARTING_X + this.stackTop * SimpleStack.ELEMENT_WIDTH;
-	var nextYPos = SimpleStack.STARTING_Y;
-	this.cmd("Move", this.stackID[this.stackTop], nextXPos, nextYPos);
-	this.cmd("Step"); // Not necessary, but not harmful either
-	this.stackTop++;
-	return this.commands;
+    this.commands = [];
+
+    this.stackID[this.stackTop] = this.nextIndex++;
+
+    this.cmd("CreateRectangle", this.stackID[this.stackTop],
+                                pushedValue,
+                                SimpleStack.ELEMENT_WIDTH,
+                                SimpleStack.ELEMENT_HEIGHT,
+                                SimpleStack.INSERT_X,
+                                SimpleStack.INSERT_Y);
+    this.cmd("SetForegroundColor", this.stackID[this.stackTop], SimpleStack.FOREGROUND_COLOR);
+    this.cmd("SetBackgroundColor", this.stackID[this.stackTop], SimpleStack.BACKGROUND_COLOR);
+    this.cmd("Step");
+    var nextXPos = SimpleStack.STARTING_X + this.stackTop * SimpleStack.ELEMENT_WIDTH;
+    var nextYPos = SimpleStack.STARTING_Y;
+    this.cmd("Move", this.stackID[this.stackTop], nextXPos, nextYPos);
+    this.cmd("Step"); // Not necessary, but not harmful either
+    this.stackTop++;
+    return this.commands;
 }
 
 SimpleStack.prototype.pop = function(unused)
 {
-	this.commands = [];
-	
-	if (this.stackTop > 0)
-	{
-		this.stackTop--;
-		
-		this.cmd("Move", this.stackID[this.stackTop], SimpleStack.INSERT_X, SimpleStack.INSERT_Y);
-		this.cmd("Step");
-		this.cmd("Delete", this.stackID[this.stackTop]);
-		this.cmd("Step");
-		
-		// OPTIONAL:  We can do a little better with memory leaks in our own memory manager by
-		//            reclaiming this memory.  It is recommened that you *NOT* do this unless
-		//            you really know what you are doing (memory management leads to tricky bugs!)
-		//            *and* you really need to (very long runnning visualizaitons, not common)
-		//            Because this is a stack, we can reclaim memory easily.  Most of the time, this
-		//            is not the case, and can be dangerous.
-		// nextIndex = this.stackID[this.stackTop];
-	}
-	return this.commands;
+    this.commands = [];
+
+    if (this.stackTop > 0)
+    {
+        this.stackTop--;
+
+        this.cmd("Move", this.stackID[this.stackTop], SimpleStack.INSERT_X, SimpleStack.INSERT_Y);
+        this.cmd("Step");
+        this.cmd("Delete", this.stackID[this.stackTop]);
+        this.cmd("Step");
+
+        // OPTIONAL:  We can do a little better with memory leaks in our own memory manager by
+        //            reclaiming this memory.  It is recommened that you *NOT* do this unless
+        //            you really know what you are doing (memory management leads to tricky bugs!)
+        //            *and* you really need to (very long runnning visualizaitons, not common)
+        //            Because this is a stack, we can reclaim memory easily.  Most of the time, this
+        //            is not the case, and can be dangerous.
+        // nextIndex = this.stackID[this.stackTop];
+    }
+    return this.commands;
 }
 </div>
 </pre>
 
 Almost done!  Some code to enable / disable our algorithm controls while the animation is running...
 
-<div class = "code">
+<div class="code">
 <pre>
 // Called by our superclass when we get an animation started event -- need to wait for the
 // event to finish before we start doing anything
 SimpleStack.prototype.disableUI = function(event)
 {
-	for (var i = 0; i &lt; this.controls.length; i++)
-	{
-		this.controls[i].disabled = true;
-	}
+    for (var i = 0; i &lt; this.controls.length; i++)
+    {
+        this.controls[i].disabled = true;
+    }
 }
 
 // Called by our superclass when we get an animation completed event -- we can
 /// now interact again.
 SimpleStack.prototype.enableUI = function(event)
 {
-	for (var i = 0; i &lt; this.controls.length; i++)
-	{
-		this.controls[i].disabled = false;
-	}
+    for (var i = 0; i &lt; this.controls.length; i++)
+    {
+        this.controls[i].disabled = false;
+    }
 }
 </div>
 </pre>
@@ -1048,7 +1048,7 @@ SimpleStack.prototype.enableUI = function(event)
 Finally, some boilerplate to get everything started.  You can pretty much cut and paste the following
 into your own code, replacing SimpleStack with your function:
 
-<div class = "code">
+<div class="code">
 <pre>
 ////////////////////////////////////////////////////////////
 // Script to start up your function, called from the webapge:
@@ -1058,9 +1058,9 @@ var currentAlg;
 
 function init()
 {
-	var animManag = initCanvas();
-	currentAlg = new SimpleStack(animManag, canvas.width, canvas.height);
-	
+    var animManag = initCanvas();
+    currentAlg = new SimpleStack(animManag, canvas.width, canvas.height);
+
 }
 </div>
 </pre>
@@ -1085,88 +1085,88 @@ of all the files, in the proper order, works everywhere)</li>
 <li> An empty table with the id "algoControlSection" where the algorithm specific controls are to be placed</li>
 <li> A canvas element, where the animations will appear</li>
 <li> An empty table with the id "GeneralAnimationControls" where general animation controls are to be placed</li>
-<li> An onload = "init();" command in the body tag to kick everything off </li>
+<li> An onload="init();" command in the body tag to kick everything off </li>
 </ul>
 
 The eaiest solition is just to use the following template, changing the values
 that are specific to your application
 
 <ul>
-<li> <a href = "template.html">template.html</a>
+<li> <a href="template.html">template.html</a>
 </ul>
 
-The template file is reproduced below, with the changes you need to make highlighted in <font color = "red">red</font>
+The template file is reproduced below, with the changes you need to make highlighted in <font color="red">red</font>
 
 
-<div class = "code">
+<div class="code">
 <pre>
 &lt;!DOCTYPE html&gt;
 &lt;html&gt;
     &lt;head&gt;
-        
+
         &lt;title&gt;
-           <font color = "red">Place your title here</font>
+           <font color="red">Place your title here</font>
         &lt;/title&gt;
-        
+
         &lt;!-- css sheet for how the page is laid out --&gt;
-        
+
         &lt;link rel="stylesheet" href="visualizationPageStyle.css"&gt;
-            
-            
+
+
         &lt;!-- jqueury stuff.  Only used for the animation speed slider. --&gt;
         &lt;link rel="stylesheet" href="ThirdParty/jquery-ui-1.8.11.custom.css"&gt;
-                
+
         &lt;script src="ThirdParty/jquery-1.5.2.min.js"&gt;&lt;/script&gt;
         &lt;script src="ThirdParty/jquery-ui-1.8.11.custom.min.js"&gt;&lt;/script&gt;
-                
+
         &lt;!-- Javascript for the actual visualization code --&gt;
-        &lt;script type = "text/javascript" src = "AnimationLibrary/CustomEvents.js"&gt; &lt;/script&gt;
-        &lt;script type = "text/javascript" src = "AnimationLibrary/UndoFunctions.js"&gt; &lt;/script&gt;
-        &lt;script type = "text/javascript" src = "AnimationLibrary/AnimatedObject.js"&gt; &lt;/script&gt;
-        &lt;script type = "text/javascript" src = "AnimationLibrary/AnimatedLabel.js"&gt; &lt;/script&gt;
-        &lt;script type = "text/javascript" src = "AnimationLibrary/AnimatedCircle.js"&gt; &lt;/script&gt;
-        &lt;script type = "text/javascript" src = "AnimationLibrary/AnimatedRectangle.js"&gt; &lt;/script&gt;
-        &lt;script type = "text/javascript" src = "AnimationLibrary/AnimatedLinkedList.js"&gt; &lt;/script&gt;
-        &lt;script type = "text/javascript" src = "AnimationLibrary/HighlightCircle.js"&gt; &lt;/script&gt;
-        &lt;script type = "text/javascript" src = "AnimationLibrary/Line.js"&gt; &lt;/script&gt;
-        &lt;script type = "text/javascript" src = "AnimationLibrary/ObjectManager.js"&gt; &lt;/script&gt;
-        &lt;script type = "text/javascript" src = "AnimationLibrary/AnimationMain.js"&gt; &lt;/script&gt;
-        &lt;script type = "text/javascript" src = "AlgorithmLibrary/Algorithm.js"&gt; &lt;/script&gt;
-        &lt;script type = "text/javascript" src = "<font color = "red">Place path to your javascript file here</font>"&gt; &lt;/script&gt; 
-                
-            
-     &lt;/head&gt; 
-    
+        &lt;script type="text/javascript" src="AnimationLibrary/CustomEvents.js"&gt; &lt;/script&gt;
+        &lt;script type="text/javascript" src="AnimationLibrary/UndoFunctions.js"&gt; &lt;/script&gt;
+        &lt;script type="text/javascript" src="AnimationLibrary/AnimatedObject.js"&gt; &lt;/script&gt;
+        &lt;script type="text/javascript" src="AnimationLibrary/AnimatedLabel.js"&gt; &lt;/script&gt;
+        &lt;script type="text/javascript" src="AnimationLibrary/AnimatedCircle.js"&gt; &lt;/script&gt;
+        &lt;script type="text/javascript" src="AnimationLibrary/AnimatedRectangle.js"&gt; &lt;/script&gt;
+        &lt;script type="text/javascript" src="AnimationLibrary/AnimatedLinkedList.js"&gt; &lt;/script&gt;
+        &lt;script type="text/javascript" src="AnimationLibrary/HighlightCircle.js"&gt; &lt;/script&gt;
+        &lt;script type="text/javascript" src="AnimationLibrary/Line.js"&gt; &lt;/script&gt;
+        &lt;script type="text/javascript" src="AnimationLibrary/ObjectManager.js"&gt; &lt;/script&gt;
+        &lt;script type="text/javascript" src="AnimationLibrary/AnimationMain.js"&gt; &lt;/script&gt;
+        &lt;script type="text/javascript" src="AlgorithmLibrary/Algorithm.js"&gt; &lt;/script&gt;
+        &lt;script type="text/javascript" src="<font color="red">Place path to your javascript file here</font>"&gt; &lt;/script&gt;
+
+
+     &lt;/head&gt;
+
     &lt;body onload="init();" class="VisualizationMainPage"&gt;
-        
-        &lt;div id = "container"&gt;
-            
-            &lt;div id="header"&gt;  
-                &lt;h1&gt;<font color = "red">Place your Header here</font> &lt;/h1&gt;
+
+        &lt;div id="container"&gt;
+
+            &lt;div id="header"&gt;
+                &lt;h1&gt;<font color="red">Place your Header here</font> &lt;/h1&gt;
             &lt;/div&gt;
-            
-            &lt;div = id = "mainContent"&gt; 
-                
-                &lt;div id = "algoControlSection"&gt;
+
+            &lt;div = id="mainContent"&gt;
+
+                &lt;div id="algoControlSection"&gt;
                     &lt;!-- Table for buttons to control specific animation (insert/find/etc) --&gt;
                     &lt;!-- (filled in by javascript code specific to the animtion) --&gt;
-                    &lt;table id="AlgorithmSpecificControls"&gt; &lt;/table&gt; 
+                    &lt;table id="AlgorithmSpecificControls"&gt; &lt;/table&gt;
                 &lt;/div&gt;
-                
+
                     &lt;!-- Drawing canvas where all animation is done.  Note:  can be resized in code --&gt;
-                                    
+
                 &lt;canvas id="canvas" width="1000" height="500"&gt;&lt;/canvas&gt;
-                
-                &lt;div id = "generalAnimationControlSection"&gt;
+
+                &lt;div id="generalAnimationControlSection"&gt;
                     &lt;!-- Table for buttons to control general animation (play/pause/undo/etc) -&gt;
                     &lt;!-- (filled in by javascript code, specifically AnimationMain.js)  --&gt;
 
-                    &lt;table id="GeneralAnimationControls"&gt;  &lt;/table&gt;     
+                    &lt;table id="GeneralAnimationControls"&gt;  &lt;/table&gt;
                 &lt;/div&gt;
-                
+
             &lt;/div&gt; &lt;!-- mainContent --&gt;
-            
-            &lt;div id="footer"&gt;  
+
+            &lt;div id="footer"&gt;
                 &lt;p&gt;&lt;a href="Algorithms.html"&gt;Algorithm Visualizations&lt;/a&gt;&lt;/p&gt;
             &lt;/div&gt;
 
@@ -1183,28 +1183,28 @@ The template file is reproduced below, with the changes you need to make highlig
 If two object overlap, which one is placed on top?  The animation system uses the following rules to determine draw order:
 
 <ol>
-<li> All non-highlighted items are drawn <em>before</em> all highlighted items 
-(so highlighted items will appear on top of non-highlighted items)</li> 
+<li> All non-highlighted items are drawn <em>before</em> all highlighted items
+(so highlighted items will appear on top of non-highlighted items)</li>
 <li> All items with the same highlight state are drawn in order of their identifiers (so objects with larger identifiers
 will be drawn in front of objects with small identifiers)</li>
-</ol> 
+</ol>
 
-This system is not terribly sophisticated, but it works well enough.  You just need to be sure that if you want object A 
+This system is not terribly sophisticated, but it works well enough.  You just need to be sure that if you want object A
 to appear in front of object B, then object A has to have a higher object ID.  If a more sophisticated system is required,
 this may be modified in a future release.
 
 
 <h3> Debugging </h3>
 
-Developing in javascript?  <a href = "http://getfirebug.com/">Firebug</a> is a very fine (and very free!) javascript debugger.
+Developing in javascript?  <a href="http://getfirebug.com/">Firebug</a> is a very fine (and very free!) javascript debugger.
 <em>However,</em> there can be a problem with breakpoints.  The animations in this system rely heavily on the javascript
 setTimeout command.  If a timeout is set, and then firebug hits a breakpoint, the timeout will be lost.  Thus, hitting
-a breakpoint in the wrong piece of code (pretty much anything in AnimationMain.js), will cause the animation to 
+a breakpoint in the wrong piece of code (pretty much anything in AnimationMain.js), will cause the animation to
 stop.  I've managed the use of setTimeout calls so that hitting a breakpoint in code that uses the animation libraries
 (as opposed to code in the libraries themselves) should <em>not</em> cause this problem.
 
 </div>
-<div class="footer">Copyright 2011 <a href = "http://www.cs.usfca.edu/galles">David Galles </a> </div>
+<div class="footer">Copyright 2011 <a href="http://www.cs.usfca.edu/galles">David Galles </a> </div>
 
 </div>
 
