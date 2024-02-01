@@ -80,6 +80,9 @@ function setCookie(cookieName,value,expireDays)
 
 
 var ANIMATION_SPEED_DEFAULT = 75;
+var ANIMATION_SPEED_SLIDER_MIN = 25;
+var ANIMATION_SPEED_SLIDER_MAX = 75;
+var ANIMATION_SPEED_SLIDER_STEP = 25;
 
 
 // TODO:  Move these out of global space into animation manager?
@@ -212,7 +215,7 @@ function doPlayPause()
     {
         this.playPauseBackButton.setAttribute("value", "pause");
     }
-    this.SetPaused(this.paused);
+    this.setPaused(this.paused);
 }
 
 
@@ -243,47 +246,6 @@ function initCanvas(canvas, generalControlBar, algorithmControlBar)
     animationManager.skipForwardButton.onclick = animationManager.skipForward.bind(animationManager);
 
 
-    var element = document.createElement("div");
-    element.setAttribute("display", "inline-block");
-    element.setAttribute("float", "left");
-
-
-    var tableEntry = document.createElement("td");
-
-
-
-
-
-    var newTable = document.createElement("table");
-
-    var midLevel = document.createElement("tr");
-    var bottomLevel = document.createElement("td");
-    midLevel.appendChild(bottomLevel);
-    bottomLevel.appendChild(element);
-    newTable.appendChild(midLevel);
-
-
-
-    midLevel = document.createElement("tr");
-    bottomLevel = document.createElement("td");
-    bottomLevel.align = "center";
-    var txtNode = document.createTextNode("Animation Speed");
-    midLevel.appendChild(bottomLevel);
-    bottomLevel.appendChild(txtNode);
-    newTable.appendChild(midLevel);
-
-
-
-    tableEntry.appendChild(newTable);
-
-
-
-    //Append the element in page (in span).
-    if(generalControlBar)
-    generalControlBar.appendChild(tableEntry);
-
-    //tableEntry.appendChild(element);
-
     var speed = getCookie("VisualizationSpeed");
     if (speed == null || speed == "")
     {
@@ -294,25 +256,18 @@ function initCanvas(canvas, generalControlBar, algorithmControlBar)
         speed = parseInt(speed);
     }
 
-    if(generalControlBar) {
-    $(element).slider({
-                      animate: true,
-                      value: speed,
-                      change: function(e, ui)
-                      {
-                        setCookie("VisualizationSpeed", String(ui.value), 30);
-                      },
-                      slide : function(e, ui){
-                      animationManager.SetSpeed(ui.value);
-                      }
+    var txtNode = document.createTextNode("speed:");
+    var tableEntry = document.createElement("td");
+    tableEntry.appendChild(txtNode);
+    if(generalControlBar)
+        generalControlBar.appendChild(tableEntry);
 
-                      });
-    }
-
-    animationManager.SetSpeed(speed);
-
-    element.setAttribute("style", "width:200px");
-
+    animationManager.speedSlider = animationManager.addControlToAnimationBar("Range", speed);
+    animationManager.speedSlider.setAttribute("min", ANIMATION_SPEED_SLIDER_MIN);
+    animationManager.speedSlider.setAttribute("max", ANIMATION_SPEED_SLIDER_MAX);
+    animationManager.speedSlider.setAttribute("step", ANIMATION_SPEED_SLIDER_STEP);
+    animationManager.speedSlider.onchange = animationManager.setAnimationSpeed.bind(animationManager);
+    animationManager.setAnimationSpeed(speed);
 
 
     var width=getCookie("VisualizationWidth");
@@ -336,9 +291,9 @@ function initCanvas(canvas, generalControlBar, algorithmControlBar)
 
     var swappedControls=getCookie("VisualizationControlSwapped");
     this.swapped = swappedControls == "true"
-        if (this.swapped)
-        {
-        reorderSibling(this.canvas, this.generalControlBar.parentNode);
+    if (this.swapped)
+    {
+        reorderSibling(this.canvas, generalControlBar.parentNode);
     }
 
     canvas.width = width;
@@ -373,8 +328,8 @@ function initCanvas(canvas, generalControlBar, algorithmControlBar)
     animationManager.sizeButton.onclick = animationManager.changeSize.bind(animationManager) ;
 
 
-        animationManager.swapButton = animationManager.addControlToAnimationBar("Button", "Move Controls");
-        animationManager.swapButton.onclick = swapControlDiv.bind(animationManager);
+    animationManager.swapButton = animationManager.addControlToAnimationBar("Button", "Move Controls");
+    animationManager.swapButton.onclick = swapControlDiv.bind(animationManager);
 
 
     animationManager.addListener("AnimationStarted", animationManager, animStarted);
@@ -446,7 +401,7 @@ function AnimationManager(objectManager)
     }
 
     // Pause / unpause animation
-    this.SetPaused = function(pausedValue)
+    this.setPaused = function(pausedValue)
     {
         this.animationPaused = pausedValue;
         if (!this.animationPaused)
@@ -456,9 +411,16 @@ function AnimationManager(objectManager)
     }
 
     // Set the speed of the animation, from 0 (slow) to 100 (fast)
-    this.SetSpeed = function(newSpeed)
+    this.setAnimationSpeed = function(newSpeed)
     {
+        newSpeed = parseInt(newSpeed);
+        if (isNaN(newSpeed))
+        {
+            newSpeed = parseInt(this.speedSlider.value);
+        }
         this.animationBlockLength = Math.floor((100-newSpeed) / 2);
+        setCookie("VisualizationSpeed", String(newSpeed), 30);
+        // console.log(`New speed: ${newSpeed}`);
     }
 
 

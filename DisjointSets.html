@@ -7,15 +7,7 @@
         </title>
 
         <!-- css sheet for how the page is laid out -->
-
         <link rel="stylesheet" href="visualizationPageStyle.css">
-
-
-        <!-- jqueury stuff.  Only used for the animation speed slider. -->
-        <link rel="stylesheet" href="ThirdParty/jquery-ui-1.8.11.custom.css">
-
-        <script src="ThirdParty/jquery-1.5.2.min.js"></script>
-        <script src="ThirdParty/jquery-ui-1.8.11.custom.min.js"></script>
 
         <!-- Javascript for the actual visualization code -->
         <script type="text/javascript" src="AnimationLibrary/CustomEvents.js"> </script>
@@ -29,11 +21,11 @@
         <script type="text/javascript" src="AnimationLibrary/Line.js"> </script>
         <script type="text/javascript" src="AnimationLibrary/ObjectManager.js"> </script>
         <script type="text/javascript" src="AnimationLibrary/AnimationMain.js"> </script>
+
         <script type="text/javascript" src="AlgorithmLibrary/Algorithm.js"> </script>
         <script type="text/javascript" src="AlgorithmLibrary/DisjointSet.js"> </script>
 
-
-     </head>
+    </head>
 
     <body onload="init();" class="VisualizationMainPage">
 
@@ -51,15 +43,15 @@
                     <table id="AlgorithmSpecificControls"> </table>
                 </div>
 
-                    <!-- Drawing canvas where all animation is done.  Note:  can be resized in code -->
+                    <!-- Drawing canvas where all animation is done. Note: can be resized in code -->
 
                 <canvas id="canvas" width="1000" height="500"></canvas>
 
                 <div id="generalAnimationControlSection">
                     <!-- Table for buttons to control general animation (play/pause/undo/etc) ->
-                    <!-- (filled in by javascript code, specifically AnimationMain.js)  -->
+                    <!-- (filled in by javascript code, specifically AnimationMain.js) -->
 
-                    <table id="GeneralAnimationControls">  </table>
+                    <table id="GeneralAnimationControls"> </table>
                 </div>
 
             </div> <!-- mainContent -->
