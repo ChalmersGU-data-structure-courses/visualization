@@ -25,12 +25,9 @@
 // or implied, of the University of San Francisco
 
 
-function Heap(am, compare)
+function Heap(am)
 {
-    this.compare = compare ? window[compare] : function(a, b) { return a < b ? -1 : a > b ? 1 : 0; };
-
     this.init(am);
-
 }
 Heap.inheritFrom(Algorithm);
 
@@ -121,13 +118,11 @@ Heap.prototype.createArray = function()
 
 Heap.prototype.insertCallback = function(event)
 {
-    var insertedValue;
-
-    insertedValue = this.normalizeNumber(this.insertField.value, 4);
+    var insertedValue = this.normalizeNumber(this.insertField.value.toUpperCase());
     if (insertedValue != "")
     {
         this.insertField.value = "";
-        this.implementAction(this.insertElement.bind(this),insertedValue);
+        this.implementAction(this.insertElement.bind(this), insertedValue);
     }
 }
 

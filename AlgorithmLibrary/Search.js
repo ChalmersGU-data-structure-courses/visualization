@@ -493,10 +493,9 @@ Search.prototype.binarySearch = function(searchVal)
             this.cmd("SetHighlight", this.searchForBoxID, 0)
             this.cmd("SetHighlight", this.arrayID[mid],0);
             this.cmd("SetForegroundColor", this.binaryCodeID[5][1], Search.CODE_STANDARD_COLOR);
-            if (this.arrayData[mid] == searchVal) {
-// HIGHLIGHT CODE!
-        keepGoing = false;
-
+            if (this.compare(this.arrayData[mid], searchVal) == 0) {
+                // HIGHLIGHT CODE!
+                keepGoing = false;
             }
             else 
             {
@@ -507,7 +506,7 @@ Search.prototype.binarySearch = function(searchVal)
                 this.cmd("SetForegroundColor", this.binaryCodeID[7][1], Search.CODE_STANDARD_COLOR);
                 this.cmd("SetHighlight", this.searchForBoxID, 0)
                 this.cmd("SetHighlight", this.arrayID[mid],0);
-        if (this.arrayData[mid]  < searchVal) {
+                if (this.compare(this.arrayData[mid], searchVal) < 0) {
                     this.cmd("SetForegroundColor", this.binaryCodeID[8][0], Search.CODE_HIGHLIGHT_COLOR);
                     this.cmd("SetHighlight", this.lowID,1);
                     this.cmd("SetText", this.lowBoxID,mid+1);
@@ -623,7 +622,7 @@ Search.prototype.linearSearch = function(searchVal)
             this.cmd("SetForegroundColor", this.linearCodeID[2][3], Search.CODE_STANDARD_COLOR);
             this.cmd("SetHighlight", this.arrayID[foundIndex],0);
             this.cmd("SetHighlight", this.searchForBoxID,0);
-            goOn =  this.arrayData[foundIndex] < searchVal
+            goOn = this.compare(this.arrayData[foundIndex], searchVal) < 0
             if (goOn)
             {
                 foundIndex++;
@@ -648,8 +647,7 @@ Search.prototype.linearSearch = function(searchVal)
         this.cmd("Step");
         this.cmd("SetForegroundColor", this.linearCodeID[5][0], Search.CODE_STANDARD_COLOR);
     }
-
-    else if (this.arrayData[foundIndex] == searchVal)
+    else if (this.compare(this.arrayData[foundIndex], searchVal) == 0)
     {
         this.cmd("SetForegroundColor", this.linearCodeID[4][1], Search.CODE_HIGHLIGHT_COLOR);
         this.cmd("SetForegroundColor", this.linearCodeID[4][2], Search.CODE_HIGHLIGHT_COLOR);

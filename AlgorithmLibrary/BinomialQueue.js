@@ -160,13 +160,11 @@ BinomialQueue.prototype.moveTree = function(tree)
 
 BinomialQueue.prototype.insertCallback = function(event)
 {
-    var insertedValue;
-
-    insertedValue = this.normalizeNumber(this.insertField.value, 4);
+    var insertedValue = this.normalizeNumber(this.insertField.value.toUpperCase());
     if (insertedValue != "")
     {
         this.insertField.value = "";
-        this.implementAction(this.insertElement.bind(this),insertedValue);
+        this.implementAction(this.insertElement.bind(this), insertedValue);
     }
 }
 
@@ -205,7 +203,7 @@ BinomialQueue.prototype.removeSmallest = function(dummy)
 
     if (this.treeRoot != null)
     {
-        var  tmp;
+        var tmp;
         var prev;
         var smallest = this.treeRoot;
 
@@ -217,7 +215,7 @@ BinomialQueue.prototype.removeSmallest = function(dummy)
             this.cmd("SetHighlight", tmp.graphicID, 1);
             this.cmd("SetHighlight", tmp.internalGraphicID, 1);
             this.cmd("Step");
-            if (tmp.data < smallest.data)
+            if (this.compare(tmp.data, smallest.data) < 0)
             {
                 this.cmd("SetHighlight", smallest.graphicID, 0);
                 this.cmd("SetHighlight", smallest.internalGraphicID, 0);
@@ -422,7 +420,7 @@ BinomialQueue.prototype.combineNodes = function()
         {
             this.cmd("Disconnect", this.treeRoot.rightSib.internalGraphicID, this.treeRoot.rightSib.rightSib.internalGraphicID);
         }
-        if (this.treeRoot.data < this.treeRoot.rightSib.data)
+        if (this.compare(this.treeRoot.data, this.treeRoot.rightSib.data) < 0)
         {
             tmp = this.treeRoot.rightSib;
             this.treeRoot.rightSib = tmp.rightSib;
@@ -510,7 +508,7 @@ BinomialQueue.prototype.combineNodes = function()
             }
 
             var tempRoot;
-            if (tmp2.rightSib.data < tmp2.rightSib.rightSib.data)
+            if (this.compare(tmp2.rightSib.data, tmp2.rightSib.rightSib.data) < 0)
             {
                 tmp = tmp2.rightSib.rightSib;
                 tmp2.rightSib.rightSib = tmp.rightSib;

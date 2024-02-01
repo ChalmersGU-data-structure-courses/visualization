@@ -168,13 +168,11 @@ FibonacciHeap.prototype.moveTree = function(tree)
 
 FibonacciHeap.prototype.insertCallback = function(event)
 {
-    var insertedValue;
-
-    insertedValue = this.normalizeNumber(this.insertField.value, 4);
+    var insertedValue = this.normalizeNumber(this.insertField.value.toUpperCase());
     if (insertedValue != "")
     {
         this.insertField.value = "";
-        this.implementAction(this.insertElement.bind(this),insertedValue);
+        this.implementAction(this.insertElement.bind(this), insertedValue);
     }
 }
 
@@ -263,7 +261,7 @@ FibonacciHeap.prototype.removeSmallest = function(dummy)
             {
                 for (tmp = this.treeRoot; tmp != null; tmp = tmp.rightSib)
                 {
-                    if (this.minElement == null || this.minElement.data > tmp.data)
+                    if (this.minElement == null || this.compare(this.minElement.data, tmp.data) > 0)
                     {
                         this.minElement = tmp;
 
@@ -453,7 +451,7 @@ FibonacciHeap.prototype.insertElement = function(insertedValue)
 
             this.cmd("Step");
             this.setPositions(this.treeRoot, FibonacciHeap.STARTING_X, FibonacciHeap.STARTING_Y);
-            if (this.minElement.data > insertNode.data)
+            if (this.compare(this.minElement.data, insertNode.data) > 0)
             {
                 this.cmd("Disconnect", this.minID, this.minElement.graphicID);
                 this.cmd("Disconnect", this.minID, this.minElement.internalGraphicID);
@@ -523,7 +521,7 @@ FibonacciHeap.prototype.insertElement = function(insertedValue)
 
             this.cmd("Step");
             this.setPositions(this.treeRoot, FibonacciHeap.STARTING_X, FibonacciHeap.STARTING_Y);
-            if (this.minElement.data > insertNode.data)
+            if (this.compare(this.minElement.data, insertNode.data) > 0)
             {
                 this.cmd("Disconnect", this.minID, this.minElement.graphicID);
                 this.cmd("Disconnect", this.minID, this.minElement.internalGraphicID);
@@ -678,7 +676,7 @@ FibonacciHeap.prototype.fixAfterRemoveMin = function()
         if (degreeArray[i] != null)
         {
             degreeArray[i].rightSib = this.treeRoot;
-            if (this.minElement == null || this.minElement.data > degreeArray[i].data)
+            if (this.minElement == null || this.compare(this.minElement.data, degreeArray[i].data) > 0)
             {
                 this.minElement = degreeArray[i];
             }
@@ -770,7 +768,7 @@ FibonacciHeap.prototype.SetAllTreePositions = function(tree, treeList, tree2)
 
 FibonacciHeap.prototype.combineTrees = function(tree1, tree2)
 {
-    if (tree2.data < tree1.data)
+    if (this.compare(tree2.data, tree1.data) < 0)
     {
         var tmp = tree2;
         tree2 = tree1;

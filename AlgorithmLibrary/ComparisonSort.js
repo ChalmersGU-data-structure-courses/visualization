@@ -331,7 +331,7 @@ ComparisonSort.prototype.selectSortCallback = function(event)
             this.cmd("SetForegroundColor", this.barObjects[j], ComparisonSort.HIGHLIGHT_BAR_COLOR);
             this.cmd("SetBackgroundColor", this.barObjects[j], ComparisonSort.HIGHLIGHT_BAR_BACKGROUND_COLOR);
             this.cmd("Step");
-            if (this.arrayData[j] < this.arrayData[smallestIndex])
+            if (this.compare(this.arrayData[j], this.arrayData[smallestIndex]) < 0)
             {
                 this.cmd("SetForegroundColor", this.barObjects[smallestIndex], ComparisonSort.BAR_FOREGROUND_COLOR);
                 this.cmd("SetBackgroundColor", this.barObjects[smallestIndex], ComparisonSort.BAR_BACKGROUND_COLOR);
@@ -352,6 +352,7 @@ ComparisonSort.prototype.selectSortCallback = function(event)
     }
     this.animationManager.StartNewAnimation(this.commands);
 }
+
 ComparisonSort.prototype.bubbleSortCallback = function(event)
 {
     this.animationManager.clearHistory();
@@ -367,7 +368,7 @@ ComparisonSort.prototype.bubbleSortCallback = function(event)
             this.cmd("SetForegroundColor", this.barObjects[j+1], ComparisonSort.HIGHLIGHT_BAR_COLOR);
             this.cmd("SetBackgroundColor", this.barObjects[j+1], ComparisonSort.HIGHLIGHT_BAR_BACKGROUND_COLOR);
             this.cmd("Step");
-            if (this.arrayData[j] > this.arrayData[j+1])
+            if (this.compare(this.arrayData[j], this.arrayData[j+1]) > 0)
             {
                 this.swap(j,j+1);
             }
@@ -430,7 +431,7 @@ ComparisonSort.prototype.doQuickSort = function(low, high)
 
         this.cmd("SetForegroundColor", this.barObjects[i], ComparisonSort.BAR_FOREGROUND_COLOR);
         this.cmd("SetBackgroundColor", this.barObjects[i], ComparisonSort.BAR_BACKGROUND_COLOR);
-        while (i <= j && this.arrayData[i] < pivot)
+        while (i <= j && this.compare(this.arrayData[i], pivot) < 0)
         {
             ++i;
             this.cmd("Move", this.iID, this.barPositionsX[i], this.array_label_y_pos + 20);
@@ -459,7 +460,7 @@ ComparisonSort.prototype.doQuickSort = function(low, high)
         this.cmd("SetForegroundColor", this.barObjects[low], ComparisonSort.BAR_FOREGROUND_COLOR);
         this.cmd("SetBackgroundColor", this.barObjects[low], ComparisonSort.BAR_BACKGROUND_COLOR);
 
-        while (j >= i && this.arrayData[j] > pivot)
+        while (j >= i && this.compare(this.arrayData[j], pivot) > 0)
         {
             --j;
             this.cmd("Move", this.jID, this.barPositionsX[j], this.array_label_y_pos + 20);
@@ -532,7 +533,7 @@ ComparisonSort.prototype.doMergeSort = function(low,high)
         var rightIndex = mid+1;
         while (insertIndex <= high)
         {
-            if (leftIndex <= mid && (rightIndex > high || this.arrayData[leftIndex] <= this.arrayData[rightIndex]))
+            if (leftIndex <= mid && (rightIndex > high || this.compare(this.arrayData[leftIndex], this.arrayData[rightIndex]) <= 0))
             {
                 this.arraySwap[insertIndex] = this.arrayData[leftIndex];
                 this.cmd("Move", this.barObjects[leftIndex], this.barPositionsX[insertIndex], ComparisonSort.LOWER_ARRAY_Y_POS);
@@ -627,7 +628,7 @@ ComparisonSort.prototype.insertionSortSkip = function(inc, offset)
             this.cmd("SetBackgroundColor", this.barObjects[j], ComparisonSort.HIGHLIGHT_BAR_BACKGROUND_COLOR);
             this.cmd("SetBackgroundColor", this.barObjects[j - inc], ComparisonSort.HIGHLIGHT_BAR_BACKGROUND_COLOR);
             this.cmd("Step");
-            if (this.arrayData[j-inc] <= this.arrayData[j])
+            if (this.compare(this.arrayData[j-inc], this.arrayData[j]) <= 0)
             {
                 this.cmd("SetForegroundColor", this.barObjects[j], ComparisonSort.BAR_FOREGROUND_COLOR);
                 this.cmd("SetForegroundColor", this.barObjects[j-inc], ComparisonSort.BAR_FOREGROUND_COLOR);

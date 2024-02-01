@@ -187,7 +187,7 @@ BucketSort.prototype.bucketSortCallback = function(event)
             this.cmd("SetHighlight", tmp.graphicID, 0);
             this.cmd("SetHighlight", node.graphicID, 0);
 
-            if (Number(tmp.data) >= Number(node.data))
+            if (this.compare(tmp.data, node.data) >= 0)
             {
                 this.cmd("Disconnect", this.linkedListRects[index], linkedListData[index].graphicID);
                 node.next = tmp;
@@ -209,7 +209,7 @@ BucketSort.prototype.bucketSortCallback = function(event)
                     this.cmd("SetHighlight", node.graphicID, 0);
                 }
 
-                while (tmp.next != null && tmp.next.data < node.data)
+                while (tmp.next != null && this.compare(tmp.next.data, node.data) < 0)
                 {
                     tmp = tmp.next;
                     if (tmp.next != null)

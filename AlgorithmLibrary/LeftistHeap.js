@@ -116,13 +116,11 @@ LeftistHeap.prototype.NPLChangedHandler = function(logicalRep, event)
 
 LeftistHeap.prototype.insertCallback = function(event)
 {
-    var insertedValue;
-
-    insertedValue = this.normalizeNumber(this.insertField.value, 4);
+    var insertedValue = this.normalizeNumber(this.insertField.value.toUpperCase());
     if (insertedValue != "")
     {
         this.insertField.value = "";
-        this.implementAction(this.insertElement.bind(this),insertedValue);
+        this.implementAction(this.insertElement.bind(this), insertedValue);
     }
 }
 
@@ -293,7 +291,7 @@ LeftistHeap.prototype.merge = function(tree1, tree2)
     var tmp;
     this.cmd("SetHighlight", tree1.graphicID, 1);
     this.cmd("SetHighlight", tree2.graphicID, 1);
-    if (tree2.data  < tree1.data)
+    if (this.compare(tree2.data, tree1.data) < 0)
     {
         this.cmd("SetText", LeftistHeap.MESSAGE_ID, "Min element is in right heap.  Recursively merge right subtree of right heap with left heap");
         tmp = tree1;

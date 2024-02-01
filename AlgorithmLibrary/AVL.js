@@ -119,12 +119,9 @@ AVL.prototype.reset = function()
 
 AVL.prototype.insertCallback = function(event)
 {
-    var insertedValue = this.insertField.value;
-    // Get text value
-    insertedValue = this.normalizeNumber(insertedValue, 4);
+    var insertedValue = this.normalizeNumber(this.insertField.value.toUpperCase());
     if (insertedValue != "")
     {
-        // set text value
         this.insertField.value = "";
         this.implementAction(this.insertElement.bind(this), insertedValue);
     }
@@ -132,22 +129,19 @@ AVL.prototype.insertCallback = function(event)
 
 AVL.prototype.deleteCallback = function(event)
 {
-    var deletedValue = this.deleteField.value;
+    var deletedValue = this.normalizeNumber(this.deleteField.value.toUpperCase());
     if (deletedValue != "")
     {
-        deletedValue = this.normalizeNumber(deletedValue, 4);
         this.deleteField.value = "";
         this.implementAction(this.deleteElement.bind(this),deletedValue);
     }
 }
 
-
 AVL.prototype.findCallback = function(event)
 {
-    var findValue = this.findField.value;
+    var findValue = this.normalizeNumber(this.findField.value.toUpperCase());
     if (findValue != "")
     {
-        findValue = this.normalizeNumber(findValue, 4);
         this.findField.value = "";
         this.implementAction(this.findElement.bind(this),findValue);
     }
@@ -230,46 +224,42 @@ AVL.prototype.doFind = function(tree, value)
     if (tree != null)
     {
         this.cmd("SetHighlight", tree.graphicID, 1);
-        if (tree.data == value)
+        var cmp = this.compare(tree.data, value);
+        if (cmp == 0)
         {
             this.cmd("SetText", 0, "Searching for "+value+" : " + value + " = " + value + " (Element found!)");
             this.cmd("Step");
             this.cmd("SetText", 0, "Found:"+value);
             this.cmd("SetHighlight", tree.graphicID, 0);
         }
+        else if (cmp > 0)
+        {
+            this.cmd("SetText", 0, "Searching for "+value+" : " + value + " < " + tree.data + " (look to left subtree)");
+            this.cmd("Step");
+            this.cmd("SetHighlight", tree.graphicID, 0);
+            if (tree.left!= null)
+            {
+                this.cmd("CreateHighlightCircle", this.highlightID, AVL.HIGHLIGHT_COLOR, tree.x, tree.y);
+                this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
+                this.cmd("Step");
+                this.cmd("Delete", this.highlightID);
+            }
+            this.doFind(tree.left, value);
+        }
         else
         {
-            if (tree.data > value)
+            this.cmd("SetText", 0, " Searching for "+value+" : " + value + " > " + tree.data + " (look to right subtree)");
+            this.cmd("Step");
+            this.cmd("SetHighlight", tree.graphicID, 0);
+            if (tree.right!= null)
             {
-                this.cmd("SetText", 0, "Searching for "+value+" : " + value + " < " + tree.data + " (look to left subtree)");
+                this.cmd("CreateHighlightCircle", this.highlightID, AVL.HIGHLIGHT_COLOR, tree.x, tree.y);
+                this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
                 this.cmd("Step");
-                this.cmd("SetHighlight", tree.graphicID, 0);
-                if (tree.left!= null)
-                {
-                    this.cmd("CreateHighlightCircle", this.highlightID, AVL.HIGHLIGHT_COLOR, tree.x, tree.y);
-                    this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
-                    this.cmd("Step");
-                    this.cmd("Delete", this.highlightID);
-                }
-                this.doFind(tree.left, value);
+                this.cmd("Delete", this.highlightID);
             }
-            else
-            {
-                this.cmd("SetText", 0, " Searching for "+value+" : " + value + " > " + tree.data + " (look to right subtree)");
-                this.cmd("Step");
-                this.cmd("SetHighlight", tree.graphicID, 0);
-                if (tree.right!= null)
-                {
-                    this.cmd("CreateHighlightCircle", this.highlightID, AVL.HIGHLIGHT_COLOR, tree.x, tree.y);
-                    this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
-                    this.cmd("Step");
-                    this.cmd("Delete", this.highlightID);
-                }
-                this.doFind(tree.right, value);
-            }
-
+            this.doFind(tree.right, value);
         }
-
     }
     else
     {
@@ -592,7 +582,8 @@ AVL.prototype.insert = function(elem, tree)
     this.cmd("SetHighlight", tree.graphicID, 1);
     this.cmd("SetHighlight", elem.graphicID, 1);
 
-    if (elem.data < tree.data)
+    var cmp = this.compare(elem.data, tree.data);
+    if (cmp < 0)
     {
         this.cmd("SetText", 0, elem.data + " < " + tree.data + ".  Looking at left subtree");
     }
@@ -604,7 +595,7 @@ AVL.prototype.insert = function(elem, tree)
     this.cmd("SetHighlight", tree.graphicID , 0);
     this.cmd("SetHighlight", elem.graphicID, 0);
 
-    if (elem.data < tree.data)
+    if (cmp < 0)
     {
         if (tree.left == null)
         {
@@ -765,11 +756,12 @@ AVL.prototype.treeDelete = function(tree, valueToDelete)
             leftchild = tree.parent.left == tree;
         }
         this.cmd("SetHighlight", tree.graphicID, 1);
-        if (valueToDelete < tree.data)
+        var cmp = this.compare(valueToDelete, tree.data);
+        if (cmp < 0)
         {
             this.cmd("SetText", 0, valueToDelete + " < " + tree.data + ".  Looking at left subtree");
         }
-        else if (valueToDelete > tree.data)
+        else if (cmp > 0)
         {
             this.cmd("SetText", 0, valueToDelete + " > " + tree.data + ".  Looking at right subtree");
         }
@@ -780,7 +772,7 @@ AVL.prototype.treeDelete = function(tree, valueToDelete)
         this.cmd("Step");
         this.cmd("SetHighlight", tree.graphicID, 0);
 
-        if (valueToDelete == tree.data)
+        if (cmp == 0)
         {
             if (tree.left == null && tree.right == null)
             {
@@ -1002,7 +994,7 @@ AVL.prototype.treeDelete = function(tree, valueToDelete)
 
             }
         }
-        else if (valueToDelete < tree.data)
+        else if (cmp < 0)
         {
             if (tree.left != null)
             {

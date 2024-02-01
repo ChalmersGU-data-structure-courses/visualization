@@ -115,17 +115,15 @@ MyAlgorithm.prototype.reset = function()
 //MyAlgorithm.prototype.insertCallback = function(event)
 //{
 //    // Get value to insert from textfield (created in addControls above)
-//    var insertedValue = this.insertField.value;
+//    // Also normalize it by parsing numbers, removing blanks, and converting to upper case
+//    var insertedValue = this.normalizeNumber(this.insertField.value.toUpperCase());
 //
-//  // If you want numbers to all have leading zeroes, you can add them like this:
-//    insertedValue = this.normalizeNumber(insertedValue, 4);
-//
-//  // Only do insertion if the text field is not empty ...
+//    // Only do insertion if the text field is not empty ...
 //    if (insertedValue != "")
 //    {
 //        // Clear text field after operation
 //        this.insertField.value = "";
-//      // Do the actual work.  The function implementAction is defined in the algorithm superclass
+//        // Do the actual work.  The function implementAction is defined in the algorithm superclass
 //        this.implementAction(this.insertElement.bind(this), insertedValue);
 //    }
 //}

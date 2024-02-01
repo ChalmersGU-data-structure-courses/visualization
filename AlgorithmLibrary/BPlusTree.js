@@ -218,21 +218,19 @@ BPlusTree.prototype.maxDegreeChangedHandler = function(newMaxDegree, event)
 
 BPlusTree.prototype.insertCallback = function(event)
 {
-    var insertedValue;
-    insertedValue = this.normalizeNumber(this.insertField.value, 4);
+    var insertedValue = this.normalizeNumber(this.insertField.value.toUpperCase());
     if (insertedValue != "")
     {
         this.insertField.value = "";
-        this.implementAction(this.insertElement.bind(this),insertedValue);
+        this.implementAction(this.insertElement.bind(this), insertedValue);
     }
 }
 
 BPlusTree.prototype.deleteCallback = function(event)
 {
-    var deletedValue = this.deleteField.value;
+    var deletedValue = this.normalizeNumber(this.deleteField.value.toUpperCase());
     if (deletedValue != "")
     {
-        deletedValue = this.normalizeNumber(this.deleteField.value, 4);
         this.deleteField.value = "";
         this.implementAction(this.deleteElement.bind(this),deletedValue);
     }
@@ -402,10 +400,12 @@ BPlusTree.prototype.changeDegree = function(degree)
 
 BPlusTree.prototype.findCallback = function(event)
 {
-    var findValue;
-    findValue = this.normalizeNumber(this.findField.value, 4);
-    this.findField.value = "";
-    this.implementAction(this.findElement.bind(this),findValue);
+    var findValue = this.normalizeNumber(this.findField.value.toUpperCase());
+    if (findValue != "")
+    {
+        this.findField.value = "";
+        this.implementAction(this.findElement.bind(this),findValue);
+    }
 }
 
 BPlusTree.prototype.findElement = function(findValue)
@@ -427,7 +427,7 @@ BPlusTree.prototype.findInTree = function(tree, val)
         this.cmd("SetHighlight", tree.graphicID, 1);
         this.cmd("Step");
         var i;
-        for (i = 0; i < tree.numKeys && tree.keys[i] < val; i++);
+        for (i = 0; i < tree.numKeys && this.compare(tree.keys[i], val) < 0; i++);
         if (i == tree.numKeys)
         {
             if (!tree.isLeaf)
@@ -444,7 +444,7 @@ BPlusTree.prototype.findInTree = function(tree, val)
                 this.cmd("SetText", this.messageID, "Element " + val + " is not in the tree");
             }
         }
-        else if (tree.keys[i] > val)
+        else if (this.compare(tree.keys[i], val) > 0)
         {
             if (!tree.isLeaf)
             {
@@ -531,7 +531,7 @@ BPlusTree.prototype.insert  = function(tree, insertValue)
         tree.numKeys++;
         this.cmd("SetNumElements", tree.graphicID, tree.numKeys);
         var insertIndex = tree.numKeys - 1;
-        while (insertIndex > 0 && tree.keys[insertIndex - 1] > insertValue)
+        while (insertIndex > 0 && this.compare(tree.keys[insertIndex - 1], insertValue) > 0)
         {
             tree.keys[insertIndex] = tree.keys[insertIndex - 1];
             this.cmd("SetText", tree.graphicID, tree.keys[insertIndex], insertIndex);
@@ -559,7 +559,7 @@ BPlusTree.prototype.insert  = function(tree, insertValue)
     else
     {
         var findIndex = 0;
-        while (findIndex < tree.numKeys && tree.keys[findIndex] < insertValue)
+        while (findIndex < tree.numKeys && this.compare(tree.keys[findIndex], insertValue) < 0)
         {
             findIndex++;
         }
@@ -787,7 +787,7 @@ BPlusTree.prototype.doDelete = function(tree, val)
         this.cmd("SetHighlight", tree.graphicID, 1);
         this.cmd("Step");
         var i;
-        for (i = 0; i < tree.numKeys && tree.keys[i] < val; i++);
+        for (i = 0; i < tree.numKeys && this.compare(tree.keys[i], val) < 0; i++);
         if (i == tree.numKeys)
         {
             if (!tree.isLeaf)
@@ -803,7 +803,7 @@ BPlusTree.prototype.doDelete = function(tree, val)
                 this.cmd("SetHighlight", tree.graphicID, 0);
             }
         }
-        else if (!tree.isLeaf && tree.keys[i] == val)
+        else if (!tree.isLeaf && this.compare(tree.keys[i], val) == 0)
         {
             this.cmd("SetEdgeHighlight", tree.graphicID, tree.children[i+1].graphicID, 1);
             this.cmd("Step");
@@ -819,7 +819,7 @@ BPlusTree.prototype.doDelete = function(tree, val)
             this.cmd("SetEdgeHighlight", tree.graphicID, tree.children[i].graphicID, 0);
             this.doDelete(tree.children[i], val);
         }
-        else if (tree.isLeaf && tree.keys[i] == val)
+        else if (tree.isLeaf && this.compare(tree.keys[i], val) == 0)
         {
             this.cmd("SetTextColor", tree.graphicID, 0xFF0000, i);
             this.cmd("Step");

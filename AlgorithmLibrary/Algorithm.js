@@ -107,31 +107,30 @@ Algorithm.prototype.implementAction = function(funct, val)
 }
 
 
-Algorithm.prototype.isAllDigits = function(str)
-{
-    for (var i = str.length - 1; i >= 0; i--)
-    {
-        if (str.charAt(i) < "0" || str.charAt(i) > "9")
-        {
-            return false;
-
+Algorithm.prototype.compare = function(a, b) {
+    if (isNaN(a) == isNaN(b)) {
+        // a and b are (1) both numbers or (2) both non-numbers
+        if (!isNaN(a)) {
+            // a and b are both numbers
+            a = Number(a); 
+            b = Number(b);
         }
+        return a == b ? 0 : a < b ? -1 : 1;
+    } else {
+        // a and b are of different types
+        // let's say that numbers are smaller than non-numbers
+        return isNaN(a) ? 1 : -1;
     }
-    return true;
 }
 
 
-Algorithm.prototype.normalizeNumber = function(input, maxLen)
+Algorithm.prototype.normalizeNumber = function(input)
 {
-    if (!this.isAllDigits(input) || input == "")
-    {
-        return input;
-    }
-    else
-    {
-        return ("OOO0000" +input).substr(-maxLen, maxLen);
-    }
+    input = input.trim();
+    var num = parseFloat(input);
+    return isNaN(num) ? input : num;
 }
+
 
 Algorithm.prototype.disableUI = function(event)
 {

@@ -98,13 +98,11 @@ SkewHeap.prototype.addControls =  function()
 
 SkewHeap.prototype.insertCallback = function(event)
 {
-    var insertedValue;
-
-    insertedValue = this.normalizeNumber(this.insertField.value, 4);
+    var insertedValue = this.normalizeNumber(this.insertField.value.toUpperCase());
     if (insertedValue != "")
     {
         this.insertField.value = "";
-        this.implementAction(this.insertElement.bind(this),insertedValue);
+        this.implementAction(this.insertElement.bind(this), insertedValue);
     }
 }
 

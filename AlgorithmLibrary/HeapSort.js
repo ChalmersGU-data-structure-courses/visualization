@@ -226,7 +226,7 @@ HeapSort.prototype.pushDown = function(index)
             this.cmd("Step");
             this.setIndexHighlight(2*index, 0);
             this.setIndexHighlight(2*index + 1, 0);
-            if (this.arrayData[2*index + 1] > this.arrayData[2*index])
+            if (this.compare(this.arrayData[2*index + 1], this.arrayData[2*index]) > 0)
             {
                 smallestIndex = 2*index + 1;
             }
@@ -237,7 +237,7 @@ HeapSort.prototype.pushDown = function(index)
         this.setIndexHighlight(index, 0);
         this.setIndexHighlight(smallestIndex, 0);
 
-        if (this.arrayData[smallestIndex] > this.arrayData[index])
+        if (this.compare(this.arrayData[smallestIndex], this.arrayData[index]) > 0)
         {
             this.swap(smallestIndex, index);
             index = smallestIndex;

@@ -97,12 +97,9 @@ SplayTree.prototype.reset = function()
 
 SplayTree.prototype.insertCallback = function(event)
 {
-    var insertedValue = this.insertField.value;
-    // Get text value
-    insertedValue = this.normalizeNumber(insertedValue, 4);
+    var insertedValue = this.normalizeNumber(this.insertField.value.toUpperCase());
     if (insertedValue != "")
     {
-        // set text value
         this.insertField.value = "";
         this.implementAction(this.insertElement.bind(this), insertedValue);
     }
@@ -110,15 +107,13 @@ SplayTree.prototype.insertCallback = function(event)
 
 SplayTree.prototype.deleteCallback = function(event)
 {
-    var deletedValue = this.deleteField.value;
+    var deletedValue = this.normalizeNumber(this.deleteField.value.toUpperCase());
     if (deletedValue != "")
     {
-        deletedValue = this.normalizeNumber(deletedValue, 4);
         this.deleteField.value = "";
         this.implementAction(this.deleteElement.bind(this),deletedValue);
     }
 }
-
 
 
 
@@ -282,10 +277,12 @@ SplayTree.prototype.printTreeRec = function(tree)
 
 SplayTree.prototype.findCallback = function(event)
 {
-    var findValue;
-    findValue = this.normalizeNumber(this.findField.value, 4);
-    this.findField.value = "";
-    this.implementAction(this.findElement.bind(this),findValue);
+    var findValue = this.normalizeNumber(this.findField.value.toUpperCase());
+    if (findValue != "")
+    {
+        this.findField.value = "";
+        this.implementAction(this.findElement.bind(this),findValue);
+    }
 }
 
 SplayTree.prototype.findElement = function(findValue)
