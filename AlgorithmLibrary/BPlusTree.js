@@ -59,27 +59,16 @@ BPlusTree.inheritFrom(Algorithm);
 BPlusTree.prototype.init = function(am)
 {
     BPlusTree.superclass.init.call(this, am);
-    var w = this.canvasWidth;
-    var h = this.canvasHeight;
-
-    this.nextIndex = 0;
-
-    this.preemptiveSplit = false
-
-    this.starting_x = w / 2;
-
     this.addControls();
 
-
+    this.nextIndex = 0;
+    this.preemptiveSplit = false
+    this.max_degree = 3;
     this.max_keys = 2;
     this.min_keys = 1;
     this.split_index = 1;
 
-    this.max_degree = 3;
-
-
-
-
+    this.commands = [];
     this.messageID = this.nextIndex++;
     this.cmd("CreateLabel", this.messageID, "", BPlusTree.MESSAGE_X, BPlusTree.MESSAGE_Y, 0);
     this.moveLabel1ID = this.nextIndex++;
@@ -88,14 +77,27 @@ BPlusTree.prototype.init = function(am)
     this.animationManager.StartNewAnimation(this.commands);
     this.animationManager.skipForward();
     this.animationManager.clearHistory();
-    this.commands = new Array();
 
+    this.sizeChanged();
+}
+
+BPlusTree.prototype.sizeChanged = function()
+{
+    var w = this.getCanvasWidth();
+    var h = this.getCanvasHeight();
+
+    this.starting_x = w / 2;
     this.first_print_pos_y = h - 3 * BPlusTree.PRINT_VERTICAL_GAP;
-
-
     this.xPosOfNextLabel = 100;
     this.yPosOfNextLabel = 200;
+
+    this.implementAction(() => {
+        this.commands = [];
+        this.resizeTree();
+        return this.commands;
+    });
 }
+
 
 BPlusTree.prototype.addControls =  function()
 {

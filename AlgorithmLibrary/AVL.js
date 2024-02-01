@@ -61,13 +61,8 @@ AVL.EXPLANITORY_TEXT_Y = 10;
 AVL.prototype.init = function(am)
 {
     AVL.superclass.init.call(this, am);
-    var w = this.canvasWidth;
-    var h = this.canvasHeight;
-
-    this.first_print_pos_y  = h - 2 * AVL.PRINT_VERTICAL_GAP;
-    this.print_max = w - 10;
-    this.startingX = w / 2;
     this.addControls();
+
     this.nextIndex = 1;
     this.commands = [];
     this.cmd("CreateLabel", 0, "", AVL.EXPLANITORY_TEXT_X, AVL.EXPLANITORY_TEXT_Y, 0);
@@ -75,7 +70,25 @@ AVL.prototype.init = function(am)
     this.animationManager.skipForward();
     this.animationManager.clearHistory();
 
+    this.sizeChanged();
 }
+
+AVL.prototype.sizeChanged = function()
+{
+    var w = this.getCanvasWidth();
+    var h = this.getCanvasHeight();
+
+    this.startingX = w / 2;
+    this.first_print_pos_y  = h - 2 * AVL.PRINT_VERTICAL_GAP;
+    this.print_max = w - 10;
+    
+    this.implementAction(() => {
+        this.commands = [];
+        this.resizeTree();
+        return this.commands;
+    });
+}
+
 
 AVL.prototype.addControls =  function()
 {
@@ -143,11 +156,6 @@ AVL.prototype.findCallback = function(event)
 AVL.prototype.printCallback = function(event)
 {
     this.implementAction(this.printTree.bind(this),"");
-}
-
-AVL.prototype.sizeChanged = function(newWidth, newHeight)
-{
-    this.startingX = newWidth / 2;
 }
 
 

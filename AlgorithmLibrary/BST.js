@@ -53,13 +53,6 @@ BST.inheritFrom(Algorithm);
 BST.prototype.init = function(am)
 {
     BST.superclass.init.call(this, am);
-    var w = this.canvasWidth;
-    var h = this.canvasHeight;
-
-    this.startingX = w / 2;
-    this.first_print_pos_y  = h - 2 * BST.PRINT_VERTICAL_GAP;
-    this.print_max = w - 10;
-
     this.addControls();
     
     this.nextIndex = 0;
@@ -70,7 +63,25 @@ BST.prototype.init = function(am)
     this.animationManager.skipForward();
     this.animationManager.clearHistory();
 
+    this.sizeChanged();
 }
+
+BST.prototype.sizeChanged = function()
+{
+    var w = this.getCanvasWidth();
+    var h = this.getCanvasHeight();
+
+    this.startingX = w / 2;
+    this.first_print_pos_y  = h - 2 * BST.PRINT_VERTICAL_GAP;
+    this.print_max = w - 10;
+
+    this.implementAction(() => {
+        this.commands = [];
+        this.resizeTree();
+        return this.commands;
+    });
+}
+
 
 BST.prototype.addControls =  function()
 {

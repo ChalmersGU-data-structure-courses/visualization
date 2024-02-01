@@ -60,7 +60,7 @@ OpenHash.INDEX_COLOR = "#0000FF";
 OpenHash.prototype.init = function(am)
 {
     OpenHash.superclass.init.call(this, am);
-    var h = this.canvasHeight;
+    var h = this.getCanvasHeight();
 
     this.nextIndex = 0;
     this.POINTER_ARRAY_ELEM_Y = h - OpenHash.POINTER_ARRAY_ELEM_WIDTH;

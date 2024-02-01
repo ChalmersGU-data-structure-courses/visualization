@@ -61,7 +61,7 @@ BucketSort.inheritFrom(Algorithm);
 BucketSort.prototype.init = function(am)
 {
     BucketSort.superclass.init.call(this, am);
-    var h = this.canvasHeight;
+    var h = this.getCanvasHeight();
 
     this.addControls();
     this.pointer_array_elem_y_small = h - 50;

@@ -130,7 +130,7 @@ RecFact.prototype.factorial = function(value)
     var oldX  = this.currentX;
     var oldY = this.currentY;
     this.currentY += RecFact.RECURSIVE_DELTA_Y;
-    if (this.currentY + Recursive.RECURSIVE_DELTA_Y > this.canvasHeight)
+    if (this.currentY + Recursive.RECURSIVE_DELTA_Y > this.getCanvasHeight())
     {
         this.currentY =  RecFact.ACTIVATION_RECORT_START_Y;
         this.currentX += Recursive.ACTIVATION_RECORD_SPACING;

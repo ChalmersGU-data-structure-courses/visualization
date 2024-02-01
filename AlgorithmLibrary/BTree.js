@@ -53,8 +53,7 @@ BTree.PRINT_COLOR = BTree.FOREGROUND_COLOR;
 
 function BTree(am, max_degree)
 {
-    this.initial_max_degree = this.max_degree = max_degree || 3;
-
+    this.initial_max_degree = max_degree || 3;
     this.init(am);
 }
 BTree.inheritFrom(Algorithm);
@@ -63,24 +62,16 @@ BTree.inheritFrom(Algorithm);
 BTree.prototype.init = function(am)
 {
     BTree.superclass.init.call(this, am);
-    var w = this.canvasWidth;
-    var h = this.canvasHeight;
-
-    this.nextIndex = 0;
-
-    this.starting_x = w / 2;
-
-    this.preemptiveSplit = false
-
-
     this.addControls();
 
-
+    this.nextIndex = 0;
+    this.preemptiveSplit = false
+    this.max_degree = this.initial_max_degree;
     this.max_keys = this.max_degree - 1;
     this.min_keys = Math.floor((this.max_degree + 1) / 2) - 1;
     this.split_index = Math.floor((this.max_degree - 1) / 2);
 
-
+    this.commands = [];
     this.messageID = this.nextIndex++;
     this.cmd("CreateLabel", this.messageID, "", BTree.MESSAGE_X, BTree.MESSAGE_Y, 0);
     this.moveLabel1ID = this.nextIndex++;
@@ -89,14 +80,27 @@ BTree.prototype.init = function(am)
     this.animationManager.StartNewAnimation(this.commands);
     this.animationManager.skipForward();
     this.animationManager.clearHistory();
-    this.commands = new Array();
 
+    this.sizeChanged();
+}
+
+BTree.prototype.sizeChanged = function()
+{
+    var w = this.getCanvasWidth();
+    var h = this.getCanvasHeight();
+
+    this.starting_x = w / 2;
     this.first_print_pos_y = h - 3 * BTree.PRINT_VERTICAL_GAP;
-
-
     this.xPosOfNextLabel = 100;
     this.yPosOfNextLabel = 200;
+
+    this.implementAction(() => {
+        this.commands = [];
+        this.resizeTree();
+        return this.commands;
+    });
 }
+
 
 BTree.prototype.addControls =  function()
 {

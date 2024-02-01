@@ -51,7 +51,7 @@ DisjointSet.inheritFrom(Algorithm);
 DisjointSet.prototype.init = function(am)
 {
     DisjointSet.superclass.init.call(this, am);
-    var h = this.canvasHeight;
+    var h = this.getCanvasHeight();
     this.addControls();
 
     this.array_start_y = h - 2 * DisjointSet.ARRAY_HEIGHT;

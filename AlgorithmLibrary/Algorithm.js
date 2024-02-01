@@ -73,8 +73,7 @@ Algorithm.prototype.init = function(am)
     am.addListener("AnimationStarted", this, this.disableUI);
     am.addListener("AnimationEnded", this, this.enableUI);
     am.addListener("AnimationUndo", this, this.undo);
-    this.canvasWidth = am.canvas.width;
-    this.canvasHeight = am.canvas.height;
+    am.addListener("CanvasSizeChanged", this, this.sizeChanged);
 
     this.actionHistory = [];
     this.recordAnimation = true;
@@ -82,8 +81,18 @@ Algorithm.prototype.init = function(am)
 }
 
 
+Algorithm.prototype.getCanvasWidth = function()
+{
+    return this.animationManager.canvas.width;
+}
+
+Algorithm.prototype.getCanvasHeight = function()
+{
+    return this.animationManager.canvas.height;
+}
+
 // Overload in subclass
-Algorithm.prototype.sizeChanged = function(newWidth, newHeight)
+Algorithm.prototype.sizeChanged = function()
 {
 
 }

@@ -63,7 +63,7 @@ ClosedHash.INDEX_COLOR = "#0000FF";
 ClosedHash.prototype.init = function(am)
 {
     ClosedHash.superclass.init.call(this, am);
-    var w = this.canvasWidth;
+    var w = this.getCanvasWidth();
 
     this.elements_per_row = Math.floor(w / ClosedHash.ARRAY_ELEM_WIDTH);
 

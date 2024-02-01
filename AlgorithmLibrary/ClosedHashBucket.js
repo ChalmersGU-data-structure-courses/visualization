@@ -70,7 +70,7 @@ ClosedHashBucket.INDEX_COLOR = "#0000FF";
 ClosedHashBucket.prototype.init = function(am)
 {
     ClosedHashBucket.superclass.init.call(this, am);
-    var w = this.canvasWidth;
+    var w = this.getCanvasWidth();
 
     this.elements_per_row = Math.floor(w / ClosedHashBucket.ARRAY_ELEM_WIDTH) ;
 

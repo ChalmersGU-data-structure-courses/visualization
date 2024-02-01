@@ -66,7 +66,7 @@ QueueLL.SIZE = 32;
 QueueLL.prototype.init = function(am)
 {
     QueueLL.superclass.init.call(this, am);
-    var h = this.canvasHeight;
+    var h = this.getCanvasHeight();
 
     this.addControls();
     this.nextIndex = 0;

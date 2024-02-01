@@ -59,8 +59,8 @@ Trie.inheritFrom(Algorithm);
 Trie.prototype.init = function(am)
 {
     Trie.superclass.init.call(this, am);
-    var w = this.canvasWidth;
-    var h = this.canvasHeight;
+    var w = this.getCanvasWidth();
+    var h = this.getCanvasHeight();
 
     this.startingX =  w / 2;
     this.first_print_pos_y  = h - 2 * Trie.PRINT_VERTICAL_GAP;

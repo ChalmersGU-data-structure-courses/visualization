@@ -344,7 +344,7 @@ DPChange.prototype.buildTable  = function(maxVal)
     var indexID;
     var xPos;
     var yPos;
-    var    table_rows = Math.floor((this.canvasHeight - DPChange.TABLE_ELEM_HEIGHT - DPChange.TABLE_START_Y) / DPChange.TABLE_ELEM_HEIGHT);
+    var table_rows = Math.floor((this.getCanvasHeight() - DPChange.TABLE_ELEM_HEIGHT - DPChange.TABLE_START_Y) / DPChange.TABLE_ELEM_HEIGHT);
     var table_cols = Math.ceil((maxVal + 1) / table_rows);
 
     var header1ID = this.nextIndex++;

@@ -54,8 +54,8 @@ Huffman.inheritFrom(Algorithm);
 Huffman.prototype.init = function(am)
 {
     Huffman.superclass.init.call(this, am);
-    var w = this.canvasWidth;
-    var h = this.canvasHeight;
+    var w = this.getCanvasWidth();
+    var h = this.getCanvasHeight();
 
     this.startingX =  w / 2;
     this.first_print_pos_y  = h - 2 * Huffman.PRINT_VERTICAL_GAP;

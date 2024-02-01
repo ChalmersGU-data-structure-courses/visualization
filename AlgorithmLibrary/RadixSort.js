@@ -55,7 +55,7 @@ RadixSort.inheritFrom(Algorithm);
 RadixSort.prototype.init = function(am)
 {
     RadixSort.superclass.init.call(this, am);
-    var h = this.canvasHeight;
+    var h = this.getCanvasHeight();
 
     this.ARRAY_ELEM_Y =  3 * RadixSort.COUNTER_ARRAY_ELEM_HEIGHT;
     this.COUNTER_ARRAY_ELEM_Y = Math.floor(h / 2);

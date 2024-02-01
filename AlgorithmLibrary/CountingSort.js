@@ -54,7 +54,7 @@ CountingSort.inheritFrom(Algorithm);
 CountingSort.prototype.init = function(am)
 {
     CountingSort.superclass.init.call(this, am);
-    var h = this.canvasHeight;
+    var h = this.getCanvasHeight();
 
     this.ARRAY_ELEM_Y =  3 * CountingSort.COUNTER_ARRAY_ELEM_HEIGHT;
     this.COUNTER_ARRAY_ELEM_Y = Math.floor(h / 2);

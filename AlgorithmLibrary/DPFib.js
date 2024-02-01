@@ -134,7 +134,7 @@ DPFib.prototype.buildTable  = function(maxVal)
     var indexID;
     var xPos;
     var yPos;
-    var    table_rows = Math.floor((this.canvasHeight - DPFib.TABLE_ELEM_HEIGHT - DPFib.TABLE_START_Y) / DPFib.TABLE_ELEM_HEIGHT);
+    var table_rows = Math.floor((this.getCanvasHeight() - DPFib.TABLE_ELEM_HEIGHT - DPFib.TABLE_START_Y) / DPFib.TABLE_ELEM_HEIGHT);
 
     for (i = 0; i <= maxVal; i++)
     {

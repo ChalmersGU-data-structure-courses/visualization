@@ -60,8 +60,8 @@ Ternary.inheritFrom(Algorithm);
 Ternary.prototype.init = function(am)
 {
     Ternary.superclass.init.call(this, am);
-    var w = this.canvasWidth;
-    var h = this.canvasHeight;
+    var w = this.getCanvasWidth();
+    var h = this.getCanvasHeight();
 
     this.startingX = w / 2;
     this.first_print_pos_y  = h - 2 * Ternary.PRINT_VERTICAL_GAP;

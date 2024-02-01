@@ -251,7 +251,7 @@ Queens.prototype.queens = function(board, current, size)
 
 
     this.currentY += Queens.RECURSIVE_DELTA_Y_QUEEN;
-    if (this.currentY + Queens.RECURSIVE_DELTA_Y_QUEEN > this.canvasHeight)
+    if (this.currentY + Queens.RECURSIVE_DELTA_Y_QUEEN > this.getCanvasHeight())
     {
         this.currentY =  Queens.ACTIVATION_RECORT_START_Y;
         this.currentX += Queens.ACTIVATION_RECORD_SPACING;

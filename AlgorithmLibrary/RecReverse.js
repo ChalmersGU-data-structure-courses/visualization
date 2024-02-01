@@ -129,7 +129,7 @@ Reverse.prototype.reverse = function(value)
     var oldX  = this.currentX;
     var oldY = this.currentY;
     this.currentY += Reverse.RECURSIVE_DELTA_Y;
-    if (this.currentY + Recursive.RECURSIVE_DELTA_Y > this.canvasHeight)
+    if (this.currentY + Recursive.RECURSIVE_DELTA_Y > this.getCanvasHeight())
     {
         this.currentY =  Reverse.ACTIVATION_RECORT_START_Y;
         this.currentX += Recursive.ACTIVATION_RECORD_SPACING;
