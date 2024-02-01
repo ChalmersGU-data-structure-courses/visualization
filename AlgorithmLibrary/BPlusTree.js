@@ -52,13 +52,8 @@ BPlusTree.PRINT_COLOR = BPlusTree.FOREGROUND_COLOR;
 function BPlusTree(am)
 {
     this.init(am);
-
 }
-
 BPlusTree.inheritFrom(Algorithm);
-
-
-
 
 
 BPlusTree.prototype.init = function(am)
@@ -217,7 +212,6 @@ BPlusTree.prototype.maxDegreeChangedHandler = function(newMaxDegree, event)
         this.implementAction(this.changeDegree.bind(this), newMaxDegree);
     }
 }
-
 
 
 BPlusTree.prototype.insertCallback = function(event)

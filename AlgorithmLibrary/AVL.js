@@ -27,7 +27,6 @@
 function AVL(am)
 {
     this.init(am);
-
 }
 AVL.inheritFrom(Algorithm);
 
@@ -211,12 +210,8 @@ AVL.prototype.printTreeRec = function(tree)
 AVL.prototype.findElement = function(findValue)
 {
     this.commands = [];
-
     this.highlightID = this.nextIndex++;
-
     this.doFind(this.treeRoot, findValue);
-
-
     return this.commands;
 }
 
@@ -361,8 +356,8 @@ AVL.prototype.singleRotateRight = function(tree)
     A.right = B;
     B.parent = A;
     B.left = t2;
-    this. resetHeight(B);
-    this. resetHeight(A);
+    this.resetHeight(B);
+    this.resetHeight(A);
     this.resizeTree();
 }
 
@@ -410,8 +405,8 @@ AVL.prototype.singleRotateLeft = function(tree)
     B.left = A;
     A.parent = B;
     A.right = t2;
-    this. resetHeight(A);
-    this. resetHeight(B);
+    this.resetHeight(A);
+    this.resetHeight(B);
 
     this.resizeTree();
 }
@@ -503,9 +498,9 @@ AVL.prototype.doubleRotateRight = function(tree)
     C.parent=B;
     A.right=t2;
     C.left = t3;
-    this. resetHeight(A);
-    this. resetHeight(C);
-    this. resetHeight(B);
+    this.resetHeight(A);
+    this.resetHeight(C);
+    this.resetHeight(B);
 
     this.resizeTree();
 
@@ -575,9 +570,9 @@ AVL.prototype.doubleRotateLeft = function(tree)
     C.parent=B;
     A.right=t2;
     C.left = t3;
-    this. resetHeight(A);
-    this. resetHeight(C);
-    this. resetHeight(B);
+    this.resetHeight(A);
+    this.resetHeight(C);
+    this.resetHeight(B);
 
     this.resizeTree();
 
@@ -738,8 +733,6 @@ AVL.prototype.insert = function(elem, tree)
             }
         }
     }
-
-
 }
 
 AVL.prototype.deleteElement = function(deletedValue)

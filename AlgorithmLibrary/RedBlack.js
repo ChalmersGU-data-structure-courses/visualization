@@ -1010,7 +1010,6 @@ RedBlack.prototype.treeDelete = function(tree, valueToDelete)
                     this.cmd("Delete", tree.right.graphicID);
                 }
 
-
                 if (leftchild && tree.parent != null)
                 {
                     tree.parent.left = null;
@@ -1022,7 +1021,6 @@ RedBlack.prototype.treeDelete = function(tree, valueToDelete)
                     }
                     else
                     {
-
                         this.attachLeftNullLeaf(tree.parent);
                         this.resizeTree();
                     }

@@ -50,7 +50,6 @@ BinomialQueue.INSERT_Y = 25
 function BinomialQueue(am)
 {
     this.init(am);
-
 }
 
 BinomialQueue.inheritFrom(Algorithm);

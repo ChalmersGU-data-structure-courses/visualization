@@ -56,13 +56,8 @@ function BTree(am, max_degree)
     this.initial_max_degree = this.max_degree = max_degree || 3;
 
     this.init(am);
-
 }
-
 BTree.inheritFrom(Algorithm);
-
-
-
 
 
 BTree.prototype.init = function(am)

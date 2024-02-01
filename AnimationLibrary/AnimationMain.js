@@ -42,11 +42,11 @@ function swapControlDiv()
     this.swapped = !this.swapped;
     if (this.swapped) {
     reorderSibling(this.canvas, this.generalControlBar.parentNode);
-        setCookie("VisualizationControlSwapped", "true", 30);
+    setCookie("VisualizationControlSwapped", "true", 30);
 
     } else {
     reorderSibling(this.generalControlBar.parentNode, this.canvas);
-        setCookie("VisualizationControlSwapped", "false", 30);
+    setCookie("VisualizationControlSwapped", "false", 30);
 
     }
 }
@@ -990,7 +990,6 @@ function AnimationManager(objectManager)
 
     }
 
-
     // Step backwards one step.  A no-op if the animation is not currently paused
     this.stepBack = function()
     {
@@ -1309,23 +1308,21 @@ AnimationManager.prototype.addControlToAnimationBar = function(type,name,contain
         return {};
     if (containerType == undefined)
     {
-            containerType = "input";
+        containerType = "input";
     }
     var element = document.createElement(containerType);
 
-        element.setAttribute("type", type);
-        element.setAttribute("value", name);
+    element.setAttribute("type", type);
+    element.setAttribute("value", name);
 
 
     var tableEntry = document.createElement("td");
 
     tableEntry.appendChild(element);
 
-
     //Append the element in page (in span).
     this.generalControlBar.appendChild(tableEntry);
     return element;
-
 }
 
 function SingleAnimation(id, fromX, fromY, toX, toY)

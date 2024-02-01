@@ -38,8 +38,8 @@ var AnimatedCircle = function(objectID, objectLabel)
     this.y = 0;
     this.alpha = 1.0;
     this.addedToScene = true;
-        this.highlightIndex = -1;
-        this.textHeight = 10;
+    this.highlightIndex = -1;
+    this.textHeight = 10;
 /*    this.foregroundColor  = '#007700';
     this.backgroundColor  = '#EEFFEE';
  */

@@ -37,8 +37,8 @@ function AnimatedLabel(id, val, center, initialWidth, ctx)
     this.addedToScene = true;
     this.labelColor = "#000000";
     this.textWidth = 0;
-        this.ctx = ctx;
-        this.height = 10;
+    this.ctx = ctx;
+    this.height = 10;
 
     if (initialWidth != undefined || false)
     {
@@ -49,9 +49,9 @@ function AnimatedLabel(id, val, center, initialWidth, ctx)
         this.width = getTextWidth();
     }
 
-        this.leftWidth = -1;
-        this.centerWidth = -1;
-        this.highlightIndex = -1;
+    this.leftWidth = -1;
+    this.centerWidth = -1;
+    this.highlightIndex = -1;
 }
 AnimatedLabel.inheritFrom(AnimatedObject);
 

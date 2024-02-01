@@ -43,7 +43,7 @@ Algorithm.prototype.setCodeAlpha = function(code, newAlpha)
 
 Algorithm.prototype.addCodeToCanvasBase  = function(code, start_x, start_y, line_height, standard_color, layer)
 {
-        layer = typeof layer !== 'undefined' ? layer : 0;
+    layer = typeof layer !== 'undefined' ? layer : 0;
     var codeID = Array(code.length);
     var i, j;
     for (i = 0; i < code.length; i++)
@@ -87,7 +87,6 @@ Algorithm.prototype.sizeChanged = function(newWidth, newHeight)
 {
 
 }
-
 
 
 Algorithm.prototype.implementAction = function(funct, val)

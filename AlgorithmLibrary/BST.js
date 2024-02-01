@@ -61,6 +61,7 @@ BST.prototype.init = function(am)
     this.print_max = w - 10;
 
     this.addControls();
+    
     this.nextIndex = 0;
     this.commands = [];
     this.cmd("CreateLabel", 0, "", 20, 10, 0);
@@ -193,12 +194,8 @@ BST.prototype.findCallback = function(event)
 BST.prototype.findElement = function(findValue)
 {
     this.commands = [];
-
     this.highlightID = this.nextIndex++;
-
     this.doFind(this.treeRoot, findValue);
-
-
     return this.commands;
 }
 
@@ -351,8 +348,6 @@ BST.prototype.insert = function(elem, tree)
             this.insert(elem, tree.right);
         }
     }
-
-
 }
 
 BST.prototype.deleteElement = function(deletedValue)
