@@ -349,13 +349,13 @@ BinomialQueue.prototype.merge = function()
     {
         this.treeRoot = this.secondaryTreeRoot;
         this.secondaryTreeRoot = null;
-        this.setPositions(this.treeRoot,  BinomialQueue.NODE_WIDTH, BinomialQueue.STARTING_Y);
+        this.setPositions(this.treeRoot, BinomialQueue.NODE_WIDTH, BinomialQueue.STARTING_Y);
         this.moveTree(this.treeRoot);
         return;
     }
     while (this.secondaryTreeRoot != null)
     {
-        var tmp  = this.secondaryTreeRoot;
+        var tmp = this.secondaryTreeRoot;
         this.secondaryTreeRoot = this.secondaryTreeRoot.rightSib;
         if (this.secondaryTreeRoot != null)
         {
@@ -377,7 +377,7 @@ BinomialQueue.prototype.merge = function()
             var tmp2  = this.treeRoot;
             while (tmp2.rightSib != null && tmp2.rightSib.degree < tmp.degree)
             {
-                tmp2 = tmp2. rightSib;
+                tmp2 = tmp2.rightSib;
             }
             if (tmp2.rightSib != null)
             {
