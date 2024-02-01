@@ -411,7 +411,7 @@ BST.prototype.treeDelete = function(tree, valueToDelete)
                 }
                 else
                 {
-                    treeRoot = null;
+                    this.treeRoot = null;
                 }
                 this.resizeTree();
                 this.cmd("Step");
