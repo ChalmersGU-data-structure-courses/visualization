@@ -60,14 +60,8 @@ Ternary.inheritFrom(Algorithm);
 Ternary.prototype.init = function(am)
 {
     Ternary.superclass.init.call(this, am);
-    var w = this.getCanvasWidth();
-    var h = this.getCanvasHeight();
-
-    this.startingX = w / 2;
-    this.first_print_pos_y  = h - 2 * Ternary.PRINT_VERTICAL_GAP;
-    this.print_max = w - 10;
-
     this.addControls();
+
     this.nextIndex = 0;
     this.commands = [];
     this.cmd("CreateLabel", 0, "", 20, 10, 0);
@@ -78,6 +72,25 @@ Ternary.prototype.init = function(am)
     this.animationManager.StartNewAnimation(this.commands);
     this.animationManager.skipForward();
     this.animationManager.clearHistory();
+
+    this.sizeChanged();
+}
+
+
+Ternary.prototype.sizeChanged = function()
+{
+    var w = this.getCanvasWidth();
+    var h = this.getCanvasHeight();
+
+    this.startingX =  w / 2;
+    this.first_print_pos_y  = h - 2 * Trie.PRINT_VERTICAL_GAP;
+    this.print_max  = w - 10;
+    
+    this.implementAction(() => {
+        this.commands = [];
+        this.resizeTree();
+        return this.commands;
+    });
 }
 
 
@@ -871,5 +884,5 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new Ternary(animManag, canvas.width, canvas.height);
+    currentAlg = new Ternary(animManag);
 }
