@@ -291,11 +291,8 @@ Algorithm.prototype.clearHistory = function()
     this.actionHistory = [];
 }
 
-        // Helper method to add text input with nice border.
-        //  AS3 probably has a built-in way to do this.   Replace when found.
 
-
-        // Helper method to create a command string from a bunch of arguments
+// Helper method to create a command string from a bunch of arguments
 Algorithm.prototype.cmd = function()
 {
     if (this.recordAnimation)

@@ -350,8 +350,7 @@ function AnimationManager(objectManager)
     AnimationManager.superclass.constructor.call(this);
 
     // Holder for all animated objects.
-    // All animation is done by manipulating objects in\
-    // this container
+    // All animation is done by manipulating objects in this container
     this.animatedObjects = objectManager;
     // TODO: change this to animatedObjects later
     this.objectManager = objectManager;
