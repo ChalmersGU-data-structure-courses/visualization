@@ -41,24 +41,91 @@ DisjointSet.FOREGROUND_COLOR = "#007700";
 DisjointSet.BACKGROUND_COLOR = "#EEFFEE";
 DisjointSet.PRINT_COLOR = DisjointSet.FOREGROUND_COLOR;
 
+
 function DisjointSet(am)
 {
     this.init(am);
 }
-
 DisjointSet.inheritFrom(Algorithm);
+
 
 DisjointSet.prototype.init = function(am)
 {
     DisjointSet.superclass.init.call(this, am);
-    var h = this.getCanvasHeight();
     this.addControls();
+    this.setup();
+}
 
+
+DisjointSet.prototype.sizeChanged = function()
+{
+    this.setup();
+}
+
+
+DisjointSet.prototype.addControls =  function()
+{
+    this.controls = [];
+
+    this.findField = this.addControlToAlgorithmBar("Text", "");
+    this.findField.onkeydown = this.returnSubmit(this.findField,  this.findCallback.bind(this), 4, true);
+    this.controls.push(this.findField);
+
+    var findButton = this.addControlToAlgorithmBar("Button", "Find");
+    findButton.onclick = this.findCallback.bind(this);
+
+    this.controls.push(findButton);
+
+    this.unionField1 = this.addControlToAlgorithmBar("Text", "");
+    this.unionField1.onkeydown = this.returnSubmit(this.unionField1,  this.unionCallback.bind(this), 4, true);
+
+    this.controls.push(this.unionField1);
+
+    this.unionField2 = this.addControlToAlgorithmBar("Text", "");
+    this.unionField2.onkeydown = this.returnSubmit(this.unionField2,  this.unionCallback.bind(this), 4, true);
+
+    this.unionButton = this.addControlToAlgorithmBar("Button", "Union");
+    this.unionButton.onclick = this.unionCallback.bind(this);
+
+    this.controls.push(this.unionField2);
+
+    this.pathCompressionBox = this.addCheckboxToAlgorithmBar("Path Compression");
+    this.pathCompressionBox.onclick = this.pathCompressionChangeCallback.bind(this);
+
+    this.controls.push(this.pathCompressionBox);
+
+    this.unionByRankBox = this.addCheckboxToAlgorithmBar("Union By Rank");
+    this.unionByRankBox.onclick = this.unionByRankChangeCallback.bind(this);
+
+    this.controls.push(this.unionByRankBox);
+
+    var radioButtonList = this.addRadioButtonGroupToAlgorithmBar([
+            "Rank = # of nodes",
+            "Rank = estimated height",
+        ],
+        "RankType");
+    this.rankNumberOfNodesButton = radioButtonList[0];
+    this.rankNumberOfNodesButton.onclick = this.rankTypeChangedCallback.bind(this, false);
+    this.controls.push(this.rankNumberOfNodesButton);
+
+    this.rankEstimatedHeightButton = radioButtonList[1];
+    this.rankEstimatedHeightButton.onclick = this.rankTypeChangedCallback.bind(this, true);
+    this.controls.push(this.rankEstimatedHeightButton);
+
+    this.rankNumberOfNodesButton.checked = !this.rankAsHeight;
+    this.rankEstimatedHeightButton.checked = this.rankAsHeight;
+}
+
+
+DisjointSet.prototype.setup = function()
+{
+    this.animationManager.resetAll();
+    this.nextIndex = 0;
+
+    var h = this.getCanvasHeight();
     this.array_start_y = h - 2 * DisjointSet.ARRAY_HEIGHT;
     this.tree_start_y = this.array_start_y - 50;
 
-    this.commands = [];
-    this.nextIndex = 0;
     this.highlight1ID = this.nextIndex++;
     this.highlight2ID = this.nextIndex++;
 
@@ -85,74 +152,8 @@ DisjointSet.prototype.init = function(am)
     this.pathCompression = false;
     this.unionByRank = false;
     this.rankAsHeight = false;
-    this.setup();
-}
 
-DisjointSet.prototype.addControls =  function()
-{
-    this.controls = [];
-
-
-    this.findField = this.addControlToAlgorithmBar("Text", "");
-    this.findField.onkeydown = this.returnSubmit(this.findField,  this.findCallback.bind(this), 4, true);
-    this.controls.push(this.findField);
-
-    var findButton = this.addControlToAlgorithmBar("Button", "Find");
-    findButton.onclick = this.findCallback.bind(this);
-
-    this.controls.push(findButton);
-
-
-    this.unionField1 = this.addControlToAlgorithmBar("Text", "");
-    this.unionField1.onkeydown = this.returnSubmit(this.unionField1,  this.unionCallback.bind(this), 4, true);
-
-    this.controls.push(this.unionField1);
-
-
-    this.unionField2 = this.addControlToAlgorithmBar("Text", "");
-    this.unionField2.onkeydown = this.returnSubmit(this.unionField2,  this.unionCallback.bind(this), 4, true);
-
-    this.unionButton = this.addControlToAlgorithmBar("Button", "Union");
-    this.unionButton.onclick = this.unionCallback.bind(this);
-
-    this.controls.push(this.unionField2);
-
-    this.pathCompressionBox = this.addCheckboxToAlgorithmBar("Path Compression");
-    this.pathCompressionBox.onclick = this.pathCompressionChangeCallback.bind(this);
-
-    this.controls.push(this.pathCompressionBox);
-
-    this.unionByRankBox = this.addCheckboxToAlgorithmBar("Union By Rank");
-    this.unionByRankBox.onclick = this.unionByRankChangeCallback.bind(this);
-
-    this.controls.push(this.unionByRankBox);
-
-    var radioButtonList = this.addRadioButtonGroupToAlgorithmBar(["Rank = # of nodes",
-                                                             "Rank = estimated height",
-                                                             ],
-                                                            "RankType");
-    this.rankNumberOfNodesButton = radioButtonList[0];
-    this.rankNumberOfNodesButton.onclick = this.rankTypeChangedCallback.bind(this, false);
-    this.controls.push(this.rankNumberOfNodesButton);
-
-
-    this.rankEstimatedHeightButton = radioButtonList[1];
-    this.rankEstimatedHeightButton.onclick = this.rankTypeChangedCallback.bind(this, true);
-    this.controls.push(this.rankEstimatedHeightButton);
-
-    this.rankNumberOfNodesButton.checked = !this.rankAsHeight;
-    this.rankEstimatedHeightButton.checked = this.rankAsHeight;
-
-}
-
-
-
-
-
-
-DisjointSet.prototype.setup = function()
-{
-    this.commands = new Array();
+    this.commands = [];
 
     for (var i = 0; i < SIZE; i++)
     {
@@ -166,11 +167,9 @@ DisjointSet.prototype.setup = function()
 
     }
 
-
     this.animationManager.StartNewAnimation(this.commands);
     this.animationManager.skipForward();
     this.animationManager.clearHistory();
-
 }
 
 
@@ -187,7 +186,6 @@ DisjointSet.prototype.reset = function()
     this.unionByRankBox.selected = this.unionByRank;
     this.rankNumberOfNodesButton.checked = !this.rankAsHeight;
     this.rankEstimatedHeightButton.checked = this.rankAsHeight;
-
 }
 
 
@@ -197,9 +195,8 @@ DisjointSet.prototype.enableUI = function(event)
     {
         this.controls[i].disabled = false;
     }
-
-
 }
+
 DisjointSet.prototype.disableUI = function(event)
 {
     for (var i = 0; i < this.controls.length; i++)
@@ -209,16 +206,13 @@ DisjointSet.prototype.disableUI = function(event)
 }
 
 
-
-
 DisjointSet.prototype.rankTypeChangedCallback = function(rankAsHeight, event)
 {
     if (this.rankAsHeight != rankAsHeight)
     {
-            this.implementAction(this.changeRankType.bind(this),  rankAsHeight);
+        this.implementAction(this.changeRankType.bind(this),  rankAsHeight);
     }
 }
-
 
 
 DisjointSet.prototype.pathCompressionChangeCallback = function(event)
@@ -229,6 +223,7 @@ DisjointSet.prototype.pathCompressionChangeCallback = function(event)
     }
 }
 
+
 DisjointSet.prototype.unionByRankChangeCallback = function(event)
 {
     if (this.unionByRank != this.unionByRankBox.checked)
@@ -236,6 +231,7 @@ DisjointSet.prototype.unionByRankChangeCallback = function(event)
         this.implementAction(this.changeUnionByRank.bind(this), this.unionByRankBox.checked);
     }
 }
+
 
 DisjointSet.prototype.changeRankType = function(newValue)
 {
@@ -255,8 +251,6 @@ DisjointSet.prototype.changeRankType = function(newValue)
     // clearAll();
     this.rebuildRootValues();
     return this.commands;
-
-
 }
 
 
@@ -274,7 +268,6 @@ DisjointSet.prototype.changeUnionByRank = function(newValue)
     // clearAll();
     this.rebuildRootValues();
     return this.commands;
-
 }
 
 
@@ -290,14 +283,12 @@ DisjointSet.prototype.changePathCompression = function(newValue)
         this.rebuildRootValues();
     // clearAll();
     return this.commands;
-
 }
+
 
 DisjointSet.prototype.findCallback = function(event)
 {
-    var findValue;
-
-    findValue = this.findField.value;
+    var findValue = this.findField.value;
     if (findValue != "" && parseInt(findValue) < SIZE)
     {
         this.findField.value.value = "";
@@ -305,10 +296,12 @@ DisjointSet.prototype.findCallback = function(event)
     }
 }
 
+
 DisjointSet.prototype.clearCallback = function(event)
 {
     this.implementAction(this.clearData.bind(this), "");
 }
+
 
 DisjointSet.prototype.clearData = function(ignored)
 {
@@ -321,7 +314,6 @@ DisjointSet.prototype.clearData = function(ignored)
 DisjointSet.prototype.getSizes = function()
 {
     var sizes = new Array(SIZE);
-
     for (var i = 0; i < SIZE; i++)
     {
         sizes[i] = 1;
@@ -343,10 +335,9 @@ DisjointSet.prototype.getSizes = function()
     return sizes;
 }
 
+
 DisjointSet.prototype.rebuildRootValues = function()
 {
-    var changed = false;
-
     if (this.unionByRank)
     {
         if (!this.rankAsHeight)
@@ -382,17 +373,13 @@ DisjointSet.prototype.rebuildRootValues = function()
     {
         this.cmd("SetText", this.arrayID[i], this.setData[i]);
     }
-
 }
+
 
 DisjointSet.prototype.unionCallback = function(event)
 {
-    var union1;
-    var union2;
-
-    union1 = this.unionField1.value;
-    union2 = this.unionField2.value;
-
+    var union1 = this.unionField1.value;
+    var union2 = this.unionField2.value;
 
     if ( union1 != "" && parseInt(union1) < SIZE &&
          union2 != "" && parseInt(union2) < SIZE)
@@ -419,15 +406,12 @@ DisjointSet.prototype.clearAll = function()
         this.treeY[i] =  this.tree_start_y;
         this.cmd("SetPosition", this.treeID[i], DisjointSet.TREE_START_X + this.treeIndexToLocation[i] * DisjointSet.TREE_ELEM_WIDTH, this.treeY[i]);
     }
-
-
 }
 
 
 DisjointSet.prototype.findElement = function(findValue)
 {
     this.commands = new Array();
-
 
     var found = this.doFind(parseInt(findValue));
 
@@ -441,7 +425,6 @@ DisjointSet.prototype.findElement = function(findValue)
     }
     return this.commands;
 }
-
 
 
 DisjointSet.prototype.doFind = function(elem)
@@ -475,7 +458,6 @@ DisjointSet.prototype.doFind = function(elem)
     {
         return elem;
     }
-
 }
 
 
@@ -486,12 +468,9 @@ DisjointSet.prototype.findRoot = function (elem)
     return elem;
 }
 
-
-
 // After linking two trees, move them next to each other.
 DisjointSet.prototype.adjustXPos = function(pos1, pos2)
 {
-
     var left1 = this.treeIndexToLocation[pos1];
     while (left1 > 0 && this.findRoot(this.locationToTreeIndex[left1 - 1]) == pos1)
     {
@@ -546,6 +525,7 @@ DisjointSet.prototype.adjustXPos = function(pos1, pos2)
     return true;
 }
 
+
 DisjointSet.prototype.doUnion = function(value)
 {
     this.commands = new Array();
@@ -554,10 +534,8 @@ DisjointSet.prototype.doUnion = function(value)
 
     this.cmd("CreateHighlightCircle", this.highlight1ID, DisjointSet.HIGHLIGHT_CIRCLE_COLOR, DisjointSet.TREE_START_X + this.treeIndexToLocation[arg1] * DisjointSet.TREE_ELEM_WIDTH, this.treeY[arg1]);
 
-
     var arg2 = this.doFind(parseInt(args[1]));
     this.cmd("CreateHighlightCircle", this.highlight2ID, DisjointSet.HIGHLIGHT_CIRCLE_COLOR, DisjointSet.TREE_START_X + this.treeIndexToLocation[arg2] * DisjointSet.TREE_ELEM_WIDTH, this.treeY[arg2]);
-
 
     if (arg1 == arg2)
     {
@@ -576,7 +554,6 @@ DisjointSet.prototype.doUnion = function(value)
     {
         changed = this.adjustXPos(arg2, arg1) || changed
     }
-
 
     if (this.unionByRank && this.setData[arg1] < this.setData[arg2])
     {
@@ -626,7 +603,6 @@ DisjointSet.prototype.doUnion = function(value)
         this.cmd("Delete", this.highlight1ID);
         this.cmd("Delete", this.highlight2ID);
     }
-
     return this.commands;
 }
 
@@ -681,7 +657,6 @@ DisjointSet.prototype.animateNewPositions = function()
         this.cmd("Move", this.treeID[i], DisjointSet.TREE_START_X + this.treeIndexToLocation[i] * DisjointSet.TREE_ELEM_WIDTH, this.treeY[i]);
     }
 }
-
 
 
 var currentAlg;
