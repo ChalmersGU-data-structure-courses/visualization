@@ -37,7 +37,6 @@ QueueArray.ARRAY_START_Y = 200;
 QueueArray.ARRAY_ELEM_WIDTH = 50;
 QueueArray.ARRAY_ELEM_HEIGHT = 50;
 
-QueueArray.ARRRAY_ELEMS_PER_LINE = 15;
 QueueArray.ARRAY_LINE_SPACING = 130;
 
 QueueArray.HEAD_POS_X = 180;
@@ -64,12 +63,13 @@ QueueArray.prototype.init = function(am)
 {
     QueueArray.superclass.init.call(this, am);
     this.addControls();
-    this.nextIndex = 0;
-    this.commands = [];
-    //this.tail_pos_y = h - QueueArray.LINKED_LIST_ELEM_HEIGHT;
-//    this.tail_label_y = this.tail_pos_y;
     this.setup();
-    this.initialIndex = this.nextIndex;
+}
+
+
+QueueArray.prototype.sizeChanged = function()
+{
+    this.setup();
 }
 
 
@@ -113,7 +113,7 @@ QueueArray.prototype.disableUI = function(event)
 
 QueueArray.prototype.setup = function()
 {
-
+    this.animationManager.resetAll();
     this.nextIndex = 0;
 
     this.arrayID = new Array(QueueArray.SIZE);
@@ -134,16 +134,22 @@ QueueArray.prototype.setup = function()
     this.tail = 0;
     this.leftoverLabelID = this.nextIndex++;
 
+    this.commands = [];
 
+    var xpos = QueueArray.ARRAY_START_X;
+    var ypos = QueueArray.ARRAY_START_Y;
     for (var i = 0; i < QueueArray.SIZE; i++)
     {
-        var xpos = (i  % QueueArray.ARRRAY_ELEMS_PER_LINE) * QueueArray.ARRAY_ELEM_WIDTH + QueueArray.ARRAY_START_X;
-        var ypos = Math.floor(i / QueueArray.ARRRAY_ELEMS_PER_LINE) * QueueArray.ARRAY_LINE_SPACING +  QueueArray.ARRAY_START_Y;
         this.cmd("CreateRectangle", this.arrayID[i],"", QueueArray.ARRAY_ELEM_WIDTH, QueueArray.ARRAY_ELEM_HEIGHT,xpos, ypos);
         this.cmd("CreateLabel",this.arrayLabelID[i],  i,  xpos, ypos + QueueArray.ARRAY_ELEM_HEIGHT);
         this.cmd("SetForegroundColor", this.arrayLabelID[i], QueueArray.INDEX_COLOR);
-
+        xpos += QueueArray.ARRAY_ELEM_WIDTH;
+        if (xpos > this.getCanvasWidth() - QueueArray.ARRAY_LINE_SPACING) {
+            xpos = QueueArray.ARRAY_START_X;
+            ypos += QueueArray.ARRAY_LINE_SPACING;
+        }
     }
+
     this.cmd("CreateLabel", headLabelID, "Head", QueueArray.HEAD_LABEL_X, QueueArray.HEAD_LABEL_Y);
     this.cmd("CreateRectangle", this.headID, 0, QueueArray.ARRAY_ELEM_WIDTH, QueueArray.ARRAY_ELEM_HEIGHT, QueueArray.HEAD_POS_X, QueueArray.HEAD_POS_Y);
 
@@ -163,8 +169,6 @@ QueueArray.prototype.setup = function()
     this.animationManager.StartNewAnimation(this.commands);
     this.animationManager.skipForward();
     this.animationManager.clearHistory();
-
-
 }
 
 
@@ -198,9 +202,23 @@ QueueArray.prototype.dequeueCallback = function(event)
 
 QueueArray.prototype.clearCallback = function(event)
 {
-    this.implementAction(this.clearAll.bind(this), "");
+    this.setup();
 }
 
+
+QueueArray.prototype.getXYPos = function(index) {
+    var xpos = QueueArray.ARRAY_START_X;
+    var ypos = QueueArray.ARRAY_START_Y;
+    for (var i = 0; i < index; i++)
+    {
+        xpos += QueueArray.ARRAY_ELEM_WIDTH;
+        if (xpos > this.getCanvasWidth() - QueueArray.ARRAY_LINE_SPACING) {
+            xpos = QueueArray.ARRAY_START_X;
+            ypos += QueueArray.ARRAY_LINE_SPACING;
+        }
+    }
+    return [xpos, ypos];
+}
 
 
 QueueArray.prototype.enqueue = function(elemToEnqueue)
@@ -219,8 +237,7 @@ QueueArray.prototype.enqueue = function(elemToEnqueue)
     this.cmd("CreateHighlightCircle", this.highlight1ID, QueueArray.INDEX_COLOR,  QueueArray.TAIL_POS_X, QueueArray.TAIL_POS_Y);
     this.cmd("Step");
 
-    var xpos = (this.tail  % QueueArray.ARRRAY_ELEMS_PER_LINE) * QueueArray.ARRAY_ELEM_WIDTH + QueueArray.ARRAY_START_X;
-    var ypos = Math.floor(this.tail / QueueArray.ARRRAY_ELEMS_PER_LINE) * QueueArray.ARRAY_LINE_SPACING +  QueueArray.ARRAY_START_Y;
+    var [xpos, ypos] = this.getXYPos(this.top);
 
     this.cmd("Move", this.highlight1ID, xpos, ypos + QueueArray.ARRAY_ELEM_HEIGHT);
     this.cmd("Step");
@@ -244,6 +261,7 @@ QueueArray.prototype.enqueue = function(elemToEnqueue)
     return this.commands;
 }
 
+
 QueueArray.prototype.dequeue = function(ignored)
 {
     this.commands = new Array();
@@ -253,20 +271,17 @@ QueueArray.prototype.dequeue = function(ignored)
 
     this.cmd("SetText", this.leftoverLabelID, "");
 
-
     this.cmd("CreateLabel", labDequeueID, "Dequeued Value: ", QueueArray.QUEUE_LABEL_X, QueueArray.QUEUE_LABEL_Y);
 
     this.cmd("CreateHighlightCircle", this.highlight1ID, QueueArray.INDEX_COLOR,  QueueArray.HEAD_POS_X, QueueArray.HEAD_POS_Y);
     this.cmd("Step");
 
-    var xpos = (this.head  % QueueArray.ARRRAY_ELEMS_PER_LINE) * QueueArray.ARRAY_ELEM_WIDTH + QueueArray.ARRAY_START_X;
-    var ypos = Math.floor(this.head / QueueArray.ARRRAY_ELEMS_PER_LINE) * QueueArray.ARRAY_LINE_SPACING +  QueueArray.ARRAY_START_Y;
+    var [xpos, ypos] = this.getXYPos(this.top);
 
     this.cmd("Move", this.highlight1ID, xpos, ypos + QueueArray.ARRAY_ELEM_HEIGHT);
     this.cmd("Step");
 
     this.cmd("Delete", this.highlight1ID);
-
 
     var dequeuedVal = this.arrayData[this.head]
     this.cmd("CreateLabel", labDequeueValID,dequeuedVal, xpos, ypos);
@@ -283,32 +298,10 @@ QueueArray.prototype.dequeue = function(ignored)
 
     this.cmd("SetText", this.leftoverLabelID, "Dequeued Value: " + dequeuedVal);
 
-
     this.cmd("Delete", labDequeueID)
     this.cmd("Delete", labDequeueValID);
 
-
-
     return this.commands;
-}
-
-
-
-QueueArray.prototype.clearAll = function()
-{
-    this.commands = new Array();
-    this.cmd("SetText", this.leftoverLabelID, "");
-
-    for (var i = 0; i < QueueArray.SIZE; i++)
-    {
-        this.cmd("SetText", this.arrayID[i], "");
-    }
-    this.head = 0;
-    this.tail = 0;
-    this.cmd("SetText", this.headID, "0");
-    this.cmd("SetText", this.tailID, "0");
-    return this.commands;
-
 }
 
 

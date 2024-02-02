@@ -40,7 +40,6 @@ QueueLL.LINKED_LIST_ELEM_HEIGHT = 30;
 QueueLL.LINKED_LIST_INSERT_X = 250;
 QueueLL.LINKED_LIST_INSERT_Y = 50;
 
-QueueLL.LINKED_LIST_ELEMS_PER_LINE = 8;
 QueueLL.LINKED_LIST_ELEM_SPACING = 100;
 QueueLL.LINKED_LIST_LINE_SPACING = 100;
 
@@ -66,15 +65,14 @@ QueueLL.SIZE = 32;
 QueueLL.prototype.init = function(am)
 {
     QueueLL.superclass.init.call(this, am);
-    var h = this.getCanvasHeight();
-
     this.addControls();
-    this.nextIndex = 0;
-    this.commands = [];
-    this.tail_pos_y = h - QueueLL.LINKED_LIST_ELEM_HEIGHT;
-    this.tail_label_y = this.tail_pos_y;
     this.setup();
-    this.initialIndex = this.nextIndex;
+}
+
+
+QueueLL.prototype.sizeChanged = function()
+{
+    this.setup();
 }
 
 
@@ -118,6 +116,13 @@ QueueLL.prototype.disableUI = function(event)
 
 QueueLL.prototype.setup = function()
 {
+    this.animationManager.resetAll();
+    this.nextIndex = 0;
+    this.initialIndex = this.nextIndex;
+
+    var h = this.getCanvasHeight();
+    this.tail_pos_y = h - QueueLL.LINKED_LIST_ELEM_HEIGHT;
+    this.tail_label_y = this.tail_pos_y;
 
     this.linkedListElemID = new Array(QueueLL.SIZE);
     for (var i = 0; i < QueueLL.SIZE; i++)
@@ -131,10 +136,11 @@ QueueLL.prototype.setup = function()
     this.tailID = this.nextIndex++;
     this.tailLabelID = this.nextIndex++;
 
-
     this.arrayData = new Array(QueueLL.SIZE);
     this.top = 0;
     this.leftoverLabelID = this.nextIndex++;
+
+    this.commands = [];
 
     this.cmd("CreateLabel", this.headLabelID, "Head", QueueLL.TOP_LABEL_X, QueueLL.TOP_LABEL_Y);
     this.cmd("CreateRectangle", this.headID, "", QueueLL.TOP_ELEM_WIDTH, QueueLL.TOP_ELEM_HEIGHT, QueueLL.TOP_POS_X, QueueLL.TOP_POS_Y);
@@ -151,18 +157,22 @@ QueueLL.prototype.setup = function()
     this.animationManager.StartNewAnimation(this.commands);
     this.animationManager.skipForward();
     this.animationManager.clearHistory();
-
 }
+
 
 QueueLL.prototype.resetLinkedListPositions = function()
 {
+    var nextX = QueueLL.LINKED_LIST_START_X;
+    var nextY = QueueLL.LINKED_LIST_START_Y;
     for (var i = this.top - 1; i >= 0; i--)
     {
-        var nextX = (this.top - 1 - i) % QueueLL.LINKED_LIST_ELEMS_PER_LINE * QueueLL.LINKED_LIST_ELEM_SPACING + QueueLL.LINKED_LIST_START_X;
-        var nextY = Math.floor((this.top - 1 - i) / QueueLL.LINKED_LIST_ELEMS_PER_LINE) * QueueLL.LINKED_LIST_LINE_SPACING + QueueLL.LINKED_LIST_START_Y;
         this.cmd("Move", this.linkedListElemID[i], nextX, nextY);
+        nextX += QueueLL.LINKED_LIST_ELEM_SPACING;
+        if (nextX > this.getCanvasWidth() - QueueLL.LINKED_LIST_ELEM_SPACING) {
+            nextX = QueueLL.LINKED_LIST_START_X;
+            nextY += QueueLL.LINKED_LIST_LINE_SPACING;
+        }
     }
-
 }
 
 
@@ -198,7 +208,7 @@ QueueLL.prototype.dequeueCallback = function(event)
 
 QueueLL.prototype.clearCallback = function(event)
 {
-    this.implementAction(this.clearData.bind(this), "");
+    this.setup();
 }
 
 
@@ -302,21 +312,6 @@ QueueLL.prototype.dequeue = function(ignored)
 
 
     return this.commands;
-}
-
-
-
-QueueLL.prototype.clearAll = function()
-{
-    this.commands = new Array();
-    for (var i = 0; i < this.top; i++)
-    {
-        this.cmd("Delete", this.linkedListElemID[i]);
-    }
-    this.top = 0;
-    this.cmd("SetNull", this.headID, 1);
-    return this.commands;
-
 }
 
 

@@ -37,7 +37,6 @@ StackArray.ARRAY_START_Y = 200;
 StackArray.ARRAY_ELEM_WIDTH = 50;
 StackArray.ARRAY_ELEM_HEIGHT = 50;
 
-StackArray.ARRRAY_ELEMS_PER_LINE = 15;
 StackArray.ARRAY_LINE_SPACING = 130;
 
 StackArray.TOP_POS_X = 180;
@@ -50,17 +49,20 @@ StackArray.PUSH_LABEL_Y = 30;
 StackArray.PUSH_ELEMENT_X = 120;
 StackArray.PUSH_ELEMENT_Y = 30;
 
-StackArray.SIZE = 30;
+StackArray.SIZE = 15;
 
 
 StackArray.prototype.init = function(am)
 {
     StackArray.superclass.init.call(this, am);
     this.addControls();
-    this.nextIndex = 0;
-    this.commands = [];
     this.setup();
-    this.initialIndex = this.nextIndex;
+}
+
+
+StackArray.prototype.sizeChanged = function()
+{
+    this.setup();
 }
 
 
@@ -104,7 +106,9 @@ StackArray.prototype.disableUI = function(event)
 
 StackArray.prototype.setup = function()
 {
+    this.animationManager.resetAll();
     this.nextIndex = 0;
+    this.initialIndex = this.nextIndex;
 
     this.arrayID = new Array(StackArray.SIZE);
     this.arrayLabelID = new Array(StackArray.SIZE);
@@ -120,17 +124,23 @@ StackArray.prototype.setup = function()
     this.arrayData = new Array(StackArray.SIZE);
     this.top = 0;
     this.leftoverLabelID = this.nextIndex++;
-    this.commands = new Array();
 
+    this.commands = [];
+
+    var xpos = StackArray.ARRAY_START_X;
+    var ypos = StackArray.ARRAY_START_Y;
     for (var i = 0; i < StackArray.SIZE; i++)
     {
-        var xpos = (i  % StackArray.ARRRAY_ELEMS_PER_LINE) * StackArray.ARRAY_ELEM_WIDTH + StackArray.ARRAY_START_X;
-        var ypos = Math.floor(i / StackArray.ARRRAY_ELEMS_PER_LINE) * StackArray.ARRAY_LINE_SPACING +  StackArray.ARRAY_START_Y;
-        this.cmd("CreateRectangle", this.arrayID[i],"", StackArray.ARRAY_ELEM_WIDTH, StackArray.ARRAY_ELEM_HEIGHT,xpos, ypos);
-        this.cmd("CreateLabel",this.arrayLabelID[i],  i,  xpos, ypos + StackArray.ARRAY_ELEM_HEIGHT);
+        this.cmd("CreateRectangle", this.arrayID[i], "", StackArray.ARRAY_ELEM_WIDTH, StackArray.ARRAY_ELEM_HEIGHT,xpos, ypos);
+        this.cmd("CreateLabel",this.arrayLabelID[i], i, xpos, ypos + StackArray.ARRAY_ELEM_HEIGHT);
         this.cmd("SetForegroundColor", this.arrayLabelID[i], "#0000FF");
-
+        xpos += StackArray.ARRAY_ELEM_WIDTH;
+        if (xpos > this.getCanvasWidth() - StackArray.ARRAY_LINE_SPACING) {
+            xpos = StackArray.ARRAY_START_X;
+            ypos += StackArray.ARRAY_LINE_SPACING;
+        }
     }
+
     this.cmd("CreateLabel", this.topLabelID, "top", StackArray.TOP_LABEL_X, StackArray.TOP_LABEL_Y);
     this.cmd("CreateRectangle", this.topID, 0, StackArray.ARRAY_ELEM_WIDTH, StackArray.ARRAY_ELEM_HEIGHT, StackArray.TOP_POS_X, StackArray.TOP_POS_Y);
 
@@ -142,7 +152,6 @@ StackArray.prototype.setup = function()
     this.animationManager.StartNewAnimation(this.commands);
     this.animationManager.skipForward();
     this.animationManager.clearHistory();
-
 }
 
 
@@ -177,14 +186,22 @@ StackArray.prototype.popCallback = function(event)
 
 StackArray.prototype.clearCallback = function(event)
 {
-    this.implementAction(this.clearData.bind(this), "");
+    this.setup();
 }
 
-StackArray.prototype.clearData = function(ignored)
-{
-    this.commands = new Array();
-    this.clearAll();
-    return this.commands;
+
+StackArray.prototype.getXYPos = function(index) {
+    var xpos = StackArray.ARRAY_START_X;
+    var ypos = StackArray.ARRAY_START_Y;
+    for (var i = 0; i < index; i++)
+    {
+        xpos += StackArray.ARRAY_ELEM_WIDTH;
+        if (xpos > this.getCanvasWidth() - StackArray.ARRAY_LINE_SPACING) {
+            xpos = StackArray.ARRAY_START_X;
+            ypos += StackArray.ARRAY_LINE_SPACING;
+        }
+    }
+    return [xpos, ypos];
 }
 
 
@@ -205,8 +222,7 @@ StackArray.prototype.push = function(elemToPush)
     this.cmd("CreateHighlightCircle", this.highlight1ID, "#0000FF",  StackArray.TOP_POS_X, StackArray.TOP_POS_Y);
     this.cmd("Step");
 
-    var xpos = (this.top  % StackArray.ARRRAY_ELEMS_PER_LINE) * StackArray.ARRAY_ELEM_WIDTH + StackArray.ARRAY_START_X;
-    var ypos = Math.floor(this.top / StackArray.ARRRAY_ELEMS_PER_LINE) * StackArray.ARRAY_LINE_SPACING +  StackArray.ARRAY_START_Y;
+    var [xpos, ypos] = this.getXYPos(this.top);
 
     this.cmd("Move", this.highlight1ID, xpos, ypos + StackArray.ARRAY_ELEM_HEIGHT);
     this.cmd("Step");
@@ -229,6 +245,7 @@ StackArray.prototype.push = function(elemToPush)
 
     return this.commands;
 }
+
 
 StackArray.prototype.pop = function(ignored)
 {
@@ -253,8 +270,7 @@ StackArray.prototype.pop = function(ignored)
     this.cmd("CreateHighlightCircle", this.highlight1ID, "#0000FF",  StackArray.TOP_POS_X, StackArray.TOP_POS_Y);
     this.cmd("Step");
 
-    var xpos = (this.top  % StackArray.ARRRAY_ELEMS_PER_LINE) * StackArray.ARRAY_ELEM_WIDTH + StackArray.ARRAY_START_X;
-    var ypos = Math.floor(this.top / StackArray.ARRRAY_ELEMS_PER_LINE) * StackArray.ARRAY_LINE_SPACING +  StackArray.ARRAY_START_Y;
+    var [xpos, ypos] = this.getXYPos(this.top);
 
     this.cmd("Move", this.highlight1ID, xpos, ypos + StackArray.ARRAY_ELEM_HEIGHT);
     this.cmd("Step");
@@ -268,26 +284,8 @@ StackArray.prototype.pop = function(ignored)
     this.cmd("Delete", this.highlight1ID);
     this.cmd("SetText", this.leftoverLabelID, "Popped Value: " + this.arrayData[this.top]);
 
-
-
     return this.commands;
 }
-
-
-
-StackArray.prototype.clearAll = function()
-{
-    this.commands = new Array();
-    for (var i = 0; i < this.top; i++)
-    {
-        this.cmd("SetText", this.arrayID[i], "");
-    }
-    this.top = 0;
-    this.cmd("SetText", this.topID, "0");
-    return this.commands;
-
-}
-
 
 
 var currentAlg;

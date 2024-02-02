@@ -40,7 +40,6 @@ StackLL.LINKED_LIST_ELEM_HEIGHT = 30;
 StackLL.LINKED_LIST_INSERT_X = 250;
 StackLL.LINKED_LIST_INSERT_Y = 50;
 
-StackLL.LINKED_LIST_ELEMS_PER_LINE = 8;
 StackLL.LINKED_LIST_ELEM_SPACING = 100;
 StackLL.LINKED_LIST_LINE_SPACING = 100;
 
@@ -64,10 +63,13 @@ StackLL.prototype.init = function(am)
 {
     StackLL.superclass.init.call(this, am);
     this.addControls();
-    this.nextIndex = 0;
-    this.commands = [];
     this.setup();
-    this.initialIndex = this.nextIndex;
+}
+
+
+StackLL.prototype.sizeChanged = function()
+{
+    this.setup();
 }
 
 
@@ -111,6 +113,9 @@ StackLL.prototype.disableUI = function(event)
 
 StackLL.prototype.setup = function()
 {
+    this.animationManager.resetAll();
+    this.nextIndex = 0;
+    this.initialIndex = this.nextIndex;
 
     this.linkedListElemID = new Array(StackLL.SIZE);
     for (var i = 0; i < StackLL.SIZE; i++)
@@ -125,6 +130,8 @@ StackLL.prototype.setup = function()
     this.top = 0;
     this.leftoverLabelID = this.nextIndex++;
 
+    this.commands = [];
+
     this.cmd("CreateLabel", this.topLabelID, "Top", StackLL.TOP_LABEL_X, StackLL.TOP_LABEL_Y);
     this.cmd("CreateRectangle", this.topID, "", StackLL.TOP_ELEM_WIDTH, StackLL.TOP_ELEM_HEIGHT, StackLL.TOP_POS_X, StackLL.TOP_POS_Y);
     this.cmd("SetNull", this.topID, 1);
@@ -134,21 +141,23 @@ StackLL.prototype.setup = function()
     this.animationManager.StartNewAnimation(this.commands);
     this.animationManager.skipForward();
     this.animationManager.clearHistory();
-
 }
+
 
 StackLL.prototype.resetLinkedListPositions = function()
 {
+    var nextX = QueueLL.LINKED_LIST_START_X;
+    var nextY = QueueLL.LINKED_LIST_START_Y;
     for (var i = this.top - 1; i >= 0; i--)
     {
-        var nextX = (this.top - 1 - i) % StackLL.LINKED_LIST_ELEMS_PER_LINE * StackLL.LINKED_LIST_ELEM_SPACING + StackLL.LINKED_LIST_START_X;
-        var nextY = Math.floor((this.top - 1 - i) / StackLL.LINKED_LIST_ELEMS_PER_LINE) * StackLL.LINKED_LIST_LINE_SPACING + StackLL.LINKED_LIST_START_Y;
         this.cmd("Move", this.linkedListElemID[i], nextX, nextY);
+        nextX += QueueLL.LINKED_LIST_ELEM_SPACING;
+        if (nextX > this.getCanvasWidth() - QueueLL.LINKED_LIST_ELEM_SPACING) {
+            nextX = QueueLL.LINKED_LIST_START_X;
+            nextY += QueueLL.LINKED_LIST_LINE_SPACING;
+        }
     }
-
 }
-
-
 
 
 StackLL.prototype.reset = function()
@@ -181,9 +190,8 @@ StackLL.prototype.popCallback = function(event)
 
 StackLL.prototype.clearCallback = function(event)
 {
-    this.implementAction(this.clearAll.bind(this), "");
+    this.setup();
 }
-
 
 
 StackLL.prototype.push = function(elemToPush)
@@ -203,8 +211,6 @@ StackLL.prototype.push = function(elemToPush)
     this.cmd("CreateLabel", labPushValID,elemToPush, StackLL.PUSH_ELEMENT_X, StackLL.PUSH_ELEMENT_Y);
 
     this.cmd("Step");
-
-
 
     this.cmd("Move", labPushValID, StackLL.LINKED_LIST_INSERT_X, StackLL.LINKED_LIST_INSERT_Y);
 
@@ -233,6 +239,7 @@ StackLL.prototype.push = function(elemToPush)
 
     return this.commands;
 }
+
 
 StackLL.prototype.pop = function(ignored)
 {
@@ -269,22 +276,6 @@ StackLL.prototype.pop = function(ignored)
     this.cmd("Delete", labPopID);
     this.cmd("SetText", this.leftoverLabelID, "Popped Value: " + this.arrayData[this.top]);
 
-
-
-    return this.commands;
-}
-
-
-
-StackLL.prototype.clearAll = function()
-{
-    this.commands = new Array();
-    for (var i = 0; i < this.top; i++)
-    {
-        this.cmd("Delete", this.linkedListElemID[i]);
-    }
-    this.top = 0;
-    this.cmd("SetNull", this.topID, 1);
     return this.commands;
 }
 
