@@ -61,15 +61,15 @@ BucketSort.inheritFrom(Algorithm);
 BucketSort.prototype.init = function(am)
 {
     BucketSort.superclass.init.call(this, am);
-    var h = this.getCanvasHeight();
-
     this.addControls();
-    this.pointer_array_elem_y_small = h - 50;
-
-    this.nextIndex = 0;
     this.setup();
 }
 
+
+BucketSort.prototype.sizeChanged = function()
+{
+    this.setup();
+}
 
 
 BucketSort.prototype.addControls =  function()
@@ -85,6 +85,12 @@ BucketSort.prototype.addControls =  function()
 
 BucketSort.prototype.setup = function()
 {
+    this.animationManager.resetAll();
+    this.nextIndex = 0;
+
+    var h = this.getCanvasHeight();
+    this.pointer_array_elem_y_small = h - 50;
+
     this.arrayData = new Array(BucketSort.ARRAY_SIZE_SMALL);
     this.arrayRects= new Array(BucketSort.ARRAY_SIZE_SMALL);
     this.linkedListRects = new Array(BucketSort.ARRAY_SIZE_SMALL);
@@ -115,11 +121,12 @@ BucketSort.prototype.setup = function()
         this.cmd("CreateLabel", nextID, i, BucketSort.POINTER_ARRAY_ELEM_START_X_SMALL + i *BucketSort.POINTER_ARRAY_ELEM_WIDTH_SMALL, this.pointer_array_elem_y_small + BucketSort.POINTER_ARRAY_ELEM_HEIGHT_SMALL);
         this.cmd("SetForegroundColor", nextID, "#0000FF");
     }
+
     this.animationManager.StartNewAnimation(this.commands);
     this.animationManager.skipForward();
     this.animationManager.clearHistory();
-
 }
+
 
 BucketSort.prototype.bucketSortCallback = function(event)
 {
@@ -155,7 +162,6 @@ BucketSort.prototype.bucketSortCallback = function(event)
         this.cmd("SetForegroundColor", label3ID, "#000000");
         this.cmd("SetForegroundColor", label4ID, "#0000FF");
 
-
         var highlightCircle = this.nextIndex++;
         this.cmd("CreateHighlightCircle", highlightCircle, "#0000FF",  305, 100);
         this.cmd("Move", highlightCircle, BucketSort.POINTER_ARRAY_ELEM_START_X_SMALL + index *BucketSort.POINTER_ARRAY_ELEM_WIDTH_SMALL, this.pointer_array_elem_y_small + BucketSort.POINTER_ARRAY_ELEM_HEIGHT_SMALL);
@@ -165,8 +171,6 @@ BucketSort.prototype.bucketSortCallback = function(event)
         this.cmd("Delete", label3ID);
         this.cmd("Delete", label4ID);
         this.cmd("Delete", highlightCircle);
-
-
 
         if (linkedListData[index] == null)
         {
@@ -274,12 +278,11 @@ BucketSort.prototype.bucketSortCallback = function(event)
             this.arrayData[insertIndex] = tmp.data;
             insertIndex++;
         }
-
-
     }
     this.animationManager.StartNewAnimation(this.commands);
     insertIndex = savedIndex;
 }
+
 
 BucketSort.prototype.randomizeArray = function()
 {
@@ -291,14 +294,10 @@ BucketSort.prototype.randomizeArray = function()
         this.cmd("SetText", this.arrayRects[i], this.arrayData[i]);
     }
 
-
-
     this.animationManager.StartNewAnimation(this.commands);
     this.animationManager.skipForward();
     this.animationManager.clearHistory();
-
 }
-
 
 
 // We want to (mostly) ignore resets, since we are disallowing undoing

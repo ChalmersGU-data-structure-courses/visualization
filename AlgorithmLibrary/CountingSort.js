@@ -54,24 +54,13 @@ CountingSort.inheritFrom(Algorithm);
 CountingSort.prototype.init = function(am)
 {
     CountingSort.superclass.init.call(this, am);
-    var h = this.getCanvasHeight();
-
-    this.ARRAY_ELEM_Y =  3 * CountingSort.COUNTER_ARRAY_ELEM_HEIGHT;
-    this.COUNTER_ARRAY_ELEM_Y = Math.floor(h / 2);
-    this.SWAP_ARRAY_ELEM_Y =  h - 3 * CountingSort.COUNTER_ARRAY_ELEM_HEIGHT
-
     this.addControls();
-    this.nextIndex = 0;
     this.setup();
 }
 
 
-
-CountingSort.prototype.sizeChanged = function(newWidth, newHeight)
+CountingSort.prototype.sizeChanged = function()
 {
-    this.ARRAY_ELEM_Y =  3 * CountingSort.COUNTER_ARRAY_ELEM_HEIGHT;
-    this.COUNTER_ARRAY_ELEM_Y = Math.floor(newHeight / 2);
-    this.SWAP_ARRAY_ELEM_Y =  newHeight - 3 * CountingSort.COUNTER_ARRAY_ELEM_HEIGHT
     this.setup();
 }
 
@@ -90,6 +79,14 @@ CountingSort.prototype.addControls =  function()
 
 CountingSort.prototype.setup = function()
 {
+    this.animationManager.resetAll();
+    this.nextIndex = 0;
+
+    var h = this.getCanvasHeight();
+    this.ARRAY_ELEM_Y = 3 * CountingSort.COUNTER_ARRAY_ELEM_HEIGHT;
+    this.COUNTER_ARRAY_ELEM_Y = Math.floor(h / 2);
+    this.SWAP_ARRAY_ELEM_Y = h - 3 * CountingSort.COUNTER_ARRAY_ELEM_HEIGHT
+
     this.arrayData = new Array(CountingSort.ARRAY_SIZE);
     this. arrayRects= new Array(CountingSort.ARRAY_SIZE);
     this. arrayIndices = new Array(CountingSort.ARRAY_SIZE);
@@ -136,12 +133,11 @@ CountingSort.prototype.setup = function()
         this.cmd("CreateLabel",nextID,  i,  CountingSort.COUNTER_ARRAY_ELEM_START_X + i *CountingSort.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y + CountingSort.COUNTER_ARRAY_ELEM_HEIGHT);
         this.cmd("SetForegroundColor", nextID, "#0000FF");
     }
+
     this.animationManager.StartNewAnimation(this. commands);
     this.animationManager.skipForward();
     this.animationManager.clearHistory();
-
 }
-
 
 
 CountingSort.prototype.resetAll = function(small)
@@ -258,8 +254,8 @@ CountingSort.prototype.countingSortCallback = function(event)
         this.cmd("SetAlpha", this. counterIndices[i], 1);
     }
     this.animationManager.StartNewAnimation(this. commands);
-
 }
+
 
 CountingSort.prototype.randomizeArray = function()
 {
@@ -275,13 +271,10 @@ CountingSort.prototype.randomizeArray = function()
         this.cmd("SetText", this. counterRects[i], "");
     }
 
-
     this.animationManager.StartNewAnimation(this. commands);
     this.animationManager.skipForward();
     this.animationManager.clearHistory();
-
 }
-
 
 
 // We want to (mostly) ignore resets, since we are disallowing undoing
@@ -295,7 +288,6 @@ CountingSort.prototype.resetCallback = function(event)
 {
     this.randomizeArray();
 }
-
 
 
 CountingSort.prototype.disableUI = function(event)

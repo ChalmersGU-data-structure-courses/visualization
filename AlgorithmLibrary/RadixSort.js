@@ -55,24 +55,13 @@ RadixSort.inheritFrom(Algorithm);
 RadixSort.prototype.init = function(am)
 {
     RadixSort.superclass.init.call(this, am);
-    var h = this.getCanvasHeight();
-
-    this.ARRAY_ELEM_Y =  3 * RadixSort.COUNTER_ARRAY_ELEM_HEIGHT;
-    this.COUNTER_ARRAY_ELEM_Y = Math.floor(h / 2);
-    this.SWAP_ARRAY_ELEM_Y =  h - 3 * RadixSort.COUNTER_ARRAY_ELEM_HEIGHT
-
     this.addControls();
-    this.nextIndex = 0;
     this.setup();
 }
 
 
-
-RadixSort.prototype.sizeChanged = function(newWidth, newHeight)
+RadixSort.prototype.sizeChanged = function()
 {
-    this.ARRAY_ELEM_Y =  3 * RadixSort.COUNTER_ARRAY_ELEM_HEIGHT;
-    this.COUNTER_ARRAY_ELEM_Y = Math.floor(newHeight / 2);
-    this.SWAP_ARRAY_ELEM_Y =  newHeight - 3 * RadixSort.COUNTER_ARRAY_ELEM_HEIGHT
     this.setup();
 }
 
@@ -84,12 +73,19 @@ RadixSort.prototype.addControls =  function()
 
     this.radixSortButton = this.addControlToAlgorithmBar("Button", "Radix Sort");
     this.radixSortButton.onclick = this.radixSortCallback.bind(this);
-
 }
 
 
 RadixSort.prototype.setup = function()
 {
+    this.animationManager.resetAll();
+    this.nextIndex = 0;
+
+    var h = this.getCanvasHeight();
+    this.ARRAY_ELEM_Y = 3 * RadixSort.COUNTER_ARRAY_ELEM_HEIGHT;
+    this.COUNTER_ARRAY_ELEM_Y = Math.floor(h / 2);
+    this.SWAP_ARRAY_ELEM_Y = h - 3 * RadixSort.COUNTER_ARRAY_ELEM_HEIGHT
+
     this.arrayData = new Array(RadixSort.ARRAY_SIZE);
     this.arrayRects= new Array(RadixSort.ARRAY_SIZE);
     this.arrayIndices = new Array(RadixSort.ARRAY_SIZE);
@@ -135,12 +131,11 @@ RadixSort.prototype.setup = function()
         this.cmd("CreateLabel",nextID,  i,  RadixSort.COUNTER_ARRAY_ELEM_START_X + i *RadixSort.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y + RadixSort.COUNTER_ARRAY_ELEM_HEIGHT);
         this.cmd("SetForegroundColor", nextID, "#0000FF");
     }
+
     this.animationManager.StartNewAnimation(this.commands);
     this.animationManager.skipForward();
     this.animationManager.clearHistory();
-
 }
-
 
 
 RadixSort.prototype.resetAll = function(small)
@@ -148,6 +143,7 @@ RadixSort.prototype.resetAll = function(small)
     this.animationManager.resetAll();
     this.nextIndex = 0;
 }
+
 
 RadixSort.prototype.radixSortCallback = function(event)
 {
@@ -162,7 +158,6 @@ RadixSort.prototype.radixSortCallback = function(event)
     {
         digits[k] = this.nextIndex++;
     }
-
 
     for (var radix = 0;  radix < RadixSort.NUM_DIGITS; radix++)
     {
@@ -193,7 +188,6 @@ RadixSort.prototype.radixSortCallback = function(event)
                 //                            this.cmd("SetAlpha", digits[k], 0.2);
                 //                        }
             }
-
 
             var index = Math.floor(this.arrayData[i] / Math.pow(10,radix)) % 10;
             this.cmd("Move", animatedCircleID,  RadixSort.COUNTER_ARRAY_ELEM_START_X + index *RadixSort.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y + RadixSort.COUNTER_ARRAY_ELEM_HEIGHT)
@@ -230,7 +224,6 @@ RadixSort.prototype.radixSortCallback = function(event)
             this.cmd("CreateHighlightCircle", animatedCircleID, "#0000FF",  RadixSort.ARRAY_ELEM_START_X + i *RadixSort.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
             this.cmd("CreateHighlightCircle", animatedCircleID2, "#0000FF",  RadixSort.ARRAY_ELEM_START_X + i *RadixSort.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
 
-
             this.cmd("SetText", this.arrayRects[i], "");
 
             for (k = 0; k < RadixSort.NUM_DIGITS; k++)
@@ -245,9 +238,6 @@ RadixSort.prototype.radixSortCallback = function(event)
                 }
             }
 
-
-
-
             index = Math.floor(this.arrayData[i] / Math.pow(10,radix)) % 10;
             this.cmd("Move", animatedCircleID2,  RadixSort.COUNTER_ARRAY_ELEM_START_X + index *RadixSort.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y + RadixSort.COUNTER_ARRAY_ELEM_HEIGHT)
             this.cmd("Step");
@@ -255,7 +245,6 @@ RadixSort.prototype.radixSortCallback = function(event)
             var insertIndex = --this.counterData[index];
             this.cmd("SetText", this.counterRects[index], this.counterData[index]);
             this.cmd("Step");
-
 
             this.cmd("CreateHighlightCircle", animatedCircleID3, "#AAAAFF",  RadixSort.COUNTER_ARRAY_ELEM_START_X + index *RadixSort.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y);
             this.cmd("CreateHighlightCircle", animatedCircleID4, "#AAAAFF",  RadixSort.COUNTER_ARRAY_ELEM_START_X + index *RadixSort.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y);
@@ -281,8 +270,8 @@ RadixSort.prototype.radixSortCallback = function(event)
             this.cmd("Delete", animatedCircleID2);
             this.cmd("Delete", animatedCircleID3);
             this.cmd("Delete", animatedCircleID4);
-
         }
+
         for (i= 0; i < RadixSort.ARRAY_SIZE; i++)
         {
             this.cmd("SetText", this.arrayRects[i], "");
@@ -301,7 +290,6 @@ RadixSort.prototype.radixSortCallback = function(event)
             this.cmd("CreateLabel", startLab+i, this.swapData[i], RadixSort.ARRAY_ELEM_START_X + i *RadixSort.ARRAY_ELEM_WIDTH, this.SWAP_ARRAY_ELEM_Y);
             this.cmd("Move", startLab+i,  RadixSort.ARRAY_ELEM_START_X + i *RadixSort.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
             this.cmd("SetText", this.swapRects[i], "");
-
         }
         this.cmd("Step");
         for (i = 0; i < RadixSort.ARRAY_SIZE; i++)
@@ -317,9 +305,7 @@ RadixSort.prototype.radixSortCallback = function(event)
         }
     }
     this.animationManager.StartNewAnimation(this.commands);
-
 }
-
 
 
 RadixSort.prototype.randomizeArray = function()
@@ -336,17 +322,10 @@ RadixSort.prototype.randomizeArray = function()
         this.cmd("SetText", this.counterRects[i], "");
     }
 
-
     this.animationManager.StartNewAnimation(this.commands);
     this.animationManager.skipForward();
     this.animationManager.clearHistory();
-
 }
-
-
-
-
-
 
 
 // We want to (mostly) ignore resets, since we are disallowing undoing
@@ -360,7 +339,6 @@ RadixSort.prototype.resetCallback = function(event)
 {
     this.randomizeArray();
 }
-
 
 
 RadixSort.prototype.disableUI = function(event)

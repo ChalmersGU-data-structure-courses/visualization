@@ -58,7 +58,6 @@ ComparisonSort.HIGHLIGHT_BAR_BACKGROUND_COLOR = "#FFAAAA";
 ComparisonSort.QUICKSORT_LINE_COLOR = "#FF0000";
 
 
-
 ComparisonSort.inheritFrom(Algorithm);
 
 ComparisonSort.prototype.init = function(am)
@@ -75,7 +74,6 @@ ComparisonSort.prototype.init = function(am)
 
     this.createVisualObjects();
 }
-
 
 
 ComparisonSort.prototype.addControls =  function()
@@ -179,7 +177,6 @@ ComparisonSort.prototype.swap = function(index1, index2)
     this.barLabels[index1] = this.barLabels[index2];
     this.barLabels[index2] = tmp;
 
-
     this.cmd("Move", this.barObjects[index1], this.barPositionsX[index1], this.array_y_pos);
     this.cmd("Move", this.barObjects[index2], this.barPositionsX[index2], this.array_y_pos);
     this.cmd("Move", this.barLabels[index1], this.barPositionsX[index1], this.array_label_y_pos);
@@ -198,7 +195,6 @@ ComparisonSort.prototype.createVisualObjects = function()
     this.barPositionsX = new Array(this.array_size);
     this.oldData = new Array(this.array_size);
     this.obscureObject  = new Array(this.array_size);
-
 
     var xPos = this.array_initial_x;
     var yPos = this.array_y_pos;
@@ -239,6 +235,7 @@ ComparisonSort.prototype.createVisualObjects = function()
     this.lastCreatedIndex = this.nextIndex;
 }
 
+
 ComparisonSort.prototype.highlightRange  = function(lowIndex, highIndex)
 {
     for (var i = 0; i < lowIndex; i++)
@@ -271,7 +268,6 @@ ComparisonSort.prototype.highlightRange  = function(lowIndex, highIndex)
 }
 
 
-
 ComparisonSort.prototype.reset = function()
 {
     for (var i = 0; i < this.array_size; i++)
@@ -299,11 +295,11 @@ ComparisonSort.prototype.resetCallback = function(event)
     this.randomizeArray();
 }
 
+
 ComparisonSort.prototype.changeSizeCallback = function(event)
 {
     this.resetAll(this.showLabels);
 }
-
 
 
 ComparisonSort.prototype.insertSortCallback = function(event)
@@ -315,11 +311,11 @@ ComparisonSort.prototype.insertSortCallback = function(event)
     this.commands = new Array();
 }
 
+
 ComparisonSort.prototype.selectSortCallback = function(event)
 {
     this.commands = new Array();
     this.animationManager.clearHistory();
-
 
     for (var i = 0; i < this.array_size - 1; i++)
     {
@@ -353,6 +349,7 @@ ComparisonSort.prototype.selectSortCallback = function(event)
     this.animationManager.StartNewAnimation(this.commands);
 }
 
+
 ComparisonSort.prototype.bubbleSortCallback = function(event)
 {
     this.animationManager.clearHistory();
@@ -382,6 +379,8 @@ ComparisonSort.prototype.bubbleSortCallback = function(event)
     }
     this.animationManager.StartNewAnimation(this.commands);
 }
+
+
 ComparisonSort.prototype.quickSortCallback = function(event)
 {
     this.animationManager.clearHistory();
@@ -400,6 +399,7 @@ ComparisonSort.prototype.quickSortCallback = function(event)
     this.cmd("Delete", this.jID);
     this.animationManager.StartNewAnimation(this.commands);
 }
+
 
 ComparisonSort.prototype.doQuickSort = function(low, high)
 {
@@ -420,7 +420,6 @@ ComparisonSort.prototype.doQuickSort = function(low, high)
 
     while (i <= j)
     {
-
         this.cmd("SetForegroundColor", this.barObjects[i], ComparisonSort.HIGHLIGHT_BAR_COLOR);
         this.cmd("SetBackgroundColor", this.barObjects[i], ComparisonSort.HIGHLIGHT_BAR_BACKGROUND_COLOR);
         this.cmd("SetForegroundColor", this.barObjects[low], ComparisonSort.HIGHLIGHT_BAR_COLOR);
@@ -509,6 +508,7 @@ ComparisonSort.prototype.doQuickSort = function(low, high)
     this.highlightRange(low,high);
 }
 
+
 ComparisonSort.prototype.mergeSortCallback = function(event)
 {
     this.animationManager.clearHistory();
@@ -517,6 +517,7 @@ ComparisonSort.prototype.mergeSortCallback = function(event)
     this.doMergeSort(0, this.array_size-1);
     this.animationManager.StartNewAnimation(this.commands);
 }
+
 
 ComparisonSort.prototype.doMergeSort = function(low,high)
 {
@@ -574,6 +575,7 @@ ComparisonSort.prototype.doMergeSort = function(low,high)
 
 }
 
+
 ComparisonSort.prototype.shellSortCallback = function(event)
 {
     this.animationManager.clearHistory();
@@ -594,7 +596,6 @@ ComparisonSort.prototype.shellSortCallback = function(event)
                         this.cmd("SetAlpha", this.barObjects[k], 1.0);
                         this.cmd("SetAlpha", this.barLabels[k], 1.0);
                     }
-
                 }
                 else
                 {
@@ -608,13 +609,11 @@ ComparisonSort.prototype.shellSortCallback = function(event)
             }
             this.cmd("Step");
             this.insertionSortSkip(inc, offset)
-
         }
-
     }
     this.animationManager.StartNewAnimation(this.commands);
-
 }
+
 
 ComparisonSort.prototype.insertionSortSkip = function(inc, offset)
 {
@@ -643,9 +642,9 @@ ComparisonSort.prototype.insertionSortSkip = function(inc, offset)
             this.cmd("SetBackgroundColor", this.barObjects[j - inc], ComparisonSort.BAR_BACKGROUND_COLOR);
             j = j - inc;
         }
-
     }
 }
+
 
 ComparisonSort.prototype.disableUI = function(event)
 {
@@ -658,6 +657,7 @@ ComparisonSort.prototype.disableUI = function(event)
     this.shellSortButton.disabled = true;
     this.sizeButton.disabled = true;
 }
+
 ComparisonSort.prototype.enableUI = function(event)
 {
     this.resetButton.disabled = false;

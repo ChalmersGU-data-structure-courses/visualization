@@ -28,10 +28,8 @@
 function HeapSort(am)
 {
     this.init(am);
-
 }
 HeapSort.inheritFrom(Algorithm);
-
 
 
 HeapSort.ARRAY_SIZE  = 32;
@@ -56,17 +54,7 @@ HeapSort.prototype.init = function(am)
                       380, 380, 380, 380, 380];
     this.commands = [];
     this.createArray();
-
-
-    /*this.nextIndex = 0;
-    this.commands = [];
-    this.cmd("CreateLabel", 0, "", 20, 50, 0);
-    this.animationManager.StartNewAnimation(this.commands);
-    this.animationManager.skipForward();
-    this.animationManager.clearHistory(); */
-
 }
-
 
 
 HeapSort.prototype.addControls =  function()
@@ -156,7 +144,6 @@ HeapSort.prototype.randomizeArray = function()
 }
 
 
-
 HeapSort.prototype.reset = function()
 {
     for (var i = 1; i < HeapSort.ARRAY_SIZE; i++)
@@ -195,8 +182,6 @@ HeapSort.prototype.swap = function(index1, index2)
     this.cmd("Delete", this.swapLabel2);
     this.cmd("Delete", this.swapLabel3);
     this.cmd("Delete", this.swapLabel4);
-
-
 }
 
 
@@ -205,6 +190,7 @@ HeapSort.prototype.setIndexHighlight = function(index, highlightVal)
     this.cmd("SetHighlight", this.circleObjs[index], highlightVal);
     this.cmd("SetHighlight", this.arrayRects[index], highlightVal);
 }
+
 
 HeapSort.prototype.pushDown = function(index)
 {
@@ -246,11 +232,9 @@ HeapSort.prototype.pushDown = function(index)
         {
             return;
         }
-
-
-
     }
 }
+
 
 HeapSort.prototype.buildHeap = function(ignored)
 {
@@ -275,7 +259,6 @@ HeapSort.prototype.buildHeap = function(ignored)
     }
     return this.commands;
 }
-
 
 
 HeapSort.prototype.disableUI = function(event)
