@@ -81,7 +81,7 @@ function setCookie(cookieName,value,expireDays)
 
 var ANIMATION_SPEED_DEFAULT = 75;
 var ANIMATION_SPEED_SLIDER_MIN = 25;
-var ANIMATION_SPEED_SLIDER_MAX = 75;
+var ANIMATION_SPEED_SLIDER_MAX = 100;
 var ANIMATION_SPEED_SLIDER_STEP = 25;
 
 
@@ -225,14 +225,18 @@ function initCanvas(canvas, generalControlBar, algorithmControlBar)
     // UI nodes should be given, otherwise use defaults.
     // This is the only place where getElementById is used
     if(!canvas)              canvas              = document.getElementById("canvas");
-    if(!generalControlBar)   generalControlBar   = document.getElementById('GeneralAnimationControls');
-    if(!algorithmControlBar) algorithmControlBar = document.getElementById("AlgorithmSpecificControls");
+    if(!generalControlBar)   generalControlBar   = document.getElementById("generalAnimationControls");
+    if(!algorithmControlBar) algorithmControlBar = document.getElementById("algorithmSpecificControls");
 
     var objectManager = new ObjectManager(canvas);
     var animationManager = new AnimationManager(objectManager);
     animationManager.canvas = canvas;
     animationManager.generalControlBar = generalControlBar;
     animationManager.algorithmControlBar = algorithmControlBar;
+
+    // Clear the control bars
+    if (generalControlBar) generalControlBar.innerHTML = "";
+    if (algorithmControlBar) algorithmControlBar.innerHTML = "";
 
     animationManager.skipBackButton = animationManager.addControlToAnimationBar("Button", "Skip Back");
     animationManager.skipBackButton.onclick = animationManager.skipBack.bind(animationManager);
