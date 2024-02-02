@@ -25,6 +25,7 @@
 // or implied, of the University of San Francisco
 
 
+
 DijkstraPrim.TABLE_ENTRY_WIDTH = 50;
 DijkstraPrim.TABLE_ENTRY_HEIGHT = 25;
 DijkstraPrim.TABLE_START_X = 50;
@@ -399,7 +400,7 @@ DijkstraPrim.prototype.startCallback = function(event)
         startValue = this.startField.value;
         this.startField.value = "";
         if (parseInt(startValue) < this.size)
-            this.implementAction(this.doDijkstraPrim.bind(this),startvalue);
+            this.implementAction(this.doDijkstraPrim.bind(this), startValue);
     }
 }
 
@@ -421,6 +422,19 @@ DijkstraPrim.prototype.disableUI = function(event)
 
     DijkstraPrim.superclass.disableUI.call(this, event);
 }
+
+
+function Dijkstra(am, dir) {
+    Dijkstra.superclass.constructor.call(this, am, true, dir);
+}
+Dijkstra.inheritFrom(DijkstraPrim);
+
+
+function Prim(am, dir) {
+    Prim.superclass.constructor.call(this, am, false, dir);
+}
+Prim.inheritFrom(DijkstraPrim);
+
 
 
 var currentAlg;
