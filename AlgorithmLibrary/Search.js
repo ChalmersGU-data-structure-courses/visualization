@@ -28,7 +28,6 @@ Search.CODE_START_X = 10;
 Search.CODE_START_Y = 10;
 Search.CODE_LINE_HEIGHT = 14;
 
-
 Search.CODE_HIGHLIGHT_COLOR = "#FF0000";
 Search.CODE_STANDARD_COLOR = "#000000";
 
@@ -41,19 +40,15 @@ Search.EXTRA_FIELD_HEIGHT = 50;
 Search.SEARCH_FOR_X = 450;
 Search.SEARCH_FOR_Y = 30;
 
-
 Search.RESULT_X = 550;
 Search.RESULT_Y = 30;
-
 
 Search.INDEX_X = 450;
 Search.INDEX_Y = 130;
 
-
 Search.HIGHLIGHT_CIRCLE_SIZE_SMALL = 20;
 Search.HIGHLIGHT_CIRCLE_SIZE_LARGE = 10;
 Search.HIGHLIGHT_CIRCLE_SIZE = Search.HIGHLIGHT_CIRCLE_SIZE_SMALL;
-
 
 Search.LOW_CIRCLE_COLOR = "#1010FF";
 Search.LOW_BACKGROUND_COLOR = "#F0F0FF";
@@ -65,14 +60,11 @@ Search.HIGH_BACKGROUND_COLOR = "#FFFFF0";
 Search.LOW_POS_X = 350;
 Search.LOW_POS_Y = 130;
 
-
 Search.MID_POS_X = 450;
 Search.MID_POS_Y = 130;
 
 Search.HIGH_POS_X = 550;
 Search.HIGH_POS_Y = 130;
-
-
 
 Search.ARRAY_START_X_SMALL = 100;
 Search.ARRAY_START_X_LARGE = 100;
@@ -87,11 +79,6 @@ Search.ARRAY_ELEM_WIDTH = Search.ARRAY_ELEM_WIDTH_SMALL;
 Search.ARRAY_ELEM_HEIGHT_SMALL = 50;
 Search.ARRAY_ELEM_HEIGHT_LARGE = 20;
 Search.ARRAY_ELEM_HEIGHT = Search.ARRAY_ELEM_HEIGHT_SMALL;
-
-Search.ARRAY_ELEMS_PER_LINE_SMALL = 16;
-Search.ARRAY_ELEMS_PER_LINE_LARGE = 30;
-Search.ARRAY_ELEMS_PER_LINE = Search.ARRAY_ELEMS_PER_LINE_SMALL;
-
 
 Search.ARRAY_LINE_SPACING_LARGE = 40;
 Search.ARRAY_LINE_SPACING_SMALL = 130;
@@ -129,15 +116,17 @@ Search.BINARY_CODE = [ ["def ", "binarySearch(listData, value)"],
                        ["    return -1"]]
 
 
-
 Search.prototype.init = function(am)
 {
     Search.superclass.init.call(this, am);
     this.addControls();
-    this.nextIndex = 0;
-    this.commands = [];
     this.setup();
-    this.initialIndex = this.nextIndex;
+}
+
+
+Search.prototype.sizeChanged = function()
+{
+    this.setup();
 }
 
 
@@ -151,11 +140,9 @@ Search.prototype.addControls =  function()
     this.controls.push(this.searchField);
     this.controls.push(this.linearSearchButton);
 
-
     this.binarySearchButton = this.addControlToAlgorithmBar("Button", "Binary Search");
     this.binarySearchButton.onclick = this.binarySearchCallback.bind(this);
     this.controls.push(this.binarySearchButton);
-
 
     var radioButtonList = this.addRadioButtonGroupToAlgorithmBar(["Small", "Large"], "List Size");
     this.smallListButton = radioButtonList[0];
@@ -163,9 +150,7 @@ Search.prototype.addControls =  function()
     this.largeListButton = radioButtonList[1];
     this.largeListButton.onclick = this.largeListCallback.bind(this);
     this.smallListButton.checked = true;
-
 }
-
 
 
 Search.prototype.smallListCallback = function (event)
@@ -188,42 +173,48 @@ Search.prototype.largeListCallback = function (event)
 }
 
 
-
 Search.prototype.enableUI = function(event)
 {
     for (var i = 0; i < this.controls.length; i++)
     {
-    this.controls[i].disabled = false;
+       this.controls[i].disabled = false;
     }
-
-
 }
+
 Search.prototype.disableUI = function(event)
 {
     for (var i = 0; i < this.controls.length; i++)
     {
-    this.controls[i].disabled = true;
+       this.controls[i].disabled = true;
     }
 }
 
 
+Search.prototype.getIndexXY = function(index) {
+    var xpos = Search.ARRAY_START_X;
+    var ypos = Search.ARRAY_START_Y + Search.ARRAY_ELEM_HEIGHT;
+    for (var i = 0; i < index; i++) {
+        xpos += Search.ARRAY_ELEM_WIDTH;
+        if (xpos > this.getCanvasWidth() - Search.ARRAY_ELEM_WIDTH) {
+            xpos = Search.ARRAY_START_X;
+            ypos += Search.ARRAY_LINE_SPACING;
+        }
+    }
+    return [xpos, ypos];
+}
 
 Search.prototype.getIndexX = function(index) {
-    var xpos = (index  % Search.ARRAY_ELEMS_PER_LINE) * Search.ARRAY_ELEM_WIDTH + Search.ARRAY_START_X;
-    return xpos;
+    return this.getIndexXY(index)[0];
 }
-
 
 Search.prototype.getIndexY = function(index) {
-    if (index == -1) {
-       index = 0;
-    }
-    var ypos = Math.floor(index / Search.ARRAY_ELEMS_PER_LINE) * Search.ARRAY_LINE_SPACING +  Search.ARRAY_START_Y +  Search.ARRAY_ELEM_HEIGHT;
-     return ypos;
+    return this.getIndexXY(index)[1];
 }
+
 
 Search.prototype.setup = function()
 {
+    this.animationManager.resetAll();
     this.nextIndex = 0;
 
     this.values = new Array(SIZE);
@@ -232,9 +223,9 @@ Search.prototype.setup = function()
     this.arrayLabelID = new Array(SIZE);
     for (var i = 0; i < SIZE; i++)
     {
-    this.arrayData[i] = Math.floor(1+Math.random()*999);
-    this.arrayID[i]= this.nextIndex++;
-    this.arrayLabelID[i]= this.nextIndex++;
+        this.arrayData[i] = Math.floor(1+Math.random()*999);
+        this.arrayID[i]= this.nextIndex++;
+        this.arrayLabelID[i]= this.nextIndex++;
     }
 
     for (var i = 1; i < SIZE; i++) {
@@ -248,24 +239,19 @@ Search.prototype.setup = function()
     }
 
     this.leftoverLabelID = this.nextIndex++;
-    this.commands = new Array();
-
+    this.commands = [];
 
     for (var i = 0; i < SIZE; i++)
     {
-    var xLabelpos = this.getIndexX(i);
-    var yLabelpos = this.getIndexY(i);
-    this.cmd("CreateRectangle", this.arrayID[i],this.arrayData[i], Search.ARRAY_ELEM_WIDTH, Search.ARRAY_ELEM_HEIGHT,xLabelpos, yLabelpos - Search.ARRAY_ELEM_HEIGHT);
-    this.cmd("CreateLabel",this.arrayLabelID[i],  i,  xLabelpos, yLabelpos);
-    this.cmd("SetForegroundColor", this.arrayLabelID[i], "#0000FF");
-
+        var xLabelpos = this.getIndexX(i);
+        var yLabelpos = this.getIndexY(i);
+        this.cmd("CreateRectangle", this.arrayID[i],this.arrayData[i], Search.ARRAY_ELEM_WIDTH, Search.ARRAY_ELEM_HEIGHT,xLabelpos, yLabelpos - Search.ARRAY_ELEM_HEIGHT);
+        this.cmd("CreateLabel",this.arrayLabelID[i],  i,  xLabelpos, yLabelpos);
+        this.cmd("SetForegroundColor", this.arrayLabelID[i], "#0000FF");
     }
 
     this.movingLabelID = this.nextIndex++;
     this.cmd("CreateLabel",this.movingLabelID,  "", 0, 0);
-
-   //    this.cmd("CreateLabel", this.leftoverLabelID, "", Search.PUSH_LABEL_X, Search.PUSH_LABEL_Y);
-
 
     this.searchForBoxID = this.nextIndex++;
     this.searchForBoxLabel = this.nextIndex++;
@@ -283,15 +269,11 @@ Search.prototype.setup = function()
     this.cmd("AlignRight",   this.resultString, this.resultBoxID);
     this.cmd("SetTextColor", this.resultString, "#FF0000");
 
-
-
     this.indexBoxID = this.nextIndex++;
     this.indexBoxLabel = this.nextIndex++;
     this.cmd("CreateRectangle",  this.indexBoxID, "", Search.EXTRA_FIELD_WIDTH, Search.EXTRA_FIELD_HEIGHT,Search.INDEX_X, Search.INDEX_Y);
     this.cmd("CreateLabel",  this.indexBoxLabel,  "index  ", Search.INDEX_X, Search.INDEX_Y);
     this.cmd("AlignLeft",   this.indexBoxLabel, this.indexBoxID);
-
-
 
     this.midBoxID = this.nextIndex++;
     this.midBoxLabel = this.nextIndex++;
@@ -305,7 +287,6 @@ Search.prototype.setup = function()
     this.midCircleID = this.nextIndex++;
     this.cmd("CreateHighlightCircle", this.midCircleID, Search.MID_CIRCLE_COLOR, 0, 0, Search.HIGHLIGHT_CIRCLE_SIZE);
 
-
     this.lowBoxID = this.nextIndex++;
     this.lowBoxLabel = this.nextIndex++;
     this.cmd("CreateRectangle",  this.lowBoxID, "", Search.EXTRA_FIELD_WIDTH, Search.EXTRA_FIELD_HEIGHT,Search.LOW_POS_X, Search.LOW_POS_Y);
@@ -318,8 +299,6 @@ Search.prototype.setup = function()
     this.lowCircleID = this.nextIndex++;
     this.cmd("CreateHighlightCircle", this.lowCircleID, Search.LOW_CIRCLE_COLOR, 0,0,Search.HIGHLIGHT_CIRCLE_SIZE);
 
-
-
     this.highBoxID = this.nextIndex++;
     this.highBoxLabel = this.nextIndex++;
     this.cmd("CreateRectangle",  this.highBoxID, "", Search.EXTRA_FIELD_WIDTH, Search.EXTRA_FIELD_HEIGHT,Search.HIGH_POS_X, Search.HIGH_POS_Y);
@@ -329,24 +308,22 @@ Search.prototype.setup = function()
     this.cmd("SetTextColor", this.highBoxID, Search.HIGH_CIRCLE_COLOR);
     this.cmd("SetBackgroundColor", this.highBoxID, Search.HIGH_BACKGROUND_COLOR);
 
-
     this.highCircleID = this.nextIndex++;
     this.cmd("CreateHighlightCircle", this.highCircleID, Search.HIGH_CIRCLE_COLOR, 0 , 0, Search.HIGHLIGHT_CIRCLE_SIZE);
 
+    this.cmd("SetAlpha", this.lowBoxID, 0);
+    this.cmd("SetAlpha", this.lowBoxLabel, 0);
+    this.cmd("SetAlpha", this.midBoxID, 0);
+    this.cmd("SetAlpha", this.midBoxLabel, 0);
+    this.cmd("SetAlpha", this.highBoxID, 0);
+    this.cmd("SetAlpha", this.highBoxLabel, 0);
 
-    this.cmd("SetALpha", this.lowBoxID, 0);
-    this.cmd("SetALpha", this.lowBoxLabel, 0);
-    this.cmd("SetALpha", this.midBoxID, 0);
-    this.cmd("SetALpha", this.midBoxLabel, 0);
-    this.cmd("SetALpha", this.highBoxID, 0);
-    this.cmd("SetALpha", this.highBoxLabel, 0);
+    this.cmd("SetAlpha", this.midCircleID, 0);
+    this.cmd("SetAlpha", this.lowCircleID, 0);
+    this.cmd("SetAlpha", this.highCircleID, 0);
 
-    this.cmd("SetALpha", this.midCircleID, 0);
-    this.cmd("SetALpha", this.lowCircleID, 0);
-    this.cmd("SetALpha", this.highCircleID, 0);
-
-    this.cmd("SetALpha", this.indexBoxID, 0);
-    this.cmd("SetALpha", this.indexBoxLabel, 0);
+    this.cmd("SetAlpha", this.indexBoxID, 0);
+    this.cmd("SetAlpha", this.indexBoxLabel, 0);
 
     this.highlight1ID = this.nextIndex++;
     this.highlight2ID = this.nextIndex++;
@@ -370,7 +347,6 @@ Search.prototype.setup_small = function() {
    Search.ARRAY_START_Y = Search.ARRAY_START_Y_SMALL;
    Search.ARRAY_ELEM_WIDTH = Search.ARRAY_ELEM_WIDTH_SMALL;
    Search.ARRAY_ELEM_HEIGHT = Search.ARRAY_ELEM_HEIGHT_SMALL;
-   Search.ARRAY_ELEMS_PER_LINE = Search.ARRAY_ELEMS_PER_LINE_SMALL;
    Search.ARRAY_LINE_SPACING = Search.ARRAY_LINE_SPACING_SMALL;
    SIZE = Search.SIZE_SMALL;
    this.size = Search.SMALL_SIZE;
@@ -386,7 +362,6 @@ Search.prototype.setup_large  = function() {
    Search.ARRAY_START_Y = Search.ARRAY_START_Y_LARGE;
    Search.ARRAY_ELEM_WIDTH = Search.ARRAY_ELEM_WIDTH_LARGE;
    Search.ARRAY_ELEM_HEIGHT = Search.ARRAY_ELEM_HEIGHT_LARGE;
-   Search.ARRAY_ELEMS_PER_LINE = Search.ARRAY_ELEMS_PER_LINE_LARGE;
    Search.ARRAY_LINE_SPACING = Search.ARRAY_LINE_SPACING_LARGE;
    SIZE = Search.SIZE_LARGE;
    this.size = Search.LARGE_SIZE;
@@ -420,12 +395,12 @@ Search.prototype.binarySearch = function(searchVal)
     this.setCodeAlpha(this.binaryCodeID, 1);
     this.setCodeAlpha(this.linearCodeID, 0);
 
-    this.cmd("SetALpha", this.lowBoxID, 1);
-    this.cmd("SetALpha", this.lowBoxLabel, 1);
-    this.cmd("SetALpha", this.midBoxID, 1);
-    this.cmd("SetALpha", this.midBoxLabel, 1);
-    this.cmd("SetALpha", this.highBoxID, 1);
-    this.cmd("SetALpha", this.highBoxLabel, 1);
+    this.cmd("SetAlpha", this.lowBoxID, 1);
+    this.cmd("SetAlpha", this.lowBoxLabel, 1);
+    this.cmd("SetAlpha", this.midBoxID, 1);
+    this.cmd("SetAlpha", this.midBoxLabel, 1);
+    this.cmd("SetAlpha", this.highBoxID, 1);
+    this.cmd("SetAlpha", this.highBoxLabel, 1);
 
     this.cmd("SetAlpha", this.lowCircleID, 1);
     this.cmd("SetAlpha", this.midCircleID, 1);
@@ -546,8 +521,8 @@ Search.prototype.binarySearch = function(searchVal)
         this.cmd("SetForegroundColor", this.binaryCodeID[11][0], Search.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step")
         this.cmd("SetForegroundColor", this.binaryCodeID[11][0], Search.CODE_STANDARD_COLOR);
-
-    }  else {
+    }
+    else {
         this.cmd("SetText", this.resultString, "   Element found");
         this.cmd("SetText", this.movingLabelID, mid);
         this.cmd("SetPosition", this.movingLabelID, this.getIndexX(mid), this.getIndexY(mid));
@@ -558,7 +533,6 @@ Search.prototype.binarySearch = function(searchVal)
         this.cmd("SetForegroundColor", this.binaryCodeID[6][0], Search.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step")
         this.cmd("SetForegroundColor", this.binaryCodeID[6][0], Search.CODE_STANDARD_COLOR);
-
     }
 
     for (var i = 0; i < SIZE; i++) {
@@ -574,12 +548,12 @@ Search.prototype.linearSearch = function(searchVal)
     this.setCodeAlpha(this.binaryCodeID, 0);
     this.setCodeAlpha(this.linearCodeID, 1);
 
-    this.cmd("SetALpha", this.lowBoxID, 0);
-    this.cmd("SetALpha", this.lowBoxLabel, 0);
-    this.cmd("SetALpha", this.midBoxID, 0);
-    this.cmd("SetALpha", this.midBoxLabel, 0);
-    this.cmd("SetALpha", this.highBoxID, 0);
-    this.cmd("SetALpha", this.highBoxLabel, 0);
+    this.cmd("SetAlpha", this.lowBoxID, 0);
+    this.cmd("SetAlpha", this.lowBoxLabel, 0);
+    this.cmd("SetAlpha", this.midBoxID, 0);
+    this.cmd("SetAlpha", this.midBoxLabel, 0);
+    this.cmd("SetAlpha", this.highBoxID, 0);
+    this.cmd("SetAlpha", this.highBoxLabel, 0);
 
     this.cmd("SetAlpha", this.lowCircleID, 1);
     this.cmd("SetAlpha", this.midCircleID, 0);
@@ -587,8 +561,8 @@ Search.prototype.linearSearch = function(searchVal)
 
     this.cmd("SetPosition", this.lowCircleID, Search.INDEX_X, Search.INDEX_Y);
 
-    this.cmd("SetALpha", this.indexBoxID, 1);
-    this.cmd("SetALpha", this.indexBoxLabel, 1);
+    this.cmd("SetAlpha", this.indexBoxID, 1);
+    this.cmd("SetAlpha", this.indexBoxLabel, 1);
 
     this.cmd("SetText", this.resultString, "");
     this.cmd("SetText", this.resultBoxID, "");
@@ -613,8 +587,8 @@ Search.prototype.linearSearch = function(searchVal)
             this.cmd("Step");
             this.cmd("SetForegroundColor", this.linearCodeID[2][1], Search.CODE_STANDARD_COLOR);
             goOn = false;
-
-        } else {
+        }
+        else {
             this.cmd("SetHighlight", this.arrayID[foundIndex],1);
             this.cmd("SetHighlight", this.searchForBoxID,1);
             this.cmd("SetForegroundColor", this.linearCodeID[2][3], Search.CODE_HIGHLIGHT_COLOR);
@@ -692,7 +666,6 @@ Search.prototype.linearSearch = function(searchVal)
     }
     return this.commands;
 }
-
 
 
 var currentAlg;
