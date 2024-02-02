@@ -49,10 +49,9 @@ function ObjectManager(canvas)
     this.BackEdges = [];
     this.activeLayers = [];
     this.activeLayers[0] = true;
+    this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
     this.framenum = 0;
-    this.width = 0;
-    this.height = 0;
     this.statusReport = new AnimatedLabel(-1, "XXX", false, 30, this.ctx);
     this.statusReport.x = 30;
 
@@ -62,8 +61,8 @@ function ObjectManager(canvas)
         if (this.framenum > 1000)
             this.framenum = 0;
 
-        this.ctx.clearRect(0,0,this.width,this.height); // clear canvas
-        this.statusReport.y = this.height - 15;
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); // clear canvas
+        this.statusReport.y = this.canvas.height - 15;
 
         var i;
         var j;

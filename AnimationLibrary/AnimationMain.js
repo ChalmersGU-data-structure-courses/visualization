@@ -336,8 +336,6 @@ function initCanvas(canvas, generalControlBar, algorithmControlBar)
     animationManager.addListener("AnimationEnded", animationManager, animEnded);
     animationManager.addListener("AnimationWaiting", animationManager, animWaiting);
     animationManager.addListener("AnimationUndoUnavailable", animationManager, anumUndoUnavailable);
-    objectManager.width = canvas.width;
-    objectManager.height = canvas.height;
     return animationManager;
 }
 
@@ -454,14 +452,12 @@ function AnimationManager(objectManager)
         if (width > 100)
         {
             this.canvas.width = width;
-            this.animatedObjects.width = width;
             setCookie("VisualizationWidth", String(width), 30);
 
         }
         if (height > 100)
         {
             this.canvas.height = height;
-            this.animatedObjects.height = height;
             setCookie("VisualizationHeight", String(height), 30);
         }
         width.value = this.canvas.width;
