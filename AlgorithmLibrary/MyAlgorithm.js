@@ -48,7 +48,7 @@ MyAlgorithm.prototype.init = function(am)
 
 }
 
-MyAlgorithm.prototype.addControls =  function()
+MyAlgorithm.prototype.addControls = function()
 {
     this.controls = [];
 

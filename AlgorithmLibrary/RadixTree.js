@@ -36,14 +36,14 @@ RadixTree.FOREGROUND_COLOR = "#007700";
 RadixTree.BACKGROUND_COLOR = "#CCFFCC";
 RadixTree.PRINT_COLOR = RadixTree.FOREGROUND_COLOR;
 RadixTree.FALSE_COLOR = "#FFFFFF"
-RadixTree.WIDTH_DELTA  = 50;
+RadixTree.WIDTH_DELTA = 50;
 RadixTree.HEIGHT_DELTA = 80;
 RadixTree.STARTING_Y = 80;
 RadixTree.LeftMargin = 300;
 RadixTree.NEW_NODE_Y = 100
 RadixTree.NEW_NODE_X = 50;
-RadixTree.FIRST_PRINT_POS_X  = 50;
-RadixTree.PRINT_VERTICAL_GAP  = 20;
+RadixTree.FIRST_PRINT_POS_X = 50;
+RadixTree.PRINT_VERTICAL_GAP = 20;
 RadixTree.PRINT_HORIZONTAL_GAP = 50;
 
 
@@ -117,7 +117,7 @@ RadixTree.prototype.findIndexDifference = function(s1, s2, id, wordIndex)
 }
 
 
-RadixTree.prototype.addControls =  function()
+RadixTree.prototype.addControls = function()
 {
     this.insertField = this.addControlToAlgorithmBar("Text", "");
     this.insertField.onkeypress = this.returnSubmit(this.insertField,  this.insertCallback.bind(this), 12,false);
@@ -746,7 +746,7 @@ RadixTree.prototype.resizeWidths = function(tree)
         tree.childWidths[i] = this.resizeWidths(tree.children[i]);
         size += tree.childWidths[i]
     }
-    tree.width = Math.max(size, RadixTree.NODE_WIDTH  + 4)
+    tree.width = Math.max(size, RadixTree.NODE_WIDTH + 4)
     return tree.width;
 }
 

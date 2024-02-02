@@ -55,11 +55,11 @@ ConnectedComponent.F_X_POS_LARGE = [560, 660, 760, 860,
 
 
 
-ConnectedComponent.D_Y_POS_LARGE = [037, 037, 037, 037,
+ConnectedComponent.D_Y_POS_LARGE = [ 37,  37,  37,  37,
                                     137, 137, 137,
                                     237, 237, 237, 237,
                                     337, 337, 337,
-                                    437,  437, 437, 437];
+                                    437, 437, 437, 437];
 
 ConnectedComponent.F_Y_POS_LARGE = [62, 62, 62, 62,
                                     162, 162, 162,
@@ -80,7 +80,7 @@ function ConnectedComponent(am)
 
 ConnectedComponent.inheritFrom(Graph);
 
-ConnectedComponent.prototype.addControls =  function()
+ConnectedComponent.prototype.addControls = function()
 {
     this.startButton = this.addControlToAlgorithmBar("Button", "Run Connected Component");
     this.startButton.onclick = this.startCallback.bind(this);
@@ -195,7 +195,7 @@ ConnectedComponent.prototype.doCC = function(ignored)
             this.cmd("CreateHighlightCircle", this.highlightCircleAL, ConnectedComponent.HIGHLIGHT_CIRCLE_COLOR,this.adj_list_x_start - this.adj_list_width, this.adj_list_y_start + vertex*this.adj_list_height);
             this.cmd("SetLayer", this.highlightCircleAL, 2);
 
-            this.cmd("CreateHighlightCircle", this.highlightCircleAM, ConnectedComponent.HIGHLIGHT_CIRCLE_COLOR,this.adj_matrix_x_start  - this.adj_matrix_width, this.adj_matrix_y_start + vertex*this.adj_matrix_height);
+            this.cmd("CreateHighlightCircle", this.highlightCircleAM, ConnectedComponent.HIGHLIGHT_CIRCLE_COLOR,this.adj_matrix_x_start - this.adj_matrix_width, this.adj_matrix_y_start + vertex*this.adj_matrix_height);
             this.cmd("SetLayer", this.highlightCircleAM, 3);
 
             if (vertex > 0)
@@ -284,7 +284,7 @@ ConnectedComponent.prototype.doCC = function(ignored)
     this.messageY = 30;
 
     var ccNum = 1;
-    for (i  = 0; i < this.size; i++)
+    for (i = 0; i < this.size; i++)
     {
         vertex = sortedVertex[i];
         if (!this.visited[vertex])
@@ -305,7 +305,7 @@ ConnectedComponent.prototype.doCC = function(ignored)
             this.cmd("CreateHighlightCircle", this.highlightCircleAL, ConnectedComponent.HIGHLIGHT_CIRCLE_COLOR,this.adj_list_x_start - this.adj_list_width, this.adj_list_y_start + vertex*this.adj_list_height);
             this.cmd("SetLayer", this.highlightCircleAL, 2);
 
-            this.cmd("CreateHighlightCircle", this.highlightCircleAM, ConnectedComponent.HIGHLIGHT_CIRCLE_COLOR,this.adj_matrix_x_start  - this.adj_matrix_width, this.adj_matrix_y_start + vertex*this.adj_matrix_height);
+            this.cmd("CreateHighlightCircle", this.highlightCircleAM, ConnectedComponent.HIGHLIGHT_CIRCLE_COLOR,this.adj_matrix_x_start - this.adj_matrix_width, this.adj_matrix_y_start + vertex*this.adj_matrix_height);
             this.cmd("SetLayer", this.highlightCircleAM, 3);
 
 

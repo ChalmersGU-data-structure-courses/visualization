@@ -63,7 +63,7 @@ DisjointSet.prototype.sizeChanged = function()
 }
 
 
-DisjointSet.prototype.addControls =  function()
+DisjointSet.prototype.addControls = function()
 {
     this.controls = [];
 

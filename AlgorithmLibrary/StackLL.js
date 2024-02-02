@@ -46,7 +46,7 @@ StackLL.LINKED_LIST_LINE_SPACING = 100;
 StackLL.TOP_POS_X = 180;
 StackLL.TOP_POS_Y = 100;
 StackLL.TOP_LABEL_X = 130;
-StackLL.TOP_LABEL_Y =  100;
+StackLL.TOP_LABEL_Y = 100;
 
 StackLL.TOP_ELEM_WIDTH = 30;
 StackLL.TOP_ELEM_HEIGHT = 30;
@@ -73,7 +73,7 @@ StackLL.prototype.sizeChanged = function()
 }
 
 
-StackLL.prototype.addControls =  function()
+StackLL.prototype.addControls = function()
 {
     this.controls = [];
     this.pushField = this.addControlToAlgorithmBar("Text", "");

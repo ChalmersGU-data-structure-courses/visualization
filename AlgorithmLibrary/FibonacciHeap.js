@@ -75,7 +75,7 @@ FibonacciHeap.prototype.init = function(am)
 }
 
 
-FibonacciHeap.prototype.addControls =  function()
+FibonacciHeap.prototype.addControls = function()
 {
     this.controls = [];
     this.insertField = this.addControlToAlgorithmBar("Text", "");
@@ -158,7 +158,7 @@ FibonacciHeap.prototype.moveTree = function(tree)
     {
         this.cmd("Move", tree.graphicID, tree.x, tree.y);
         this.cmd("Move", tree.internalGraphicID, tree.x, tree.y);
-        this.cmd("Move", tree.degreeID, tree.x  + FibonacciHeap.DEGREE_OFFSET_X, tree.y + FibonacciHeap.DEGREE_OFFSET_Y);
+        this.cmd("Move", tree.degreeID, tree.x + FibonacciHeap.DEGREE_OFFSET_X, tree.y + FibonacciHeap.DEGREE_OFFSET_Y);
 
         this.moveTree(tree.leftChild);
         this.moveTree(tree.rightSib);
@@ -181,7 +181,7 @@ FibonacciHeap.prototype.clearCallback = function(event)
     this.implementAction(this.clear.bind(this),"");
 }
 
-FibonacciHeap.prototype.clear  = function()
+FibonacciHeap.prototype.clear = function()
 {
     this.commands = new Array();
 
@@ -399,7 +399,7 @@ FibonacciHeap.prototype.insertElement = function(insertedValue)
     this.cmd("SetForegroundColor", insertNode.internalGraphicID, FibonacciHeap.FOREGROUND_COLOR);
     this.cmd("SetBackgroundColor", insertNode.internalGraphicID, FibonacciHeap.BACKGROUND_COLOR);
     this.cmd("SetLayer", insertNode.internalGraphicID, 2);
-    this.cmd("CreateLabel", insertNode.degreeID, insertNode.degree, insertNode.x  + FibonacciHeap.DEGREE_OFFSET_X, insertNode.y + FibonacciHeap.DEGREE_OFFSET_Y);
+    this.cmd("CreateLabel", insertNode.degreeID, insertNode.degree, insertNode.x + FibonacciHeap.DEGREE_OFFSET_X, insertNode.y + FibonacciHeap.DEGREE_OFFSET_Y);
     this.cmd("SetTextColor", insertNode.degreeID, "#0000FF");
     this.cmd("SetLayer", insertNode.degreeID, 2);
     this.cmd("Step");
@@ -587,7 +587,7 @@ FibonacciHeap.prototype.fixAfterRemoveMin = function()
         this.cmd("SetTextColod", indexID[i], FibonacciHeap.INDEX_COLOR);
     }
     var tmp = this.treeRoot;
-    // When remving w/ 1 tree. this.treeRoot == null?
+    // When remving w/ 1 tree.this.treeRoot == null?
     this.cmd("CreateLabel", tmpPtrID, "NextElem", this.treeRoot.x, FibonacciHeap.TMP_PTR_Y);
     while (this.treeRoot != null)
     {
@@ -630,7 +630,7 @@ FibonacciHeap.prototype.fixAfterRemoveMin = function()
             this.cmd("Disconnect", degreeGraphic[tmp.degree], degreeArray[tmp.degree].graphicID);
             this.cmd("Disconnect", degreeGraphic[tmp.degree], degreeArray[tmp.degree].internalGraphicID);
             this.cmd("SetNull", degreeGraphic[tmp.degree], 1);
-            var tmp2 =  degreeArray[tmp.degree];
+            var tmp2 = degreeArray[tmp.degree];
             degreeArray[tmp.degree] = null
             tmp = this.combineTrees(tmp, tmp2);
             this.cmd("Connect", tmpPtrID,

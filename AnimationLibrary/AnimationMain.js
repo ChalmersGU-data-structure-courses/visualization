@@ -41,28 +41,26 @@ function swapControlDiv()
 {
     this.swapped = !this.swapped;
     if (this.swapped) {
-    reorderSibling(this.canvas, this.generalControlBar.parentNode);
-    setCookie("VisualizationControlSwapped", "true", 30);
-
+        reorderSibling(this.canvas, this.generalControlBar.toolbar.parentNode);
+        setCookie("VisualizationControlSwapped", "true", 30);
     } else {
-    reorderSibling(this.generalControlBar.parentNode, this.canvas);
-    setCookie("VisualizationControlSwapped", "false", 30);
-
+        reorderSibling(this.generalControlBar.toolbar.parentNode, this.canvas);
+        setCookie("VisualizationControlSwapped", "false", 30);
     }
 }
 
 
-// Utility funciton to read a cookie
+// Utility function to read a cookie
 function getCookie(cookieName)
 {
     var i, x, y;
-    var cookies=document.cookie.split(";");
-    for (i=0; i < cookies.length; i++)
+    var cookies = document.cookie.split(";");
+    for (i = 0; i < cookies.length; i++)
     {
-        x=cookies[i].substr(0,cookies[i].indexOf("="));
-        y=cookies[i].substr(cookies[i].indexOf("=")+1);
-        x=x.replace(/^\s+|\s+$/g,"");
-        if (x==cookieName)
+        x = cookies[i].substr(0,cookies[i].indexOf("="));
+        y = cookies[i].substr(cookies[i].indexOf("=")+1);
+        x = x.replace(/^\s+|\s+$/g,"");
+        if (x == cookieName)
         {
             return unescape(y);
         }
@@ -225,7 +223,7 @@ function initCanvas(canvas, generalControlBar, algorithmControlBar)
     // UI nodes should be given, otherwise use defaults.
     // This is the only place where getElementById is used
     if(!canvas)              canvas              = document.getElementById("canvas");
-    if(!generalControlBar)   generalControlBar   = document.getElementById("generalAnimationControls");
+    if(!generalControlBar)   generalControlBar = document.getElementById("generalAnimationControls");
     if(!algorithmControlBar) algorithmControlBar = document.getElementById("algorithmSpecificControls");
 
     var objectManager = new ObjectManager(canvas);
@@ -605,7 +603,7 @@ function AnimationManager(objectManager)
             else if (nextCommand[0].toUpperCase() == "MOVE")
             {
                 var objectID = parseInt(nextCommand[1]);
-                var nextAnim =  new SingleAnimation(objectID,
+                var nextAnim = new SingleAnimation(objectID,
                                                     this.animatedObjects.getNodeX(objectID),
                                                     this.animatedObjects.getNodeY(objectID),
                                                     parseInt(nextCommand[2]),
@@ -624,7 +622,7 @@ function AnimationManager(objectManager)
                                 var newXY = this.animatedObjects.getAlignRightPos(id, otherId);
 
 
-                var nextAnim =  new SingleAnimation(id,
+                var nextAnim = new SingleAnimation(id,
                                     this.animatedObjects.getNodeX(id),
                                     this.animatedObjects.getNodeY(id),
                                     newXY[0],
@@ -695,7 +693,7 @@ function AnimationManager(objectManager)
             }
             else if (nextCommand[0].toUpperCase() == "DELETE")
             {
-                var objectID  = parseInt(nextCommand[1]);
+                var objectID = parseInt(nextCommand[1]);
 
                 var i;
                 var removedEdges = this.animatedObjects.deleteIncident(objectID);
@@ -926,7 +924,7 @@ function AnimationManager(objectManager)
 
     //  Start a new animation.  The input parameter commands is an array of strings,
     //  which represents the animation to start
-    this.StartNewAnimation =  function(commands)
+    this.StartNewAnimation = function(commands)
     {
         clearTimeout(this.timer);
         if (this.AnimationSteps != null)
@@ -1015,7 +1013,7 @@ function AnimationManager(objectManager)
 
     this.skipBack = function()
     {
-        var keepUndoing = this.undoAnimationStepIndices != null && this. undoAnimationStepIndices.length != 0;
+        var keepUndoing = this.undoAnimationStepIndices != null && this.undoAnimationStepIndices.length != 0;
         if (keepUndoing)
         {
             var i;
@@ -1162,7 +1160,7 @@ function AnimationManager(objectManager)
             var i;
             for (i = undo.length - 1; i >= 0; i--)
             {
-                var animateNext  =  undo[i].addUndoAnimation(this.currentBlock);
+                var animateNext = undo[i].addUndoAnimation(this.currentBlock);
                 anyAnimations = anyAnimations || animateNext;
 
             }
@@ -1220,7 +1218,7 @@ function AnimationManager(objectManager)
                     var oldX = this.animatedObjects.getNodeX(objectID);
                     var oldY = this.animatedObjects.getNodeY(objectID);
                     var targetX = this.currentBlock[i].toX;
-                    var targety  = this.currentBlock[i].toY;
+                    var targety = this.currentBlock[i].toY;
                     var newX = this.lerp(this.animatedObjects.getNodeX(objectID), this.currentBlock[i].toX, percent);
                     var newY = this.lerp(this.animatedObjects.getNodeY(objectID), this.currentBlock[i].toY, percent);
                     this.animatedObjects.setNodePosition(objectID, newX, newY);

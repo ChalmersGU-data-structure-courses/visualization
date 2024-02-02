@@ -163,7 +163,7 @@ DPChange.prototype.init = function(am)
 }
 
 
-DPChange.prototype.addControls =  function()
+DPChange.prototype.addControls = function()
 {
     this.controls = [];
     this.fibField = this.addControlToAlgorithmBar("Text", "");
@@ -324,7 +324,7 @@ DPChange.prototype.implementGreedy = function(value)
 
 
 
-DPChange.prototype.buildTable  = function(maxVal)
+DPChange.prototype.buildTable = function(maxVal)
 {
 
     this.tableID = new Array(2);
@@ -362,7 +362,7 @@ DPChange.prototype.buildTable  = function(maxVal)
 
     for (i = 0; i <= maxVal; i++)
     {
-        yPos = i % table_rows *  DPChange.TABLE_ELEM_HEIGHT + DPChange.TABLE_START_Y;
+        yPos = i % table_rows * DPChange.TABLE_ELEM_HEIGHT + DPChange.TABLE_START_Y;
         xPos = Math.floor(i / table_rows) * DPChange.TABLE_DIFF_X + DPChange.TABLE_START_X;
 
         for (j = 0; j < 2; j++)
@@ -560,7 +560,7 @@ DPChange.prototype.change = function(value, xPos, ID)
 
         var i;
         var best = -1;
-        var nextID  = this.nextIndex++;
+        var nextID = this.nextIndex++;
         var nextID2 = this.nextIndex++;
         var recID = nextID;
         var bestList;
@@ -574,7 +574,7 @@ DPChange.prototype.change = function(value, xPos, ID)
                 this.cmd("SetForegroundColor", this.codeID[6][1], DPChange.CODE_HIGHLIGHT_COLOR);
                 this.cmd("Step");
                 this.cmd("SetForegroundColor", this.codeID[6][1], DPChange.CODE_STANDARD_COLOR);
-                var nextTry  = this.change(value - coins[i], xPos + DPChange.RECURSIVE_DELTA_X, recID);
+                var nextTry = this.change(value - coins[i], xPos + DPChange.RECURSIVE_DELTA_X, recID);
                 // TODO:  SOMEHTING ELSE HERE
                 if (best == -1)
                 {
@@ -617,7 +617,7 @@ DPChange.prototype.change = function(value, xPos, ID)
         this.cmd("Move", ID, xPos, this.currentY - 2 * DPChange.RECURSIVE_DELTA_Y);
 
 
-        this.currentY  = this.currentY -  2 * DPChange.RECURSIVE_DELTA_Y;
+        this.currentY = this.currentY - 2 * DPChange.RECURSIVE_DELTA_Y;
 
         this.cmd("SetForegroundColor", this.codeID[9][0], DPChange.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");
@@ -767,7 +767,7 @@ DPChange.prototype.fibMem = function(value, xPos, ID)
         this.cmd("SetText", ID, firstValue + secondValue);
         this.cmd("Step");
         this.tableVals[value] = firstValue + secondValue;
-        this.currentY  = this.currentY - 2 * DPChange.RECURSIVE_DELTA_Y;
+        this.currentY = this.currentY - 2 * DPChange.RECURSIVE_DELTA_Y;
         this.cmd("CreateLabel", this.nextIndex, this.tableVals[value], xPos+5, this.currentY + 5);
         this.cmd("Move", this.nextIndex, this.tableXPos[value], this.tableYPos[value], this.currentY);
         this.cmd("Step");
@@ -862,7 +862,7 @@ DPChange.prototype.changeMem = function(value, xPos, ID)
 
         var i;
         var best = -1;
-        var nextID  = this.nextIndex++;
+        var nextID = this.nextIndex++;
         var nextID2 = this.nextIndex++;
         var recID = nextID;
         var bestList;
@@ -876,7 +876,7 @@ DPChange.prototype.changeMem = function(value, xPos, ID)
                 this.cmd("SetForegroundColor", this.codeID[6][1], DPChange.CODE_HIGHLIGHT_COLOR);
                 this.cmd("Step");
                 this.cmd("SetForegroundColor", this.codeID[6][1], DPChange.CODE_STANDARD_COLOR);
-                var nextTry  = this.changeMem(value - coins[i], xPos + DPChange.RECURSIVE_DELTA_X, recID);
+                var nextTry = this.changeMem(value - coins[i], xPos + DPChange.RECURSIVE_DELTA_X, recID);
                 // TODO:  SOMEHTING ELSE HERE
                 if (best == -1)
                 {
@@ -925,7 +925,7 @@ DPChange.prototype.changeMem = function(value, xPos, ID)
         this.cmd("Move", ID, xPos, this.currentY - 2 * DPChange.RECURSIVE_DELTA_Y);
 
 
-        this.currentY  = this.currentY -  2 * DPChange.RECURSIVE_DELTA_Y;
+        this.currentY = this.currentY - 2 * DPChange.RECURSIVE_DELTA_Y;
 
         this.cmd("SetForegroundColor", this.codeID[9][0], DPChange.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");

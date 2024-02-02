@@ -31,7 +31,7 @@ function ComparisonSort(am)
 }
 
 
-ComparisonSort.ARRAY_SIZE_SMALL  = 50;
+ComparisonSort.ARRAY_SIZE_SMALL = 50;
 ComparisonSort.ARRAY_WIDTH_SMALL = 17;
 ComparisonSort.ARRAY_BAR_WIDTH_SMALL = 10;
 ComparisonSort.ARRAY_INITIAL_X_SMALL = 15;
@@ -76,7 +76,7 @@ ComparisonSort.prototype.init = function(am)
 }
 
 
-ComparisonSort.prototype.addControls =  function()
+ComparisonSort.prototype.addControls = function()
 {
     this.resetButton = this.addControlToAlgorithmBar("Button", "Randomize Array");
     this.resetButton.onclick = this.resetCallback.bind(this);
@@ -194,7 +194,7 @@ ComparisonSort.prototype.createVisualObjects = function()
     this.barLabels = new Array(this.array_size);
     this.barPositionsX = new Array(this.array_size);
     this.oldData = new Array(this.array_size);
-    this.obscureObject  = new Array(this.array_size);
+    this.obscureObject = new Array(this.array_size);
 
     var xPos = this.array_initial_x;
     var yPos = this.array_y_pos;
@@ -236,7 +236,7 @@ ComparisonSort.prototype.createVisualObjects = function()
 }
 
 
-ComparisonSort.prototype.highlightRange  = function(lowIndex, highIndex)
+ComparisonSort.prototype.highlightRange = function(lowIndex, highIndex)
 {
     for (var i = 0; i < lowIndex; i++)
     {

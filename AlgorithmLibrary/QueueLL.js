@@ -46,7 +46,7 @@ QueueLL.LINKED_LIST_LINE_SPACING = 100;
 QueueLL.TOP_POS_X = 180;
 QueueLL.TOP_POS_Y = 100;
 QueueLL.TOP_LABEL_X = 130;
-QueueLL.TOP_LABEL_Y =  100;
+QueueLL.TOP_LABEL_Y = 100;
 
 QueueLL.TOP_ELEM_WIDTH = 30;
 QueueLL.TOP_ELEM_HEIGHT = 30;
@@ -76,7 +76,7 @@ QueueLL.prototype.sizeChanged = function()
 }
 
 
-QueueLL.prototype.addControls =  function()
+QueueLL.prototype.addControls = function()
 {
     this.controls = [];
     this.enqueueField = this.addControlToAlgorithmBar("Text", "");
@@ -221,7 +221,7 @@ QueueLL.prototype.enqueue = function(elemToPush)
 
     this.cmd("SetText", this.leftoverLabelID, "");
 
-    for (var i  = this.top; i > 0; i--)
+    for (var i = this.top; i > 0; i--)
     {
         this.arrayData[i] = this.arrayData[i-1];
         this.linkedListElemID[i] =this.linkedListElemID[i-1];

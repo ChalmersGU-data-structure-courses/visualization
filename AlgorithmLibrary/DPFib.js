@@ -101,7 +101,7 @@ DPFib.prototype.init = function(am)
 }
 
 
-DPFib.prototype.addControls =  function()
+DPFib.prototype.addControls = function()
 {
     this.controls = [];
     this.fibField = this.addControlToAlgorithmBar("Text", "");
@@ -124,7 +124,7 @@ DPFib.prototype.addControls =  function()
 
 
 
-DPFib.prototype.buildTable  = function(maxVal)
+DPFib.prototype.buildTable = function(maxVal)
 {
     this.tableID = new Array(maxVal + 1);
     this.tableVals = new Array(maxVal + 1);
@@ -142,7 +142,7 @@ DPFib.prototype.buildTable  = function(maxVal)
         this.tableVals[i] = -1;
         this.oldIDs.push(this.tableID[i]);
 
-        yPos = i % table_rows *  DPFib.TABLE_ELEM_HEIGHT + DPFib.TABLE_START_Y;
+        yPos = i % table_rows * DPFib.TABLE_ELEM_HEIGHT + DPFib.TABLE_START_Y;
         xPos = Math.floor(i / table_rows) * DPFib.TABLE_DIFF_X + DPFib.TABLE_START_X;
 
         this.tableXPos[i] = xPos;
@@ -314,7 +314,7 @@ DPFib.prototype.fib = function(value, xPos, ID)
         this.cmd("Delete", secondID);
         this.cmd("SetText", ID, firstValue + secondValue);
         this.cmd("Step");
-        this.currentY  = this.currentY - 2 * DPFib.RECURSIVE_DELTA_Y;
+        this.currentY = this.currentY - 2 * DPFib.RECURSIVE_DELTA_Y;
         return firstValue + secondValue;
     }
     else
@@ -444,7 +444,7 @@ DPFib.prototype.fibMem = function(value, xPos, ID)
         this.cmd("SetText", ID, firstValue + secondValue);
         this.cmd("Step");
         this.tableVals[value] = firstValue + secondValue;
-        this.currentY  = this.currentY - 2 * DPFib.RECURSIVE_DELTA_Y;
+        this.currentY = this.currentY - 2 * DPFib.RECURSIVE_DELTA_Y;
         this.cmd("CreateLabel", this.nextIndex, this.tableVals[value], xPos+5, this.currentY + 5);
         this.cmd("Move", this.nextIndex, this.tableXPos[value], this.tableYPos[value], this.currentY);
         this.cmd("Step");

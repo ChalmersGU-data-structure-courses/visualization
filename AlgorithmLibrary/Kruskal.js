@@ -64,7 +64,7 @@ Kruskal.HIGHLIGHT_CIRCLE_COLOR_1 = "#FFAAAA";
 Kruskal.HIGHLIGHT_CIRCLE_COLOR_2 = "#FF0000";
 
 
-Kruskal.prototype.addControls =  function()
+Kruskal.prototype.addControls = function()
 {
 
     this.startButton = this.addControlToAlgorithmBar("Button", "Run Kruskal");
@@ -126,7 +126,7 @@ Kruskal.prototype.disjointSetFind = function(valueToFind, highlightCircleID)
         this.cmd("SetTextColor", this.setID[valueToFind], "#000000");
         this.cmd("Move", highlightCircleID,  Kruskal.SET_ARRAY_START_X - Kruskal.SET_ARRAY_ELEM_WIDTH ,Kruskal.SET_ARRAY_START_Y + this.setData[valueToFind]*Kruskal.SET_ARRAY_ELEM_HEIGHT);
         this.cmd("Step");
-        valueToFind =  this.setData[valueToFind];
+        valueToFind = this.setData[valueToFind];
         this.cmd("SetTextColor", this.setID[valueToFind], "#FF0000");
         this.cmd("Step");
     }
@@ -170,7 +170,7 @@ Kruskal.prototype.doKruskal = function(ignored)
                 this.edgesListRight.push(j);
                 this.cmd("CreateLabel", this.edgesListLeftID[top], i, Kruskal.EDGE_LIST_START_X + Math.floor(top / Kruskal.EDGE_LIST_MAX_PER_COLUMN) * Kruskal.EDGE_LIST_COLUMN_WIDTH,
                     Kruskal.EDGE_LIST_START_Y + (top % Kruskal.EDGE_LIST_MAX_PER_COLUMN) * Kruskal.EDGE_LIST_ELEM_HEIGHT);
-                this.cmd("CreateLabel", this.edgesListRightID[top], j, Kruskal.EDGE_LIST_START_X +Kruskal.EDGE_LIST_ELEM_WIDTH +  Math.floor(top / Kruskal.EDGE_LIST_MAX_PER_COLUMN) * Kruskal.EDGE_LIST_COLUMN_WIDTH,
+                this.cmd("CreateLabel", this.edgesListRightID[top], j, Kruskal.EDGE_LIST_START_X +Kruskal.EDGE_LIST_ELEM_WIDTH + Math.floor(top / Kruskal.EDGE_LIST_MAX_PER_COLUMN) * Kruskal.EDGE_LIST_COLUMN_WIDTH,
                     Kruskal.EDGE_LIST_START_Y + (top % Kruskal.EDGE_LIST_MAX_PER_COLUMN) * Kruskal.EDGE_LIST_ELEM_HEIGHT);
                 this.cmd("Connect", this.edgesListLeftID[top], this.edgesListRightID[top], Graph.EDGE_COLOR, 0, 0, this.adj_matrix[i][j])
             }
@@ -208,7 +208,7 @@ Kruskal.prototype.doKruskal = function(ignored)
     {
         this.cmd("Move", this.edgesListLeftID[i], Kruskal.EDGE_LIST_START_X + Math.floor(i / Kruskal.EDGE_LIST_MAX_PER_COLUMN) * Kruskal.EDGE_LIST_COLUMN_WIDTH,
             Kruskal.EDGE_LIST_START_Y + (i % Kruskal.EDGE_LIST_MAX_PER_COLUMN) * Kruskal.EDGE_LIST_ELEM_HEIGHT);
-        this.cmd("Move",  this.edgesListRightID[i], Kruskal.EDGE_LIST_START_X +Kruskal.EDGE_LIST_ELEM_WIDTH +  Math.floor(i / Kruskal.EDGE_LIST_MAX_PER_COLUMN) * Kruskal.EDGE_LIST_COLUMN_WIDTH,
+        this.cmd("Move",  this.edgesListRightID[i], Kruskal.EDGE_LIST_START_X +Kruskal.EDGE_LIST_ELEM_WIDTH + Math.floor(i / Kruskal.EDGE_LIST_MAX_PER_COLUMN) * Kruskal.EDGE_LIST_COLUMN_WIDTH,
             Kruskal.EDGE_LIST_START_Y + (i % Kruskal.EDGE_LIST_MAX_PER_COLUMN) * Kruskal.EDGE_LIST_ELEM_HEIGHT);
 
     }
@@ -248,7 +248,7 @@ Kruskal.prototype.doKruskal = function(ignored)
 
         this.cmd("SetText", findLabelRight, "find(" + String(this.edgesListRight[nextListIndex]) + ") = ");
 
-        this.cmd("CreateHighlightCircle", highlightCircle2, Kruskal.HIGHLIGHT_CIRCLE_COLOR_2,  Kruskal.EDGE_LIST_START_X +Kruskal.EDGE_LIST_ELEM_WIDTH  + Math.floor(nextListIndex / Kruskal.EDGE_LIST_MAX_PER_COLUMN) * Kruskal.EDGE_LIST_COLUMN_WIDTH,
+        this.cmd("CreateHighlightCircle", highlightCircle2, Kruskal.HIGHLIGHT_CIRCLE_COLOR_2,  Kruskal.EDGE_LIST_START_X +Kruskal.EDGE_LIST_ELEM_WIDTH + Math.floor(nextListIndex / Kruskal.EDGE_LIST_MAX_PER_COLUMN) * Kruskal.EDGE_LIST_COLUMN_WIDTH,
             Kruskal.EDGE_LIST_START_Y + (nextListIndex % Kruskal.EDGE_LIST_MAX_PER_COLUMN) * Kruskal.EDGE_LIST_ELEM_HEIGHT, 15);
 
 

@@ -50,7 +50,7 @@ BFS.QUEUE_START_Y = 50;
 BFS.QUEUE_SPACING = 30;
 
 
-BFS.prototype.addControls =  function()
+BFS.prototype.addControls = function()
 {
     this.addLabelToAlgorithmBar("Start Vertex: ");
     this.startField = this.addControlToAlgorithmBar("Text", "");
@@ -164,7 +164,7 @@ BFS.prototype.doBFS = function(startVetex)
         this.cmd("SetLayer", this.highlightCircleL, 1);
         this.cmd("CreateHighlightCircle", this.highlightCircleAL, BFS.HIGHLIGHT_CIRCLE_COLOR,this.adj_list_x_start - this.adj_list_width, this.adj_list_y_start + vertex*this.adj_list_height);
         this.cmd("SetLayer", this.highlightCircleAL, 2);
-        this.cmd("CreateHighlightCircle", this.highlightCircleAM, BFS.HIGHLIGHT_CIRCLE_COLOR,this.adj_matrix_x_start  - this.adj_matrix_width, this.adj_matrix_y_start + vertex*this.adj_matrix_height);
+        this.cmd("CreateHighlightCircle", this.highlightCircleAM, BFS.HIGHLIGHT_CIRCLE_COLOR,this.adj_matrix_x_start - this.adj_matrix_width, this.adj_matrix_y_start + vertex*this.adj_matrix_height);
         this.cmd("SetLayer", this.highlightCircleAM, 3);
 
         this.cmd("SetTextColor", queueID[head], BFS.BFS_QUEUE_HEAD_COLOR);

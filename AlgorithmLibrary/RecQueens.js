@@ -104,7 +104,7 @@ Queens.prototype.init = function(am)
 }
 
 
-Queens.prototype.addControls =  function()
+Queens.prototype.addControls = function()
 {
     this.controls = [];
     this.addLabelToAlgorithmBar("Board size:  (1-8)");
@@ -128,7 +128,7 @@ Queens.prototype.queensCallback = function(event)
 
     if (this.sizeField.value != "")
     {
-        var queenSize =  parseInt(this.sizeField.value);
+        var queenSize = parseInt(this.sizeField.value);
         queenSize = Math.min(queenSize, 8);
         this.sizeField.value = String(queenSize);
         this.implementAction(this.doQueens.bind(this),queenSize);
@@ -175,12 +175,12 @@ Queens.prototype.doQueens = function(size)
                  "-1",
                  Queens.INTERNAL_BOARD_WIDTH,
                  Queens.INTERNAL_BOARD_HEIGHT,
-                 Queens.INTERNAL_BOARD_START_X  + i * Queens.INTERNAL_BOARD_WIDTH,
+                 Queens.INTERNAL_BOARD_START_X + i * Queens.INTERNAL_BOARD_WIDTH,
                  Queens.INTERNAL_BOARD_START_Y);
 
         this.boardInternalIndexID[i] = this.nextIndex++;
         this.oldIDs.push(this.boardInternalIndexID[i]);
-        this.cmd("CreateLabel", this.boardInternalIndexID[i], i,Queens.INTERNAL_BOARD_START_X  + i * Queens.INTERNAL_BOARD_WIDTH,
+        this.cmd("CreateLabel", this.boardInternalIndexID[i], i,Queens.INTERNAL_BOARD_START_X + i * Queens.INTERNAL_BOARD_WIDTH,
                  Queens.INTERNAL_BOARD_START_Y - Queens.INTERNAL_BOARD_HEIGHT);
         this.cmd("SetForegroundColor", this.boardInternalIndexID[i], Queens.INDEX_COLOR);
 
@@ -194,8 +194,8 @@ Queens.prototype.doQueens = function(size)
                      "",
                      Queens.LOGICAL_BOARD_WIDTH,
                      Queens.LOGICAL_BOARD_HEIGHT,
-                     Queens.LOGICAL_BOARD_START_X  + j * Queens.LOGICAL_BOARD_WIDTH,
-                     Queens.LOGICAL_BOARD_START_Y  + i * Queens.LOGICAL_BOARD_HEIGHT);
+                     Queens.LOGICAL_BOARD_START_X + j * Queens.LOGICAL_BOARD_WIDTH,
+                     Queens.LOGICAL_BOARD_START_Y + i * Queens.LOGICAL_BOARD_HEIGHT);
 
 
         }
@@ -226,7 +226,7 @@ Queens.prototype.doQueens = function(size)
 
 Queens.prototype.queens = function(board, current, size)
 {
-    var oldX  = this.currentX;
+    var oldX = this.currentX;
     var oldY = this.currentY;
     var oldLeft = this.activationLeft;
     var activationRec = this.createActivation("queens", Queens.QUEENS_ACTIVATION_FIELDS, this.currentX, this.currentY, this.activationLeft);
@@ -253,7 +253,7 @@ Queens.prototype.queens = function(board, current, size)
     this.currentY += Queens.RECURSIVE_DELTA_Y_QUEEN;
     if (this.currentY + Queens.RECURSIVE_DELTA_Y_QUEEN > this.getCanvasHeight())
     {
-        this.currentY =  Queens.ACTIVATION_RECORT_START_Y;
+        this.currentY = Queens.ACTIVATION_RECORT_START_Y;
         this.currentX += Queens.ACTIVATION_RECORD_SPACING;
         this.activationLeft = false;
     }

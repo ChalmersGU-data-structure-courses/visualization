@@ -264,7 +264,7 @@ AnimatedObject.prototype.getClosestCardinalPoint = function(fromX, fromY)
     }
     else
     {
-        yPos  = this.centerY();
+        yPos = this.centerY();
     }
 
     return [xPos, yPos];
@@ -282,8 +282,8 @@ AnimatedObject.prototype.pulseHighlight = function(frameNum)
     if (this.highlighted)
     {
                 var frameMod = frameNum / 7.0;
-                var delta  = Math.abs((frameMod) % (2 * this.range  - 2) - this.range + 1)
-                this.highlightDiff =  delta + this.minHeightDiff;
+                var delta = Math.abs((frameMod) % (2 * this.range - 2) - this.range + 1)
+                this.highlightDiff = delta + this.minHeightDiff;
     }
 
 }

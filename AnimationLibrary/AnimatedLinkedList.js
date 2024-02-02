@@ -166,7 +166,7 @@ AnimatedLinkedList.prototype.resetTextPosition = function()
     else
     {
         this.labelPosY[0] = this.y;
-        this.labelPosX[0] = this.x +  this.w * (1-this.linkPercent)/2*(1/this.numLabels - 1);
+        this.labelPosX[0] = this.x + this.w * (1-this.linkPercent)/2*(1/this.numLabels - 1);
         for (var i = 1; i < this.numLabels; i++)
         {
             this.labelPosY[i] = this.y;

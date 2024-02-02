@@ -47,12 +47,16 @@ Heap.prototype.init = function(am)
     Heap.superclass.init.call(this, am);
     this.addControls();
     this.nextIndex = 0;
-    this.HeapXPositions = [0, 450, 250, 650, 150, 350, 550, 750, 100, 200, 300, 400, 500, 600,
-                      700, 800, 075, 125, 175, 225, 275, 325, 375, 425, 475, 525, 575,
-                      625, 675, 725, 775, 825];
-    this.HeapYPositions = [0, 100, 170, 170, 240, 240, 240, 240, 310, 310, 310, 310, 310, 310,
-                      310, 310, 380, 380, 380, 380, 380, 380, 380, 380, 380, 380, 380,
-                      380, 380, 380, 380, 380];
+    this.HeapXPositions = [
+        0, 450, 250, 650, 150, 350, 550, 750, 100, 200, 300, 400, 500, 600,
+        700, 800, 75, 125, 175, 225, 275, 325, 375, 425, 475, 525, 575,
+        625, 675, 725, 775, 825
+    ];
+    this.HeapYPositions = [
+        0, 100, 170, 170, 240, 240, 240, 240, 310, 310, 310, 310, 310, 310,
+        310, 310, 380, 380, 380, 380, 380, 380, 380, 380, 380, 380, 380,
+        380, 380, 380, 380, 380
+    ];
     this.commands = [];
     this.createArray();
 
@@ -66,7 +70,7 @@ Heap.prototype.init = function(am)
 
 }
 
-Heap.prototype.addControls =  function()
+Heap.prototype.addControls = function()
 {
     this.insertField = this.addControlToAlgorithmBar("Text", "");
     this.insertField.onkeydown = this.returnSubmit(this.insertField,  this.insertCallback.bind(this), 4, true);

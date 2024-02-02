@@ -67,7 +67,7 @@ BinomialQueue.prototype.init = function(am)
 }
 
 
-BinomialQueue.prototype.addControls =  function()
+BinomialQueue.prototype.addControls = function()
 {
     this.controls = [];
     this.insertField = this.addControlToAlgorithmBar("Text", "");
@@ -150,7 +150,7 @@ BinomialQueue.prototype.moveTree = function(tree)
     {
         this.cmd("Move", tree.graphicID, tree.x, tree.y);
         this.cmd("Move", tree.internalGraphicID, tree.x, tree.y);
-        this.cmd("Move", tree.degreeID, tree.x  + BinomialQueue.DEGREE_OFFSET_X, tree.y + BinomialQueue.DEGREE_OFFSET_Y);
+        this.cmd("Move", tree.degreeID, tree.x + BinomialQueue.DEGREE_OFFSET_X, tree.y + BinomialQueue.DEGREE_OFFSET_Y);
 
         this.moveTree(tree.leftChild);
         this.moveTree(tree.rightSib);
@@ -173,7 +173,7 @@ BinomialQueue.prototype.clearCallback = function(event)
     this.clear();
 }
 
-BinomialQueue.prototype.clear  = function()
+BinomialQueue.prototype.clear = function()
 {
     this.commands = new Array();
 
@@ -308,7 +308,7 @@ BinomialQueue.prototype.insertElement = function(insertedValue)
     this.cmd("SetForegroundColor", insertNode.internalGraphicID, BinomialQueue.FOREGROUND_COLOR);
     this.cmd("SetBackgroundColor", insertNode.internalGraphicID, BinomialQueue.BACKGROUND_COLOR);
     this.cmd("SetLayer", insertNode.internalGraphicID, 2);
-    this.cmd("CreateLabel", insertNode.degreeID, insertNode.degree, insertNode.x  + BinomialQueue.DEGREE_OFFSET_X, insertNode.y + BinomialQueue.DEGREE_OFFSET_Y);
+    this.cmd("CreateLabel", insertNode.degreeID, insertNode.degree, insertNode.x + BinomialQueue.DEGREE_OFFSET_X, insertNode.y + BinomialQueue.DEGREE_OFFSET_Y);
     this.cmd("SetTextColor", insertNode.degreeID, "#0000FF");
     this.cmd("SetLayer", insertNode.degreeID, 2);
     this.cmd("Step");
@@ -372,7 +372,7 @@ BinomialQueue.prototype.merge = function()
         }
         else
         {
-            var tmp2  = this.treeRoot;
+            var tmp2 = this.treeRoot;
             while (tmp2.rightSib != null && tmp2.rightSib.degree < tmp.degree)
             {
                 tmp2 = tmp2.rightSib;

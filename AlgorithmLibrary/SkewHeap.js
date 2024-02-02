@@ -39,7 +39,7 @@ SkewHeap.HIGHLIGHT_CIRCLE_COLOR = "#007700";
 SkewHeap.FOREGROUND_COLOR = "#007700";
 SkewHeap.BACKGROUND_COLOR = "#EEFFEE";
 
-SkewHeap.WIDTH_DELTA  = 50;
+SkewHeap.WIDTH_DELTA = 50;
 SkewHeap.HEIGHT_DELTA = 50;
 SkewHeap.STARTING_Y = 90;
 
@@ -71,7 +71,7 @@ SkewHeap.prototype.init = function(am)
 }
 
 
-SkewHeap.prototype.addControls =  function()
+SkewHeap.prototype.addControls = function()
 {
     this.controls = [];
     this.insertField = this.addControlToAlgorithmBar("Text", "");
@@ -111,7 +111,7 @@ SkewHeap.prototype.clearCallback = function(event)
     this.implementAction(this.clear.bind(this, ""));
 }
 
-SkewHeap.prototype.clear  = function(ignored)
+SkewHeap.prototype.clear = function(ignored)
 {
     this.commands = new Array();
     this.clearTree(this.treeRoot);
@@ -120,7 +120,7 @@ SkewHeap.prototype.clear  = function(ignored)
     return this.commands;
 }
 
-SkewHeap.prototype.clearTree    = function(tree)
+SkewHeap.prototype.clearTree = function(tree)
 {
         if (tree != null)
         {

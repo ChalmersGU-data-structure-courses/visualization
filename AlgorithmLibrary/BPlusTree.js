@@ -32,7 +32,7 @@ BPlusTree.PRINT_HORIZONTAL_GAP = 50;
 BPlusTree.MIN_MAX_DEGREE = 3;
 BPlusTree.MAX_MAX_DEGREE = 7;
 
-BPlusTree.HEIGHT_DELTA  = 50;
+BPlusTree.HEIGHT_DELTA = 50;
 BPlusTree.NODE_SPACING = 15;
 BPlusTree.STARTING_Y = 30;
 BPlusTree.WIDTH_PER_ELEM = 40;
@@ -99,7 +99,7 @@ BPlusTree.prototype.sizeChanged = function()
 }
 
 
-BPlusTree.prototype.addControls =  function()
+BPlusTree.prototype.addControls = function()
 {
     this.controls = [];
 
@@ -521,7 +521,7 @@ BPlusTree.prototype.insertElement = function(insertedValue)
 
 
 
-BPlusTree.prototype.insert  = function(tree, insertValue)
+BPlusTree.prototype.insert = function(tree, insertValue)
 {
     this.cmd("SetHighlight", tree.graphicID, 1);
     this.cmd("Step");
@@ -584,7 +584,7 @@ BPlusTree.prototype.insertRepair = function(tree)
     }
     else
     {
-        var newNode  = this.split(tree);
+        var newNode = this.split(tree);
         this.insertRepair(newNode);
     }
 }
@@ -929,7 +929,7 @@ BPlusTree.prototype.mergeRight = function(tree)
 
     for (var i = 0; i < rightSib.numKeys; i++)
     {
-        var insertIndex =  tree.numKeys + 1 + i;
+        var insertIndex = tree.numKeys + 1 + i;
         if (tree.isLeaf)
         {
             insertIndex -= 1;

@@ -38,7 +38,7 @@ ClosedHash.ARRAY_ELEM_START_X = 50;
 ClosedHash.ARRAY_ELEM_START_Y = 100;
 ClosedHash.ARRAY_VERTICAL_SEPARATION = 100;
 
-ClosedHash.CLOSED_HASH_TABLE_SIZE  = 29;
+ClosedHash.CLOSED_HASH_TABLE_SIZE = 29;
 
 ClosedHash.INDEX_COLOR = "#0000FF";
 
@@ -95,7 +95,7 @@ ClosedHash.prototype.changeProbeType = function(newProbingType)
         this.quadraticProbingButton.checked = true;
         this.currentHashingTypeButtonState = this.quadraticProbingButton;
 
-        for (var i = 0; i < this.    table_size; i++)
+        for (var i = 0; i < this.table_size; i++)
         {
             this.skipDist[i] = i * i;
         }
@@ -179,7 +179,7 @@ ClosedHash.prototype.getEmptyIndex = function(index, elem)
         this.resetSkipDist(elem, this.nextIndex++);
     }
     var foundIndex = -1;
-    for (var i  = 0; i < this.table_size; i++)
+    for (var i = 0; i < this.table_size; i++)
     {
         var candidateIndex   = (index + this.skipDist[i]) % this.table_size;
         this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 1);
@@ -206,7 +206,7 @@ ClosedHash.prototype.getElemIndex = function(index, elem)
         resetSkipDist(elem, this.nextIndex++);
     }
     var foundIndex = -1;
-    for (var i  = 0; i < this.table_size; i++)
+    for (var i = 0; i < this.table_size; i++)
     {
         var candidateIndex   = (index + this.skipDist[i]) % this.table_size;
         this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 1);
@@ -304,12 +304,12 @@ ClosedHash.prototype.setup = function()
     for (var i = 0; i < this.table_size; i++)
     {
         this.skipDist[i] = i; // Start with linear probing
-        var nextID  = this.nextIndex++;
+        var nextID = this.nextIndex++;
         this.empty[i] = true;
         this.deleted[i] = false;
 
-        var nextXPos =  ClosedHash.ARRAY_ELEM_START_X + (i % this.elements_per_row) * ClosedHash.ARRAY_ELEM_WIDTH;
-        var nextYPos =  ClosedHash.ARRAY_ELEM_START_Y + Math.floor(i / this.elements_per_row) * ClosedHash.ARRAY_VERTICAL_SEPARATION;
+        var nextXPos = ClosedHash.ARRAY_ELEM_START_X + (i % this.elements_per_row) * ClosedHash.ARRAY_ELEM_WIDTH;
+        var nextYPos = ClosedHash.ARRAY_ELEM_START_Y + Math.floor(i / this.elements_per_row) * ClosedHash.ARRAY_VERTICAL_SEPARATION;
         this.cmd("CreateRectangle", nextID, "", ClosedHash.ARRAY_ELEM_WIDTH, ClosedHash.ARRAY_ELEM_HEIGHT,nextXPos, nextYPos)
         this.hashTableVisual[i] = nextID;
         nextID = this.nextIndex++;
@@ -324,7 +324,7 @@ ClosedHash.prototype.setup = function()
     this.animationManager.StartNewAnimation(this.commands);
     this.animationManager.skipForward();
     this.animationManager.clearHistory();
-    this.resetIndex  = this.nextIndex;
+    this.resetIndex = this.nextIndex;
 }
 
 

@@ -108,7 +108,7 @@ DPLCS.prototype.init = function(am)
 }
 
 
-DPLCS.prototype.addControls =  function()
+DPLCS.prototype.addControls = function()
 {
     this.controls = [];
     this.addLabelToAlgorithmBar("S1:");
@@ -137,7 +137,7 @@ DPLCS.prototype.addControls =  function()
 
 
 
-DPLCS.prototype.buildTable  = function(S1, S2)
+DPLCS.prototype.buildTable = function(S1, S2)
 {
     var x = S1.length;
     var y = S2.length;
@@ -178,7 +178,7 @@ DPLCS.prototype.buildTable  = function(S1, S2)
         }
         var index = this.nextIndex++;
         this.oldIDs.push(index);
-        this.cmd("CreateLabel", index, i - 1, DPLCS.TABLE_START_X  - 1 * DPLCS.TABLE_ELEM_WIDTH, DPLCS.TABLE_START_Y +  i * DPLCS.TABLE_ELEM_HEIGHT);
+        this.cmd("CreateLabel", index, i - 1, DPLCS.TABLE_START_X - 1 * DPLCS.TABLE_ELEM_WIDTH, DPLCS.TABLE_START_Y + i * DPLCS.TABLE_ELEM_HEIGHT);
         this.cmd("SetForegroundColor", index, "#0000FF");
     }
 

@@ -46,7 +46,7 @@ CountingSort.COUNTER_ARRAY_ELEM_START_X = 20;
 CountingSort.MAX_DATA_VALUE = 30;
 CountingSort.COUNTER_ARRAY_SIZE = CountingSort.MAX_DATA_VALUE + 1;
 
-CountingSort.ARRAY_SIZE  = 30;
+CountingSort.ARRAY_SIZE = 30;
 
 
 CountingSort.inheritFrom(Algorithm);
@@ -65,7 +65,7 @@ CountingSort.prototype.sizeChanged = function()
 }
 
 
-CountingSort.prototype.addControls =  function()
+CountingSort.prototype.addControls = function()
 {
     this.resetButton = this.addControlToAlgorithmBar("Button", "Randomize List");
     this.resetButton.onclick = this.resetCallback.bind(this);
@@ -88,19 +88,19 @@ CountingSort.prototype.setup = function()
     this.SWAP_ARRAY_ELEM_Y = h - 3 * CountingSort.COUNTER_ARRAY_ELEM_HEIGHT
 
     this.arrayData = new Array(CountingSort.ARRAY_SIZE);
-    this. arrayRects= new Array(CountingSort.ARRAY_SIZE);
-    this. arrayIndices = new Array(CountingSort.ARRAY_SIZE);
+    this.arrayRects= new Array(CountingSort.ARRAY_SIZE);
+    this.arrayIndices = new Array(CountingSort.ARRAY_SIZE);
 
 
-    this. counterData = new Array(CountingSort.COUNTER_ARRAY_SIZE);
-    this. counterRects= new Array(CountingSort.COUNTER_ARRAY_SIZE);
-    this. counterIndices = new Array(CountingSort.COUNTER_ARRAY_SIZE);
+    this.counterData = new Array(CountingSort.COUNTER_ARRAY_SIZE);
+    this.counterRects= new Array(CountingSort.COUNTER_ARRAY_SIZE);
+    this.counterIndices = new Array(CountingSort.COUNTER_ARRAY_SIZE);
 
-    this. swapData = new Array(CountingSort.ARRAY_SIZE);
-    this. swapRects= new Array(CountingSort.ARRAY_SIZE);
-    this. swapIndices = new Array(CountingSort.ARRAY_SIZE);
+    this.swapData = new Array(CountingSort.ARRAY_SIZE);
+    this.swapRects= new Array(CountingSort.ARRAY_SIZE);
+    this.swapIndices = new Array(CountingSort.ARRAY_SIZE);
 
-    this. commands = new Array();
+    this.commands = new Array();
 
     this.animationManager.resetAll();
     for (var i = 0; i < CountingSort.ARRAY_SIZE; i++)
@@ -108,17 +108,17 @@ CountingSort.prototype.setup = function()
         var nextID = this.nextIndex++;
         this.arrayData[i] = Math.floor(Math.random()*CountingSort.MAX_DATA_VALUE);
         this.cmd("CreateRectangle", nextID, this.arrayData[i], CountingSort.ARRAY_ELEM_WIDTH, CountingSort.ARRAY_ELEM_HEIGHT, CountingSort.ARRAY_ELEM_START_X + i *CountingSort.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y)
-        this. arrayRects[i] = nextID;
+        this.arrayRects[i] = nextID;
         nextID = this.nextIndex++;
-        this. arrayIndices[i] = nextID;
+        this.arrayIndices[i] = nextID;
         this.cmd("CreateLabel",nextID,  i,  CountingSort.ARRAY_ELEM_START_X + i *CountingSort.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y + CountingSort.ARRAY_ELEM_HEIGHT);
         this.cmd("SetForegroundColor", nextID, "#0000FF");
 
         nextID = this.nextIndex++;
         this.cmd("CreateRectangle", nextID, "", CountingSort.ARRAY_ELEM_WIDTH, CountingSort.ARRAY_ELEM_HEIGHT, CountingSort.ARRAY_ELEM_START_X + i *CountingSort.ARRAY_ELEM_WIDTH, this.SWAP_ARRAY_ELEM_Y)
-        this. swapRects[i] = nextID;
+        this.swapRects[i] = nextID;
         nextID = this.nextIndex++;
-        this. swapIndices[i] = nextID;
+        this.swapIndices[i] = nextID;
         this.cmd("CreateLabel",nextID,  i,  CountingSort.ARRAY_ELEM_START_X + i *CountingSort.ARRAY_ELEM_WIDTH, this.SWAP_ARRAY_ELEM_Y + CountingSort.ARRAY_ELEM_HEIGHT);
         this.cmd("SetForegroundColor", nextID, "#0000FF");
 
@@ -127,14 +127,14 @@ CountingSort.prototype.setup = function()
     {
         nextID = this.nextIndex++;
         this.cmd("CreateRectangle", nextID,"", CountingSort.COUNTER_ARRAY_ELEM_WIDTH, CountingSort.COUNTER_ARRAY_ELEM_HEIGHT, CountingSort.COUNTER_ARRAY_ELEM_START_X + i *CountingSort.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y)
-        this. counterRects[i] = nextID;
+        this.counterRects[i] = nextID;
         nextID = this.nextIndex++;
-        this. counterIndices[i] = nextID;
+        this.counterIndices[i] = nextID;
         this.cmd("CreateLabel",nextID,  i,  CountingSort.COUNTER_ARRAY_ELEM_START_X + i *CountingSort.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y + CountingSort.COUNTER_ARRAY_ELEM_HEIGHT);
         this.cmd("SetForegroundColor", nextID, "#0000FF");
     }
 
-    this.animationManager.StartNewAnimation(this. commands);
+    this.animationManager.StartNewAnimation(this.commands);
     this.animationManager.skipForward();
     this.animationManager.clearHistory();
 }
@@ -148,15 +148,15 @@ CountingSort.prototype.resetAll = function(small)
 
 CountingSort.prototype.countingSortCallback = function(event)
 {
-    this. commands = new Array();
+    this.commands = new Array();
     var animatedCircleID = this.nextIndex++;
     var animatedCircleID2 = this.nextIndex++;
     var animatedCircleID3 = this.nextIndex++;
     var animatedCircleID4 = this.nextIndex++;
     for (var i = 0; i < CountingSort.COUNTER_ARRAY_SIZE; i++)
     {
-        this. counterData[i] = 0;
-        this.cmd("SetText", this. counterRects[i], 0);
+        this.counterData[i] = 0;
+        this.cmd("SetText", this.counterRects[i], 0);
     }
     for (i = 0; i < CountingSort.ARRAY_SIZE; i++)
     {
@@ -165,27 +165,27 @@ CountingSort.prototype.countingSortCallback = function(event)
         var index = this.arrayData[i];
         this.cmd("Move", animatedCircleID,  CountingSort.COUNTER_ARRAY_ELEM_START_X + index *CountingSort.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y + CountingSort.COUNTER_ARRAY_ELEM_HEIGHT)
         this.cmd("Step");
-        this. counterData[index]++;
-        this.cmd("SetText", this. counterRects[this.arrayData[i]], this. counterData[this.arrayData[i]]);
+        this.counterData[index]++;
+        this.cmd("SetText", this.counterRects[this.arrayData[i]], this.counterData[this.arrayData[i]]);
         this.cmd("Step");
-        this.cmd("SetAlpha", this. arrayRects[i], 0.2);
+        this.cmd("SetAlpha", this.arrayRects[i], 0.2);
         this.cmd("Delete", animatedCircleID);
         this.cmd("Delete", animatedCircleID2);
     }
     for (i=1; i < CountingSort.COUNTER_ARRAY_SIZE; i++)
     {
-        this.cmd("SetHighlight", this. counterRects[i-1], 1);
-        this.cmd("SetHighlight", this. counterRects[i], 1);
+        this.cmd("SetHighlight", this.counterRects[i-1], 1);
+        this.cmd("SetHighlight", this.counterRects[i], 1);
         this.cmd("Step")
-        this. counterData[i] = this. counterData[i] + this. counterData[i-1];
-        this.cmd("SetText", this. counterRects[i], this. counterData[i]);
+        this.counterData[i] = this.counterData[i] + this.counterData[i-1];
+        this.cmd("SetText", this.counterRects[i], this.counterData[i]);
         this.cmd("Step")
-        this.cmd("SetHighlight", this. counterRects[i-1], 0);
-        this.cmd("SetHighlight", this. counterRects[i], 0);
+        this.cmd("SetHighlight", this.counterRects[i-1], 0);
+        this.cmd("SetHighlight", this.counterRects[i], 0);
     }
     for (i=CountingSort.ARRAY_SIZE - 1; i >= 0; i--)
     {
-        this.cmd("SetAlpha", this. arrayRects[i], 1.0);
+        this.cmd("SetAlpha", this.arrayRects[i], 1.0);
     }
     for (i=CountingSort.ARRAY_SIZE - 1; i >= 0; i--)
     {
@@ -196,8 +196,8 @@ CountingSort.prototype.countingSortCallback = function(event)
         this.cmd("Move", animatedCircleID2,  CountingSort.COUNTER_ARRAY_ELEM_START_X + index *CountingSort.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y + CountingSort.COUNTER_ARRAY_ELEM_HEIGHT)
         this.cmd("Step");
 
-        var insertIndex = --this. counterData[this.arrayData[i]];
-        this.cmd("SetText", this. counterRects[this.arrayData[i]], this. counterData[this.arrayData[i]]);
+        var insertIndex = --this.counterData[this.arrayData[i]];
+        this.cmd("SetText", this.counterRects[this.arrayData[i]], this.counterData[this.arrayData[i]]);
         this.cmd("Step");
 
         this.cmd("CreateHighlightCircle", animatedCircleID3, "#AAAAFF",  CountingSort.COUNTER_ARRAY_ELEM_START_X + index *CountingSort.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y);
@@ -207,14 +207,14 @@ CountingSort.prototype.countingSortCallback = function(event)
         this.cmd("Step");
 
         var moveLabel = this.nextIndex++;
-        this.cmd("SetText", this. arrayRects[i], "");
+        this.cmd("SetText", this.arrayRects[i], "");
         this.cmd("CreateLabel", moveLabel, this.arrayData[i], CountingSort.ARRAY_ELEM_START_X + i *CountingSort.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
         this.cmd("Move", moveLabel, CountingSort.ARRAY_ELEM_START_X + insertIndex *CountingSort.ARRAY_ELEM_WIDTH, this.SWAP_ARRAY_ELEM_Y);
-        this. swapData[insertIndex] = this.arrayData[i];
+        this.swapData[insertIndex] = this.arrayData[i];
         this.cmd("Step");
         this.cmd("Delete", moveLabel);
         this.nextIndex--;  // Reuse index from moveLabel, now that it has been removed.
-        this.cmd("SetText", this. swapRects[insertIndex], this. swapData[insertIndex]);
+        this.cmd("SetText", this.swapRects[insertIndex], this.swapData[insertIndex]);
         this.cmd("Delete", animatedCircleID);
         this.cmd("Delete", animatedCircleID2);
         this.cmd("Delete", animatedCircleID3);
@@ -223,55 +223,55 @@ CountingSort.prototype.countingSortCallback = function(event)
     }
     for (i= 0; i < CountingSort.ARRAY_SIZE; i++)
     {
-        this.cmd("SetText", this. arrayRects[i], "");
+        this.cmd("SetText", this.arrayRects[i], "");
     }
 
     for (i= 0; i < CountingSort.COUNTER_ARRAY_SIZE; i++)
     {
-        this.cmd("SetAlpha", this. counterRects[i], 0.05);
-        this.cmd("SetAlpha", this. counterIndices[i], 0.05);
+        this.cmd("SetAlpha", this.counterRects[i], 0.05);
+        this.cmd("SetAlpha", this.counterIndices[i], 0.05);
     }
 
     this.cmd("Step");
     var startLab = this.nextIndex;
     for (i = 0; i < CountingSort.ARRAY_SIZE; i++)
     {
-        this.cmd("CreateLabel", startLab+i, this. swapData[i], CountingSort.ARRAY_ELEM_START_X + i *CountingSort.ARRAY_ELEM_WIDTH, this.SWAP_ARRAY_ELEM_Y);
+        this.cmd("CreateLabel", startLab+i, this.swapData[i], CountingSort.ARRAY_ELEM_START_X + i *CountingSort.ARRAY_ELEM_WIDTH, this.SWAP_ARRAY_ELEM_Y);
         this.cmd("Move", startLab+i,  CountingSort.ARRAY_ELEM_START_X + i *CountingSort.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
-        this.cmd("SetText", this. swapRects[i], "");
+        this.cmd("SetText", this.swapRects[i], "");
 
     }
     this.cmd("Step");
     for (i = 0; i < CountingSort.ARRAY_SIZE; i++)
     {
-        this.arrayData[i] = this. swapData[i];
-        this.cmd("SetText", this. arrayRects[i], this.arrayData[i]);
+        this.arrayData[i] = this.swapData[i];
+        this.cmd("SetText", this.arrayRects[i], this.arrayData[i]);
         this.cmd("Delete", startLab + i);
     }
     for (i= 0; i < CountingSort.COUNTER_ARRAY_SIZE; i++)
     {
-        this.cmd("SetAlpha", this. counterRects[i], 1);
-        this.cmd("SetAlpha", this. counterIndices[i], 1);
+        this.cmd("SetAlpha", this.counterRects[i], 1);
+        this.cmd("SetAlpha", this.counterIndices[i], 1);
     }
-    this.animationManager.StartNewAnimation(this. commands);
+    this.animationManager.StartNewAnimation(this.commands);
 }
 
 
 CountingSort.prototype.randomizeArray = function()
 {
-    this. commands = new Array();
+    this.commands = new Array();
     for (var i = 0; i < CountingSort.ARRAY_SIZE; i++)
     {
         this.arrayData[i] = Math.floor(1 + Math.random()*CountingSort.MAX_DATA_VALUE);
-        this.cmd("SetText", this. arrayRects[i], this.arrayData[i]);
+        this.cmd("SetText", this.arrayRects[i], this.arrayData[i]);
     }
 
     for (i = 0; i < CountingSort.COUNTER_ARRAY_SIZE; i++)
     {
-        this.cmd("SetText", this. counterRects[i], "");
+        this.cmd("SetText", this.counterRects[i], "");
     }
 
-    this.animationManager.StartNewAnimation(this. commands);
+    this.animationManager.StartNewAnimation(this.commands);
     this.animationManager.skipForward();
     this.animationManager.clearHistory();
 }

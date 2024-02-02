@@ -130,7 +130,7 @@ Search.prototype.sizeChanged = function()
 }
 
 
-Search.prototype.addControls =  function()
+Search.prototype.addControls = function()
 {
     this.controls = [];
     this.searchField = this.addControlToAlgorithmBar("Text", "");
@@ -233,7 +233,7 @@ Search.prototype.setup = function()
         var j = i
         while (j > 0 && this.arrayData[j-1] > nxt) {
             this.arrayData[j] = this.arrayData[j-1];
-            j  = j - 1;
+            j = j - 1;
         }
         this.arrayData[j] = nxt;
     }
@@ -355,7 +355,7 @@ Search.prototype.setup_small = function() {
 }
 
 
-Search.prototype.setup_large  = function() {
+Search.prototype.setup_large = function() {
 
    Search.HIGHLIGHT_CIRCLE_SIZE = Search.HIGHLIGHT_CIRCLE_SIZE_LARGE;
    Search.ARRAY_START_X = Search.ARRAY_START_X_LARGE;

@@ -46,30 +46,30 @@ TopoSortDFS.D_Y_POS_SMALL = [18, 118, 118, 218, 218, 318, 318, 418];
 TopoSortDFS.F_Y_POS_SMALL = [32, 132, 132, 232, 232, 332, 332, 432];
 
 TopoSortDFS.D_X_POS_LARGE = [560, 660, 760, 860,
-                                    610, 710, 810,
-                                    560, 660, 760, 860,
-                                    610, 710, 810,
-                                    560, 660, 760, 860];
+                             610, 710, 810,
+                             560, 660, 760, 860,
+                             610, 710, 810,
+                             560, 660, 760, 860];
 
 TopoSortDFS.F_X_POS_LARGE = [560, 660, 760, 860,
-                                    610, 710, 810,
-                                    560, 660, 760, 860,
-                                    610, 710, 810,
-                                    560, 660, 760, 860];
+                             610, 710, 810,
+                             560, 660, 760, 860,
+                             610, 710, 810,
+                             560, 660, 760, 860];
 
 
 
-TopoSortDFS.D_Y_POS_LARGE = [037, 037, 037, 037,
-                                    137, 137, 137,
-                                    237, 237, 237, 237,
-                                    337, 337, 337,
-                                    437,  437, 437, 437];
+TopoSortDFS.D_Y_POS_LARGE = [ 37,  37,  37, 37,
+                             137, 137, 137,
+                             237, 237, 237, 237,
+                             337, 337, 337,
+                             437, 437, 437, 437];
 
-TopoSortDFS.F_Y_POS_LARGE = [62, 62, 62, 62,
-                                    162, 162, 162,
-                                    262, 262, 262, 262,
-                                    362, 362, 362,
-                                    462,  462, 462, 462];
+TopoSortDFS.F_Y_POS_LARGE = [ 62,  62,  62,  62,
+                             162, 162, 162,
+                             262, 262, 262, 262,
+                             362, 362, 362,
+                             462,  462, 462, 462];
 
 
 TopoSortDFS.HIGHLIGHT_CIRCLE_COLOR = "#000000";
@@ -77,7 +77,7 @@ TopoSortDFS.DFS_TREE_COLOR = "#0000FF";
 
 
 
-TopoSortDFS.prototype.addControls =  function()
+TopoSortDFS.prototype.addControls = function()
 {
     this.startButton = this.addControlToAlgorithmBar("Button", "Do Topological Sort");
     this.startButton.onclick = this.startCallback.bind(this);
@@ -189,7 +189,7 @@ TopoSortDFS.prototype.doTopoSort = function(ignored)
             this.cmd("CreateHighlightCircle", this.highlightCircleAL, TopoSortDFS.HIGHLIGHT_CIRCLE_COLOR,this.adj_list_x_start - this.adj_list_width, this.adj_list_y_start + vertex*this.adj_list_height);
             this.cmd("SetLayer", this.highlightCircleAL, 2);
 
-            this.cmd("CreateHighlightCircle", this.highlightCircleAM, TopoSortDFS.HIGHLIGHT_CIRCLE_COLOR,this.adj_matrix_x_start  - this.adj_matrix_width, this.adj_matrix_y_start + vertex*this.adj_matrix_height);
+            this.cmd("CreateHighlightCircle", this.highlightCircleAM, TopoSortDFS.HIGHLIGHT_CIRCLE_COLOR,this.adj_matrix_x_start - this.adj_matrix_width, this.adj_matrix_y_start + vertex*this.adj_matrix_height);
             this.cmd("SetLayer", this.highlightCircleAM, 3);
 
             if (vertex > 0)

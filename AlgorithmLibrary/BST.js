@@ -33,13 +33,13 @@ BST.FOREGROUND_COLOR = "#007700";
 BST.BACKGROUND_COLOR = "#EEFFEE";
 BST.PRINT_COLOR = BST.FOREGROUND_COLOR;
 
-BST.WIDTH_DELTA  = 50;
+BST.WIDTH_DELTA = 50;
 BST.HEIGHT_DELTA = 50;
 BST.STARTING_Y = 50;
 
 
-BST.FIRST_PRINT_POS_X  = 50;
-BST.PRINT_VERTICAL_GAP  = 20;
+BST.FIRST_PRINT_POS_X = 50;
+BST.PRINT_VERTICAL_GAP = 20;
 BST.PRINT_HORIZONTAL_GAP = 50;
 
 
@@ -72,7 +72,7 @@ BST.prototype.sizeChanged = function()
     var h = this.getCanvasHeight();
 
     this.startingX = w / 2;
-    this.first_print_pos_y  = h - 2 * BST.PRINT_VERTICAL_GAP;
+    this.first_print_pos_y = h - 2 * BST.PRINT_VERTICAL_GAP;
     this.print_max = w - 10;
 
     this.implementAction(() => {
@@ -83,7 +83,7 @@ BST.prototype.sizeChanged = function()
 }
 
 
-BST.prototype.addControls =  function()
+BST.prototype.addControls = function()
 {
     this.insertField = this.addControlToAlgorithmBar("Text", "");
     this.insertField.onkeydown = this.returnSubmit(this.insertField,  this.insertCallback.bind(this), 4);
@@ -569,7 +569,7 @@ BST.prototype.treeDelete = function(tree, valueToDelete)
 
 BST.prototype.resizeTree = function()
 {
-    var startingPoint  = this.startingX;
+    var startingPoint = this.startingX;
     this.resizeWidths(this.treeRoot);
     if (this.treeRoot != null)
     {
@@ -671,5 +671,4 @@ function init()
 {
     var animManag = initCanvas();
     currentAlg = new BST(animManag);
-
 }

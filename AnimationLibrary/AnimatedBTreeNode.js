@@ -92,12 +92,12 @@ AnimatedBTreeNode.prototype.setNumElements = function(newNumElements)
 
 AnimatedBTreeNode.prototype.left = function()
 {
-    return this.x  - this.getWidth() / 2.0;
+    return this.x - this.getWidth() / 2.0;
 }
 
 AnimatedBTreeNode.prototype.right = function()
 {
-    return this.x  + this.getWidth() / 2.0;
+    return this.x + this.getWidth() / 2.0;
 }
 
 AnimatedBTreeNode.prototype.top = function()
@@ -119,7 +119,7 @@ AnimatedBTreeNode.prototype.draw = function(context)
     startX = this.left();
     if (startX == NaN)
     {
-        startX  = 0;
+        startX = 0;
     }
     startY = this.top();
 
@@ -158,7 +158,7 @@ AnimatedBTreeNode.prototype.draw = function(context)
 
     for (var i = 0; i < this.numLabels; i++)
     {
-        var labelx  = this.x - this.widthPerElement * this.numLabels / 2 + this.widthPerElement / 2 + i * this.widthPerElement;
+        var labelx = this.x - this.widthPerElement * this.numLabels / 2 + this.widthPerElement / 2 + i * this.widthPerElement;
         var labely = this.y
 
         context.fillStyle = this.labelColors[i];
@@ -209,11 +209,11 @@ AnimatedBTreeNode.prototype.getHeadPointerAttachPos = function(fromX, fromY)
     {
         return [this.x, this.y - this.nodeHeight / 2];
     }
-    else if (this.fromY > this.y + this.nodeHeight /  2)
+    else if (this.fromY > this.y + this.nodeHeight / 2)
     {
         return [this.x, this.y + this.nodeHeight / 2];
     }
-    else if (fromX  <  this.x  - this.getWidth() / 2)
+    else if (fromX  <  this.x - this.getWidth() / 2)
     {
         return [this.x - this.getWidth() / 2, this.y];
     }

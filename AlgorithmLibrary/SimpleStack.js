@@ -60,7 +60,7 @@ SimpleStack.prototype.init = function(am)
     this.stackTop = 0;
 }
 
-SimpleStack.prototype.addControls =  function()
+SimpleStack.prototype.addControls = function()
 {
     this.controls = [];
 

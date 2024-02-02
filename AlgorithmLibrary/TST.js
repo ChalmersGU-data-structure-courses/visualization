@@ -38,14 +38,14 @@ Ternary.BACKGROUND_COLOR = "#CCFFCC";
 Ternary.TRUE_COLOR = "#CCFFCC";
 Ternary.PRINT_COLOR = Ternary.FOREGROUND_COLOR;
 Ternary.FALSE_COLOR = "#FFFFFF"
-Ternary.WIDTH_DELTA  = 50;
+Ternary.WIDTH_DELTA = 50;
 Ternary.HEIGHT_DELTA = 50;
 Ternary.STARTING_Y = 20;
 Ternary.LeftMargin = 300;
 Ternary.NEW_NODE_Y = 100
 Ternary.NEW_NODE_X = 50;
-Ternary.FIRST_PRINT_POS_X  = 50;
-Ternary.PRINT_VERTICAL_GAP  = 20;
+Ternary.FIRST_PRINT_POS_X = 50;
+Ternary.PRINT_VERTICAL_GAP = 20;
 Ternary.PRINT_HORIZONTAL_GAP = 50;
 
 
@@ -82,9 +82,9 @@ Ternary.prototype.sizeChanged = function()
     var w = this.getCanvasWidth();
     var h = this.getCanvasHeight();
 
-    this.startingX =  w / 2;
-    this.first_print_pos_y  = h - 2 * Trie.PRINT_VERTICAL_GAP;
-    this.print_max  = w - 10;
+    this.startingX = w / 2;
+    this.first_print_pos_y = h - 2 * Trie.PRINT_VERTICAL_GAP;
+    this.print_max = w - 10;
     
     this.implementAction(() => {
         this.commands = [];
@@ -94,7 +94,7 @@ Ternary.prototype.sizeChanged = function()
 }
 
 
-Ternary.prototype.addControls =  function()
+Ternary.prototype.addControls = function()
 {
     this.insertField = this.addControlToAlgorithmBar("Text", "");
     this.insertField.onkeypress = this.returnSubmit(this.insertField,  this.insertCallback.bind(this), 12,false);
@@ -806,7 +806,7 @@ Ternary.prototype.setNewPositions = function(tree, xLeft, yPosition)
             }
         if (tree.right != null)
             {
-        this.setNewPositions(tree.right, xLeft + tree.leftWidth +  tree.centerWidth, newYPos);
+        this.setNewPositions(tree.right, xLeft + tree.leftWidth + tree.centerWidth, newYPos);
             }
 
     }
@@ -833,7 +833,7 @@ Ternary.prototype.resizeWidths = function(tree)
         tree.leftWidth = (this.resizeWidths(tree.left));
         tree.centerWidth = (this.resizeWidths(tree.center));
         tree.rightWidth = (this.resizeWidths(tree.right));
-        tree.width = Math.max(tree.leftWidth + tree.centerWidth+tree.rightWidth, Ternary.NODE_WIDTH  + 4);
+        tree.width = Math.max(tree.leftWidth + tree.centerWidth+tree.rightWidth, Ternary.NODE_WIDTH + 4);
         return tree.width;
 }
 
@@ -850,9 +850,9 @@ function TernaryNode(val, id, initialX, initialY)
     this.left = null;
     this.center = null;
     this.right = null;
-    this.leftWidth =  0;
-    this.centerWidth =  0;
-    this.rightWwidth =  0;
+    this.leftWidth = 0;
+    this.centerWidth = 0;
+    this.rightWwidth = 0;
     this.parent = null;
 }
 

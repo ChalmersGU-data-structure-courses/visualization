@@ -51,7 +51,7 @@ BucketSort.LINKED_ITEM_POINTER_PERCENT_SMALL = 0.25;
 
 BucketSort.MAX_DATA_VALUE = 999;
 
-BucketSort.ARRAY_SIZE_SMALL  = 30;
+BucketSort.ARRAY_SIZE_SMALL = 30;
 
 BucketSort.ARRAY_Y_POS = 350;
 
@@ -72,7 +72,7 @@ BucketSort.prototype.sizeChanged = function()
 }
 
 
-BucketSort.prototype.addControls =  function()
+BucketSort.prototype.addControls = function()
 {
     this.resetButton = this.addControlToAlgorithmBar("Button", "Randomize List");
     this.resetButton.onclick = this.resetCallback.bind(this);
@@ -140,7 +140,7 @@ BucketSort.prototype.bucketSortCallback = function(event)
         var label2ID = this.nextIndex++;
         var label3ID = this.nextIndex++;
         var label4ID = this.nextIndex++;
-        var node  = new LinkedListNode(this.arrayData[i],this.nextIndex++, 100, 75);
+        var node = new LinkedListNode(this.arrayData[i],this.nextIndex++, 100, 75);
         this.cmd("CreateLinkedList", node.graphicID, "", BucketSort.LINKED_ITEM_WIDTH_SMALL, BucketSort.LINKED_ITEM_HEIGHT_SMALL, 100, 75);
         this.cmd("SetNull", node.graphicID, 1);
 
@@ -151,7 +151,7 @@ BucketSort.prototype.bucketSortCallback = function(event)
         this.cmd("Step");
         this.cmd("SetText", node.graphicID, this.arrayData[i]);
         this.cmd("Delete", labelID);
-        var index  = Math.floor((this.arrayData[i]  * BucketSort.ARRAY_SIZE_SMALL) / (BucketSort.MAX_DATA_VALUE + 1));
+        var index = Math.floor((this.arrayData[i]  * BucketSort.ARRAY_SIZE_SMALL) / (BucketSort.MAX_DATA_VALUE + 1));
 
         this.cmd("CreateLabel", labelID, "Linked List Array index = " ,  300, 20, 0);
         this.cmd("CreateLabel", label2ID, "Value * BucketSort.NUMBER_OF_ELEMENTS / (BucketSort.MAXIMUM_ARRAY_VALUE + 1)) = ",  300, 40, 0);
@@ -241,7 +241,7 @@ BucketSort.prototype.bucketSortCallback = function(event)
             }
             tmp = linkedListData[index];
             var startX = BucketSort.POINTER_ARRAY_ELEM_START_X_SMALL + index *BucketSort.POINTER_ARRAY_ELEM_WIDTH_SMALL;
-            var startY =  this.pointer_array_elem_y_small - BucketSort.LINKED_ITEM_Y_DELTA_SMALL;
+            var startY = this.pointer_array_elem_y_small - BucketSort.LINKED_ITEM_Y_DELTA_SMALL;
             while (tmp != null)
             {
                 tmp.x = startX;

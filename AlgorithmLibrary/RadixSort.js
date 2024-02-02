@@ -35,7 +35,7 @@ RadixSort.ARRAY_ELEM_WIDTH = 30;
 RadixSort.ARRAY_ELEM_HEIGHT = 30;
 RadixSort.ARRAY_ELEM_START_X = 20;
 
-RadixSort.ARRAY_SIZE  = 30;
+RadixSort.ARRAY_SIZE = 30;
 RadixSort.COUNTER_ARRAY_SIZE = 10;
 
 
@@ -66,7 +66,7 @@ RadixSort.prototype.sizeChanged = function()
 }
 
 
-RadixSort.prototype.addControls =  function()
+RadixSort.prototype.addControls = function()
 {
     this.resetButton = this.addControlToAlgorithmBar("Button", "Randomize List");
     this.resetButton.onclick = this.resetCallback.bind(this);

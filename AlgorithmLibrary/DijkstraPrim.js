@@ -111,10 +111,10 @@ DijkstraPrim.prototype.setup = function()
         this.cmd("SetTextColor",  this.vertexID[i], DijkstraPrim.VERTEX_INDEX_COLOR);
 
     }
-    this.cmd("CreateLabel", this.nextIndex++, "Vertex", DijkstraPrim.TABLE_START_X, DijkstraPrim.TABLE_START_Y  - DijkstraPrim.TABLE_ENTRY_HEIGHT);
-    this.cmd("CreateLabel", this.nextIndex++, "Known", DijkstraPrim.TABLE_START_X + DijkstraPrim.TABLE_ENTRY_WIDTH, DijkstraPrim.TABLE_START_Y  - DijkstraPrim.TABLE_ENTRY_HEIGHT);
-    this.cmd("CreateLabel", this.nextIndex++, "Cost", DijkstraPrim.TABLE_START_X + 2 * DijkstraPrim.TABLE_ENTRY_WIDTH, DijkstraPrim.TABLE_START_Y  - DijkstraPrim.TABLE_ENTRY_HEIGHT);
-    this.cmd("CreateLabel", this.nextIndex++, "Path", DijkstraPrim.TABLE_START_X + 3 * DijkstraPrim.TABLE_ENTRY_WIDTH, DijkstraPrim.TABLE_START_Y  - DijkstraPrim.TABLE_ENTRY_HEIGHT);
+    this.cmd("CreateLabel", this.nextIndex++, "Vertex", DijkstraPrim.TABLE_START_X, DijkstraPrim.TABLE_START_Y - DijkstraPrim.TABLE_ENTRY_HEIGHT);
+    this.cmd("CreateLabel", this.nextIndex++, "Known", DijkstraPrim.TABLE_START_X + DijkstraPrim.TABLE_ENTRY_WIDTH, DijkstraPrim.TABLE_START_Y - DijkstraPrim.TABLE_ENTRY_HEIGHT);
+    this.cmd("CreateLabel", this.nextIndex++, "Cost", DijkstraPrim.TABLE_START_X + 2 * DijkstraPrim.TABLE_ENTRY_WIDTH, DijkstraPrim.TABLE_START_Y - DijkstraPrim.TABLE_ENTRY_HEIGHT);
+    this.cmd("CreateLabel", this.nextIndex++, "Path", DijkstraPrim.TABLE_START_X + 3 * DijkstraPrim.TABLE_ENTRY_WIDTH, DijkstraPrim.TABLE_START_Y - DijkstraPrim.TABLE_ENTRY_HEIGHT);
 
     this.animationManager.setAllLayers([0, this.currentLayer]);
     this.animationManager.StartNewAnimation(this.commands);

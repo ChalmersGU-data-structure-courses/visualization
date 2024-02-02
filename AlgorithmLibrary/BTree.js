@@ -34,7 +34,7 @@ BTree.PRINT_HORIZONTAL_GAP = 50;
 BTree.MIN_MAX_DEGREE = 3;
 BTree.MAX_MAX_DEGREE = 7;
 
-BTree.HEIGHT_DELTA  = 50;
+BTree.HEIGHT_DELTA = 50;
 BTree.NODE_SPACING = 3;
 BTree.STARTING_Y = 30;
 BTree.WIDTH_PER_ELEM = 40;
@@ -102,7 +102,7 @@ BTree.prototype.sizeChanged = function()
 }
 
 
-BTree.prototype.addControls =  function()
+BTree.prototype.addControls = function()
 {
     this.controls = [];
 
@@ -146,17 +146,14 @@ BTree.prototype.addControls =  function()
     }
 
     this.maxDegreeRadioButtons = this.addRadioButtonGroupToAlgorithmBar(radioButtonNames, "MaxDegree");
-
     this.maxDegreeRadioButtons[0].checked = true;
-    for(i = 0; i < this.maxDegreeRadioButtons.length; i++)
+    for (i = 0; i < this.maxDegreeRadioButtons.length; i++)
     {
         this.maxDegreeRadioButtons[i].onclick = this.maxDegreeChangedHandler.bind(this,i+BTree.MIN_MAX_DEGREE);
     }
 
-
     this.premptiveSplitBox = this.addCheckboxToAlgorithmBar("Preemtive Split / Merge (Even max degree only)");
     this.premptiveSplitBox.onclick = this.premtiveSplitCallback.bind(this);
-
 
     // Other buttons ...
 
@@ -186,71 +183,46 @@ BTree.prototype.reset = function()
 
 BTree.prototype.enableUI = function(event)
 {
-    var i;
-    for (i = 0; i < this.controls.length; i++)
-    {
+    for (var i = 0; i < this.controls.length; i++) {
         this.controls[i].disabled = false;
     }
 
     // TODO  Only enable even maxdegree if preemptive merge is on
-
-    if (this.preemptiveSplit)
-    {
+    if (this.preemptiveSplit) {
         var initialEven = BTree.MIN_MAX_DEGREE % 2;
-        var i;
-        for (i = initialEven; i <= BTree.MAX_MAX_DEGREE - BTree.MIN_MAX_DEGREE; i+= 2)
+        for (var i = initialEven; i <= BTree.MAX_MAX_DEGREE - BTree.MIN_MAX_DEGREE; i+= 2)
         {
             this.maxDegreeRadioButtons[i].disabled = false;
         }
     }
-    else
-    {
-        for (i = 0; i < this.maxDegreeRadioButtons.length; i++)
-        {
+    else {
+        for (var i = 0; i < this.maxDegreeRadioButtons.length; i++) {
             this.maxDegreeRadioButtons[i].disabled = false;
         }
     }
-
-
-
-
-
-    if (this.max_degree % 2 == 0)
-    {
+    if (this.max_degree % 2 == 0) {
         this.premptiveSplitBox.disabled = false;
     }
-
-
 }
+
 BTree.prototype.disableUI = function(event)
 {
-    for (var i = 0; i < this.controls.length; i++)
-    {
+    for (var i = 0; i < this.controls.length; i++) {
         this.controls[i].disabled = true;
     }
-
-    for (i = 0; i < this.maxDegreeRadioButtons.length; i++)
-    {
+    for (var i = 0; i < this.maxDegreeRadioButtons.length; i++) {
         this.maxDegreeRadioButtons[i].disabled = true;
     }
-
     this.premptiveSplitBox.disabled = true;
-
-
-
 }
 
 
-//TODO:  Fix me!
 BTree.prototype.maxDegreeChangedHandler = function(newMaxDegree, event)
 {
-    if (this.max_degree != newMaxDegree)
-    {
+    if (this.max_degree != newMaxDegree) {
         this.implementAction(this.changeDegree.bind(this), newMaxDegree);
-            this.animationManager.skipForward();
-                animationManager.clearHistory();
-
-
+        this.animationManager.skipForward();
+        animationManager.clearHistory();
     }
 }
 
@@ -669,7 +641,7 @@ BTree.prototype.insertRepair = function(tree)
     }
     else
     {
-        var newNode  = this.split(tree);
+        var newNode = this.split(tree);
         this.insertRepair(newNode);
     }
 }

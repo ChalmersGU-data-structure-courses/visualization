@@ -185,7 +185,7 @@ Graph.prototype.addControls = function(addDirection)
         addDirection = true;
     }
     this.newGraphButton = this.addControlToAlgorithmBar("Button", "New Graph");
-    this.newGraphButton.onclick =  this.newGraphCallback.bind(this);
+    this.newGraphButton.onclick = this.newGraphCallback.bind(this);
 
     if (addDirection)
     {
@@ -364,8 +364,8 @@ Graph.prototype.setup_small = function()
 {
     this.allowed = Graph.SMALL_ALLLOWED;
     this.curve = Graph.SMALL_CURVE;
-    this. x_pos_logical = Graph.SMALL_X_POS_LOGICAL;
-    this. y_pos_logical = Graph.SMALL_Y_POS_LOGICAL;
+    this.x_pos_logical = Graph.SMALL_X_POS_LOGICAL;
+    this.y_pos_logical = Graph.SMALL_Y_POS_LOGICAL;
     this.adj_matrix_x_start = Graph.SMALL_ADJ_MATRIX_X_START;
     this.adj_matrix_y_start = Graph.SMALL_ADJ_MATRIX_Y_START;
     this.adj_matrix_width = Graph.SMALL_ADJ_MATRIX_WIDTH;
@@ -385,8 +385,8 @@ Graph.prototype.setup_large = function()
 {
     this.allowed = Graph.LARGE_ALLOWED;
     this.curve = Graph.LARGE_CURVE;
-    this. x_pos_logical = Graph.LARGE_X_POS_LOGICAL;
-    this. y_pos_logical = Graph.LARGE_Y_POS_LOGICAL;
+    this.x_pos_logical = Graph.LARGE_X_POS_LOGICAL;
+    this.y_pos_logical = Graph.LARGE_Y_POS_LOGICAL;
     this.adj_matrix_x_start = Graph.LARGE_ADJ_MATRIX_X_START;
     this.adj_matrix_y_start = Graph.LARGE_ADJ_MATRIX_Y_START;
     this.adj_matrix_width = Graph.LARGE_ADJ_MATRIX_WIDTH;
@@ -422,7 +422,7 @@ Graph.prototype.setup = function()
     for (var i = 0; i < this.size; i++)
     {
         this.circleID[i] = this.nextIndex++;
-        this.cmd("CreateCircle", this.circleID[i], i, this. x_pos_logical[i], this. y_pos_logical[i]);
+        this.cmd("CreateCircle", this.circleID[i], i, this.x_pos_logical[i], this.y_pos_logical[i]);
         this.cmd("SetTextColor", this.circleID[i], Graph.VERTEX_INDEX_COLOR, 0);
 
         this.cmd("SetLayer", this.circleID[i], 1);
@@ -516,7 +516,7 @@ Graph.prototype.setup = function()
                     this.adj_matrix[j][i] = this.adj_matrix[i][j];
                     if (this.showEdgeCosts)
                     {
-                        var edgeLabel  = String(this.adj_matrix[i][j]);
+                        var edgeLabel = String(this.adj_matrix[i][j]);
                     }
                     else
                     {
@@ -579,7 +579,7 @@ Graph.prototype.buildAdjMatrix = function()
         this.adj_matrix_index_y[i] = this.nextIndex++;
         this.cmd("CreateLabel", this.adj_matrix_index_x[i], i,   this.adj_matrix_x_start + i*this.adj_matrix_width, this.adj_matrix_y_start - this.adj_matrix_height);
         this.cmd("SetForegroundColor", this.adj_matrix_index_x[i], Graph.VERTEX_INDEX_COLOR);
-        this.cmd("CreateLabel", this.adj_matrix_index_y[i], i,   this.adj_matrix_x_start  - this.adj_matrix_width, this.adj_matrix_y_start + i* this.adj_matrix_height);
+        this.cmd("CreateLabel", this.adj_matrix_index_y[i], i,   this.adj_matrix_x_start - this.adj_matrix_width, this.adj_matrix_y_start + i* this.adj_matrix_height);
         this.cmd("SetForegroundColor", this.adj_matrix_index_y[i], Graph.VERTEX_INDEX_COLOR);
         this.cmd("SetLayer", this.adj_matrix_index_x[i], 3);
         this.cmd("SetLayer", this.adj_matrix_index_y[i], 3);

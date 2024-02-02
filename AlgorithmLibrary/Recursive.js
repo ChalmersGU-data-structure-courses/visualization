@@ -62,7 +62,7 @@ Recursive.ACTIVATION_RECORD_SPACING = 2 * Recursive.ACTIVATION_RECORD_WIDTH + 10
 
 Recursive.SEPARATING_LINE_COLOR = "#0000FF"
 
-Recursive.prototype.addCodeToCanvas  = function(code)
+Recursive.prototype.addCodeToCanvas = function(code)
 {
      this.codeID = this.addCodeToCanvasBase(code, Recursive.CODE_START_X, Recursive.CODE_START_Y, Recursive.CODE_LINE_HEIGHT, Recursive.CODE_STANDARD_COLOR);
 /*    this.codeID = Array(this.code.length);
@@ -164,7 +164,7 @@ Recursive.prototype.createActivation = function(functionName, argList, x, y, lab
                                     x,
                                     y + i * Recursive.ACTIVATION_RECORD_HEIGHT);
 
-        var labelID  = this.nextIndex++;
+        var labelID = this.nextIndex++;
         activationRec.labelIDs[i] = labelID;
         this.cmd("CreateLabel", labelID, argList[i]);
         if (labelsOnLeft)

@@ -46,12 +46,12 @@ AVL.FOREGROUND_COLOR = "0x007700";
 AVL.BACKGROUND_COLOR = "#DDFFDD";
 AVL.PRINT_COLOR = AVL.FOREGROUND_COLOR;
 
-AVL.WIDTH_DELTA  = 50;
+AVL.WIDTH_DELTA = 50;
 AVL.HEIGHT_DELTA = 50;
 AVL.STARTING_Y = 50;
 
-AVL.FIRST_PRINT_POS_X  = 50;
-AVL.PRINT_VERTICAL_GAP  = 20;
+AVL.FIRST_PRINT_POS_X = 50;
+AVL.PRINT_VERTICAL_GAP = 20;
 AVL.PRINT_HORIZONTAL_GAP = 50;
 AVL.EXPLANITORY_TEXT_X = 10;
 AVL.EXPLANITORY_TEXT_Y = 10;
@@ -79,7 +79,7 @@ AVL.prototype.sizeChanged = function()
     var h = this.getCanvasHeight();
 
     this.startingX = w / 2;
-    this.first_print_pos_y  = h - 2 * AVL.PRINT_VERTICAL_GAP;
+    this.first_print_pos_y = h - 2 * AVL.PRINT_VERTICAL_GAP;
     this.print_max = w - 10;
     
     this.implementAction(() => {
@@ -90,7 +90,7 @@ AVL.prototype.sizeChanged = function()
 }
 
 
-AVL.prototype.addControls =  function()
+AVL.prototype.addControls = function()
 {
     this.insertField = this.addControlToAlgorithmBar("Text", "");
     this.insertField.onkeydown = this.returnSubmit(this.insertField,  this.insertCallback.bind(this), 4);
@@ -277,7 +277,7 @@ AVL.prototype.insertElement = function(insertedValue)
     if (this.treeRoot == null)
     {
         var treeNodeID = this.nextIndex++;
-        var labelID  = this.nextIndex++;
+        var labelID = this.nextIndex++;
         this.cmd("CreateCircle", treeNodeID, insertedValue,  this.startingX, AVL.STARTING_Y);
         this.cmd("SetForegroundColor", treeNodeID, AVL.FOREGROUND_COLOR);
         this.cmd("SetBackgroundColor", treeNodeID, AVL.BACKGROUND_COLOR);
@@ -1086,7 +1086,7 @@ AVL.prototype.treeDelete = function(tree, valueToDelete)
 
 AVL.prototype.resizeTree = function()
 {
-    var startingPoint  = this.startingX;
+    var startingPoint = this.startingX;
     this.resizeWidths(this.treeRoot);
     if (this.treeRoot != null)
     {
@@ -1193,7 +1193,7 @@ function AVLNode(val, id, hid, initialX, initialY)
 
 AVLNode.prototype.isLeftChild = function()
 {
-    if (this. parent == null)
+    if (this.parent == null)
     {
         return true;
     }

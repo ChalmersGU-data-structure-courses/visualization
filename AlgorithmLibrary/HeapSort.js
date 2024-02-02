@@ -32,7 +32,7 @@ function HeapSort(am)
 HeapSort.inheritFrom(Algorithm);
 
 
-HeapSort.ARRAY_SIZE  = 32;
+HeapSort.ARRAY_SIZE = 32;
 HeapSort.ARRAY_ELEM_WIDTH = 30;
 HeapSort.ARRAY_ELEM_HEIGHT = 25;
 HeapSort.ARRAY_INITIAL_X = 30;
@@ -46,18 +46,22 @@ HeapSort.prototype.init = function(am)
     HeapSort.superclass.init.call(this, am);
     this.addControls();
     this.nextIndex = 0;
-    this.HeapXPositions = [0, 450, 250, 650, 150, 350, 550, 750, 100, 200, 300, 400, 500, 600,
-                      700, 800, 075, 125, 175, 225, 275, 325, 375, 425, 475, 525, 575,
-                      625, 675, 725, 775, 825];
-    this.HeapYPositions = [0, 100, 170, 170, 240, 240, 240, 240, 310, 310, 310, 310, 310, 310,
-                      310, 310, 380, 380, 380, 380, 380, 380, 380, 380, 380, 380, 380,
-                      380, 380, 380, 380, 380];
+    this.HeapXPositions = [
+        0, 450, 250, 650, 150, 350, 550, 750, 100, 200, 300, 400, 500, 600,
+        700, 800, 75, 125, 175, 225, 275, 325, 375, 425, 475, 525, 575,
+        625, 675, 725, 775, 825
+    ];
+    this.HeapYPositions = [
+        0, 100, 170, 170, 240, 240, 240, 240, 310, 310, 310, 310, 310, 310,
+        310, 310, 380, 380, 380, 380, 380, 380, 380, 380, 380, 380, 380,
+        380, 380, 380, 380, 380
+    ];
     this.commands = [];
     this.createArray();
 }
 
 
-HeapSort.prototype.addControls =  function()
+HeapSort.prototype.addControls = function()
 {
     this.randomizeArrayButton = this.addControlToAlgorithmBar("Button", "Randomize Array");
     this.randomizeArrayButton.onclick = this.randomizeCallback.bind(this);

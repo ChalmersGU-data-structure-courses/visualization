@@ -72,7 +72,7 @@ Reverse.prototype.init = function(am)
 }
 
 
-Reverse.prototype.addControls =  function()
+Reverse.prototype.addControls = function()
 {
     this.controls = [];
     this.reverseField = this.addControlToAlgorithmBar("Text", "");
@@ -126,12 +126,12 @@ Reverse.prototype.reverse = function(value)
     var activationRec = this.createActivation("reverse     ", Reverse.ACTIVATION_FIELDS, this.currentX, this.currentY);
     this.cmd("SetText", activationRec.fieldIDs[0], value);
 //    this.cmd("CreateLabel", ID, "", 10, this.currentY, 0);
-    var oldX  = this.currentX;
+    var oldX = this.currentX;
     var oldY = this.currentY;
     this.currentY += Reverse.RECURSIVE_DELTA_Y;
     if (this.currentY + Recursive.RECURSIVE_DELTA_Y > this.getCanvasHeight())
     {
-        this.currentY =  Reverse.ACTIVATION_RECORT_START_Y;
+        this.currentY = Reverse.ACTIVATION_RECORT_START_Y;
         this.currentX += Recursive.ACTIVATION_RECORD_SPACING;
     }
     this.cmd("SetForegroundColor", this.codeID[0][1], Recursive.CODE_HIGHLIGHT_COLOR);

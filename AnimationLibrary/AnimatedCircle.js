@@ -70,7 +70,7 @@ AnimatedCircle.prototype.getHeadPointerAttachPos = function(fromX, fromY)
 {
     var xVec = fromX - this.x;
     var yVec = fromY - this.y;
-    var len  = Math.sqrt(xVec * xVec + yVec*yVec);
+    var len = Math.sqrt(xVec * xVec + yVec*yVec);
     if (len == 0)
     {
         return [this.x, this.y];

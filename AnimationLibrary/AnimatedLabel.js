@@ -382,7 +382,7 @@ AnimatedLabel.prototype.left = function()
 {
    if (this.centering)
    {
-       return this. x - this.textWidth / 2;
+       return this.x - this.textWidth / 2;
    }
    else
    {

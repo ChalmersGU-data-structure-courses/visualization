@@ -42,12 +42,12 @@ QueueArray.ARRAY_LINE_SPACING = 130;
 QueueArray.HEAD_POS_X = 180;
 QueueArray.HEAD_POS_Y = 100;
 QueueArray.HEAD_LABEL_X = 130;
-QueueArray.HEAD_LABEL_Y =  100;
+QueueArray.HEAD_LABEL_Y = 100;
 
 QueueArray.TAIL_POS_X = 280;
 QueueArray.TAIL_POS_Y = 100;
 QueueArray.TAIL_LABEL_X = 230;
-QueueArray.TAIL_LABEL_Y =  100;
+QueueArray.TAIL_LABEL_Y = 100;
 
 QueueArray.QUEUE_LABEL_X = 50;
 QueueArray.QUEUE_LABEL_Y = 30;
@@ -73,7 +73,7 @@ QueueArray.prototype.sizeChanged = function()
 }
 
 
-QueueArray.prototype.addControls =  function()
+QueueArray.prototype.addControls = function()
 {
     this.controls = [];
     this.enqueueField = this.addControlToAlgorithmBar("Text", "");

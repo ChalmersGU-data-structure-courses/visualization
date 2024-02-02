@@ -44,7 +44,7 @@ OpenHash.LINKED_ITEM_WIDTH = 65;
 OpenHash.LINKED_ITEM_Y_DELTA = 50;
 OpenHash.LINKED_ITEM_POINTER_PERCENT = 0.25;
 
-OpenHash.HASH_TABLE_SIZE  = 13;
+OpenHash.HASH_TABLE_SIZE = 13;
 
 OpenHash.ARRAY_Y_POS = 350;
 
@@ -75,7 +75,7 @@ OpenHash.prototype.insertElement = function(elem)
     this.commands = new Array();
     this.cmd("SetText", this.ExplainLabel, "Inserting element: " + String(elem));
     var index = this.doHash(elem);
-    var node  = new LinkedListNode(elem,this.nextIndex++, 100, 75);
+    var node = new LinkedListNode(elem,this.nextIndex++, 100, 75);
     this.cmd("CreateLinkedList", node.graphicID, elem, OpenHash.LINKED_ITEM_WIDTH, OpenHash.LINKED_ITEM_HEIGHT, 100, 75);
     if (this.hashTableValues[index] != null && this.hashTableValues[index] != undefined)
     {
@@ -102,7 +102,7 @@ OpenHash.prototype.insertElement = function(elem)
 OpenHash.prototype.repositionList = function(index)
 {
     var startX = OpenHash.POINTER_ARRAY_ELEM_START_X + index *OpenHash.POINTER_ARRAY_ELEM_WIDTH;
-    var startY =  this.POINTER_ARRAY_ELEM_Y - OpenHash.LINKED_ITEM_Y_DELTA;
+    var startY = this.POINTER_ARRAY_ELEM_Y - OpenHash.LINKED_ITEM_Y_DELTA;
     var tmp = this.hashTableValues[index];
     while (tmp != null)
     {
@@ -245,7 +245,7 @@ OpenHash.prototype.setup = function()
     this.commands = [];
     for (var i = 0; i < OpenHash.HASH_TABLE_SIZE; i++)
     {
-        var nextID  = this.nextIndex++;
+        var nextID = this.nextIndex++;
 
         this.cmd("CreateRectangle", nextID, "", OpenHash.POINTER_ARRAY_ELEM_WIDTH, OpenHash.POINTER_ARRAY_ELEM_HEIGHT, OpenHash.POINTER_ARRAY_ELEM_START_X + i *OpenHash.POINTER_ARRAY_ELEM_WIDTH, this.POINTER_ARRAY_ELEM_Y)
         this.hashTableVisual[i] = nextID;
@@ -264,7 +264,7 @@ OpenHash.prototype.setup = function()
     this.animationManager.StartNewAnimation(this.commands);
     this.animationManager.skipForward();
     this.animationManager.clearHistory();
-    this.resetIndex  = this.nextIndex;
+    this.resetIndex = this.nextIndex;
 }
 
 

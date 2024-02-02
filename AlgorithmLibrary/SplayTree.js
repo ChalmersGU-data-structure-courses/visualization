@@ -33,13 +33,13 @@ SplayTree.FOREGROUND_COLOR = "#007700";
 SplayTree.BACKGROUND_COLOR = "#EEFFEE";
 SplayTree.PRINT_COLOR = SplayTree.FOREGROUND_COLOR;
 
-SplayTree.WIDTH_DELTA  = 50;
+SplayTree.WIDTH_DELTA = 50;
 SplayTree.HEIGHT_DELTA = 50;
 SplayTree.STARTING_Y = 50;
 
 
-SplayTree.FIRST_PRINT_POS_X  = 50;
-SplayTree.PRINT_VERTICAL_GAP  = 20;
+SplayTree.FIRST_PRINT_POS_X = 50;
+SplayTree.PRINT_VERTICAL_GAP = 20;
 SplayTree.PRINT_HORIZONTAL_GAP = 50;
 
 
@@ -72,7 +72,7 @@ SplayTree.prototype.sizeChanged = function()
     var h = this.getCanvasHeight();
 
     this.startingX = w / 2;
-    this.first_print_pos_y  = h - 2 * SplayTree.PRINT_VERTICAL_GAP;
+    this.first_print_pos_y = h - 2 * SplayTree.PRINT_VERTICAL_GAP;
     this.print_max = w - 10;
     
     this.implementAction(() => {
@@ -82,7 +82,7 @@ SplayTree.prototype.sizeChanged = function()
     });
 }
 
-SplayTree.prototype.addControls =  function()
+SplayTree.prototype.addControls = function()
 {
     this.insertField = this.addControlToAlgorithmBar("Text", "");
     this.insertField.onkeydown = this.returnSubmit(this.insertField,  this.insertCallback.bind(this), 4);
@@ -992,7 +992,7 @@ SplayTree.prototype.doubleRotateLeft = function(tree)
 
 SplayTree.prototype.resizeTree = function()
 {
-    var startingPoint  = this.startingX;
+    var startingPoint = this.startingX;
     this.resizeWidths(this.treeRoot);
     if (this.treeRoot != null)
     {
@@ -1067,7 +1067,7 @@ function BSTNode(val, id, initialX, initialY)
 
 BSTNode.prototype.isLeftChild = function()
 {
-    if (this. parent == null)
+    if (this.parent == null)
     {
         return true;
     }

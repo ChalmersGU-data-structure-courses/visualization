@@ -106,7 +106,7 @@ RotateScale2D.prototype.init = function(am)
 
 }
 
-RotateScale2D.prototype.setupAxis =  function()
+RotateScale2D.prototype.setupAxis = function()
 {
     this.xAxisLeft = this.nextIndex++;
     this.xAxisRight = this.nextIndex++;
@@ -149,7 +149,7 @@ RotateScale2D.prototype.setupAxis =  function()
 }
 
 
-RotateScale2D.prototype.setupObject =  function()
+RotateScale2D.prototype.setupObject = function()
 {
     this.objectVertexPosition = RotateScale2D.OBJECTS[this.currentShape].slice(0);
 }
@@ -185,7 +185,7 @@ RotateScale2D.prototype.moveObjectToNewPosition = function()
 }
 
 
-RotateScale2D.prototype.setupObjectGraphic =  function()
+RotateScale2D.prototype.setupObjectGraphic = function()
 {
     this.objectVertexID = new Array(this.objectVertexPosition.length);
     var i;
@@ -205,7 +205,7 @@ RotateScale2D.prototype.setupObjectGraphic =  function()
     this.cmd("Connect", this.objectVertexID[this.objectVertexID.length - 1], this.objectVertexID[0], RotateScale2D.EDGE_COLOR, 0, 0, "");
 }
 
-RotateScale2D.prototype.addControls =  function()
+RotateScale2D.prototype.addControls = function()
 {
     this.controls = [];
 
@@ -475,8 +475,8 @@ RotateScale2D.prototype.transform = function(input)
     this.commands = [];
     var inputs = input.split(";");
     var rotateDegree = toRadians(parseFloat(inputs[0]));
-    var scaleX  = parseFloat(inputs[1]);
-    var scaleY   = parseFloat(inputs[2]);
+    var scaleX = parseFloat(inputs[1]);
+    var scaleY = parseFloat(inputs[2]);
 
     var xpos = RotateScale2D.MATRIX_START_X;
     var ypos = RotateScale2D.MATRIX_START_Y;
@@ -624,7 +624,7 @@ RotateScale2D.prototype.transform = function(input)
     var paren4 = this.nextIndex++
 
     var parenX;
-    parenX  =  2 * RotateScale2D.MATRIX_ELEM_WIDTH + RotateScale2D.MATRIX_START_X + RotateScale2D.MATRIX_MULTIPLY_SPACING - 2;
+    parenX = 2 * RotateScale2D.MATRIX_ELEM_WIDTH + RotateScale2D.MATRIX_START_X + RotateScale2D.MATRIX_MULTIPLY_SPACING - 2;
     if (!this.rowMajor)
     {
         parenX += RotateScale2D.EQUALS_SPACING - RotateScale2D.MATRIX_MULTIPLY_SPACING;
@@ -721,7 +721,7 @@ RotateScale2D.prototype.transform = function(input)
         }
         this.resetMatrixLabels(xy);
         this.cmd("Step");
-        this.cmd("CreateLabel", equalID, "=", xpos + RotateScale2D.EQUALS_SPACING  / 2, ypos + tmpMat.data.length / 2 * RotateScale2D.MATRIX_ELEM_HEIGHT);
+        this.cmd("CreateLabel", equalID, "=", xpos + RotateScale2D.EQUALS_SPACING / 2, ypos + tmpMat.data.length / 2 * RotateScale2D.MATRIX_ELEM_HEIGHT);
         if (this.rowMajor)
         {
             output = this.createMatrix([["",""]],  xpos + RotateScale2D.EQUALS_SPACING, ypos)
@@ -837,7 +837,7 @@ RotateScale2D.prototype.multiplyMatrix = function(mat1, mat2, mat3, explainID)
 
 RotateScale2D.prototype.standardize = function(lab)
 {
-    var newLab =  Math.round(lab * 1000) / 1000;
+    var newLab = Math.round(lab * 1000) / 1000;
     if (isNaN(newLab))
     {
         return lab;
@@ -878,11 +878,11 @@ RotateScale2D.prototype.moveMatrix = function(mat, x, y)
 
     this.cmd("Move", mat.leftBrack1, x, y);
     this.cmd("Move", mat.leftBrack2, x, y);
-    this.cmd("Move", mat.leftBrack3, x, y +  height * RotateScale2D.MATRIX_ELEM_HEIGHT);
+    this.cmd("Move", mat.leftBrack3, x, y + height * RotateScale2D.MATRIX_ELEM_HEIGHT);
 
     this.cmd("Move", mat.rightBrack1,  x + width * RotateScale2D.MATRIX_ELEM_WIDTH, y);
     this.cmd("Move", mat.rightBrack2,   x + width * RotateScale2D.MATRIX_ELEM_WIDTH, y);
-    this.cmd("Move", mat.rightBrack3,  x+ width * RotateScale2D.MATRIX_ELEM_WIDTH, y +  height * RotateScale2D.MATRIX_ELEM_HEIGHT);
+    this.cmd("Move", mat.rightBrack3,  x+ width * RotateScale2D.MATRIX_ELEM_WIDTH, y + height * RotateScale2D.MATRIX_ELEM_HEIGHT);
 
     for (i = 0; i < mat.data.length; i++)
     {
@@ -959,11 +959,11 @@ RotateScale2D.prototype.createMatrix = function(contents, x, y)
 
     this.cmd("CreateRectangle", mat.leftBrack1, "", 5, 1,  x, y, "left","center");
     this.cmd("CreateRectangle", mat.leftBrack2, "", 1, height * RotateScale2D.MATRIX_ELEM_HEIGHT,  x, y, "center","top");
-    this.cmd("CreateRectangle", mat.leftBrack3, "", 5, 1,  x, y +  height * RotateScale2D.MATRIX_ELEM_HEIGHT , "left","center");
+    this.cmd("CreateRectangle", mat.leftBrack3, "", 5, 1,  x, y + height * RotateScale2D.MATRIX_ELEM_HEIGHT , "left","center");
 
     this.cmd("CreateRectangle", mat.rightBrack1, "", 5, 1,  x + width * RotateScale2D.MATRIX_ELEM_WIDTH, y, "right","center");
     this.cmd("CreateRectangle", mat.rightBrack2, "", 1, height * RotateScale2D.MATRIX_ELEM_HEIGHT,  x + width * RotateScale2D.MATRIX_ELEM_WIDTH, y, "center","top");
-    this.cmd("CreateRectangle", mat.rightBrack3, "", 5, 1,  x+ width * RotateScale2D.MATRIX_ELEM_WIDTH, y +  height * RotateScale2D.MATRIX_ELEM_HEIGHT , "right","center");
+    this.cmd("CreateRectangle", mat.rightBrack3, "", 5, 1,  x+ width * RotateScale2D.MATRIX_ELEM_WIDTH, y + height * RotateScale2D.MATRIX_ELEM_HEIGHT , "right","center");
 
     for (i = 0; i < mat.data.length; i++)
     {

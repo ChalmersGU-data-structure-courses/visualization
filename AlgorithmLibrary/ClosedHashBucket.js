@@ -40,7 +40,7 @@ ClosedHashBucket.ARRAY_VERTICAL_SEPARATION = 100;
 
 ClosedHashBucket.BUCKET_SIZE = 3;
 ClosedHashBucket.NUM_BUCKETS = 11;
-ClosedHashBucket.CLOSED_HASH_TABLE_SIZE  = 40;
+ClosedHashBucket.CLOSED_HASH_TABLE_SIZE = 40;
 
 ClosedHashBucket.ARRAY_Y_POS = 350;
 
@@ -122,7 +122,7 @@ ClosedHashBucket.prototype.insertElement = function(elem)
 }
 
 
-ClosedHashBucket.prototype.getElemIndex  = function(elem)
+ClosedHashBucket.prototype.getElemIndex = function(elem)
 {
     var foundIndex = -1;
     var initialIndex = this.doHash(elem);
@@ -230,12 +230,12 @@ ClosedHashBucket.prototype.setup = function()
 
     for (var i = 0; i < ClosedHashBucket.CLOSED_HASH_TABLE_SIZE; i++)
     {
-        var nextID  = this.nextIndex++;
+        var nextID = this.nextIndex++;
         this.empty[i] = true;
         this.deleted[i] = false;
 
-        var nextXPos =  ClosedHashBucket.ARRAY_ELEM_START_X + (i % this.elements_per_row) * ClosedHashBucket.ARRAY_ELEM_WIDTH;
-        var nextYPos =  ClosedHashBucket.ARRAY_ELEM_START_Y + Math.floor(i / this.elements_per_row) * ClosedHashBucket.ARRAY_VERTICAL_SEPARATION;
+        var nextXPos = ClosedHashBucket.ARRAY_ELEM_START_X + (i % this.elements_per_row) * ClosedHashBucket.ARRAY_ELEM_WIDTH;
+        var nextYPos = ClosedHashBucket.ARRAY_ELEM_START_Y + Math.floor(i / this.elements_per_row) * ClosedHashBucket.ARRAY_VERTICAL_SEPARATION;
         this.cmd("CreateRectangle", nextID, "", ClosedHashBucket.ARRAY_ELEM_WIDTH, ClosedHashBucket.ARRAY_ELEM_HEIGHT,nextXPos, nextYPos)
         this.hashTableVisual[i] = nextID;
         nextID = this.nextIndex++;
@@ -250,8 +250,8 @@ ClosedHashBucket.prototype.setup = function()
     for (i = 0; i <= ClosedHashBucket.NUM_BUCKETS; i++)
     {
         nextID = this.nextIndex++;
-        nextXPos =  ClosedHashBucket.ARRAY_ELEM_START_X + (i * 3 % this.elements_per_row) * ClosedHashBucket.ARRAY_ELEM_WIDTH - ClosedHashBucket.ARRAY_ELEM_WIDTH / 2;
-        nextYPos =  ClosedHashBucket.ARRAY_ELEM_START_Y + Math.floor((i * 3) / this.elements_per_row) * ClosedHashBucket.ARRAY_VERTICAL_SEPARATION + ClosedHashBucket.ARRAY_ELEM_HEIGHT;
+        nextXPos = ClosedHashBucket.ARRAY_ELEM_START_X + (i * 3 % this.elements_per_row) * ClosedHashBucket.ARRAY_ELEM_WIDTH - ClosedHashBucket.ARRAY_ELEM_WIDTH / 2;
+        nextYPos = ClosedHashBucket.ARRAY_ELEM_START_Y + Math.floor((i * 3) / this.elements_per_row) * ClosedHashBucket.ARRAY_VERTICAL_SEPARATION + ClosedHashBucket.ARRAY_ELEM_HEIGHT;
         this.cmd("CreateRectangle", nextID, "", 0, ClosedHashBucket.ARRAY_ELEM_HEIGHT * 2,nextXPos, nextYPos)
         nextID = this.nextIndex++;
         if (i == ClosedHashBucket.NUM_BUCKETS)
@@ -270,7 +270,7 @@ ClosedHashBucket.prototype.setup = function()
     this.animationManager.StartNewAnimation(this.commands);
     this.animationManager.skipForward();
     this.animationManager.clearHistory();
-    this.resetIndex  = this.nextIndex;
+    this.resetIndex = this.nextIndex;
 }
 
 

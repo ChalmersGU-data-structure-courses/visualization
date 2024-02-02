@@ -143,7 +143,7 @@ DFS.prototype.doDFS = function(startVetex)
     this.cmd("CreateHighlightCircle", this.highlightCircleAL, DFS.HIGHLIGHT_CIRCLE_COLOR,this.adj_list_x_start - this.adj_list_width, this.adj_list_y_start + vertex*this.adj_list_height);
     this.cmd("SetLayer", this.highlightCircleAL, 2);
 
-    this.cmd("CreateHighlightCircle", this.highlightCircleAM, DFS.HIGHLIGHT_CIRCLE_COLOR,this.adj_matrix_x_start  - this.adj_matrix_width, this.adj_matrix_y_start + vertex*this.adj_matrix_height);
+    this.cmd("CreateHighlightCircle", this.highlightCircleAM, DFS.HIGHLIGHT_CIRCLE_COLOR,this.adj_matrix_x_start - this.adj_matrix_width, this.adj_matrix_y_start + vertex*this.adj_matrix_height);
     this.cmd("SetLayer", this.highlightCircleAM, 3);
 
     this.messageY = 30;

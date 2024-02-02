@@ -266,7 +266,7 @@ ChangeCoordinate2D.prototype.transformPoint = function(point, matrix, position)
 }
 
 
-ChangeCoordinate2D.prototype.setupExtraAxes =  function()
+ChangeCoordinate2D.prototype.setupExtraAxes = function()
 {
     var robotOrigin = this.RobotPositionValues;
     var x1 = this.transformPoint([-150, 0], this.RobotMatrixValues, this.RobotPositionValues);
@@ -341,10 +341,10 @@ ChangeCoordinate2D.prototype.setupExtraAxes =  function()
 }
 
 
-ChangeCoordinate2D.prototype.setupAxis =  function()
+ChangeCoordinate2D.prototype.setupAxis = function()
 {
 
-    this.axisHand =     this.addAxis(this.worldToScreenSpace([0,0], 0),
+    this.axisHand = this.addAxis(this.worldToScreenSpace([0,0], 0),
                                      this.worldToScreenSpace([-150, 0], 0),
                                      this.worldToScreenSpace([150,0],  0),
                                      this.worldToScreenSpace([0, -150], 0),
@@ -352,7 +352,7 @@ ChangeCoordinate2D.prototype.setupAxis =  function()
                                      ChangeCoordinate2D.AXIS_COLOR_0);
     this.setAxisAlpha(this.axisHand, 0.5);
 
-    this.axisRobot =     this.addAxis(this.worldToScreenSpace([0,0], 1),
+    this.axisRobot = this.addAxis(this.worldToScreenSpace([0,0], 1),
                                      this.worldToScreenSpace([-150, 0], 1),
                                      this.worldToScreenSpace([150,0],  1),
                                      this.worldToScreenSpace([0, -150], 1),
@@ -360,7 +360,7 @@ ChangeCoordinate2D.prototype.setupAxis =  function()
                                      ChangeCoordinate2D.AXIS_COLOR_1);
     this.setAxisAlpha(this.axisRobot, 0.5);
 
-    this.axisWorld =     this.addAxis(this.worldToScreenSpace([0,0], 2),
+    this.axisWorld = this.addAxis(this.worldToScreenSpace([0,0], 2),
                                      this.worldToScreenSpace([-50, 0], 2),
                                      this.worldToScreenSpace([400,0],  2),
                                      this.worldToScreenSpace([0, -50], 2),
@@ -377,7 +377,7 @@ ChangeCoordinate2D.prototype.setupAxis =  function()
 }
 
 
-ChangeCoordinate2D.prototype.setAxisAlpha =  function(axisList, newAlpha)
+ChangeCoordinate2D.prototype.setAxisAlpha = function(axisList, newAlpha)
 {
     for (var i = 0; i < axisList.length; i++)
     {
@@ -390,7 +390,7 @@ ChangeCoordinate2D.prototype.setAxisAlpha =  function(axisList, newAlpha)
 
 }
 
-ChangeCoordinate2D.prototype.setupObjects =  function()
+ChangeCoordinate2D.prototype.setupObjects = function()
 {
 
     var i;
@@ -488,7 +488,7 @@ ChangeCoordinate2D.prototype.removeOldIDs = function()
 
 
 
-ChangeCoordinate2D.prototype.setupObjectGraphic =  function()
+ChangeCoordinate2D.prototype.setupObjectGraphic = function()
 {
     var i;
 
@@ -497,7 +497,7 @@ ChangeCoordinate2D.prototype.setupObjectGraphic =  function()
 
 }
 
-ChangeCoordinate2D.prototype.addControls =  function()
+ChangeCoordinate2D.prototype.addControls = function()
 {
     this.controls = [];
 
@@ -651,14 +651,14 @@ ChangeCoordinate2D.prototype.transposeVisual = function(matrix)
                 moveLabels.push(moveLabel2);
                 this.cmd("CreateLabel", moveLabel1,
                          matrix.data[i][j], matrix.x + ChangeCoordinate2D.MATRIX_ELEM_WIDTH / 2+ i * ChangeCoordinate2D.MATRIX_ELEM_WIDTH,
-                         matrix.y  + ChangeCoordinate2D.MATRIX_ELEM_HEIGHT / 2+  j * ChangeCoordinate2D.MATRIX_ELEM_HEIGHT);
+                         matrix.y + ChangeCoordinate2D.MATRIX_ELEM_HEIGHT / 2+  j * ChangeCoordinate2D.MATRIX_ELEM_HEIGHT);
                 this.cmd("CreateLabel", moveLabel2,
                          matrix.data[j][i], matrix.x + ChangeCoordinate2D.MATRIX_ELEM_WIDTH / 2+ j * ChangeCoordinate2D.MATRIX_ELEM_WIDTH,
-                         matrix.y + ChangeCoordinate2D.MATRIX_ELEM_HEIGHT / 2 +  i * ChangeCoordinate2D.MATRIX_ELEM_HEIGHT);
+                         matrix.y + ChangeCoordinate2D.MATRIX_ELEM_HEIGHT / 2 + i * ChangeCoordinate2D.MATRIX_ELEM_HEIGHT);
                 this.cmd("Move", moveLabel1, matrix.x + ChangeCoordinate2D.MATRIX_ELEM_WIDTH / 2+ j * ChangeCoordinate2D.MATRIX_ELEM_WIDTH,
-                         matrix.y + ChangeCoordinate2D.MATRIX_ELEM_HEIGHT / 2 +  i * ChangeCoordinate2D.MATRIX_ELEM_HEIGHT);
+                         matrix.y + ChangeCoordinate2D.MATRIX_ELEM_HEIGHT / 2 + i * ChangeCoordinate2D.MATRIX_ELEM_HEIGHT);
                 this.cmd("Move", moveLabel2, matrix.x + ChangeCoordinate2D.MATRIX_ELEM_WIDTH / 2+  i * ChangeCoordinate2D.MATRIX_ELEM_WIDTH,
-                         matrix.y + ChangeCoordinate2D.MATRIX_ELEM_HEIGHT / 2 +  j * ChangeCoordinate2D.MATRIX_ELEM_HEIGHT);
+                         matrix.y + ChangeCoordinate2D.MATRIX_ELEM_HEIGHT / 2 + j * ChangeCoordinate2D.MATRIX_ELEM_HEIGHT);
                 tmp = matrix.data[i][j];
                 matrix.data[i][j] = matrix.data[j][i];
                 matrix.data[j][i] = tmp;
@@ -770,12 +770,12 @@ ChangeCoordinate2D.prototype.rotatePoint = function(point, matrix, xPos, yPos, f
 
     if (this.rowMajor)
     {
-        inertialPositionMatrix =  this.createMatrix([["", ""]], xPos + 2 * ChangeCoordinate2D.MATRIX_ELEM_WIDTH + ChangeCoordinate2D.EQUALS_SPACING,
+        inertialPositionMatrix = this.createMatrix([["", ""]], xPos + 2 * ChangeCoordinate2D.MATRIX_ELEM_WIDTH + ChangeCoordinate2D.EQUALS_SPACING,
                                                     yPos);
     }
     else
     {
-        inertialPositionMatrix =  this.createMatrix([[""], [""]],
+        inertialPositionMatrix = this.createMatrix([[""], [""]],
                                                     xPos + 3 * ChangeCoordinate2D.MATRIX_ELEM_WIDTH + ChangeCoordinate2D.EQUALS_SPACING + ChangeCoordinate2D.MATRIX_MULTIPLY_SPACING,
                                                     yPos);
 
@@ -826,7 +826,7 @@ ChangeCoordinate2D.prototype.rotatePoint = function(point, matrix, xPos, yPos, f
 
     var originID = this.nextIndex++;
     this.oldIDs.push(originID);
-    var origin  = this.worldToScreenSpace([0,0], fromSpace);
+    var origin = this.worldToScreenSpace([0,0], fromSpace);
 
 
     this.cmd("CreateRectangle", originID, "", 0, 0, origin[0], origin[1]);
@@ -903,7 +903,7 @@ ChangeCoordinate2D.prototype.translatePoint = function(point, transVector, xPos,
 
     var originID = this.nextIndex++;
     this.oldIDs.push(originID);
-    var origin  = this.worldToScreenSpace([0,0], fromSpace);
+    var origin = this.worldToScreenSpace([0,0], fromSpace);
 
     this.cmd("CreateCircle", originID, "", origin[0], origin[1]);
     this.cmd("SetWidth", originID, 0);
@@ -935,11 +935,11 @@ ChangeCoordinate2D.prototype.addMultiply = function(position, transVector, rotMa
     }
     else
     {
-        this.moveMatrix(newPosition, rotX +  2 * ChangeCoordinate2D.MATRIX_ELEM_WIDTH + ChangeCoordinate2D.MATRIX_MULTIPLY_SPACING, transY)
+        this.moveMatrix(newPosition, rotX + 2 * ChangeCoordinate2D.MATRIX_ELEM_WIDTH + ChangeCoordinate2D.MATRIX_MULTIPLY_SPACING, transY)
     }
 
 
-    var posMatrixAndPointID =  this.rotatePoint(newPosition, rotMatrix, rotX, rotY, fromSpace, toSpace);
+    var posMatrixAndPointID = this.rotatePoint(newPosition, rotMatrix, rotX, rotY, fromSpace, toSpace);
     this.cmd("Delete", pointID);
     this.cmd("Step");
 
@@ -980,7 +980,7 @@ ChangeCoordinate2D.prototype.addMultiply = function(position, transVector, rotMa
 
 ChangeCoordinate2D.prototype.multiplyAdd = function(position, rotMatrix, transVector, rotX, rotY, transX, transY, fromSpace, toSpace)
 {
-    var posMatrixAndPointID =  this.rotatePoint(position, rotMatrix, rotX, rotY, fromSpace, toSpace);
+    var posMatrixAndPointID = this.rotatePoint(position, rotMatrix, rotX, rotY, fromSpace, toSpace);
     var inertialPositionMatrix = posMatrixAndPointID[0];
     var inertialPositionID = posMatrixAndPointID[1];
 
@@ -993,7 +993,7 @@ ChangeCoordinate2D.prototype.multiplyAdd = function(position, rotMatrix, transVe
     }
     else
     {
-        this.moveMatrix(inertialPositionMatrix, transX -  ChangeCoordinate2D.MATRIX_ELEM_WIDTH - ChangeCoordinate2D.EQUALS_SPACING, transY)
+        this.moveMatrix(inertialPositionMatrix, transX - ChangeCoordinate2D.MATRIX_ELEM_WIDTH - ChangeCoordinate2D.EQUALS_SPACING, transY)
     }
 
 
@@ -1235,7 +1235,7 @@ ChangeCoordinate2D.prototype.globalToLocal = function(params)
     }
     else
     {
-        initialPointMatrix = this.createMatrix([[x], [y]], ChangeCoordinate2D.ROBOT_MATRIX_START_X -  ChangeCoordinate2D.MATRIX_ELEM_WIDTH,
+        initialPointMatrix = this.createMatrix([[x], [y]], ChangeCoordinate2D.ROBOT_MATRIX_START_X - ChangeCoordinate2D.MATRIX_ELEM_WIDTH,
                                                ChangeCoordinate2D.ROBOT_MATRIX_START_Y);
 
     }
@@ -1253,7 +1253,7 @@ ChangeCoordinate2D.prototype.globalToLocal = function(params)
 
     if (this.rowMajor)
     {
-        this.moveMatrix(robotPositionMatrix,  ChangeCoordinate2D.HAND_MATRIX_START_X  - 2 * ChangeCoordinate2D.MATRIX_ELEM_WIDTH,
+        this.moveMatrix(robotPositionMatrix,  ChangeCoordinate2D.HAND_MATRIX_START_X - 2 * ChangeCoordinate2D.MATRIX_ELEM_WIDTH,
                         ChangeCoordinate2D.HAND_MATRIX_START_Y);
     }
     else
@@ -1418,7 +1418,7 @@ ChangeCoordinate2D.prototype.multiplyMatrix = function(mat1, mat2, mat3, explain
 
 ChangeCoordinate2D.prototype.standardize = function(lab)
 {
-    var newLab =  Math.round(lab * 1000) / 1000;
+    var newLab = Math.round(lab * 1000) / 1000;
     if (isNaN(newLab))
     {
         return lab;
@@ -1459,11 +1459,11 @@ ChangeCoordinate2D.prototype.moveMatrix = function(mat, x, y)
 
     this.cmd("Move", mat.leftBrack1, x, y);
     this.cmd("Move", mat.leftBrack2, x, y);
-    this.cmd("Move", mat.leftBrack3, x, y +  height * ChangeCoordinate2D.MATRIX_ELEM_HEIGHT);
+    this.cmd("Move", mat.leftBrack3, x, y + height * ChangeCoordinate2D.MATRIX_ELEM_HEIGHT);
 
     this.cmd("Move", mat.rightBrack1,  x + width * ChangeCoordinate2D.MATRIX_ELEM_WIDTH, y);
     this.cmd("Move", mat.rightBrack2,   x + width * ChangeCoordinate2D.MATRIX_ELEM_WIDTH, y);
-    this.cmd("Move", mat.rightBrack3,  x+ width * ChangeCoordinate2D.MATRIX_ELEM_WIDTH, y +  height * ChangeCoordinate2D.MATRIX_ELEM_HEIGHT);
+    this.cmd("Move", mat.rightBrack3,  x+ width * ChangeCoordinate2D.MATRIX_ELEM_WIDTH, y + height * ChangeCoordinate2D.MATRIX_ELEM_HEIGHT);
 
     for (i = 0; i < mat.data.length; i++)
     {
@@ -1607,11 +1607,11 @@ ChangeCoordinate2D.prototype.createMatrix = function(contents, x, y)
 
     this.cmd("CreateRectangle", mat.leftBrack1, "", 5, 1,  x, y, "left","center");
     this.cmd("CreateRectangle", mat.leftBrack2, "", 1, height * ChangeCoordinate2D.MATRIX_ELEM_HEIGHT,  x, y, "center","top");
-    this.cmd("CreateRectangle", mat.leftBrack3, "", 5, 1,  x, y +  height * ChangeCoordinate2D.MATRIX_ELEM_HEIGHT , "left","center");
+    this.cmd("CreateRectangle", mat.leftBrack3, "", 5, 1,  x, y + height * ChangeCoordinate2D.MATRIX_ELEM_HEIGHT , "left","center");
 
     this.cmd("CreateRectangle", mat.rightBrack1, "", 5, 1,  x + width * ChangeCoordinate2D.MATRIX_ELEM_WIDTH, y, "right","center");
     this.cmd("CreateRectangle", mat.rightBrack2, "", 1, height * ChangeCoordinate2D.MATRIX_ELEM_HEIGHT,  x + width * ChangeCoordinate2D.MATRIX_ELEM_WIDTH, y, "center","top");
-    this.cmd("CreateRectangle", mat.rightBrack3, "", 5, 1,  x+ width * ChangeCoordinate2D.MATRIX_ELEM_WIDTH, y +  height * ChangeCoordinate2D.MATRIX_ELEM_HEIGHT , "right","center");
+    this.cmd("CreateRectangle", mat.rightBrack3, "", 5, 1,  x+ width * ChangeCoordinate2D.MATRIX_ELEM_WIDTH, y + height * ChangeCoordinate2D.MATRIX_ELEM_HEIGHT , "right","center");
 
     for (i = 0; i < mat.data.length; i++)
     {

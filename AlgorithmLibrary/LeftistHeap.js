@@ -38,7 +38,7 @@ LeftistHeap.HIGHLIGHT_CIRCLE_COLOR = "#007700";
 LeftistHeap.FOREGROUND_COLOR = "#007700";
 LeftistHeap.BACKGROUND_COLOR = "#EEFFEE";
 
-LeftistHeap.WIDTH_DELTA  = 50;
+LeftistHeap.WIDTH_DELTA = 50;
 LeftistHeap.HEIGHT_DELTA = 50;
 LeftistHeap.STARTING_Y = 85;
 
@@ -73,7 +73,7 @@ LeftistHeap.prototype.init = function(am)
 }
 
 
-LeftistHeap.prototype.addControls =  function()
+LeftistHeap.prototype.addControls = function()
 {
     this.controls = [];
     this.insertField = this.addControlToAlgorithmBar("Text", "");
@@ -129,7 +129,7 @@ LeftistHeap.prototype.clearCallback = function(event)
     this.implementAction(this.clear.bind(this, ""));
 }
 
-LeftistHeap.prototype.clear  = function(ignored)
+LeftistHeap.prototype.clear = function(ignored)
 {
     this.commands = new Array();
     this.clearTree(this.treeRoot);
@@ -138,7 +138,7 @@ LeftistHeap.prototype.clear  = function(ignored)
     return this.commands;
 }
 
-LeftistHeap.prototype.clearTree    = function(tree)
+LeftistHeap.prototype.clearTree = function(tree)
 {
         if (tree != null)
         {
@@ -533,8 +533,8 @@ function LeftistHeapNode(val, id, nplID, initialX, initialY)
     this.data = val;
     this.x = (initialX == undefined) ? 0 : initialX;
     this.y = (initialY == undefined) ? 0 : initialY;
-    this.npX =  initialX - LeftistHeap.NPL_OFFSET_X;
-    this.npY =  initialY - LeftistHeap.NPL_OFFSET_Y;
+    this.npX = initialX - LeftistHeap.NPL_OFFSET_X;
+    this.npY = initialY - LeftistHeap.NPL_OFFSET_Y;
 
     this.graphicID = id;
     this.nplID = nplID;

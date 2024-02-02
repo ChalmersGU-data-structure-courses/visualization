@@ -49,7 +49,7 @@ ChangeCoordinate3D.ROBOT_MATRIX_START_X = 10 + 3 * ChangeCoordinate3D.MATRIX_ELE
 ChangeCoordinate3D.ROBOT_MATRIX_START_Y = 30;
 
 ChangeCoordinate3D.HAND_MATRIX_START_X = 10 +3 * ChangeCoordinate3D.MATRIX_ELEM_WIDTH + ChangeCoordinate3D.MATRIX_MULTIPLY_SPACING;
-ChangeCoordinate3D.HAND_MATRIX_START_Y = 10 + 25 + 20 + 20 +  3*ChangeCoordinate3D.MATRIX_ELEM_HEIGHT;
+ChangeCoordinate3D.HAND_MATRIX_START_Y = 10 + 25 + 20 + 20 + 3*ChangeCoordinate3D.MATRIX_ELEM_HEIGHT;
 
 
 ChangeCoordinate3D.ROBOT_POSITION_START_X = ChangeCoordinate3D.ROBOT_MATRIX_START_X + 5*ChangeCoordinate3D.MATRIX_ELEM_WIDTH + 100;
@@ -321,7 +321,7 @@ ChangeCoordinate3D.prototype.transformPoint = function(point, matrix, position)
 }
 
 
-ChangeCoordinate3D.prototype.setupExtraAxes =  function()
+ChangeCoordinate3D.prototype.setupExtraAxes = function()
 {
     var robotOrigin = this.RobotPositionValues;
     var x1 = this.transformPoint([-150, 0, 0], this.RobotMatrixValues, this.RobotPositionValues);
@@ -408,10 +408,10 @@ ChangeCoordinate3D.prototype.setupExtraAxes =  function()
 }
 
 
-ChangeCoordinate3D.prototype.setupAxis =  function()
+ChangeCoordinate3D.prototype.setupAxis = function()
 {
 
-    this.axisHand =     this.addAxis(this.worldToScreenSpace([0,0,0], 0),
+    this.axisHand = this.addAxis(this.worldToScreenSpace([0,0,0], 0),
                                      this.worldToScreenSpace([-150, 0, 0], 0),
                                      this.worldToScreenSpace([150,0, 0],  0),
                                      this.worldToScreenSpace([0, -150, 0], 0),
@@ -421,7 +421,7 @@ ChangeCoordinate3D.prototype.setupAxis =  function()
                                      ChangeCoordinate3D.AXIS_COLOR_0);
     this.setAxisAlpha(this.axisHand, 0.5);
 
-    this.axisRobot =     this.addAxis(this.worldToScreenSpace([0,0, 0], 1),
+    this.axisRobot = this.addAxis(this.worldToScreenSpace([0,0, 0], 1),
                                      this.worldToScreenSpace([-150, 0, 0], 1),
                                      this.worldToScreenSpace([150,0, 0],  1),
                                      this.worldToScreenSpace([0, -150, 0], 1),
@@ -431,7 +431,7 @@ ChangeCoordinate3D.prototype.setupAxis =  function()
                                      ChangeCoordinate3D.AXIS_COLOR_1);
     this.setAxisAlpha(this.axisRobot, 0.5);
 
-    this.axisWorld =     this.addAxis(this.worldToScreenSpace([0,0, 0], 2),
+    this.axisWorld = this.addAxis(this.worldToScreenSpace([0,0, 0], 2),
                                      this.worldToScreenSpace([-50, 0, 0], 2),
                                      this.worldToScreenSpace([400,0, 0],  2),
                                      this.worldToScreenSpace([0, -50, 0], 2),
@@ -450,7 +450,7 @@ ChangeCoordinate3D.prototype.setupAxis =  function()
 }
 
 
-ChangeCoordinate3D.prototype.setAxisAlpha =  function(axisList, newAlpha)
+ChangeCoordinate3D.prototype.setAxisAlpha = function(axisList, newAlpha)
 {
     for (var i = 0; i < axisList.length; i++)
     {
@@ -463,7 +463,7 @@ ChangeCoordinate3D.prototype.setAxisAlpha =  function(axisList, newAlpha)
 
 }
 
-ChangeCoordinate3D.prototype.setupObjects =  function()
+ChangeCoordinate3D.prototype.setupObjects = function()
 {
 
     var i;
@@ -571,7 +571,7 @@ ChangeCoordinate3D.prototype.removeOldIDs = function()
 
 
 
-ChangeCoordinate3D.prototype.setupObjectGraphic =  function()
+ChangeCoordinate3D.prototype.setupObjectGraphic = function()
 {
     var i;
 
@@ -580,7 +580,7 @@ ChangeCoordinate3D.prototype.setupObjectGraphic =  function()
 
 }
 
-ChangeCoordinate3D.prototype.addControls =  function()
+ChangeCoordinate3D.prototype.addControls = function()
 {
     this.controls = [];
 
@@ -742,14 +742,14 @@ ChangeCoordinate3D.prototype.transposeVisual = function(matrix)
                 moveLabels.push(moveLabel2);
                 this.cmd("CreateLabel", moveLabel1,
                          this.standardize(matrix.data[i][j]), matrix.x + ChangeCoordinate3D.MATRIX_ELEM_WIDTH / 2+ i * ChangeCoordinate3D.MATRIX_ELEM_WIDTH,
-                         matrix.y  + ChangeCoordinate3D.MATRIX_ELEM_HEIGHT / 2+  j * ChangeCoordinate3D.MATRIX_ELEM_HEIGHT);
+                         matrix.y + ChangeCoordinate3D.MATRIX_ELEM_HEIGHT / 2+  j * ChangeCoordinate3D.MATRIX_ELEM_HEIGHT);
                 this.cmd("CreateLabel", moveLabel2,
                          this.standardize(matrix.data[j][i]), matrix.x + ChangeCoordinate3D.MATRIX_ELEM_WIDTH / 2+ j * ChangeCoordinate3D.MATRIX_ELEM_WIDTH,
-                         matrix.y + ChangeCoordinate3D.MATRIX_ELEM_HEIGHT / 2 +  i * ChangeCoordinate3D.MATRIX_ELEM_HEIGHT);
+                         matrix.y + ChangeCoordinate3D.MATRIX_ELEM_HEIGHT / 2 + i * ChangeCoordinate3D.MATRIX_ELEM_HEIGHT);
                 this.cmd("Move", moveLabel1, matrix.x + ChangeCoordinate3D.MATRIX_ELEM_WIDTH / 2+ j * ChangeCoordinate3D.MATRIX_ELEM_WIDTH,
-                         matrix.y + ChangeCoordinate3D.MATRIX_ELEM_HEIGHT / 2 +  i * ChangeCoordinate3D.MATRIX_ELEM_HEIGHT);
+                         matrix.y + ChangeCoordinate3D.MATRIX_ELEM_HEIGHT / 2 + i * ChangeCoordinate3D.MATRIX_ELEM_HEIGHT);
                 this.cmd("Move", moveLabel2, matrix.x + ChangeCoordinate3D.MATRIX_ELEM_WIDTH / 2+  i * ChangeCoordinate3D.MATRIX_ELEM_WIDTH,
-                         matrix.y + ChangeCoordinate3D.MATRIX_ELEM_HEIGHT / 2 +  j * ChangeCoordinate3D.MATRIX_ELEM_HEIGHT);
+                         matrix.y + ChangeCoordinate3D.MATRIX_ELEM_HEIGHT / 2 + j * ChangeCoordinate3D.MATRIX_ELEM_HEIGHT);
                 tmp = matrix.data[i][j];
                 matrix.data[i][j] = matrix.data[j][i];
                 matrix.data[j][i] = tmp;
@@ -871,12 +871,12 @@ ChangeCoordinate3D.prototype.rotatePoint = function(point, matrix, xPos, yPos, f
 
     if (this.rowMajor)
     {
-        inertialPositionMatrix =  this.createMatrix([["", "", ""]], xPos + 3 * ChangeCoordinate3D.MATRIX_ELEM_WIDTH + ChangeCoordinate3D.EQUALS_SPACING,
+        inertialPositionMatrix = this.createMatrix([["", "", ""]], xPos + 3 * ChangeCoordinate3D.MATRIX_ELEM_WIDTH + ChangeCoordinate3D.EQUALS_SPACING,
                                                     yPos);
     }
     else
     {
-        inertialPositionMatrix =  this.createMatrix([[""], [""], [""]],
+        inertialPositionMatrix = this.createMatrix([[""], [""], [""]],
                                                     xPos + 4 * ChangeCoordinate3D.MATRIX_ELEM_WIDTH + ChangeCoordinate3D.EQUALS_SPACING + ChangeCoordinate3D.MATRIX_MULTIPLY_SPACING,
                                                     yPos);
 
@@ -927,7 +927,7 @@ ChangeCoordinate3D.prototype.rotatePoint = function(point, matrix, xPos, yPos, f
 
     var originID = this.nextIndex++;
     this.oldIDs.push(originID);
-    var origin  = this.worldToScreenSpace([0,0,0], fromSpace);
+    var origin = this.worldToScreenSpace([0,0,0], fromSpace);
 
 
     this.cmd("CreateRectangle", originID, "", 0, 0, origin[0], origin[1]);
@@ -1006,7 +1006,7 @@ ChangeCoordinate3D.prototype.translatePoint = function(point, transVector, xPos,
 
     var originID = this.nextIndex++;
     this.oldIDs.push(originID);
-    var origin  = this.worldToScreenSpace([0,0, 0], fromSpace);
+    var origin = this.worldToScreenSpace([0,0, 0], fromSpace);
 
     this.cmd("CreateCircle", originID, "", origin[0], origin[1]);
     this.cmd("SetWidth", originID, 0);
@@ -1038,11 +1038,11 @@ ChangeCoordinate3D.prototype.addMultiply = function(position, transVector, rotMa
     }
     else
     {
-        this.moveMatrix(newPosition, rotX +  3 * ChangeCoordinate3D.MATRIX_ELEM_WIDTH + ChangeCoordinate3D.MATRIX_MULTIPLY_SPACING, transY)
+        this.moveMatrix(newPosition, rotX + 3 * ChangeCoordinate3D.MATRIX_ELEM_WIDTH + ChangeCoordinate3D.MATRIX_MULTIPLY_SPACING, transY)
     }
 
 
-    var posMatrixAndPointID =  this.rotatePoint(newPosition, rotMatrix, rotX, rotY, fromSpace, toSpace);
+    var posMatrixAndPointID = this.rotatePoint(newPosition, rotMatrix, rotX, rotY, fromSpace, toSpace);
     this.cmd("Delete", pointID);
     this.cmd("Step");
 
@@ -1083,7 +1083,7 @@ ChangeCoordinate3D.prototype.addMultiply = function(position, transVector, rotMa
 
 ChangeCoordinate3D.prototype.multiplyAdd = function(position, rotMatrix, transVector, rotX, rotY, transX, transY, fromSpace, toSpace)
 {
-    var posMatrixAndPointID =  this.rotatePoint(position, rotMatrix, rotX, rotY, fromSpace, toSpace);
+    var posMatrixAndPointID = this.rotatePoint(position, rotMatrix, rotX, rotY, fromSpace, toSpace);
     var inertialPositionMatrix = posMatrixAndPointID[0];
     var inertialPositionID = posMatrixAndPointID[1];
 
@@ -1096,7 +1096,7 @@ ChangeCoordinate3D.prototype.multiplyAdd = function(position, rotMatrix, transVe
     }
     else
     {
-        this.moveMatrix(inertialPositionMatrix, transX -  ChangeCoordinate3D.MATRIX_ELEM_WIDTH - ChangeCoordinate3D.EQUALS_SPACING, transY)
+        this.moveMatrix(inertialPositionMatrix, transX - ChangeCoordinate3D.MATRIX_ELEM_WIDTH - ChangeCoordinate3D.EQUALS_SPACING, transY)
     }
 
 
@@ -1340,7 +1340,7 @@ ChangeCoordinate3D.prototype.globalToLocal = function(params)
     }
     else
     {
-        initialPointMatrix = this.createMatrix([[x], [y], [z]], ChangeCoordinate3D.ROBOT_MATRIX_START_X -  ChangeCoordinate3D.MATRIX_ELEM_WIDTH,
+        initialPointMatrix = this.createMatrix([[x], [y], [z]], ChangeCoordinate3D.ROBOT_MATRIX_START_X - ChangeCoordinate3D.MATRIX_ELEM_WIDTH,
                                                ChangeCoordinate3D.ROBOT_MATRIX_START_Y);
 
     }
@@ -1358,7 +1358,7 @@ ChangeCoordinate3D.prototype.globalToLocal = function(params)
 
     if (this.rowMajor)
     {
-        this.moveMatrix(robotPositionMatrix,  ChangeCoordinate3D.HAND_MATRIX_START_X  - 3 * ChangeCoordinate3D.MATRIX_ELEM_WIDTH,
+        this.moveMatrix(robotPositionMatrix,  ChangeCoordinate3D.HAND_MATRIX_START_X - 3 * ChangeCoordinate3D.MATRIX_ELEM_WIDTH,
                         ChangeCoordinate3D.HAND_MATRIX_START_Y);
     }
     else
@@ -1524,7 +1524,7 @@ ChangeCoordinate3D.prototype.standardize = function(lab, digits)
 {
     digits = (digits == undefined) ? 3 : digits;
     var shift = Math.pow(10, digits);
-    var newLab =  Math.round(lab * shift) / shift;
+    var newLab = Math.round(lab * shift) / shift;
     if (isNaN(newLab))
     {
         return lab;
@@ -1565,11 +1565,11 @@ ChangeCoordinate3D.prototype.moveMatrix = function(mat, x, y)
 
     this.cmd("Move", mat.leftBrack1, x, y);
     this.cmd("Move", mat.leftBrack2, x, y);
-    this.cmd("Move", mat.leftBrack3, x, y +  height * ChangeCoordinate3D.MATRIX_ELEM_HEIGHT);
+    this.cmd("Move", mat.leftBrack3, x, y + height * ChangeCoordinate3D.MATRIX_ELEM_HEIGHT);
 
     this.cmd("Move", mat.rightBrack1,  x + width * ChangeCoordinate3D.MATRIX_ELEM_WIDTH, y);
     this.cmd("Move", mat.rightBrack2,   x + width * ChangeCoordinate3D.MATRIX_ELEM_WIDTH, y);
-    this.cmd("Move", mat.rightBrack3,  x+ width * ChangeCoordinate3D.MATRIX_ELEM_WIDTH, y +  height * ChangeCoordinate3D.MATRIX_ELEM_HEIGHT);
+    this.cmd("Move", mat.rightBrack3,  x+ width * ChangeCoordinate3D.MATRIX_ELEM_WIDTH, y + height * ChangeCoordinate3D.MATRIX_ELEM_HEIGHT);
 
     for (i = 0; i < mat.data.length; i++)
     {
@@ -1713,11 +1713,11 @@ ChangeCoordinate3D.prototype.createMatrix = function(contents, x, y)
 
     this.cmd("CreateRectangle", mat.leftBrack1, "", 5, 1,  x, y, "left","center");
     this.cmd("CreateRectangle", mat.leftBrack2, "", 1, height * ChangeCoordinate3D.MATRIX_ELEM_HEIGHT,  x, y, "center","top");
-    this.cmd("CreateRectangle", mat.leftBrack3, "", 5, 1,  x, y +  height * ChangeCoordinate3D.MATRIX_ELEM_HEIGHT , "left","center");
+    this.cmd("CreateRectangle", mat.leftBrack3, "", 5, 1,  x, y + height * ChangeCoordinate3D.MATRIX_ELEM_HEIGHT , "left","center");
 
     this.cmd("CreateRectangle", mat.rightBrack1, "", 5, 1,  x + width * ChangeCoordinate3D.MATRIX_ELEM_WIDTH, y, "right","center");
     this.cmd("CreateRectangle", mat.rightBrack2, "", 1, height * ChangeCoordinate3D.MATRIX_ELEM_HEIGHT,  x + width * ChangeCoordinate3D.MATRIX_ELEM_WIDTH, y, "center","top");
-    this.cmd("CreateRectangle", mat.rightBrack3, "", 5, 1,  x+ width * ChangeCoordinate3D.MATRIX_ELEM_WIDTH, y +  height * ChangeCoordinate3D.MATRIX_ELEM_HEIGHT , "right","center");
+    this.cmd("CreateRectangle", mat.rightBrack3, "", 5, 1,  x+ width * ChangeCoordinate3D.MATRIX_ELEM_WIDTH, y + height * ChangeCoordinate3D.MATRIX_ELEM_HEIGHT , "right","center");
 
     for (i = 0; i < mat.data.length; i++)
     {

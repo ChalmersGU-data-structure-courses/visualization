@@ -52,8 +52,8 @@ RedBlack.prototype.sizeChanged = function()
     var h = this.getCanvasHeight();
 
     this.startingX = w / 2;
-    this.print_max  = w - RedBlack.PRINT_HORIZONTAL_GAP;
-    this.first_print_pos_y  = h - 2 * RedBlack.PRINT_VERTICAL_GAP;
+    this.print_max = w - RedBlack.PRINT_HORIZONTAL_GAP;
+    this.first_print_pos_y = h - 2 * RedBlack.PRINT_VERTICAL_GAP;
 
     this.implementAction(() => {
         this.commands = [];
@@ -62,7 +62,7 @@ RedBlack.prototype.sizeChanged = function()
     });
 }
 
-RedBlack.prototype.addControls =  function()
+RedBlack.prototype.addControls = function()
 {
     this.insertField = this.addControlToAlgorithmBar("Text", "");
     this.insertField.onkeydown = this.returnSubmit(this.insertField,  this.insertCallback.bind(this), 4);
@@ -119,13 +119,13 @@ RedBlack.HIGHLIGHT_COLOR = "#007700";
 RedBlack.FOREGROUND_COLOR = RedBlack.FOREGROUND_BLACK;
 RedBlack.PRINT_COLOR = RedBlack.FOREGROUND_COLOR
 
-var widthDelta  = 50;
+var widthDelta = 50;
 var heightDelta = 50;
 var startingY = 50;
 
 
-RedBlack.FIRST_PRINT_POS_X  = 40;
-RedBlack.PRINT_VERTICAL_GAP  = 20;
+RedBlack.FIRST_PRINT_POS_X = 40;
+RedBlack.PRINT_VERTICAL_GAP = 20;
 RedBlack.PRINT_HORIZONTAL_GAP = 50;
 RedBlack.EXPLANITORY_TEXT_X = 10;
 RedBlack.EXPLANITORY_TEXT_Y = 10;
@@ -307,12 +307,12 @@ RedBlack.prototype.findUncle = function(tree)
     {
         return null;
     }
-    var par  = tree.parent;
+    var par = tree.parent;
     if (par.parent == null)
     {
         return null;
     }
-    var grandPar   = par.parent;
+    var grandPar = par.parent;
 
     if (grandPar.left == par)
     {
@@ -859,7 +859,7 @@ RedBlack.prototype.fixExtraBlackChild = function(parNode, isLeftChild)
         }
         else
         {
-            newPar  = this.singleRotateRight(parNode);
+            newPar = this.singleRotateRight(parNode);
             newPar.blackLevel = 1;
             this.fixNodeColor(newPar);
             newPar.right.blackLevel = 0;
@@ -899,7 +899,7 @@ RedBlack.prototype.fixExtraBlackChild = function(parNode, isLeftChild)
         this.cmd("SetText", 0, "Double black node has black sibling, is a left child, and its right nephew is red.\nOne rotation can fix double-blackness.");
         this.cmd("Step");
 
-        var oldParBlackLevel  = parNode.blackLevel;
+        var oldParBlackLevel = parNode.blackLevel;
         newPar = this.singleRotateLeft(parNode);
         if (oldParBlackLevel == 0)
         {
@@ -921,7 +921,7 @@ RedBlack.prototype.fixExtraBlackChild = function(parNode, isLeftChild)
         this.cmd("SetText", 0, "Double black node has black sibling, is a right child, and its left nephew is red.\nOne rotation can fix double-blackness.");
         this.cmd("Step");
 
-        oldParBlackLevel  = parNode.blackLevel;
+        oldParBlackLevel = parNode.blackLevel;
         newPar = this.singleRotateRight(parNode);
         if (oldParBlackLevel == 0)
         {
@@ -1364,7 +1364,7 @@ RedBlack.prototype.fixNodeColor = function(tree)
 
 RedBlack.prototype.resizeTree = function()
 {
-    var startingPoint  = this.startingX;
+    var startingPoint = this.startingX;
     this.resizeWidths(this.treeRoot);
     if (this.treeRoot != null)
     {

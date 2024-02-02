@@ -141,7 +141,7 @@ Hash.prototype.doHash = function(input)
         var labelID2 = this.nextIndex++;
         var highlightID = this.nextIndex++;
         var index = parseInt(input) % this.table_size;
-        this.currHash =  parseInt(input);
+        this.currHash = parseInt(input);
 
         this.cmd("CreateLabel", labelID1, input + " % " + String(this.table_size) + " = " , Hash.HASH_LABEL_X, Hash.HASH_LABEL_Y);
         this.cmd("CreateLabel", labelID2,index,  Hash.HASH_LABEL_X + Hash.HASH_LABEL_DELTA_X, Hash.HASH_LABEL_Y);

@@ -219,7 +219,7 @@ function UndoSetForegroundColor(id, color)
 
 UndoSetForegroundColor.inheritFrom(UndoBlock);
 
-UndoSetForegroundColor.prototype.undoInitialStep =  function (world)
+UndoSetForegroundColor.prototype.undoInitialStep = function (world)
 {
     world.setForegroundColor(this.objectID, this.color);
 }
@@ -236,7 +236,7 @@ function UndoSetBackgroundColor(id, color)
 
 UndoSetBackgroundColor.inheritFrom(UndoBlock);
 
-UndoSetBackgroundColor.prototype.undoInitialStep =  function (world)
+UndoSetBackgroundColor.prototype.undoInitialStep = function (world)
 {
     world.setBackgroundColor(this.objectID, this.color);
 }
@@ -255,7 +255,7 @@ function UndoSetHighlightIndex(id, index)
 
 UndoSetHighlightIndex.inheritFrom(UndoBlock);
 
-UndoSetHighlightIndex.prototype.undoInitialStep =  function (world)
+UndoSetHighlightIndex.prototype.undoInitialStep = function (world)
 {
     world.setHighlightIndex(this.objectID, this.index);
 }
@@ -349,7 +349,7 @@ function UndoSetEdgeAlpha(from, to, oldAplha)
 {
     this.fromID = from;
     this.toID = to;
-    this.alpha  = oldAplha;
+    this.alpha = oldAplha;
 }
 
 UndoSetEdgeAlpha.inheritFrom(UndoBlock);

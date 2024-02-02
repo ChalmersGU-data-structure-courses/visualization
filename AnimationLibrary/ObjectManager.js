@@ -792,7 +792,7 @@ function ObjectManager(canvas)
             throw new Error("addLinkedListObject:Object with same ID already Exists!");
             return;
         }
-        var newNode  = new AnimatedLinkedList(objectID, nodeLabel, width, height, linkPer, verticalOrientation, linkPosEnd, numLabels, backgroundColor, foregroundColor);
+        var newNode = new AnimatedLinkedList(objectID, nodeLabel, width, height, linkPer, verticalOrientation, linkPosEnd, numLabels, backgroundColor, foregroundColor);
         this.Nodes[objectID] = newNode;
     }
 

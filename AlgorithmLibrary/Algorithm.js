@@ -41,7 +41,7 @@ Algorithm.prototype.setCodeAlpha = function(code, newAlpha)
 }
 
 
-Algorithm.prototype.addCodeToCanvasBase  = function(code, start_x, start_y, line_height, standard_color, layer)
+Algorithm.prototype.addCodeToCanvasBase = function(code, start_x, start_y, line_height, standard_color, layer)
 {
     layer = typeof layer !== 'undefined' ? layer : 0;
     var codeID = Array(code.length);
@@ -304,8 +304,8 @@ Algorithm.prototype.cmd = function()
         }
         this.commands.push(command);
     }
-
 }
+
 
 // Algorithm bar methods //////////////////
 

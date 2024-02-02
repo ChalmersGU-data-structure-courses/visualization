@@ -256,7 +256,7 @@ Floyd.prototype.setup = function()
         this.costIndexYID[i] = this.nextIndex++;
         this.cmd("CreateLabel", this.pathIndexXID[i], i, this.path_table_start_x + i * this.path_table_width, this.path_table_start_y - this.path_table_height);
         this.cmd("SetTextColor", this.pathIndexXID[i], "#0000FF");
-        this.cmd("CreateLabel", this.pathIndexYID[i], i, this.path_table_start_x   - this.path_table_width, this.path_table_start_y + i * this.path_table_height);
+        this.cmd("CreateLabel", this.pathIndexYID[i], i, this.path_table_start_x - this.path_table_width, this.path_table_start_y + i * this.path_table_height);
         this.cmd("SetTextColor", this.pathIndexYID[i], "#0000FF");
 
         this.cmd("CreateLabel", this.costIndexXID[i], i, this.cost_table_start_x + i * this.cost_table_width, this.cost_table_start_y - this.cost_table_height);
@@ -301,7 +301,7 @@ Floyd.prototype.doFloydWarshall = function(ignored)
     this.commands = new Array();
 
     var oldIndex= this.nextIndex;
-    var messageID  = this.nextIndex++;
+    var messageID = this.nextIndex++;
     var moveLabel1ID = this.nextIndex++;
     var moveLabel2ID = this.nextIndex++;
 

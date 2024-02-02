@@ -148,7 +148,7 @@ RotateScale3D.prototype.init = function(am)
 
 }
 
-RotateScale3D.prototype.setupAxis =  function()
+RotateScale3D.prototype.setupAxis = function()
 {
     this.xAxisMinID = this.nextIndex++;
     this.xAxisMaxID = this.nextIndex++;
@@ -228,7 +228,7 @@ RotateScale3D.prototype.setupAxis =  function()
 }
 
 
-RotateScale3D.prototype.setupObject =  function()
+RotateScale3D.prototype.setupObject = function()
 {
     this.objectVertexPosition = RotateScale3D.OBJECTS[this.currentShape].slice(0);
     this.extraConnections = RotateScale3D.EXTRA_CONNECTIONS[this.currentShape].slice(0);
@@ -259,7 +259,7 @@ RotateScale3D.prototype.moveObjectToNewPosition = function()
 }
 
 
-RotateScale3D.prototype.setupObjectGraphic =  function()
+RotateScale3D.prototype.setupObjectGraphic = function()
 {
     this.objectVertexID = new Array(this.objectVertexPosition.length);
     var i;
@@ -284,7 +284,7 @@ RotateScale3D.prototype.setupObjectGraphic =  function()
 
 }
 
-RotateScale3D.prototype.addControls =  function()
+RotateScale3D.prototype.addControls = function()
 {
     this.controls = [];
 
@@ -834,7 +834,7 @@ RotateScale3D.prototype.rotate = function(input)
     this.cmd("step");
 
     var parenX;
-    parenX  =  xpos - 6 * RotateScale3D.MATRIX_ELEM_WIDTH -  RotateScale3D.MATRIX_MULTIPLY_SPACING - 2;
+    parenX = xpos - 6 * RotateScale3D.MATRIX_ELEM_WIDTH - RotateScale3D.MATRIX_MULTIPLY_SPACING - 2;
 
     this.cmd("CreateRectangle", paren1, "", 0, 0, parenX, RotateScale3D.MATRIX_START_Y, "center","center");
     this.cmd("CreateRectangle", paren2, "", 0, 0,  parenX, RotateScale3D.MATRIX_START_Y + 3*RotateScale3D.MATRIX_ELEM_HEIGHT, "center","center");
@@ -878,7 +878,7 @@ RotateScale3D.prototype.rotate = function(input)
 
     var transformMatrix = this.createMatrix([["","",""], ["","",""],["","",""]], xpos + RotateScale3D.EQUALS_SPACING, ypos);
 
-    this.cmd("CreateLabel", explainID, "",  xpos +  RotateScale3D.EQUALS_SPACING, ypos + RotateScale3D.MATRIX_ELEM_HEIGHT*3 + 5, 0);
+    this.cmd("CreateLabel", explainID, "",  xpos + RotateScale3D.EQUALS_SPACING, ypos + RotateScale3D.MATRIX_ELEM_HEIGHT*3 + 5, 0);
     this.cmd("CreateLabel", equalID, "=",  xpos + RotateScale3D.EQUALS_SPACING / 2, ypos + RotateScale3D.MATRIX_ELEM_HEIGHT*1.5);
 
     this.multiplyMatrix(firstMat, tmpMat, transformMatrix, explainID);
@@ -948,7 +948,7 @@ RotateScale3D.prototype.multiplyMatrix = function(mat1, mat2, mat3, explainID)
 
 RotateScale3D.prototype.standardize = function(lab)
 {
-    var newLab =  Math.round(lab * 1000) / 1000;
+    var newLab = Math.round(lab * 1000) / 1000;
     if (isNaN(newLab))
     {
         return lab;
@@ -989,11 +989,11 @@ RotateScale3D.prototype.moveMatrix = function(mat, x, y)
 
     this.cmd("Move", mat.leftBrack1, x, y);
     this.cmd("Move", mat.leftBrack2, x, y);
-    this.cmd("Move", mat.leftBrack3, x, y +  height * RotateScale3D.MATRIX_ELEM_HEIGHT);
+    this.cmd("Move", mat.leftBrack3, x, y + height * RotateScale3D.MATRIX_ELEM_HEIGHT);
 
     this.cmd("Move", mat.rightBrack1,  x + width * RotateScale3D.MATRIX_ELEM_WIDTH, y);
     this.cmd("Move", mat.rightBrack2,   x + width * RotateScale3D.MATRIX_ELEM_WIDTH, y);
-    this.cmd("Move", mat.rightBrack3,  x+ width * RotateScale3D.MATRIX_ELEM_WIDTH, y +  height * RotateScale3D.MATRIX_ELEM_HEIGHT);
+    this.cmd("Move", mat.rightBrack3,  x+ width * RotateScale3D.MATRIX_ELEM_WIDTH, y + height * RotateScale3D.MATRIX_ELEM_HEIGHT);
 
     for (i = 0; i < mat.data.length; i++)
     {
@@ -1098,11 +1098,11 @@ RotateScale3D.prototype.createMatrix = function(contents, x, y)
 
     this.cmd("CreateRectangle", mat.leftBrack1, "", 5, 1,  x, y, "left","center");
     this.cmd("CreateRectangle", mat.leftBrack2, "", 1, height * RotateScale3D.MATRIX_ELEM_HEIGHT,  x, y, "center","top");
-    this.cmd("CreateRectangle", mat.leftBrack3, "", 5, 1,  x, y +  height * RotateScale3D.MATRIX_ELEM_HEIGHT , "left","center");
+    this.cmd("CreateRectangle", mat.leftBrack3, "", 5, 1,  x, y + height * RotateScale3D.MATRIX_ELEM_HEIGHT , "left","center");
 
     this.cmd("CreateRectangle", mat.rightBrack1, "", 5, 1,  x + width * RotateScale3D.MATRIX_ELEM_WIDTH, y, "right","center");
     this.cmd("CreateRectangle", mat.rightBrack2, "", 1, height * RotateScale3D.MATRIX_ELEM_HEIGHT,  x + width * RotateScale3D.MATRIX_ELEM_WIDTH, y, "center","top");
-    this.cmd("CreateRectangle", mat.rightBrack3, "", 5, 1,  x+ width * RotateScale3D.MATRIX_ELEM_WIDTH, y +  height * RotateScale3D.MATRIX_ELEM_HEIGHT , "right","center");
+    this.cmd("CreateRectangle", mat.rightBrack3, "", 5, 1,  x+ width * RotateScale3D.MATRIX_ELEM_WIDTH, y + height * RotateScale3D.MATRIX_ELEM_HEIGHT , "right","center");
 
     for (i = 0; i < mat.data.length; i++)
     {

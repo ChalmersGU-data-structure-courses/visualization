@@ -37,14 +37,14 @@ Trie.BACKGROUND_COLOR = "#CCFFCC";
 Trie.TRUE_COLOR = "#CCFFCC";
 Trie.PRINT_COLOR = Trie.FOREGROUND_COLOR;
 Trie.FALSE_COLOR = "#FFFFFF"
-Trie.WIDTH_DELTA  = 50;
+Trie.WIDTH_DELTA = 50;
 Trie.HEIGHT_DELTA = 50;
 Trie.STARTING_Y = 80;
 Trie.LeftMargin = 300;
 Trie.NEW_NODE_Y = 100
 Trie.NEW_NODE_X = 50;
-Trie.FIRST_PRINT_POS_X  = 50;
-Trie.PRINT_VERTICAL_GAP  = 20;
+Trie.FIRST_PRINT_POS_X = 50;
+Trie.PRINT_VERTICAL_GAP = 20;
 Trie.PRINT_HORIZONTAL_GAP = 50;
 
 
@@ -80,9 +80,9 @@ Trie.prototype.sizeChanged = function()
     var w = this.getCanvasWidth();
     var h = this.getCanvasHeight();
 
-    this.startingX =  w / 2;
-    this.first_print_pos_y  = h - 2 * Trie.PRINT_VERTICAL_GAP;
-    this.print_max  = w - 10;
+    this.startingX = w / 2;
+    this.first_print_pos_y = h - 2 * Trie.PRINT_VERTICAL_GAP;
+    this.print_max = w - 10;
     
     this.implementAction(() => {
         this.commands = [];
@@ -92,7 +92,7 @@ Trie.prototype.sizeChanged = function()
 }
 
 
-Trie.prototype.addControls =  function()
+Trie.prototype.addControls = function()
 {
     this.insertField = this.addControlToAlgorithmBar("Text", "");
     this.insertField.onkeypress = this.returnSubmit(this.insertField,  this.insertCallback.bind(this), 12,false);
@@ -567,7 +567,7 @@ Trie.prototype.resizeWidths = function(tree)
             tree.childWidths[i] = this.resizeWidths(tree.children[i]);
             size += tree.childWidths[i]
     }
-        tree.width = Math.max(size, Trie.NODE_WIDTH  + 4)
+        tree.width = Math.max(size, Trie.NODE_WIDTH + 4)
         return tree.width;
 }
 

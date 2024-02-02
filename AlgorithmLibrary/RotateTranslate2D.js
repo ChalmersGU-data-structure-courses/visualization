@@ -114,7 +114,7 @@ RotateTranslate2D.prototype.init = function(am)
 
 }
 
-RotateTranslate2D.prototype.setupAxis =  function()
+RotateTranslate2D.prototype.setupAxis = function()
 {
     this.xAxisLeft = this.nextIndex++;
     this.xAxisRight = this.nextIndex++;
@@ -157,7 +157,7 @@ RotateTranslate2D.prototype.setupAxis =  function()
 }
 
 
-RotateTranslate2D.prototype.setupObject =  function()
+RotateTranslate2D.prototype.setupObject = function()
 {
     var i = 0;
     this.objectVertexLocalPosition = new Array(RotateTranslate2D.OBJECTS[this.currentShape].length);
@@ -194,7 +194,7 @@ RotateTranslate2D.prototype.worldToScreenSpace = function(point)
 
 
 
-RotateTranslate2D.prototype.setupObjectGraphic =  function()
+RotateTranslate2D.prototype.setupObjectGraphic = function()
 {
     var i;
 
@@ -264,7 +264,7 @@ RotateTranslate2D.prototype.setupObjectGraphic =  function()
 
 }
 
-RotateTranslate2D.prototype.addControls =  function()
+RotateTranslate2D.prototype.addControls = function()
 {
     this.controls = [];
 
@@ -534,8 +534,8 @@ RotateTranslate2D.prototype.transform = function(input)
 
     var inputs = input.split(";");
     var rotateDegree = parseFloat(inputs[0]);
-    var deltaX  = parseFloat(inputs[1]);
-    var deltaY   = parseFloat(inputs[2]);
+    var deltaX = parseFloat(inputs[1]);
+    var deltaY = parseFloat(inputs[2]);
     var rotateRadians = toRadians(rotateDegree);
 
 
@@ -583,11 +583,11 @@ RotateTranslate2D.prototype.transform = function(input)
 
     if (this.rowMajor)
     {
-        resultXPos =  RotateTranslate2D.MATRIX_START_X +6 * RotateTranslate2D.MATRIX_ELEM_WIDTH + RotateTranslate2D.MATRIX_MULTIPLY_SPACING;
+        resultXPos = RotateTranslate2D.MATRIX_START_X +6 * RotateTranslate2D.MATRIX_ELEM_WIDTH + RotateTranslate2D.MATRIX_MULTIPLY_SPACING;
     }
     else
     {
-        resultXPos =  RotateTranslate2D.MATRIX_START_X +3 * RotateTranslate2D.MATRIX_ELEM_WIDTH;
+        resultXPos = RotateTranslate2D.MATRIX_START_X +3 * RotateTranslate2D.MATRIX_ELEM_WIDTH;
     }
     resultMatrix = this.createMatrix([["", "", ""],["", "", ""],["", "", ""]],
                                      resultXPos + RotateTranslate2D.EQUALS_SPACING,
@@ -777,7 +777,7 @@ RotateTranslate2D.prototype.multiplyMatrix = function(mat1, mat2, mat3, explainI
 
 RotateTranslate2D.prototype.standardize = function(lab)
 {
-    var newLab =  Math.round(lab * 1000) / 1000;
+    var newLab = Math.round(lab * 1000) / 1000;
     if (isNaN(newLab))
     {
         return lab;
@@ -818,11 +818,11 @@ RotateTranslate2D.prototype.moveMatrix = function(mat, x, y)
 
     this.cmd("Move", mat.leftBrack1, x, y);
     this.cmd("Move", mat.leftBrack2, x, y);
-    this.cmd("Move", mat.leftBrack3, x, y +  height * RotateTranslate2D.MATRIX_ELEM_HEIGHT);
+    this.cmd("Move", mat.leftBrack3, x, y + height * RotateTranslate2D.MATRIX_ELEM_HEIGHT);
 
     this.cmd("Move", mat.rightBrack1,  x + width * RotateTranslate2D.MATRIX_ELEM_WIDTH, y);
     this.cmd("Move", mat.rightBrack2,   x + width * RotateTranslate2D.MATRIX_ELEM_WIDTH, y);
-    this.cmd("Move", mat.rightBrack3,  x+ width * RotateTranslate2D.MATRIX_ELEM_WIDTH, y +  height * RotateTranslate2D.MATRIX_ELEM_HEIGHT);
+    this.cmd("Move", mat.rightBrack3,  x+ width * RotateTranslate2D.MATRIX_ELEM_WIDTH, y + height * RotateTranslate2D.MATRIX_ELEM_HEIGHT);
 
     for (i = 0; i < mat.data.length; i++)
     {
@@ -899,11 +899,11 @@ RotateTranslate2D.prototype.createMatrix = function(contents, x, y)
 
     this.cmd("CreateRectangle", mat.leftBrack1, "", 5, 1,  x, y, "left","center");
     this.cmd("CreateRectangle", mat.leftBrack2, "", 1, height * RotateTranslate2D.MATRIX_ELEM_HEIGHT,  x, y, "center","top");
-    this.cmd("CreateRectangle", mat.leftBrack3, "", 5, 1,  x, y +  height * RotateTranslate2D.MATRIX_ELEM_HEIGHT , "left","center");
+    this.cmd("CreateRectangle", mat.leftBrack3, "", 5, 1,  x, y + height * RotateTranslate2D.MATRIX_ELEM_HEIGHT , "left","center");
 
     this.cmd("CreateRectangle", mat.rightBrack1, "", 5, 1,  x + width * RotateTranslate2D.MATRIX_ELEM_WIDTH, y, "right","center");
     this.cmd("CreateRectangle", mat.rightBrack2, "", 1, height * RotateTranslate2D.MATRIX_ELEM_HEIGHT,  x + width * RotateTranslate2D.MATRIX_ELEM_WIDTH, y, "center","top");
-    this.cmd("CreateRectangle", mat.rightBrack3, "", 5, 1,  x+ width * RotateTranslate2D.MATRIX_ELEM_WIDTH, y +  height * RotateTranslate2D.MATRIX_ELEM_HEIGHT , "right","center");
+    this.cmd("CreateRectangle", mat.rightBrack3, "", 5, 1,  x+ width * RotateTranslate2D.MATRIX_ELEM_WIDTH, y + height * RotateTranslate2D.MATRIX_ELEM_HEIGHT , "right","center");
 
     for (i = 0; i < mat.data.length; i++)
     {

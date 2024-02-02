@@ -72,7 +72,7 @@ RecFact.prototype.init = function(am)
 }
 
 
-RecFact.prototype.addControls =  function()
+RecFact.prototype.addControls = function()
 {
     this.controls = [];
     this.factorialField = this.addControlToAlgorithmBar("Text", "");
@@ -127,12 +127,12 @@ RecFact.prototype.factorial = function(value)
     var activationRec = this.createActivation("factorial     ", RecFact.ACTIVATION_FIELDS, this.currentX, this.currentY);
     this.cmd("SetText", activationRec.fieldIDs[0], value);
 //    this.cmd("CreateLabel", ID, "", 10, this.currentY, 0);
-    var oldX  = this.currentX;
+    var oldX = this.currentX;
     var oldY = this.currentY;
     this.currentY += RecFact.RECURSIVE_DELTA_Y;
     if (this.currentY + Recursive.RECURSIVE_DELTA_Y > this.getCanvasHeight())
     {
-        this.currentY =  RecFact.ACTIVATION_RECORT_START_Y;
+        this.currentY = RecFact.ACTIVATION_RECORT_START_Y;
         this.currentX += Recursive.ACTIVATION_RECORD_SPACING;
     }
     this.cmd("SetForegroundColor", this.codeID[0][1], Recursive.CODE_HIGHLIGHT_COLOR);

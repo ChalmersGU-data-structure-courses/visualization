@@ -109,7 +109,7 @@ DPMatrixMultiply.prototype.init = function(am)
 }
 
 
-DPMatrixMultiply.prototype.addControls =  function()
+DPMatrixMultiply.prototype.addControls = function()
 {
     this.controls = [];
     this.addLabelToAlgorithmBar("S1:");
@@ -138,7 +138,7 @@ DPMatrixMultiply.prototype.addControls =  function()
 
 
 
-DPMatrixMultiply.prototype.buildTable  = function(S1, S2)
+DPMatrixMultiply.prototype.buildTable = function(S1, S2)
 {
     var x = S1.length;
     var y = S2.length;
@@ -179,7 +179,7 @@ DPMatrixMultiply.prototype.buildTable  = function(S1, S2)
         }
         var index = this.nextIndex++;
         this.oldIDs.push(index);
-        this.cmd("CreateLabel", index, i - 1, DPMatrixMultiply.TABLE_START_X  - 1 * DPMatrixMultiply.TABLE_ELEM_WIDTH, DPMatrixMultiply.TABLE_START_Y +  i * DPMatrixMultiply.TABLE_ELEM_HEIGHT);
+        this.cmd("CreateLabel", index, i - 1, DPMatrixMultiply.TABLE_START_X - 1 * DPMatrixMultiply.TABLE_ELEM_WIDTH, DPMatrixMultiply.TABLE_START_Y + i * DPMatrixMultiply.TABLE_ELEM_HEIGHT);
         this.cmd("SetForegroundColor", index, "#0000FF");
     }
 

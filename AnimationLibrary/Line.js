@@ -38,7 +38,7 @@ var LINE_highlightDiff = 3;
 function Line(n1, n2, color, cv, d, weight, anchorIndex)
 {
     this.arrowHeight = 8;
-    this. arrowWidth = 4;
+    this.arrowWidth = 4;
 
     this.Node1 = n1;
     this.Node2 = n2;
@@ -74,8 +74,8 @@ function Line(n1, n2, color, cv, d, weight, anchorIndex)
        if (this.highlighted)
        {
            var frameMod = frameNum / 14.0;
-           var delta  = Math.abs((frameMod) % (2 * LINE_range  - 2) - LINE_range + 1)
-           this.highlightDiff =  delta + LINE_minHeightDiff;
+           var delta = Math.abs((frameMod) % (2 * LINE_range - 2) - LINE_range + 1)
+           this.highlightDiff = delta + LINE_minHeightDiff;
            Dirty = true;
        }
     }
@@ -87,7 +87,7 @@ function Line(n1, n2, color, cv, d, weight, anchorIndex)
     }
 
 
-    this.createUndoDisconnect  = function()
+    this.createUndoDisconnect = function()
         {
         return new UndoConnect(this.Node1.objectID, this.Node2.objectID, true, this.edgeColor, this.directed, this.curve, this.edgeLabel, this.anchorPoint);
     }
@@ -134,7 +134,7 @@ function Line(n1, n2, color, cv, d, weight, anchorIndex)
         // Position of the edge label:  First, we will place it right along the
         // middle of the curve (or the middle of the line, for curve == 0)
         var labelPosX = 0.25* fromPos[0] + 0.5*controlX + 0.25*toPos[0];
-        var labelPosY =  0.25* fromPos[1] + 0.5*controlY + 0.25*toPos[1];
+        var labelPosY = 0.25* fromPos[1] + 0.5*controlY + 0.25*toPos[1];
 
         // Next, we push the edge position label out just a little in the direction of
         // the curve, so that the label doesn't intersect the cuve (as long as the label

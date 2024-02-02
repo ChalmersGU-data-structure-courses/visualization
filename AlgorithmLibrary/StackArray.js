@@ -42,7 +42,7 @@ StackArray.ARRAY_LINE_SPACING = 130;
 StackArray.TOP_POS_X = 180;
 StackArray.TOP_POS_Y = 100;
 StackArray.TOP_LABEL_X = 130;
-StackArray.TOP_LABEL_Y =  100;
+StackArray.TOP_LABEL_Y = 100;
 
 StackArray.PUSH_LABEL_X = 50;
 StackArray.PUSH_LABEL_Y = 30;
@@ -66,7 +66,7 @@ StackArray.prototype.sizeChanged = function()
 }
 
 
-StackArray.prototype.addControls =  function()
+StackArray.prototype.addControls = function()
 {
     this.controls = [];
     this.pushField = this.addControlToAlgorithmBar("Text", "");

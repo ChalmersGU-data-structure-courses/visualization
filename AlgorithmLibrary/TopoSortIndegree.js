@@ -169,7 +169,7 @@ TopoSortIndegree.prototype.doTopoSort = function(ignored)
                 this.cmd("SetLayer", this.highlightCircleL, 1);
                 this.cmd("CreateHighlightCircle", this.highlightCircleAL, TopoSortIndegree.HIGHLIGHT_CIRCLE_COLOR,this.adj_list_x_start + adjListIndex * (this.adj_list_width + this.adj_list_spacing), this.adj_list_y_start + vertex*this.adj_list_height);
                 this.cmd("SetLayer", this.highlightCircleAL, 2);
-                this.cmd("CreateHighlightCircle", this.highlightCircleAM, TopoSortIndegree.HIGHLIGHT_CIRCLE_COLOR,this.adj_matrix_x_start  + neighbor * this.adj_matrix_width, this.adj_matrix_y_start - this.adj_matrix_height);
+                this.cmd("CreateHighlightCircle", this.highlightCircleAM, TopoSortIndegree.HIGHLIGHT_CIRCLE_COLOR,this.adj_matrix_x_start + neighbor * this.adj_matrix_width, this.adj_matrix_y_start - this.adj_matrix_height);
                 this.cmd("SetLayer", this.highlightCircleAM, 3);
 
                 this.cmd("Move", this.highlightCircleL,TopoSortIndegree.INDEGREE_ARRAY_START_X - TopoSortIndegree.INDEGREE_ARRAY_ELEM_WIDTH ,TopoSortIndegree.INDEGREE_ARRAY_START_Y + neighbor*TopoSortIndegree.INDEGREE_ARRAY_ELEM_HEIGHT);
@@ -241,7 +241,7 @@ TopoSortIndegree.prototype.doTopoSort = function(ignored)
                 this.cmd("SetLayer", this.highlightCircleL, 1);
                 this.cmd("CreateHighlightCircle", this.highlightCircleAL, TopoSortIndegree.HIGHLIGHT_CIRCLE_COLOR,this.adj_list_x_start + adjListIndex * (this.adj_list_width + this.adj_list_spacing), this.adj_list_y_start + nextElem*this.adj_list_height);
                 this.cmd("SetLayer", this.highlightCircleAL, 2);
-                this.cmd("CreateHighlightCircle", this.highlightCircleAM, TopoSortIndegree.HIGHLIGHT_CIRCLE_COLOR,this.adj_matrix_x_start  + vertex * this.adj_matrix_width, this.adj_matrix_y_start - this.adj_matrix_height);
+                this.cmd("CreateHighlightCircle", this.highlightCircleAM, TopoSortIndegree.HIGHLIGHT_CIRCLE_COLOR,this.adj_matrix_x_start + vertex * this.adj_matrix_width, this.adj_matrix_y_start - this.adj_matrix_height);
                 this.cmd("SetLayer", this.highlightCircleAM, 3);
 
                 this.cmd("Move", this.highlightCircleL,TopoSortIndegree.INDEGREE_ARRAY_START_X - TopoSortIndegree.INDEGREE_ARRAY_ELEM_WIDTH ,TopoSortIndegree.INDEGREE_ARRAY_START_Y + vertex*TopoSortIndegree.INDEGREE_ARRAY_ELEM_HEIGHT);
