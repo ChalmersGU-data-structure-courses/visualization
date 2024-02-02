@@ -44,35 +44,30 @@ OpenHash.LINKED_ITEM_WIDTH = 65;
 OpenHash.LINKED_ITEM_Y_DELTA = 50;
 OpenHash.LINKED_ITEM_POINTER_PERCENT = 0.25;
 
-OpenHash.MAX_DATA_VALUE = 999;
-
 OpenHash.HASH_TABLE_SIZE  = 13;
 
 OpenHash.ARRAY_Y_POS = 350;
 
-
 OpenHash.INDEX_COLOR = "#0000FF";
-
-
-
 
 
 OpenHash.prototype.init = function(am)
 {
     OpenHash.superclass.init.call(this, am);
-    var h = this.getCanvasHeight();
-
-    this.nextIndex = 0;
-    this.POINTER_ARRAY_ELEM_Y = h - OpenHash.POINTER_ARRAY_ELEM_WIDTH;
     this.setup();
 }
+
+
+OpenHash.prototype.sizeChanged = function()
+{
+    this.setup();
+}
+
 
 OpenHash.prototype.addControls = function()
 {
     OpenHash.superclass.addControls.call(this);
-
-    // Add new controls
-
+    // Add new controls here
 }
 
 OpenHash.prototype.insertElement = function(elem)
@@ -101,7 +96,6 @@ OpenHash.prototype.insertElement = function(elem)
     this.cmd("SetText", this.ExplainLabel, "");
 
     return this.commands;
-
 }
 
 
@@ -231,6 +225,12 @@ OpenHash.prototype.findElement = function(elem)
 
 OpenHash.prototype.setup = function()
 {
+    this.animationManager.resetAll();
+    this.nextIndex = 0;
+
+    var h = this.getCanvasHeight();
+    this.POINTER_ARRAY_ELEM_Y = h - OpenHash.POINTER_ARRAY_ELEM_WIDTH;
+
     this.hashTableVisual = new Array(OpenHash.HASH_TABLE_SIZE);
     this.hashTableIndices = new Array(OpenHash.HASH_TABLE_SIZE);
     this.hashTableValues = new Array(OpenHash.HASH_TABLE_SIZE);
@@ -266,7 +266,6 @@ OpenHash.prototype.setup = function()
     this.animationManager.clearHistory();
     this.resetIndex  = this.nextIndex;
 }
-
 
 
 OpenHash.prototype.resetAll = function()
@@ -310,18 +309,6 @@ OpenHash.prototype.resetCallback = function(event)
 }
 
 
-
-/*this.nextIndex = 0;
- this.commands = [];
- this.cmd("CreateLabel", 0, "", 20, 50, 0);
- this.animationManager.StartNewAnimation(this.commands);
- this.animationManager.skipForward();
- this.animationManager.clearHistory(); */
-
-
-
-
-
 OpenHash.prototype.disableUI = function(event)
 {
     var sc = OpenHash.superclass;
@@ -335,8 +322,6 @@ OpenHash.prototype.enableUI = function(event)
 }
 
 
-
-
 function LinkedListNode(val, id, initialX, initialY)
 {
     this.data = val;
@@ -346,8 +331,6 @@ function LinkedListNode(val, id, initialX, initialY)
     this.next = null;
 
 }
-
-
 
 
 var currentAlg;

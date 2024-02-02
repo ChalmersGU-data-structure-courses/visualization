@@ -38,60 +38,34 @@ ClosedHashBucket.ARRAY_ELEM_START_X = 50;
 ClosedHashBucket.ARRAY_ELEM_START_Y = 100;
 ClosedHashBucket.ARRAY_VERTICAL_SEPARATION = 100;
 
-ClosedHashBucket.CLOSED_HASH_TABLE_SIZE  = 29;
-
-
 ClosedHashBucket.BUCKET_SIZE = 3;
 ClosedHashBucket.NUM_BUCKETS = 11;
 ClosedHashBucket.CLOSED_HASH_TABLE_SIZE  = 40;
 
-
 ClosedHashBucket.ARRAY_Y_POS = 350;
 
-
 ClosedHashBucket.INDEX_COLOR = "#0000FF";
-
-
-
-
-ClosedHashBucket.MAX_DATA_VALUE = 999;
-
-ClosedHashBucket.HASH_TABLE_SIZE  = 13;
-
-ClosedHashBucket.ARRAY_Y_POS = 350;
-
-
-ClosedHashBucket.INDEX_COLOR = "#0000FF";
-
-
 
 
 
 ClosedHashBucket.prototype.init = function(am)
 {
     ClosedHashBucket.superclass.init.call(this, am);
-    var w = this.getCanvasWidth();
-
-    this.elements_per_row = Math.floor(w / ClosedHashBucket.ARRAY_ELEM_WIDTH) ;
-
-
-    //Change me!
-    this.nextIndex = 0;
-    //this.POINTER_ARRAY_ELEM_Y = h - ClosedHashBucket.POINTER_ARRAY_ELEM_WIDTH;
     this.setup();
 }
+
+
+ClosedHashBucket.prototype.sizeChanged = function()
+{
+    this.setup();
+}
+
 
 ClosedHashBucket.prototype.addControls = function()
 {
     ClosedHashBucket.superclass.addControls.call(this);
-
-
-
-    // Add new controls
-
+    // Add new controls here
 }
-
-
 
 
 
@@ -126,7 +100,6 @@ ClosedHashBucket.prototype.insertElement = function(elem)
                 foundIndex = candidateIndex;
                 break;
             }
-
         }
     }
 
@@ -143,14 +116,10 @@ ClosedHashBucket.prototype.insertElement = function(elem)
         this.deleted[foundIndex] = false;
     }
 
-
     this.cmd("SetText", this.ExplainLabel, "");
 
     return this.commands;
-
 }
-
-
 
 
 ClosedHashBucket.prototype.getElemIndex  = function(elem)
@@ -212,8 +181,9 @@ ClosedHashBucket.prototype.deleteElement = function(elem)
     }
 
     return this.commands;
-
 }
+
+
 ClosedHashBucket.prototype.findElement = function(elem)
 {
     this.commands = new Array();
@@ -231,10 +201,15 @@ ClosedHashBucket.prototype.findElement = function(elem)
 }
 
 
-
-
 ClosedHashBucket.prototype.setup = function()
 {
+    this.animationManager.resetAll();
+    this.nextIndex = 0;
+
+    var w = this.getCanvasWidth();
+    this.elements_per_row = Math.floor(w / ClosedHashBucket.ARRAY_ELEM_WIDTH) ;
+    //this.POINTER_ARRAY_ELEM_Y = h - ClosedHashBucket.POINTER_ARRAY_ELEM_WIDTH;
+
     this.table_size = ClosedHashBucket.NUM_BUCKETS;
     this.hashTableVisual = new Array(ClosedHashBucket.CLOSED_HASH_TABLE_SIZE);
     this.hashTableIndices = new Array(ClosedHashBucket.CLOSED_HASH_TABLE_SIZE);
@@ -245,7 +220,6 @@ ClosedHashBucket.prototype.setup = function()
 
     this.indexXPos2 = new Array(ClosedHashBucket.CLOSED_HASH_TABLE_SIZE);
     this.indexYPos2 = new Array(ClosedHashBucket.CLOSED_HASH_TABLE_SIZE);
-
 
     this.empty = new Array(ClosedHashBucket.CLOSED_HASH_TABLE_SIZE);
     this.deleted = new Array(ClosedHashBucket.CLOSED_HASH_TABLE_SIZE);
@@ -300,11 +274,6 @@ ClosedHashBucket.prototype.setup = function()
 }
 
 
-
-
-
-
-
 ClosedHashBucket.prototype.resetAll = function()
 {
     this.commands = ClosedHashBucket.superclass.resetAll.call(this);
@@ -318,7 +287,6 @@ ClosedHashBucket.prototype.resetAll = function()
     return this.commands;
     // Clear array, etc
 }
-
 
 
 // NEED TO OVERRIDE IN PARENT
@@ -335,8 +303,6 @@ ClosedHashBucket.prototype.reset = function()
 }
 
 
-
-
 ClosedHashBucket.prototype.disableUI = function(event)
 {
     ClosedHashBucket.superclass.disableUI.call(this);
@@ -347,8 +313,6 @@ ClosedHashBucket.prototype.enableUI = function(event)
     ClosedHashBucket.superclass.enableUI.call(this);
 
 }
-
-
 
 
 var currentAlg;

@@ -40,44 +40,25 @@ ClosedHash.ARRAY_VERTICAL_SEPARATION = 100;
 
 ClosedHash.CLOSED_HASH_TABLE_SIZE  = 29;
 
-ClosedHash.ARRAY_Y_POS = 350;
-
-
 ClosedHash.INDEX_COLOR = "#0000FF";
-
-
-
-
-ClosedHash.MAX_DATA_VALUE = 999;
-
-ClosedHash.HASH_TABLE_SIZE  = 13;
-
-ClosedHash.ARRAY_Y_POS = 350;
-
-
-ClosedHash.INDEX_COLOR = "#0000FF";
-
-
 
 
 ClosedHash.prototype.init = function(am)
 {
     ClosedHash.superclass.init.call(this, am);
-    var w = this.getCanvasWidth();
-
-    this.elements_per_row = Math.floor(w / ClosedHash.ARRAY_ELEM_WIDTH);
-
-
-    //Change me!
-    this.nextIndex = 0;
-    //this.POINTER_ARRAY_ELEM_Y = h - ClosedHash.POINTER_ARRAY_ELEM_WIDTH;
     this.setup();
 }
+
+
+ClosedHash.prototype.sizeChanged = function()
+{
+    this.setup();
+}
+
 
 ClosedHash.prototype.addControls = function()
 {
     ClosedHash.superclass.addControls.call(this);
-
 
     var radioButtonList = this.addRadioButtonGroupToAlgorithmBar(["Linear Probing: f(i) = i",
                                                              "Quadratic Probing: f(i) = i * i",
@@ -93,7 +74,7 @@ ClosedHash.prototype.addControls = function()
     this.linearProblingButton.checked = true;
     this.currentHashingTypeButtonState = this.linearProblingButton;
 
-    // Add new controls
+    // Add new controls here
 
 }
 
@@ -108,7 +89,6 @@ ClosedHash.prototype.changeProbeType = function(newProbingType)
         {
             this.skipDist[i] = i;
         }
-
     }
     else if (newProbingType == this.quadraticProbingButton)
     {
@@ -119,20 +99,15 @@ ClosedHash.prototype.changeProbeType = function(newProbingType)
         {
             this.skipDist[i] = i * i;
         }
-
-
     }
     else if (newProbingType == this.doubleHashingButton)
     {
         this.doubleHashingButton.checked = true;
         this.currentHashingTypeButtonState = this.doubleHashingButton;
-
-
     }
     this.commands = this.resetAll();
     return this.commands;
 }
-
 
 
 ClosedHash.prototype.quadraticProbeCallback = function(event)
@@ -141,7 +116,6 @@ ClosedHash.prototype.quadraticProbeCallback = function(event)
     {
         this.implementAction(this.changeProbeType.bind(this),this.quadraticProbingButton);
     }
-
 }
 
 
@@ -151,7 +125,6 @@ ClosedHash.prototype.doubleHashingCallback = function(event)
     {
         this.implementAction(this.changeProbeType.bind(this),this.doubleHashingButton);
     }
-
 }
 
 ClosedHash.prototype.linearProbeCallback = function(event)
@@ -160,8 +133,8 @@ ClosedHash.prototype.linearProbeCallback = function(event)
     {
         this.implementAction(this.changeProbeType.bind(this),this.linearProblingButton);
     }
-
 }
+
 
 ClosedHash.prototype.insertElement = function(elem)
 {
@@ -184,7 +157,6 @@ ClosedHash.prototype.insertElement = function(elem)
         this.deleted[index] = false;
     }
     return this.commands;
-
 }
 
 
@@ -197,9 +169,8 @@ ClosedHash.prototype.resetSkipDist = function(elem, labelID)
     {
         this.skipDist[i] = this.skipDist[i-1] + skipVal;
     }
-
-
 }
+
 
 ClosedHash.prototype.getEmptyIndex = function(index, elem)
 {
@@ -227,6 +198,7 @@ ClosedHash.prototype.getEmptyIndex = function(index, elem)
     return foundIndex;
 }
 
+
 ClosedHash.prototype.getElemIndex = function(index, elem)
 {
     if (this.currentHashingTypeButtonState == this.doubleHashingButton)
@@ -247,7 +219,8 @@ ClosedHash.prototype.getElemIndex = function(index, elem)
         }
         else if (this.empty[candidateIndex] && !this.deleted[candidateIndex])
         {
-        break;                }
+            break;
+        }
     }
     if (this.currentHashingTypeButtonState == this.doubleHashingButton)
     {
@@ -255,6 +228,7 @@ ClosedHash.prototype.getElemIndex = function(index, elem)
     }
     return foundIndex;
 }
+
 
 ClosedHash.prototype.deleteElement = function(elem)
 {
@@ -278,6 +252,8 @@ ClosedHash.prototype.deleteElement = function(elem)
     return this.commands;
 
 }
+
+
 ClosedHash.prototype.findElement = function(elem)
 {
     this.commands = new Array();
@@ -293,7 +269,6 @@ ClosedHash.prototype.findElement = function(elem)
     else
     {
         this.cmd("SetText", this.ExplainLabel, "Finding Element: " + elem+ "  Not Found!")
-
     }
     return this.commands;
 }
@@ -303,6 +278,13 @@ ClosedHash.prototype.findElement = function(elem)
 
 ClosedHash.prototype.setup = function()
 {
+    this.animationManager.resetAll();
+    this.nextIndex = 0;
+
+    var w = this.getCanvasWidth();
+    this.elements_per_row = Math.floor(w / ClosedHash.ARRAY_ELEM_WIDTH);
+    //this.POINTER_ARRAY_ELEM_Y = h - ClosedHash.POINTER_ARRAY_ELEM_WIDTH;
+
     this.table_size = ClosedHash.CLOSED_HASH_TABLE_SIZE;
     this.skipDist = new Array(this.table_size);
     this.hashTableVisual = new Array(this.table_size);
@@ -346,7 +328,6 @@ ClosedHash.prototype.setup = function()
 }
 
 
-
 ClosedHash.prototype.resetAll = function()
 {
     this.commands = ClosedHash.superclass.resetAll.call(this);
@@ -360,7 +341,6 @@ ClosedHash.prototype.resetAll = function()
     return this.commands;
     // Clear array, etc
 }
-
 
 
 // NEED TO OVERRIDE IN PARENT
@@ -383,9 +363,6 @@ function resetCallback(event)
 }
 
 
-
-
-
 ClosedHash.prototype.disableUI = function(event)
 {
     ClosedHash.superclass.disableUI.call(this);
@@ -401,8 +378,6 @@ ClosedHash.prototype.enableUI = function(event)
     this.quadraticProbingButton.disabled = false;
     this.doubleHashingButton.disabled = false;
 }
-
-
 
 
 var currentAlg;
