@@ -55,8 +55,18 @@ function ObjectManager(canvas)
     this.statusReport = new AnimatedLabel(-1, "XXX", false, 30, this.ctx);
     this.statusReport.x = 30;
 
+    this.pruneNodesAndEdges = function() {
+        for (const arr of [this.Nodes, this.Edges, this.BackEdges]) {
+            var i = arr.length-1;
+            while (i >= 0 && arr[i] == null) i--;
+            arr.splice(i+1);
+        }
+    }
+
     this.draw = function()
     {
+        this.pruneNodesAndEdges();
+
         this.framenum++;
         if (this.framenum > 1000)
             this.framenum = 0;
