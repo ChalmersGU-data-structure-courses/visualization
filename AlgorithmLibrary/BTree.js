@@ -222,7 +222,7 @@ BTree.prototype.maxDegreeChangedHandler = function(newMaxDegree, event)
     if (this.max_degree != newMaxDegree) {
         this.implementAction(this.changeDegree.bind(this), newMaxDegree);
         this.animationManager.skipForward();
-        animationManager.clearHistory();
+        this.animationManager.clearHistory();
     }
 }
 
