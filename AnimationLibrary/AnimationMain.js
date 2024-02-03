@@ -40,7 +40,7 @@ function reorderSibling(node1, node2)
 // Utility function to read a cookie
 function getCookie(cookieName)
 {
-    console.log(document.cookie);
+    // console.log(`Current cookies: ${document.cookie}`);
     for (var cookie of document.cookie.split(";")) {
         var [x, y] = cookie.split("=", 2);
         if (x.trim() == cookieName) {
@@ -59,7 +59,7 @@ function setCookie(cookieName, value, expireDays)
         value += "; expires=" + exdate.toUTCString();
     }
     document.cookie = cookieName + "=" + value;
-    console.log(cookieName, value)
+    // console.log(`Setting cookie ${cookieName} = ${value}`);
 }
 
 
