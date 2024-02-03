@@ -53,27 +53,26 @@ function swapControlDiv()
 // Utility function to read a cookie
 function getCookie(cookieName)
 {
-    var i, x, y;
-    var cookies = document.cookie.split(";");
-    for (i = 0; i < cookies.length; i++)
-    {
-        x = cookies[i].substr(0,cookies[i].indexOf("="));
-        y = cookies[i].substr(cookies[i].indexOf("=")+1);
-        x = x.replace(/^\s+|\s+$/g,"");
-        if (x == cookieName)
-        {
-            return unescape(y);
+    console.log(document.cookie);
+    for (var cookie of document.cookie.split(";")) {
+        var [x, y] = cookie.split("=", 2);
+        if (x.trim() == cookieName) {
+            return decodeURIComponent(y);
         }
     }
 }
 
 // Utility funciton to write a cookie
-function setCookie(cookieName,value,expireDays)
+function setCookie(cookieName, value, expireDays)
 {
-    var exdate=new Date();
-    exdate.setDate(exdate.getDate() + expireDays);
-    var cookieValue=escape(value) + ((expireDays==null) ? "" : "; expires="+exdate.toUTCString());
-    document.cookie=cookieName + "=" + value;
+    value = encodeURIComponent(value);
+    if (expireDays > 0) {
+        var exdate = new Date();
+        exdate.setDate(exdate.getDate() + expireDays);
+        value += "; expires=" + exdate.toUTCString();
+    }
+    document.cookie = cookieName + "=" + value;
+    console.log(cookieName, value)
 }
 
 
