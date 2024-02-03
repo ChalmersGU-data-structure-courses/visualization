@@ -221,10 +221,9 @@ function doPlayPause()
 function initCanvas(canvas, generalControlBar, algorithmControlBar)
 {
     // UI nodes should be given, otherwise use defaults.
-    // This is the only place where getElementById is used
-    if(!canvas)              canvas              = document.getElementById("canvas");
-    if(!generalControlBar)   generalControlBar = document.getElementById("generalAnimationControls");
-    if(!algorithmControlBar) algorithmControlBar = document.getElementById("algorithmSpecificControls");
+    if (!canvas) canvas = document.getElementById("canvas");
+    generalControlBar = new Toolbar(generalControlBar || "generalAnimationControls");
+    algorithmControlBar = new Toolbar(algorithmControlBar || "algorithmSpecificControls");
 
     var objectManager = new ObjectManager(canvas);
     var animationManager = new AnimationManager(objectManager);
@@ -232,107 +231,56 @@ function initCanvas(canvas, generalControlBar, algorithmControlBar)
     animationManager.generalControlBar = generalControlBar;
     animationManager.algorithmControlBar = algorithmControlBar;
 
-    // Clear the control bars
-    if (generalControlBar) generalControlBar.innerHTML = "";
-    if (algorithmControlBar) algorithmControlBar.innerHTML = "";
-
-    animationManager.skipBackButton = animationManager.addControlToAnimationBar("Button", "Skip Back");
+    animationManager.skipBackButton = generalControlBar.addInput("Button", "Skip Back");
     animationManager.skipBackButton.onclick = animationManager.skipBack.bind(animationManager);
-    animationManager.stepBackButton = animationManager.addControlToAnimationBar("Button", "Step Back");
+    animationManager.stepBackButton = generalControlBar.addInput("Button", "Step Back");
     animationManager.stepBackButton.onclick = animationManager.stepBack.bind(animationManager);
-    animationManager.playPauseBackButton = animationManager.addControlToAnimationBar("Button", "Pause");
+    animationManager.playPauseBackButton = generalControlBar.addInput("Button", "Pause");
     animationManager.playPauseBackButton.onclick = doPlayPause.bind(animationManager);
-    animationManager.stepForwardButton = animationManager.addControlToAnimationBar("Button", "Step Forward");
+    animationManager.stepForwardButton = generalControlBar.addInput("Button", "Step Forward");
     animationManager.stepForwardButton.onclick = animationManager.step.bind(animationManager) ;
-    animationManager.skipForwardButton = animationManager.addControlToAnimationBar("Button", "Skip Forward");
+    animationManager.skipForwardButton = generalControlBar.addInput("Button", "Skip Forward");
     animationManager.skipForwardButton.onclick = animationManager.skipForward.bind(animationManager);
 
-
     var speed = getCookie("VisualizationSpeed");
-    if (speed == null || speed == "")
-    {
-        speed = ANIMATION_SPEED_DEFAULT;
-    }
-    else
-    {
-        speed = parseInt(speed);
-    }
+    speed = (speed == null || speed == "") ? ANIMATION_SPEED_DEFAULT : parseInt(speed);
 
-    var txtNode = document.createTextNode("speed:");
-    var tableEntry = document.createElement("td");
-    tableEntry.appendChild(txtNode);
-    if(generalControlBar)
-        generalControlBar.appendChild(tableEntry);
-
-    animationManager.speedSlider = animationManager.addControlToAnimationBar("Range", speed);
-    animationManager.speedSlider.setAttribute("min", ANIMATION_SPEED_SLIDER_MIN);
-    animationManager.speedSlider.setAttribute("max", ANIMATION_SPEED_SLIDER_MAX);
-    animationManager.speedSlider.setAttribute("step", ANIMATION_SPEED_SLIDER_STEP);
+    generalControlBar.addLabel("speed:");
+    animationManager.speedSlider = generalControlBar.addInput("Range", speed, {
+        min: ANIMATION_SPEED_SLIDER_MIN,
+        max: ANIMATION_SPEED_SLIDER_MAX,
+        step: ANIMATION_SPEED_SLIDER_STEP,
+    });
     animationManager.speedSlider.onchange = animationManager.setAnimationSpeed.bind(animationManager);
     animationManager.setAnimationSpeed(speed);
 
+    var width = getCookie("VisualizationWidth");
+    var height = getCookie("VisualizationHeight");
+    width = (width == null || width == "") ? canvas.width : parseInt(width);
+    height = (height == null || height == "") ? canvas.height : parseInt(height);
 
-    var width=getCookie("VisualizationWidth");
-    if (width == null || width == "")
-    {
-        width = canvas.width;
-    }
-    else
-    {
-        width = parseInt(width);
-    }
-    var height=getCookie("VisualizationHeight");
-    if (height == null || height == "")
-    {
-        height = canvas.height;
-    }
-    else
-    {
-        height = parseInt(height);
-    }
-
-    var swappedControls=getCookie("VisualizationControlSwapped");
-    this.swapped = swappedControls == "true"
-    if (this.swapped)
-    {
-        reorderSibling(this.canvas, generalControlBar.parentNode);
+    var swappedControls = getCookie("VisualizationControlSwapped");
+    this.swapped = (swappedControls == "true");
+    if (this.swapped) {
+        reorderSibling(this.canvas, generalControlBar.toolbar.parentNode);
     }
 
     canvas.width = width;
     canvas.height = height;
 
-
-
-    tableEntry = document.createElement("td");
-    txtNode = document.createTextNode(" w:");
-    tableEntry.appendChild(txtNode);
-    if(generalControlBar)
-    generalControlBar.appendChild(tableEntry);
-
-
-    animationManager.widthEntry = animationManager.addControlToAnimationBar("Text", canvas.width);
-    animationManager.widthEntry.size = 4;
+    generalControlBar.addLabel("w:");
+    animationManager.widthEntry = generalControlBar.addInput("Text", canvas.width, {size: 4});
     animationManager.widthEntry.onkeydown = returnSubmit(animationManager.widthEntry, animationManager.changeSize.bind(animationManager), 4, true);
 
-
-    tableEntry = document.createElement("td");
-    txtNode = document.createTextNode("       h:");
-    tableEntry.appendChild(txtNode);
-    if(generalControlBar)
-    generalControlBar.appendChild(tableEntry);
-
-    animationManager.heightEntry = animationManager.addControlToAnimationBar("Text", canvas.height);
+    generalControlBar.addLabel("h:");
+    animationManager.heightEntry = generalControlBar.addInput("Text", canvas.height);
     animationManager.heightEntry.onkeydown = returnSubmit(animationManager.heightEntry, animationManager.changeSize.bind(animationManager), 4, true);
 
-//    heightEntry.size = 4;
-    animationManager.sizeButton = animationManager.addControlToAnimationBar("Button", "Change Canvas Size");
-
+    animationManager.sizeButton = generalControlBar.addInput("Button", "Change Canvas Size");
     animationManager.sizeButton.onclick = animationManager.changeSize.bind(animationManager) ;
 
-
-    animationManager.swapButton = animationManager.addControlToAnimationBar("Button", "Move Controls");
+    animationManager.swapButton = generalControlBar.addInput("Button", "Move Controls");
     animationManager.swapButton.onclick = swapControlDiv.bind(animationManager);
-
 
     animationManager.addListener("AnimationStarted", animationManager, animStarted);
     animationManager.addListener("AnimationEnded", animationManager, animEnded);
@@ -1260,29 +1208,6 @@ function AnimationManager(objectManager)
 
 AnimationManager.inheritFrom(EventListener);
 
-AnimationManager.prototype.addControlToAnimationBar = function(type,name,containerType)
-{
-    // return a dummy object if we're not using a control bar
-    if(!this.generalControlBar)
-        return {};
-    if (containerType == undefined)
-    {
-        containerType = "input";
-    }
-    var element = document.createElement(containerType);
-
-    element.setAttribute("type", type);
-    element.setAttribute("value", name);
-
-
-    var tableEntry = document.createElement("td");
-
-    tableEntry.appendChild(element);
-
-    //Append the element in page (in span).
-    this.generalControlBar.appendChild(tableEntry);
-    return element;
-}
 
 function SingleAnimation(id, fromX, fromY, toX, toY)
 {
@@ -1291,4 +1216,74 @@ function SingleAnimation(id, fromX, fromY, toX, toY)
     this.fromY = fromY;
     this.toX = toX;
     this.toY = toY;
+}
+
+
+function Toolbar(toolbar)
+{
+    if (typeof(toolbar) == "string") {
+        toolbar = document.getElementById(toolbar);
+    }
+    this.toolbar = toolbar;
+    if (toolbar.tagName.toLowerCase() == "table") {
+        toolbar.innerHTML = "<tr></tr>";
+    } else {
+        toolbar.innerHTML = "<table><tr></tr></table>";
+    }
+
+    this.addElement = function(element, attrs) {
+        if (attrs) {
+            for (var name in attrs) {
+                element.setAttribute(name, attrs[name]);
+            }
+        }
+        var td = document.createElement("td");
+        td.appendChild(element);
+        this.toolbar.getElementsByTagName("tr")[0].appendChild(td);
+        return element;
+    }
+
+    this.addControl = function(tag, attrs) {
+        var element = document.createElement(tag);
+        return this.addElement(element, attrs);
+    }
+
+    this.addLabel = function(label) {
+        return this.addElement(document.createTextNode(label));
+    }
+
+    this.addInput = function(type, value, attrs) {
+        if (!attrs) attrs = {};
+        attrs["type"] = type;
+        attrs["value"] = value;
+        return this.addControl("input", attrs);
+    }
+
+    this.addCheckbox = function(labelText) {
+        var label = document.createElement("label");
+        var checkbox = document.createElement("input");
+        checkbox.setAttribute("type", "checkbox");
+        label.append(checkbox, labelText);
+        this.addElement(label);
+        return checkbox;
+    }
+
+    this.addRadioButtons = function(labelTexts, groupName) {
+        var span = document.createElement("span");
+        var radioList = [];
+        for (var i = 0; i < labelTexts.length; i++)
+        {
+            var label = document.createElement("label");
+            var radio = document.createElement("input");
+            radio.setAttribute("type", "radio");
+            radio.setAttribute("name", groupName);
+            radio.setAttribute("value", labelTexts[i]);
+            label.append(radio, labelTexts[i]);
+            if (i > 0) span.append(document.createElement("br"));
+            span.append(label);
+            radioList.push(radio);
+        }
+        this.addElement(span);
+        return radioList;
+    }
 }

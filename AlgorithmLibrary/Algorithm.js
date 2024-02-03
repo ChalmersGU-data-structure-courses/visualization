@@ -311,95 +311,23 @@ Algorithm.prototype.cmd = function()
 
 Algorithm.prototype.addLabelToAlgorithmBar = function(labelName)
 {
-    var element = document.createTextNode(labelName);
-
-    var tableEntry = document.createElement("td");
-    tableEntry.appendChild(element);
-
-    //Append the element in page (in span).
-    var controlBar = this.animationManager.algorithmControlBar;
-    if(controlBar)
-        controlBar.appendChild(tableEntry);
-
-    return element;
+    return this.animationManager.algorithmControlBar.addLabel(labelName);
 }
 
-// TODO:  Make this stackable like radio butons
-//        (keep backwards compatible, thought)
 Algorithm.prototype.addCheckboxToAlgorithmBar = function(boxLabel)
 {
-    var element = document.createElement("input");
-
-    element.setAttribute("type", "checkbox");
-    element.setAttribute("value", boxLabel);
-
-    var label = document.createTextNode(boxLabel);
-
-    var tableEntry = document.createElement("td");
-    tableEntry.appendChild(element);
-    tableEntry.appendChild(label);
-
-    //Append the element in page (in span).
-    var controlBar = this.animationManager.algorithmControlBar;
-    if(controlBar)
-        controlBar.appendChild(tableEntry);
-
-    return element;
+    return this.animationManager.algorithmControlBar.addCheckbox(boxLabel);
 }
 
 Algorithm.prototype.addRadioButtonGroupToAlgorithmBar = function(buttonNames, groupName)
 {
-    var buttonList = [];
-    var newTable = document.createElement("table");
-
-    for (var i = 0; i < buttonNames.length; i++)
-    {
-        var midLevel = document.createElement("tr");
-        var bottomLevel = document.createElement("td");
-
-        var button = document.createElement("input");
-        button.setAttribute("type", "radio");
-        button.setAttribute("name", groupName);
-        button.setAttribute("value", buttonNames[i]);
-        bottomLevel.appendChild(button);
-        midLevel.appendChild(bottomLevel);
-        var txtNode = document.createTextNode(" " + buttonNames[i]);
-        bottomLevel.appendChild(txtNode);
-        newTable.appendChild(midLevel);
-        buttonList.push(button);
-    }
-
-    var topLevelTableEntry = document.createElement("td");
-    topLevelTableEntry.appendChild(newTable);
-
-    var controlBar = this.animationManager.algorithmControlBar;
-    if(controlBar)
-        controlBar.appendChild(topLevelTableEntry);
-
-    return buttonList
+    return this.animationManager.algorithmControlBar.addRadioButtons(buttonNames, groupName);
 }
 
 
-Algorithm.prototype.addControlToAlgorithmBar = function(type, name) {
-
-    var element = document.createElement("input");
-
-    element.setAttribute("type", type);
-    element.setAttribute("value", name);
-//    element.setAttribute("name", name);
-
-
-    var tableEntry = document.createElement("td");
-
-    tableEntry.appendChild(element);
-
-    //Append the element in page (in span).
-    var controlBar = this.animationManager.algorithmControlBar;
-    if(controlBar)
-        controlBar.appendChild(tableEntry);
-
-    return element;
-
+Algorithm.prototype.addControlToAlgorithmBar = function(type, name)
+{
+    return this.animationManager.algorithmControlBar.addInput(type, name);
 }
 
 
