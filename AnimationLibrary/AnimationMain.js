@@ -37,19 +37,6 @@ function reorderSibling(node1, node2)
 }
 
 
-function swapControlDiv()
-{
-    this.swapped = !this.swapped;
-    if (this.swapped) {
-        reorderSibling(this.canvas, this.generalControlBar.toolbar.parentNode);
-        setCookie("VisualizationControlSwapped", "true", 30);
-    } else {
-        reorderSibling(this.generalControlBar.toolbar.parentNode, this.canvas);
-        setCookie("VisualizationControlSwapped", "false", 30);
-    }
-}
-
-
 // Utility function to read a cookie
 function getCookie(cookieName)
 {
@@ -259,9 +246,9 @@ function initCanvas(canvas, generalControlBar, algorithmControlBar)
     height = (height == null || height == "") ? canvas.height : parseInt(height);
 
     var swappedControls = getCookie("VisualizationControlSwapped");
-    this.swapped = (swappedControls == "true");
-    if (this.swapped) {
-        reorderSibling(this.canvas, generalControlBar.toolbar.parentNode);
+    animationManager.swapped = (swappedControls == "true");
+    if (animationManager.swapped) {
+        reorderSibling(canvas, generalControlBar.toolbar.parentNode);
     }
 
     canvas.width = width;
@@ -279,7 +266,7 @@ function initCanvas(canvas, generalControlBar, algorithmControlBar)
     animationManager.sizeButton.onclick = animationManager.changeSize.bind(animationManager) ;
 
     animationManager.swapButton = generalControlBar.addInput("Button", "Move Controls");
-    animationManager.swapButton.onclick = swapControlDiv.bind(animationManager);
+    animationManager.swapButton.onclick = animationManager.swapControlDiv.bind(animationManager);
 
     animationManager.addListener("AnimationStarted", animationManager, animStarted);
     animationManager.addListener("AnimationEnded", animationManager, animEnded);
@@ -391,6 +378,19 @@ function AnimationManager(objectManager)
     }
 
 
+    this.swapControlDiv = function()
+    {
+        this.swapped = !this.swapped;
+        if (this.swapped) {
+            reorderSibling(this.canvas, this.generalControlBar.toolbar.parentNode);
+            setCookie("VisualizationControlSwapped", "true", 30);
+        } else {
+            reorderSibling(this.generalControlBar.toolbar.parentNode, this.canvas);
+            setCookie("VisualizationControlSwapped", "false", 30);
+        }
+    }
+    
+    
     this.changeSize = function()
     {
 
