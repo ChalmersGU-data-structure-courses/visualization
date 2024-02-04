@@ -37,11 +37,6 @@
 //  Undo objects (which are themselves controlled by AnimationMain
 
 
-// TODO:
-//       1.  Add proper throws for all error conditions (perhaps guarded by
-//           an assert-like structure that can be turned off for production?)
-//       2.  Refactor this code so that it uses the same object syntax (with
-//           prototypes) as te rest of the code.  (low priority)
 function ObjectManager(canvas)
 {
     this.Nodes = [];
@@ -55,18 +50,9 @@ function ObjectManager(canvas)
     this.statusReport = new AnimatedLabel(-1, "XXX", false, 30, this.ctx);
     this.statusReport.x = 30;
 
-    this.pruneNodesAndEdges = function() {
-        for (const arr of [this.Nodes, this.Edges, this.BackEdges]) {
-            var i = arr.length-1;
-            while (i >= 0 && arr[i] == null) i--;
-            arr.splice(i+1);
-        }
-    }
 
     this.draw = function()
     {
-        this.pruneNodesAndEdges();
-
         this.framenum++;
         if (this.framenum > 1000)
             this.framenum = 0;
@@ -74,95 +60,70 @@ function ObjectManager(canvas)
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); // clear canvas
         this.statusReport.y = this.canvas.height - 15;
 
-        var i;
-        var j;
-        for (i = 0; i < this.Nodes.length; i++)
-        {
-            if (this.Nodes[i] != null && !this.Nodes[i].highlighted && this.Nodes[i].addedToScene && !this.Nodes[i].alwaysOnTop)
-            {
+        for (var i = 0; i < this.Nodes.length; i++) {
+            if (this.Nodes[i] != null && !this.Nodes[i].highlighted && this.Nodes[i].addedToScene && !this.Nodes[i].alwaysOnTop) {
                 this.Nodes[i].draw(this.ctx);
             }
         }
-        for (i = 0; i < this.Nodes.length; i++)
-        {
-            if (this.Nodes[i] != null && (this.Nodes[i].highlighted && !this.Nodes[i].alwaysOnTop) && this.Nodes[i].addedToScene)
-            {
+
+        for (var i = 0; i < this.Nodes.length; i++) {
+            if (this.Nodes[i] != null && (this.Nodes[i].highlighted && !this.Nodes[i].alwaysOnTop) && this.Nodes[i].addedToScene) {
                 this.Nodes[i].pulseHighlight(this.framenum);
                 this.Nodes[i].draw(this.ctx);
             }
         }
 
-        for (i = 0; i < this.Nodes.length; i++)
-        {
-            if (this.Nodes[i] != null && this.Nodes[i].alwaysOnTop && this.Nodes[i].addedToScene)
-            {
+        for (var i = 0; i < this.Nodes.length; i++) {
+            if (this.Nodes[i] != null && this.Nodes[i].alwaysOnTop && this.Nodes[i].addedToScene) {
                 this.Nodes[i].pulseHighlight(this.framenum);
                 this.Nodes[i].draw(this.ctx);
             }
         }
 
-
-        for (i = 0; i < this.Edges.length; i++)
-        {
-            if (this.Edges[i] != null)
-            {
-                for (j = 0; j < this.Edges[i].length; j++)
-                {
-                    if (this.Edges[i][j].addedToScene)
-                    {
+        for (var i = 0; i < this.Edges.length; i++) {
+            if (this.Edges[i] != null) {
+                for (var j = 0; j < this.Edges[i].length; j++) {
+                    if (this.Edges[i][j].addedToScene) {
                         this.Edges[i][j].pulseHighlight(this.framenum);
                         this.Edges[i][j].draw(this.ctx);
                     }
-
                 }
-
             }
         }
+
         this.statusReport.draw(this.ctx);
-
-    }
-
-    this.update = function ()
-    {
-
-
     }
 
 
-    this.setLayers = function(shown,layers)
+    this.update = function() 
     {
-        for (var i = 0; i < layers.length; i++)
-        {
+    }
+
+
+    this.setLayers = function(shown, layers)
+    {
+        for (var i = 0; i < layers.length; i++) {
             this.activeLayers[layers[i]] = shown;
         }
         this.resetLayers();
-
     }
 
 
-    this.addHighlightCircleObject = function(objectID, objectColor, radius)
-    {
-        if (this.Nodes[objectID] != null && this.Nodes[objectID] != undefined)
-        {
-                  throw "addHighlightCircleObject:Object with same ID (" + String(objectID) + ") already Exists!"
+    this.addHighlightCircleObject = function(objectID, objectColor, radius) {
+        if (this.Nodes[objectID] != null) {
+            throw new Error(`addHighlightCircleObject: Object with same ID (${objectID}) already exists`);
         }
         var newNode = new HighlightCircle(objectID, objectColor, radius)
         this.Nodes[objectID] = newNode;
     }
 
-    this.setEdgeAlpha = function(fromID, toID, alphaVal)
-    {
+
+    this.setEdgeAlpha = function(fromID, toID, alphaVal) {
         var oldAlpha = 1.0;
-        if (this.Edges[fromID] != null &&
-            this.Edges[fromID] != undefined)
-        {
+        if (this.Edges[fromID] != null) {
             var len = this.Edges[fromID].length;
-            for (var i = len - 1; i >= 0; i--)
-            {
-                if (this.Edges[fromID][i] != null &&
-                    this.Edges[fromID][i] != undefined &&
-                    this.Edges[fromID][i].Node2 == this.Nodes[toID])
-                {
+            for (var i = len - 1; i >= 0; i--) {
+                if (this.Edges[fromID][i] != null && this.Edges[fromID][i].Node2 == this.Nodes[toID]) {
                     oldAlpha = this.Edges[fromID][i].alpha
                     this.Edges[fromID][i].alpha = alphaVal;
                 }
@@ -172,144 +133,101 @@ function ObjectManager(canvas)
 
     }
 
-    this.setAlpha = function(nodeID, alphaVal)
+    this.setAlpha = function(objectID, alphaVal)
     {
-        if (this.Nodes[nodeID] != null && this.Nodes[nodeID] != undefined)
-        {
-            this.Nodes[nodeID].setAlpha(alphaVal);
+        if (this.Nodes[objectID] != null) {
+            this.Nodes[objectID].setAlpha(alphaVal);
         }
     }
 
-    this.getAlpha = function(nodeID)
+    this.getAlpha = function(objectID)
     {
-        if (this.Nodes[nodeID] != null && this.Nodes[nodeID] != undefined)
-        {
-            return this.Nodes[nodeID].getAlpha();
-        }
-        else
-        {
+        if (this.Nodes[objectID] == null) {
             return -1;
         }
+        return this.Nodes[objectID].getAlpha();
     }
 
-    this.getTextColor = function(nodeID, index)
+    this.getTextColor = function(objectID, index)
     {
-        if (this.Nodes[nodeID] != null && this.Nodes[nodeID] != undefined)
-        {
-            return this.Nodes[nodeID].getTextColor(index);
-        }
-        else
-        {
+        if (this.Nodes[objectID] == null) {
             return "#000000";
         }
-
+        return this.Nodes[objectID].getTextColor(index);
     }
 
-    this.setTextColor = function(nodeID, color, index)
+
+    this.setTextColor = function(objectID, color, index)
     {
-        if (this.Nodes[nodeID] != null && this.Nodes[nodeID] != undefined)
-        {
-            this.Nodes[nodeID].setTextColor(color, index);
+        if (this.Nodes[objectID] != null) {
+            this.Nodes[objectID].setTextColor(color, index);
         }
     }
 
 
-    this.setHighlightIndex = function(nodeID, index)
+    this.setHighlightIndex = function(objectID, index)
     {
-        if (this.Nodes[nodeID] != null && this.Nodes[nodeID] != undefined)
-        {
-            this.Nodes[nodeID].setHighlightIndex(index);
+        if (this.Nodes[objectID] != null) {
+            this.Nodes[objectID].setHighlightIndex(index);
         }
     }
-
-
-
 
 
     this.setAllLayers = function(layers)
     {
         this.activeLayers = [];
-        for(var i = 0; i < layers.length; i++)
-        {
+        for(var i = 0; i < layers.length; i++) {
             this.activeLayers[layers[i]] = true;
         }
         this.resetLayers();
     }
 
+
     this.resetLayers = function()
     {
-        var i
-        for (i = 0; i <this.Nodes.length; i++)
-        {
-            if (this.Nodes[i] != null && this.Nodes[i] != undefined)
-            {
-                this.Nodes[i].addedToScene = this.activeLayers[this.Nodes[i].layer] == true;
+        for (var i = 0; i < this.Nodes.length; i++) {
+            if (this.Nodes[i] != null) {
+                this.Nodes[i].addedToScene = this.activeLayers[this.Nodes[i].layer];
             }
         }
-        for (i = this.Edges.length - 1; i >= 0; i--)
-        {
-            if (this.Edges[i] != null && this.Edges[i] != undefined)
-            {
-                for (var j = 0; j < this.Edges[i].length; j++)
-                {
-                    if (this.Edges[i][j] != null && this.Edges[i][j] != undefined)
-                    {
+        for (var i = this.Edges.length - 1; i >= 0; i--) {
+            if (this.Edges[i] != null) {
+                for (var j = 0; j < this.Edges[i].length; j++) {
+                    if (this.Edges[i][j] != null) {
                             this.Edges[i][j].addedToScene =
-                                this.activeLayers[this.Edges[i][j].Node1.layer] == true &&
-                                this.activeLayers[this.Edges[i][j].Node2.layer] == true;
+                                this.activeLayers[this.Edges[i][j].Node1.layer] &&
+                                this.activeLayers[this.Edges[i][j].Node2.layer];
                     }
-
                 }
-
             }
-
         }
-
     }
-
 
 
     this.setLayer = function(objectID, layer)
     {
-        if (this.Nodes[objectID] != null && this.Nodes[objectID] != undefined)
-        {
+        if (this.Nodes[objectID] != null) {
             this.Nodes[objectID].layer = layer;
-            if (this.activeLayers[layer])
-            {
-                this.Nodes[objectID].addedToScene = true;
-            }
-            else
-            {
-                this.Nodes[objectID].addedToScene = false;
-            }
-            if (this.Edges[objectID] != null && this.Edges[objectID] != undefined)
-            {
-                for (var i = 0; i < this.Edges[objectID].length; i++)
-                {
+            this.Nodes[objectID].addedToScene = Boolean(this.activeLayers[layer]);
+            if (this.Edges[objectID] != null) {
+                for (var i = 0; i < this.Edges[objectID].length; i++) {
                     var nextEdge = this.Edges[objectID][i];
-                    if (nextEdge != null && nextEdge != undefined)
-                    {
-                        nextEdge.addedToScene = ((nextEdge.Node1.addedToScene) &&
-                                                (nextEdge.Node2.addedToScene));
-
+                    if (nextEdge != null) {
+                        nextEdge.addedToScene = nextEdge.Node1.addedToScene && nextEdge.Node2.addedToScene;
                     }
                 }
             }
-            if (this.BackEdges[objectID] != null && this.BackEdges[objectID] != undefined)
-            {
-                for (var i = 0; i < this.BackEdges[objectID].length; i++)
-                {
+            if (this.BackEdges[objectID] != null) {
+                for (var i = 0; i < this.BackEdges[objectID].length; i++) {
                     var nextEdge = this.BackEdges[objectID][i];
-                    if (nextEdge != null && nextEdge != undefined)
-                    {
-                        nextEdge.addedToScene = ((nextEdge.Node1.addedToScene) &&
-                                                 (nextEdge.Node2.addedToScene));
-
+                    if (nextEdge != null) {
+                        nextEdge.addedToScene = nextEdge.Node1.addedToScene && nextEdge.Node2.addedToScene;
                     }
                 }
             }
         }
     }
+
 
     this.clearAllObjects = function()
     {
@@ -321,131 +239,107 @@ function ObjectManager(canvas)
 
     this.setForegroundColor = function(objectID, color)
     {
-        if (this.Nodes[objectID] != null && this.Nodes[objectID] != undefined)
-        {
+        if (this.Nodes[objectID] != null) {
             this.Nodes[objectID].setForegroundColor(color);
-
         }
     }
+
 
     this.setBackgroundColor = function(objectID, color)
     {
-        if (this.Nodes[objectID] != null)
-        {
+        if (this.Nodes[objectID] != null) {
             this.Nodes[objectID].setBackgroundColor(color);
-
         }
     }
 
-    this.setHighlight = function(nodeID, val)
+    this.setHighlight = function(objectID, val)
     {
-        if (this.Nodes[nodeID] == null  || this.Nodes[nodeID] == undefined)
-        {
-            // TODO:  Error here?
-            return;
+        if (this.Nodes[objectID] == null) {
+            return;  // TODO:  Error here?
         }
-        this.Nodes[nodeID].setHighlight(val);
+        this.Nodes[objectID].setHighlight(val);
     }
 
 
-    this.getHighlight = function(nodeID)
+    this.getHighlight = function(objectID)
     {
-        if (this.Nodes[nodeID] == null  || this.Nodes[nodeID] == undefined)
-        {
-            // TODO:  Error here?
-            return false;
+        if (this.Nodes[objectID] == null) {
+            return false;  // TODO:  Error here?
         }
-        return this.Nodes[nodeID].getHighlight();
+        return this.Nodes[objectID].getHighlight();
     }
 
 
-    this.getHighlightIndex = function(nodeID)
+    this.getHighlightIndex = function(objectID)
     {
-        if (this.Nodes[nodeID] == null  || this.Nodes[nodeID] == undefined)
-        {
-            // TODO:  Error here?
-            return false;
+        if (this.Nodes[objectID] == null) {
+            return false;  // TODO:  Error here?
         }
-        return this.Nodes[nodeID].getHighlightIndex();
+        return this.Nodes[objectID].getHighlightIndex();
     }
 
-    this.setWidth = function(nodeID, val)
+
+    this.setWidth = function(objectID, val)
     {
-        if (this.Nodes[nodeID] == null  || this.Nodes[nodeID] == undefined)
-        {
-            // TODO:  Error here?
-            return;
+        if (this.Nodes[objectID] == null) {
+            return;  // TODO:  Error here?
         }
-        this.Nodes[nodeID].setWidth(val);
+        this.Nodes[objectID].setWidth(val);
     }
 
-    this.setHeight = function(nodeID, val)
+
+    this.setHeight = function(objectID, val)
     {
-        if (this.Nodes[nodeID] == null  || this.Nodes[nodeID] == undefined)
-        {
-            // TODO:  Error here?
-            return;
+        if (this.Nodes[objectID] == null) {
+            return;  // TODO:  Error here?
         }
-        this.Nodes[nodeID].setHeight(val);
+        this.Nodes[objectID].setHeight(val);
     }
 
 
-    this.getHeight = function(nodeID)
+    this.getHeight = function(objectID)
     {
-        if (this.Nodes[nodeID] == null  || this.Nodes[nodeID] == undefined)
-        {
-            // TODO:  Error here?
-            return -1;
+        if (this.Nodes[objectID] == null) {
+            return -1;  // TODO:  Error here?
         }
-        return this.Nodes[nodeID].getHeight();
+        return this.Nodes[objectID].getHeight();
     }
 
-    this.getWidth = function(nodeID)
+
+    this.getWidth = function(objectID)
     {
-        if (this.Nodes[nodeID] == null  || this.Nodes[nodeID] == undefined)
-        {
-            // TODO:  Error here?
-            return -1;
+        if (this.Nodes[objectID] == null) {
+            return -1;  // TODO:  Error here?
         }
-        return this.Nodes[nodeID].getWidth();
+        return this.Nodes[objectID].getWidth();
     }
+
 
     this.backgroundColor = function(objectID)
     {
-        if (this.Nodes[objectID] != null)
-        {
-            return this.Nodes[objectID].backgroundColor;
+        if (this.Nodes[objectID] == null) {
+            return "#FFFFFF";
         }
-        else
-        {
-            return '#000000';
-        }
+        return this.Nodes[objectID].backgroundColor;
     }
+
 
     this.foregroundColor = function(objectID)
     {
-        if (this.Nodes[objectID] != null)
-        {
-            return this.Nodes[objectID].foregroundColor;
+        if (this.Nodes[objectID] == null) {
+            return "#000000";
         }
-        else
-        {
-            return '#000000';
-        }
+        return this.Nodes[objectID].foregroundColor;
     }
 
 
     this.disconnect = function(objectIDfrom,objectIDto)
     {
         var undo = null;
-        var i;
-        if (this.Edges[objectIDfrom] != null)
-        {
+        if (this.Edges[objectIDfrom] != null) {
             var len = this.Edges[objectIDfrom].length;
-            for (i = len - 1; i >= 0; i--)
-            {
-                if (this.Edges[objectIDfrom][i] != null && this.Edges[objectIDfrom][i].Node2 == this.Nodes[objectIDto])
-                {
+            for (var i = len - 1; i >= 0; i--) {
+                if (this.Edges[objectIDfrom][i] != null && this.Edges[objectIDfrom][i].Node2 == this.Nodes[objectIDto]) {
                     var deleted = this.Edges[objectIDfrom][i];
                     undo = deleted.createUndoDisconnect();
                     this.Edges[objectIDfrom][i] = this.Edges[objectIDfrom][len - 1];
@@ -454,13 +348,10 @@ function ObjectManager(canvas)
                 }
             }
         }
-        if (this.BackEdges[objectIDto] != null)
-        {
+        if (this.BackEdges[objectIDto] != null) {
             len = this.BackEdges[objectIDto].length;
-            for (i = len - 1; i >= 0; i--)
-            {
-                if (this.BackEdges[objectIDto][i] != null && this.BackEdges[objectIDto][i].Node1 == this.Nodes[objectIDfrom])
-                {
+            for (var i = len - 1; i >= 0; i--) {
+                if (this.BackEdges[objectIDto][i] != null && this.BackEdges[objectIDto][i].Node1 == this.Nodes[objectIDfrom]) {
                     deleted = this.BackEdges[objectIDto][i];
                     // Note:  Don't need to remove this child, did it above on the regular edge
                     this.BackEdges[objectIDto][i] = this.BackEdges[objectIDto][len - 1];
@@ -472,24 +363,21 @@ function ObjectManager(canvas)
         return undo;
     }
 
+
     this.deleteIncident = function(objectID)
     {
         var undoStack = [];
 
-        if (this.Edges[objectID] != null)
-        {
+        if (this.Edges[objectID] != null) {
             var len = this.Edges[objectID].length;
-            for (var i = len - 1; i >= 0; i--)
-            {
+            for (var i = len - 1; i >= 0; i--) {
                 var deleted = this.Edges[objectID][i];
                 var node2ID = deleted.Node2.identifier();
                 undoStack.push(deleted.createUndoDisconnect());
 
                 var len2 = this.BackEdges[node2ID].length;
-                for (var j = len2 - 1; j >=0; j--)
-                {
-                    if (this.BackEdges[node2ID][j] == deleted)
-                    {
+                for (var j = len2 - 1; j >=0; j--) {
+                    if (this.BackEdges[node2ID][j] == deleted) {
                         this.BackEdges[node2ID][j] = this.BackEdges[node2ID][len2 - 1];
                         len2 -= 1;
                         this.BackEdges[node2ID].pop();
@@ -498,20 +386,17 @@ function ObjectManager(canvas)
             }
             this.Edges[objectID] = null;
         }
-        if (this.BackEdges[objectID] != null)
-        {
+
+        if (this.BackEdges[objectID] != null) {
             len = this.BackEdges[objectID].length;
-            for (i = len - 1; i >= 0; i--)
-            {
+            for (i = len - 1; i >= 0; i--) {
                 deleted = this.BackEdges[objectID][i];
                 var node1ID = deleted.Node1.identifier();
                 undoStack.push(deleted.createUndoDisconnect());
 
                 len2 = this.Edges[node1ID].length;
-                for (j = len2 - 1; j >=0; j--)
-                {
-                    if (this.Edges[node1ID][j] == deleted)
-                    {
+                for (j = len2 - 1; j >=0; j--) {
+                    if (this.Edges[node1ID][j] == deleted) {
                         this.Edges[node1ID][j] = this.Edges[node1ID][len2 - 1];
                         len2 -= 1;
                         this.Edges[node1ID].pop();
@@ -526,100 +411,91 @@ function ObjectManager(canvas)
 
     this.removeObject = function(ObjectID)
     {
-        var OldObject = this.Nodes[ObjectID];
-        if (ObjectID == this.Nodes.length - 1)
-        {
+        var oldObject = this.Nodes[ObjectID];
+        if (ObjectID == this.Nodes.length - 1) {
             this.Nodes.pop();
         }
-        else
-        {
+        else {
             this.Nodes[ObjectID] = null;
         }
+        return oldObject;
     }
+
 
     this.getObject = function(objectID)
     {
-        if (this.Nodes[objectID] == null || this.Nodes[objectID] == undefined)
-        {
-            throw "getObject:Object with ID (" + String(objectID) + ") does not exist"
+        if (this.Nodes[objectID] == null) {
+            throw new Error(`getObject: Object with ID (${objectID}) does not exist`);
         }
         return this.Nodes[objectID];
-
     }
 
 
-    this.addCircleObject = function (objectID, objectLabel)
+    this.addCircleObject = function(objectID, objectLabel)
     {
-            if (this.Nodes[objectID] != null && this.Nodes[objectID] != undefined)
-            {
-                throw "addCircleObject:Object with same ID (" + String(objectID) + ") already Exists!"
-            }
-            var newNode = new AnimatedCircle(objectID, objectLabel);
-            this.Nodes[objectID] = newNode;
-    }
-
-    this.getNodeX = function(nodeID)
-    {
-        if (this.Nodes[nodeID] == null || this.Nodes[nodeID] == undefined)
-        {
-            throw "getting x position of an object that does not exit";
+        if (this.Nodes[objectID] != null) {
+            throw new Error(`addCircleObject: Object with same ID (${objectID}) already exists`);
         }
-        return this.Nodes[nodeID].x;
+        var newNode = new AnimatedCircle(objectID, objectLabel);
+        this.Nodes[objectID] = newNode;
     }
+
+
+    this.getNodeX = function(objectID)
+    {
+        if (this.Nodes[objectID] == null) {
+            throw new Error(`getNodeX: Object with ID (${objectID}) does not exist`);
+        }
+        return this.Nodes[objectID].x;
+    }
+
+
+    this.getNodeY = function(objectID)
+    {
+        if (this.Nodes[objectID] == null) {
+            throw new Error(`getNodeY: Object with ID (${objectID}) does not exist`);
+        }
+        return this.Nodes[objectID].y;
+    }
+
 
     this.getTextWidth = function(text)
     {
         // TODO:  Need to make fonts more flexible, and less hardwired.
-        this.ctx.font = '10px sans-serif';
-        if (text==undefined)
-        {
-            w = 3;
+        if (text == null) {
+            return 3;
         }
+        this.ctx.font = '10px sans-serif';
         var strList = text.split("\n");
         var width = 0;
-        if (strList.length == 1)
-        {
+        if (strList.length == 1) {
              width = this.ctx.measureText(text).width;
         }
-        else
-        {
-            for (var i = 0; i < strList.length; i++)
-            {
+        else {
+            for (var i = 0; i < strList.length; i++) {
                 width = Math.max(width, this.ctx.measureText(strList[i]).width);
             }
         }
-
         return width;
     }
 
-    this.setText = function(nodeID, text, index)
+
+    this.setText = function(objectID, text, index)
     {
-        if (this.Nodes[nodeID] == null || this.Nodes[nodeID] == undefined)
-        {
+        if (this.Nodes[objectID] == null) {
             return;
-            throw "setting text of an object that does not exit";
+            throw new Error(`setText: Object with ID (${objectID}) does not exist`);
         }
-        this.Nodes[nodeID].setText(text, index, this.getTextWidth(text));
-
+        this.Nodes[objectID].setText(text, index, this.getTextWidth(text));
     }
 
-    this.getText = function(nodeID, index)
-    {
-        if (this.Nodes[nodeID] == null || this.Nodes[nodeID] == undefined)
-        {
-            throw "getting text of an object that does not exit";
-        }
-        return this.Nodes[nodeID].getText(index);
 
-    }
-
-    this.getNodeY = function(nodeID)
+    this.getText = function(objectID, index)
     {
-        if (this.Nodes[nodeID] == null || this.Nodes[nodeID] == undefined)
-        {
-            throw "getting y position of an object that does not exit";
+        if (this.Nodes[objectID] == null) {
+            throw new Error(`getText: Object with ID (${objectID}) does not exist`);
         }
-        return this.Nodes[nodeID].y;
+        return this.Nodes[objectID].getText(index);
     }
 
 
@@ -627,59 +503,46 @@ function ObjectManager(canvas)
     {
         var fromObj = this.Nodes[objectIDfrom];
         var toObj = this.Nodes[objectIDto];
-        if (fromObj == null || toObj == null)
-        {
-            throw "Tried to connect two nodes, one didn't exist!";
+        if (fromObj == null || toObj == null) {
+            throw new Error(`connectEdge: One of the objects ${objectIDfrom} or ${objectIDto} do not exist`);
         }
         var l = new Line(fromObj,toObj, color, curve, directed, lab, connectionPoint);
-        if (this.Edges[objectIDfrom] == null || this.Edges[objectIDfrom] == undefined)
-        {
+        if (this.Edges[objectIDfrom] == null) {
             this.Edges[objectIDfrom] = [];
         }
-        if (this.BackEdges[objectIDto] == null || this.BackEdges[objectIDto] == undefined)
-        {
+        if (this.BackEdges[objectIDto] == null) {
             this.BackEdges[objectIDto] = [];
         }
         l.addedToScene = fromObj.addedToScene && toObj.addedToScene;
         this.Edges[objectIDfrom].push(l);
         this.BackEdges[objectIDto].push(l);
-
     }
 
 
     this.setNull = function(objectID, nullVal)
     {
-        if (this.Nodes[objectID] != null && this.Nodes[objectID] != undefined)
-        {
+        if (this.Nodes[objectID] != null) {
             this.Nodes[objectID].setNull(nullVal);
-
         }
     }
+
 
     this.getNull = function(objectID)
     {
-        if (this.Nodes[objectID] != null && this.Nodes[objectID] != undefined)
-        {
-            return this.Nodes[objectID].getNull();
+        if (this.Nodes[objectID] == null) {
+            return false;  // TODO:  Error here?
         }
-        return false;  // TODO:  Error here?
+        return this.Nodes[objectID].getNull();
     }
-
 
 
     this.setEdgeColor = function(fromID, toID, color) // returns old color
     {
         var oldColor ="#000000";
-        if (this.Edges[fromID] != null &&
-            this.Edges[fromID] != undefined)
-        {
+        if (this.Edges[fromID] != null) {
             var len = this.Edges[fromID].length;
-            for (var i = len - 1; i >= 0; i--)
-            {
-                if (this.Edges[fromID][i] != null &&
-                    this.Edges[fromID][i] != undefined &&
-                    this.Edges[fromID][i].Node2 == this.Nodes[toID])
-                {
+            for (var i = len - 1; i >= 0; i--) {
+                if (this.Edges[fromID][i] != null && this.Edges[fromID][i].Node2 == this.Nodes[toID]) {
                     oldColor = this.Edges[fromID][i].color();
                     this.Edges[fromID][i].setColor(color);
                 }
@@ -688,84 +551,67 @@ function ObjectManager(canvas)
         return oldColor;
     }
 
+
     this.alignTop = function(id1, id2)
     {
-        if (this.Nodes[id1] == null || this.Nodes[id1] == undefined ||
-            this.Nodes[id2] == null || this.Nodes[id2] == undefined)
-        {
-            throw "Tring to align two nodes, one doesn't exist: " + String(id1) + "," + String(id2);
+        if (this.Nodes[id1] == null || this.Nodes[id2] == null) {
+            throw new Error(`alignTop: One of the objects ${id1} or ${id2} do not exist`);
         }
         this.Nodes[id1].alignTop(this.Nodes[id2]);
     }
 
-    this.alignLeft = function(id1, id2)
+
+    this.alignBottom = function(id1, id2)
     {
-        if (this.Nodes[id1] == null || this.Nodes[id1] == undefined ||
-            this.Nodes[id2] == null || this.Nodes[id2] == undefined)
-        {
-            throw "Tring to align two nodes, one doesn't exist: " + String(id1) + "," + String(id2);
+        if (this.Nodes[id1] == null || this.Nodes[id2] == null) {
+            throw new Error(`alignBottom: One of the objects ${id1} or ${id2} do not exist`);
+        }
+        this.Nodes[id1].alignBottom(this.Nodes[id2]);
+    }
+
+
+    this.alignLeft = function(id1, id2) {
+        if (this.Nodes[id1] == null || this.Nodes[id2] == null) {
+            throw new Error(`alignLeft: One of the objects ${id1} or ${id2} do not exist`);
         }
         this.Nodes[id1].alignLeft(this.Nodes[id2]);
     }
 
+
     this.alignRight = function(id1, id2)
     {
-        if (this.Nodes[id1] == null || this.Nodes[id1] == undefined ||
-            this.Nodes[id2] == null || this.Nodes[id2] == undefined)
-        {
-            throw "Tring to align two nodes, one doesn't exist: " + String(id1) + "," + String(id2);
+        if (this.Nodes[id1] == null || this.Nodes[id2] == null) {
+            throw new Error(`alignRight: One of the objects ${id1} or ${id2} do not exist`);
         }
         this.Nodes[id1].alignRight(this.Nodes[id2]);
     }
 
 
-
     this.getAlignRightPos = function(id1, id2)
     {
-        if (this.Nodes[id1] == null || this.Nodes[id1] == undefined ||
-            this.Nodes[id2] == null || this.Nodes[id2] == undefined)
-        {
-            throw "Tring to align two nodes, one doesn't exist: " + String(id1) + "," + String(id2);
+        if (this.Nodes[id1] == null || this.Nodes[id2] == null) {
+            throw new Error(`getAlignRightPos: One of the objects ${id1} or ${id2} do not exist`);
         }
-            return this.Nodes[id1].getAlignRightPos(this.Nodes[id2]);
+        return this.Nodes[id1].getAlignRightPos(this.Nodes[id2]);
     }
+
 
     this.getAlignLeftPos = function(id1, id2)
     {
-        if (this.Nodes[id1] == null || this.Nodes[id1] == undefined ||
-            this.Nodes[id2] == null || this.Nodes[id2] == undefined)
-        {
-            throw "Tring to align two nodes, one doesn't exist: " + String(id1) + "," + String(id2);
+        if (this.Nodes[id1] == null || this.Nodes[id2] == null) {
+            throw new Error(`getAlignLeftPos: One of the objects ${id1} or ${id2} do not exist`);
         }
-            return this.Nodes[id1].getAlignLeftPos(this.Nodes[id2]);
-    }
-
-
-
-    this.alignBottom = function(id1, id2)
-    {
-        if (this.Nodes[id1] == null || this.Nodes[id1] == undefined ||
-            this.Nodes[id2] == null || this.Nodes[id2] == undefined)
-        {
-            throw "Tring to align two nodes, one doesn't exist: " + String(id1) + "," + String(id2);
-        }
-        this.Nodes[id1].alignBottom(this.Nodes[id2]);
+        return this.Nodes[id1].getAlignLeftPos(this.Nodes[id2]);
     }
 
 
     this.setEdgeHighlight = function(fromID, toID, val) // returns old color
     {
         var oldHighlight = false;
-        if (this.Edges[fromID] != null &&
-            this.Edges[fromID] != undefined)
-        {
+        if (this.Edges[fromID] != null) {
             var len = this.Edges[fromID].length;
-            for (var i = len - 1; i >= 0; i--)
-            {
-                if (this.Edges[fromID][i] != null &&
-                    this.Edges[fromID][i] != undefined &&
-                    this.Edges[fromID][i].Node2 == this.Nodes[toID])
-                {
+            for (var i = len - 1; i >= 0; i--) {
+                if (this.Edges[fromID][i] != null && this.Edges[fromID][i].Node2 == this.Nodes[toID]) {
                     oldHighlight = this.Edges[fromID][i].highlighted;
                     this.Edges[fromID][i].setHighlight(val);
                 }
@@ -773,13 +619,13 @@ function ObjectManager(canvas)
         }
         return oldHighlight;
     }
+
+
     this.addLabelObject = function(objectID, objectLabel, centering)
     {
-        if (this.Nodes[objectID] != null && this.Nodes[objectID] != undefined)
-        {
-            throw new Error("addLabelObject: Object Already Exists!");
+        if (this.Nodes[objectID] != null) {
+            throw new Error(`addLabelObject: Object with same ID (${objectID}) already exists`);
         }
-
         var newLabel = new AnimatedLabel(objectID, objectLabel, centering, this.getTextWidth(objectLabel),this.ctx);
         this.Nodes[objectID] = newLabel;
     }
@@ -787,10 +633,8 @@ function ObjectManager(canvas)
 
     this.addLinkedListObject = function(objectID, nodeLabel, width, height, linkPer, verticalOrientation, linkPosEnd, numLabels, backgroundColor, foregroundColor)
     {
-        if (this.Nodes[objectID] != null)
-        {
-            throw new Error("addLinkedListObject:Object with same ID already Exists!");
-            return;
+        if (this.Nodes[objectID] != null) {
+            throw new Error(`addLinkedListObject: Object with same ID (${objectID}) already exists`);
         }
         var newNode = new AnimatedLinkedList(objectID, nodeLabel, width, height, linkPer, verticalOrientation, linkPosEnd, numLabels, backgroundColor, foregroundColor);
         this.Nodes[objectID] = newNode;
@@ -799,69 +643,57 @@ function ObjectManager(canvas)
 
     this.getNumElements = function(objectID)
     {
+        if (this.Nodes[objectID] == null) {
+            throw new Error(`getNumElements: Object with ID (${objectID}) does not exist`);
+        }
         return this.Nodes[objectID].getNumElements();
     }
 
 
     this.setNumElements = function(objectID, numElems)
     {
+        if (this.Nodes[objectID] == null) {
+            return;  // TODO:  Error here?
+        }
         this.Nodes[objectID].setNumElements(numElems);
     }
+
+
     this.addBTreeNode = function(objectID, widthPerElem, height, numElems, backgroundColor, foregroundColor)
-     {
-         backgroundColor = (backgroundColor == undefined) ? "#FFFFFF" : backgroundColor;
-         foregroundColor = (foregroundColor == undefined) ? "#FFFFFF" : foregroundColor;
-
-         if (this.Nodes[objectID] != null && Nodes[objectID] != undefined)
-         {
-             throw "addBTreeNode:Object with same ID already Exists!";
-         }
-
-         var newNode = new AnimatedBTreeNode(objectID,widthPerElem, height, numElems, backgroundColor, foregroundColor);
-         this.Nodes[objectID] = newNode;
-     }
-
-     this.addRectangleObject = function(objectID,nodeLabel, width, height, xJustify , yJustify , backgroundColor, foregroundColor)
-     {
-         if (this.Nodes[objectID] != null || this.Nodes[objectID] != undefined)
-         {
-             throw new Error("addRectangleObject:Object with same ID already Exists!");
-         }
-         var newNode = new AnimatedRectangle(objectID, nodeLabel, width, height, xJustify, yJustify, backgroundColor, foregroundColor);
-         this.Nodes[objectID] = newNode;
-
-     }
-
-
-
-
-    this.setNodePosition = function(nodeID, newX, newY)
     {
-        if (this.Nodes[nodeID] == null || this.Nodes[nodeID] == undefined)
-        {
-            // TODO:  Error here?
+        if (this.Nodes[objectID] != null) {
+            throw new Error(`addBTreeNode: Object with same ID (${objectID}) already exists`);
+        }
+        if (!backgroundColor) backgroundColor = "#FFFFFF";
+        if (!foregroundColor) foregroundColor = "#FFFFFF";
+        var newNode = new AnimatedBTreeNode(objectID,widthPerElem, height, numElems, backgroundColor, foregroundColor);
+        this.Nodes[objectID] = newNode;
+    }
+
+
+    this.addRectangleObject = function(objectID,nodeLabel, width, height, xJustify , yJustify , backgroundColor, foregroundColor)
+    {
+        if (this.Nodes[objectID] != null) {
+            throw new Error(`addRectangleObject: Object with same ID (${objectID}) already exists`);
+        }
+        var newNode = new AnimatedRectangle(objectID, nodeLabel, width, height, xJustify, yJustify, backgroundColor, foregroundColor);
+        this.Nodes[objectID] = newNode;
+    }
+
+
+    this.setNodePosition = function(objectID, newX, newY)
+    {
+        if (this.Nodes[objectID] == null) {
+            return;  // TODO:  Error here?
+        }
+        if (newX == null || newY == null) {
             return;
         }
-        if (newX == undefined || newY == undefined)
-        {
-
-            return;
-        }
-        this.Nodes[nodeID].x = newX;
-        this.Nodes[nodeID].y = newY;
-        /* Don't need to dirty anything, since we repaint everything every frame
-         (TODO:  Revisit if we do conditional redraws)
-        */
-
+        this.Nodes[objectID].x = newX;
+        this.Nodes[objectID].y = newY;
+        // Don't need to dirty anything, since we repaint everything every frame
+        // (TODO:  Revisit if we do conditional redraws)
     }
 
 }
-
-
-
-
-
-
-
-
 
