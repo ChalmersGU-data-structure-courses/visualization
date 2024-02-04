@@ -25,13 +25,6 @@
 // or implied, of the University of San Francisco
 
 
-function reorderSibling(node1, node2)
-{
-    node1.parentNode.replaceChild(node1, node2);
-    node1.parentNode.insertBefore(node2, node1);
-}
-
-
 // Utility function to read a cookie
 function getCookie(cookieName)
 {
@@ -230,12 +223,6 @@ function initCanvas(canvas, generalControlBar, algorithmControlBar)
     width = (width == null || width == "") ? canvas.width : parseInt(width);
     height = (height == null || height == "") ? canvas.height : parseInt(height);
 
-    var swappedControls = getCookie("VisualizationControlSwapped");
-    animationManager.swapped = (swappedControls == "true");
-    if (animationManager.swapped) {
-        reorderSibling(canvas, generalControlBar.toolbar.parentNode);
-    }
-
     canvas.width = width;
     canvas.height = height;
 
@@ -249,9 +236,6 @@ function initCanvas(canvas, generalControlBar, algorithmControlBar)
 
     animationManager.sizeButton = generalControlBar.addInput("Button", "Change Canvas Size");
     animationManager.sizeButton.onclick = animationManager.changeSize.bind(animationManager) ;
-
-    animationManager.swapButton = generalControlBar.addInput("Button", "Move Controls");
-    animationManager.swapButton.onclick = animationManager.swapControlDiv.bind(animationManager);
 
     animationManager.addListener("AnimationStarted", animationManager, animStarted);
     animationManager.addListener("AnimationEnded", animationManager, animEnded);
@@ -339,19 +323,6 @@ function AnimationManager(objectManager)
     }
 
 
-    this.swapControlDiv = function()
-    {
-        this.swapped = !this.swapped;
-        if (this.swapped) {
-            reorderSibling(this.canvas, this.generalControlBar.toolbar.parentNode);
-            setCookie("VisualizationControlSwapped", "true", 30);
-        } else {
-            reorderSibling(this.generalControlBar.toolbar.parentNode, this.canvas);
-            setCookie("VisualizationControlSwapped", "false", 30);
-        }
-    }
-    
-    
     this.changeSize = function()
     {
         var width = parseInt(this.widthEntry.value);
