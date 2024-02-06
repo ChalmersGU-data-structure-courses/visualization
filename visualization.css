@@ -1,0 +1,135 @@
+@charset "utf-8";
+
+/* A mixture of the following two CSS resets:
+   - Josh Comeau: https://www.joshwcomeau.com/css/custom-css-reset/
+   - Andy Bell: https://piccalil.li/blog/a-more-modern-css-reset/
+*/
+
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+* {
+	margin: 0;
+	padding: 0;
+}
+input, button, textarea, select {
+	font: inherit;
+}
+body {
+	line-height: 1.5;
+	-webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4, button, input, label {
+  	line-height: 1.1;
+}
+p, h1, h2, h3, h4, h5, h6 {
+	overflow-wrap: break-word;
+}
+img, picture, video, canvas, svg {
+	display: block;
+	max-width: 100%;
+}
+
+/* End CSS reset */
+
+
+body {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 100%;
+	background-color: green;
+}
+
+section, p, h1, h2, h3, h4, h5, h6, ul, ol, dl {
+	padding-bottom: 1rem;
+}
+
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.2rem; }
+h3 { font-size: 1.1rem; }
+
+body > * {
+	padding-top: 1rem;
+	padding-left: 5%;
+	padding-right: 5%;
+}
+
+header, footer {
+	color: gold;
+	background-color: green;
+}
+
+#content {
+	background-color: lightyellow;
+}
+
+summary {
+	cursor: pointer;
+	list-style: none;
+}
+
+summary > * {
+	display: inline-block;
+}
+
+a {
+	color: inherit;
+}
+
+h1 a {
+	text-decoration: none;
+}
+
+ul, ol {
+	padding-left: 2em;
+}
+
+#selectorWrapper > select {
+	appearance: none;
+	padding: 6px 12px;
+	background-color: inherit;
+}
+
+canvas, #selectorWrapper > select {
+	border: solid 1px green;
+	border-radius: 5px;
+	width: 100%;
+}
+
+#selectorWrapper {
+	position: relative;
+	max-width: 1000px;
+}
+
+#selectorWrapper::after {
+	content: "▼";
+	color: green;
+	font-size: 1rem;
+	top: 10px;
+	right: 10px;
+	position: absolute;
+}
+
+
+canvas {
+	background-color: #FFFFFF;
+	width: 100%;
+	max-width: 1000px;
+}
+
+.toolbar > * {
+	margin-right: 6px;
+}
+
+.break {
+	padding-right: 12px;
+}
+
+input {
+	padding: 3px 6px;
+}
+
+input[type="checkbox"], input[type="radio"] {
+	width: 1.3em;
+	height: 1em;
+}
+
