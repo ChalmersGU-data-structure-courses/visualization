@@ -54,14 +54,13 @@ AnimatedBTreeNode.prototype.getNumElements = function()
     return this.numLabels;
 }
 
+
 AnimatedBTreeNode.prototype.getWidth = function()
 {
-    if (this.numLabels > 0)
-    {
+    if (this.numLabels > 0) {
         return  (this.widthPerElement * this.numLabels);
     }
-    else
-    {
+    else {
         return AnimatedBTreeNode.MIN_WIDTH;
     }
 }
@@ -69,20 +68,15 @@ AnimatedBTreeNode.prototype.getWidth = function()
 
 AnimatedBTreeNode.prototype.setNumElements = function(newNumElements)
 {
-    var i;
-    if (this.numLabels < newNumElements)
-    {
-        for (i = this.numLabels; i < newNumElements; i++)
-        {
+    if (this.numLabels < newNumElements) {
+        for (var i = this.numLabels; i < newNumElements; i++) {
             this.labels[i] = "";
             this.labelColors[i] = this.foregroundColor;
         }
         this.numLabels = newNumElements;
     }
-    else if (this.numLabels > newNumElements)
-    {
-        for (i = newNumElements; i < this.numLabels; i++)
-        {
+    else if (this.numLabels > newNumElements) {
+        for (var i = newNumElements; i < this.numLabels; i++) {
             this.labels[i] = null;
         }
         this.numLabels = newNumElements;
@@ -95,15 +89,18 @@ AnimatedBTreeNode.prototype.left = function()
     return this.x - this.getWidth() / 2.0;
 }
 
+
 AnimatedBTreeNode.prototype.right = function()
 {
     return this.x + this.getWidth() / 2.0;
 }
 
+
 AnimatedBTreeNode.prototype.top = function()
 {
     return this.y - this.nodeHeight / 2.0;
 }
+
 
 AnimatedBTreeNode.prototype.bottom = function()
 {
@@ -117,14 +114,12 @@ AnimatedBTreeNode.prototype.draw = function(context)
     var startY;
 
     startX = this.left();
-    if (startX == NaN)
-    {
+    if (startX == NaN) {
         startX = 0;
     }
     startY = this.top();
 
-    if (this.highlighted)
-    {
+    if (this.highlighted) {
         context.strokeStyle = "#ff0000";
         context.fillStyle = "#ff0000";
 
@@ -153,11 +148,10 @@ AnimatedBTreeNode.prototype.draw = function(context)
     context.fill();
 
     context.textAlign = 'center';
-    context.textBaseline   = 'middle';
+    context.textBaseline = 'middle';
 
 
-    for (var i = 0; i < this.numLabels; i++)
-    {
+    for (var i = 0; i < this.numLabels; i++) {
         var labelx = this.x - this.widthPerElement * this.numLabels / 2 + this.widthPerElement / 2 + i * this.widthPerElement;
         var labely = this.y
 
@@ -167,19 +161,16 @@ AnimatedBTreeNode.prototype.draw = function(context)
 }
 
 
-
 AnimatedBTreeNode.prototype.getHeight = function()
 {
     return this.nodeHeight;
 }
 
 
-
 AnimatedBTreeNode.prototype.setForegroundColor = function(newColor)
 {
     this.foregroundColor = newColor;
-    for (var i = 0; i < numLabels; i++)
-    {
+    for (var i = 0; i < numLabels; i++) {
         labelColor[i] = newColor;
     }
 }
@@ -188,16 +179,13 @@ AnimatedBTreeNode.prototype.setForegroundColor = function(newColor)
 // TODO:  Kill the magic numbers here
 AnimatedBTreeNode.prototype.getTailPointerAttachPos = function(fromX, fromY, anchor)
 {
-    if (anchor == 0)
-    {
+    if (anchor == 0) {
         return [this.left() + AnimatedBTreeNode.EDGE_POINTER_DISPLACEMENT, this.y];
     }
-    else if (anchor == this.numLabels)
-    {
+    else if (anchor == this.numLabels) {
         return [this.right() - AnimatedBTreeNode.EDGE_POINTER_DISPLACEMENT, this.y];
     }
-    else
-    {
+    else {
         return [this.left() + anchor * this.widthPerElement, this.y]
     }
 }
@@ -205,24 +193,19 @@ AnimatedBTreeNode.prototype.getTailPointerAttachPos = function(fromX, fromY, anc
 
 AnimatedBTreeNode.prototype.getHeadPointerAttachPos = function(fromX, fromY)
 {
-    if (fromY < this.y - this.nodeHeight / 2)
-    {
+    if (fromY < this.y - this.nodeHeight / 2) {
         return [this.x, this.y - this.nodeHeight / 2];
     }
-    else if (this.fromY > this.y + this.nodeHeight / 2)
-    {
+    else if (this.fromY > this.y + this.nodeHeight / 2) {
         return [this.x, this.y + this.nodeHeight / 2];
     }
-    else if (fromX  <  this.x - this.getWidth() / 2)
-    {
+    else if (fromX  <  this.x - this.getWidth() / 2) {
         return [this.x - this.getWidth() / 2, this.y];
     }
-    else
-    {
+    else {
         return [this.x + this.getWidth() / 2, this.y];
     }
 }
-
 
 
 AnimatedBTreeNode.prototype.createUndoDelete = function()
@@ -237,11 +220,13 @@ AnimatedBTreeNode.prototype.getTextColor = function(textIndex)
     return this.labelColors[textIndex];
 }
 
+
 AnimatedBTreeNode.prototype.getText = function(index)
 {
     index = (index == undefined) ? 0 : index;
     return this.labels[index];
 }
+
 
 AnimatedBTreeNode.prototype.setTextColor = function(color, textIndex)
 {
@@ -282,14 +267,11 @@ UndoDeleteBTreeNode.prototype.undoInitialStep = function(world)
 
     world.addBTreeNode(this.objectID, this.widthPerElem, this.nodeHeight, this.numElems, this.backgroundColor, this.foregroundColor);
     world.setNodePosition(this.objectID, this.posX, this.posY);
-    for (var i = 0; i < this.numElems; i++)
-    {
+    for (var i = 0; i < this.numElems; i++) {
         world.setText(this.objectID, this.labels[i], i);
         world.setTextColor(this.objectID, this.labelColors[i],i);
     }
     world.setHighlight(this.objectID, this.highlighted);
     world.setLayer(this.objectID, this.layer);
 }
-
-
 

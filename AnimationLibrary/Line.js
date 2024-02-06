@@ -71,8 +71,7 @@ function Line(n1, n2, color, cv, d, weight, anchorIndex)
 
     this.pulseHighlight = function(frameNum)
     {
-       if (this.highlighted)
-       {
+       if (this.highlighted) {
            var frameMod = frameNum / 14.0;
            var delta = Math.abs((frameMod) % (2 * LINE_range - 2) - LINE_range + 1)
            this.highlightDiff = delta + LINE_minHeightDiff;
@@ -81,8 +80,7 @@ function Line(n1, n2, color, cv, d, weight, anchorIndex)
     }
 
 
-    this.hasNode = function(n)
-    {
+    this.hasNode = function(n) {
         return ((this.Node1 == n) || (this.Node2 == n));
     }
 
@@ -95,14 +93,7 @@ function Line(n1, n2, color, cv, d, weight, anchorIndex)
 
     this.sign = function(n)
     {
-       if (n > 0)
-       {
-           return 1;
-       }
-       else
-       {
-           return -1;
-       }
+       return n > 0 ? 1 : -1;
     }
 
 
@@ -129,38 +120,35 @@ function Line(n1, n2, color, cv, d, weight, anchorIndex)
         context.moveTo(fromPos[0], fromPos[1]);
         context.quadraticCurveTo(controlX, controlY, toPos[0], toPos[1]);
         context.stroke();
-        //context.closePath();
+        // context.closePath();
 
         // Position of the edge label:  First, we will place it right along the
         // middle of the curve (or the middle of the line, for curve == 0)
-        var labelPosX = 0.25* fromPos[0] + 0.5*controlX + 0.25*toPos[0];
-        var labelPosY = 0.25* fromPos[1] + 0.5*controlY + 0.25*toPos[1];
+        var labelPosX = 0.25*fromPos[0] + 0.5*controlX + 0.25*toPos[0];
+        var labelPosY = 0.25*fromPos[1] + 0.5*controlY + 0.25*toPos[1];
 
         // Next, we push the edge position label out just a little in the direction of
         // the curve, so that the label doesn't intersect the cuve (as long as the label
         // is only a few characters, that is)
         var midLen = Math.sqrt(deltaY*deltaY + deltaX*deltaX);
-        if (midLen != 0)
-        {
-            labelPosX +=  (- deltaY * this.sign(this.curve))  / midLen * 10
+        if (midLen != 0) {
+            labelPosX += (-deltaY * this.sign(this.curve))  / midLen * 10
             labelPosY += ( deltaX * this.sign(this.curve))  / midLen * 10
         }
 
 
 
         context.textAlign = 'center';
-        context.font         = '10px sans-serif';
-        context.textBaseline   = 'middle';
+        context.font = this.textHeight + 'px sans-serif';
+        context.textBaseline = 'middle';
         context.fillText(this.edgeLabel, labelPosX, labelPosY);
 
-        if (this.directed)
-        {
+        if (this.directed) {
             var xVec = controlX - toPos[0];
             var yVec = controlY - toPos[1];
             var len = Math.sqrt(xVec * xVec + yVec*yVec);
 
-            if (len > 0)
-            {
+            if (len > 0) {
                 xVec = xVec / len
                 yVec = yVec / len;
 
@@ -173,25 +161,21 @@ function Line(n1, n2, color, cv, d, weight, anchorIndex)
                 context.stroke();
                 context.fill();
             }
-
         }
+    }
 
-       }
 
-
-       this.draw = function(ctx)
-       {
-           if (!this.addedToScene)
-           {
-               return;
-           }
-           ctx.globalAlpha = this.alpha;
-
-            if (this.highlighted)
-                this.drawArrow(this.highlightDiff, "#FF0000", ctx);
-            this.drawArrow(1, this.edgeColor, ctx);
-       }
-
+    this.draw = function(ctx)
+    {
+        if (!this.addedToScene) {
+            return;
+        }
+        ctx.globalAlpha = this.alpha;
+        if (this.highlighted) {
+            this.drawArrow(this.highlightDiff, "#FF0000", ctx);
+        }
+        this.drawArrow(1, this.edgeColor, ctx);
+    }
 
 }
 
@@ -212,12 +196,10 @@ function UndoConnect(from, to, createConnection, edgeColor, isDirected, cv, lab,
 
 UndoConnect.prototype.undoInitialStep = function(world)
 {
-    if (this.connect)
-    {
+    if (this.connect) {
         world.connectEdge(this.fromID, this.toID, this.color, this.curve, this.directed, this.edgeLabel,this.anchorPoint);
     }
-    else
-    {
+    else {
         world.disconnect(this.fromID,this.toID);
     }
 }

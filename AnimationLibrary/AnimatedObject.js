@@ -24,6 +24,8 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+AnimatedObject.DEFAULT_TEXT_HEIGHT = 14;
+
 function AnimatedObject()
 {
     this.backgroundColor = "#FFFFFF";
@@ -41,7 +43,7 @@ function AnimatedObject()
     this.range = 5;
     this.highlightIndex = -1;
     this.highlightIndexDirty = true;
-    this.textHeight = 10;
+    this.textHeight = this.DEFAULT_TEXT_HEIGHT;
 }
 
 AnimatedObject.prototype.alwaysOnTop = false;

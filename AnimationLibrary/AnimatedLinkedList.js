@@ -24,9 +24,9 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+
 function AnimatedLinkedList(id, val, wth, hgt, linkPer, verticalOrientation, linkPosEnd, numLab, fillColor, edgeColor)
 {
-    // call superclass' constructor, which calls init
     AnimatedLinkedList.superclass.constructor.call(this);
 
     this.w = wth;
@@ -61,86 +61,75 @@ function AnimatedLinkedList(id, val, wth, hgt, linkPer, verticalOrientation, lin
     }
 
     this.labels[0] = this.val;
-    this.highlighted = false;
 }
 AnimatedLinkedList.inheritFrom(AnimatedObject);
 
 
-AnimatedLinkedList.prototype.left = function()
-{
-    if (this.vertical)
-    {
-        return this.x - this.w / 2.0;
-    }
-    else if (this.linkPositionEnd)
-    {
-        return this.x - ((this.w * (1 - this.linkPercent)) / 2);
-    }
-    else
-    {
-        return this.x  - (this.w * (this.linkPercent + 1)) / 2;
-    }
-}
-
-
 AnimatedLinkedList.prototype.setNull = function(np)
 {
-    if (this.nullPointer != np)
-    {
+    if (this.nullPointer != np) {
         this.nullPointer = np;
     }
-
 }
+
 
 AnimatedLinkedList.prototype.getNull = function()
 {
     return this.nullPointer;
 }
 
+
+AnimatedLinkedList.prototype.left = function()
+{
+    if (this.vertical) {
+        return this.x - this.w / 2.0;
+    }
+    else if (this.linkPositionEnd) {
+        return this.x - ((this.w * (1 - this.linkPercent)) / 2);
+    }
+    else {
+        return this.x  - (this.w * (this.linkPercent + 1)) / 2;
+    }
+}
+
+
 AnimatedLinkedList.prototype.right = function()
 {
-    if (this.vertical)
-    {
+    if (this.vertical) {
         return this.x + this.w / 2.0;
     }
-    else if (this.linkPositionEnd)
-    {
+    else if (this.linkPositionEnd) {
         return this.x + ((this.w * (this.linkPercent + 1)) / 2);
     }
-    else
-    {
+    else {
         return this.x + (this.w * (1 - this.linkPercent)) / 2;
     }
 }
 
+
 AnimatedLinkedList.prototype.top = function()
 {
-    if (!this.vertical)
-    {
+    if (!this.vertical) {
         return this.y - this.h / 2.0;
     }
-    else if (this.linkPositionEnd)
-    {
+    else if (this.linkPositionEnd) {
         return this.y - (this.h * (1 -this.linkPercent)) / 2;
     }
-    else
-    {
+    else {
         return this.y - (this.h * (1 + this.linkPercent)) / 2;
     }
 }
 
+
 AnimatedLinkedList.prototype.bottom = function()
 {
-    if (!this.vertical)
-    {
+    if (!this.vertical) {
         return this.y + this.h / 2.0;
     }
-    else if (this.linkPositionEnd)
-    {
+    else if (this.linkPositionEnd) {
         return this.y + (this.h * (1 +this.linkPercent)) / 2;
     }
-    else
-    {
+    else {
         return this.y + (this.h * (1 - this.linkPercent)) / 2;
     }
 }
@@ -151,48 +140,39 @@ AnimatedLinkedList.prototype.bottom = function()
 //       which did drawing differently
 AnimatedLinkedList.prototype.resetTextPosition = function()
 {
-    if (this.vertical)
-    {
+    if (this.vertical) {
         this.labelPosX[0] = this.x;
 
         this.labelPosY[0] = this.y + this.h * (1-this.linkPercent)/2 *(1/this.numLabels - 1);
-        //                labelPosY[0] = -height * (1-linkPercent) / 2 + height*(1-linkPercent)/2*numLabels;
-        for (var i = 1; i < this.numLabels; i++)
-        {
-            this.labelPosY[i] = this.labelPosY[i-1] +  this.h*(1-this.linkPercent)/this.numLabels;
+        //   labelPosY[0] = -height * (1-linkPercent) / 2 + height*(1-linkPercent)/2*numLabels;
+        for (var i = 1; i < this.numLabels; i++) {
+            this.labelPosY[i] = this.labelPosY[i-1] + this.h*(1-this.linkPercent)/this.numLabels;
             this.labelPosX[i] = this.x;
         }
     }
-    else
-    {
+    else {
         this.labelPosY[0] = this.y;
         this.labelPosX[0] = this.x + this.w * (1-this.linkPercent)/2*(1/this.numLabels - 1);
-        for (var i = 1; i < this.numLabels; i++)
-        {
+        for (var i = 1; i < this.numLabels; i++) {
             this.labelPosY[i] = this.y;
             this.labelPosX[i] = this.labelPosX[i-1] +  this.w*(1-this.linkPercent)/this.numLabels;
         }
     }
-
 }
 
 
 AnimatedLinkedList.prototype.getTailPointerAttachPos = function(fromX, fromY, anchor)
 {
-    if (this.vertical && this.linkPositionEnd)
-    {
+    if (this.vertical && this.linkPositionEnd) {
         return [this.x, this.y + this.h / 2.0];
     }
-    else if (this.vertical && !this.linkPositionEnd)
-    {
+    else if (this.vertical && !this.linkPositionEnd) {
         return [this.x, this.y - this.h / 2.0];
     }
-    else if  (!this.vertical && this.linkPositionEnd)
-    {
+    else if (!this.vertical && this.linkPositionEnd) {
         return [this.x + this.w / 2.0, this.y];
     }
-    else // (!this.vertical && !this.linkPositionEnd)
-    {
+    else { // (!this.vertical && !this.linkPositionEnd)
         return [this.x - this.w / 2.0, this.y];
     }
 }
@@ -217,6 +197,7 @@ AnimatedLinkedList.prototype.setHeight = function(hght)
     this.resetTextPosition();
 }
 
+
 AnimatedLinkedList.prototype.getWidth = function()
 {
     return this.w;
@@ -227,6 +208,7 @@ AnimatedLinkedList.prototype.getHeight = function()
     return this.h;
 }
 
+
 AnimatedLinkedList.prototype.draw = function(context)
 {
     var startX;
@@ -235,8 +217,7 @@ AnimatedLinkedList.prototype.draw = function(context)
     startX = this.left();
     startY = this.top();
 
-    if (this.highlighted)
-    {
+    if (this.highlighted) {
         context.strokeStyle = "#ff0000";
         context.fillStyle = "#ff0000";
 
@@ -263,13 +244,10 @@ AnimatedLinkedList.prototype.draw = function(context)
     context.stroke();
     context.fill();
 
-    var i;
-    if (this.vertical)
-    {
+    if (this.vertical) {
         startX = this.left();
-        for (i= 1; i < this.numLabels; i++)
-        {
-            //TODO: this doesn't look right ...
+        for (var i = 1; i < this.numLabels; i++) {
+            // TODO: this doesn't look right ...
             startY = this.y + this.h*(1-this.linkPercent)*(i / this.numLabels - 1/2);
 
             context.beginPath();
@@ -279,11 +257,9 @@ AnimatedLinkedList.prototype.draw = function(context)
             context.stroke();
         }
     }
-    else
-    {
+    else {
         startY = this.top();
-        for (i = 1; i < this.numLabels; i++)
-        {
+        for (var i = 1; i < this.numLabels; i++) {
             startX = this.x + this.w*(1-this.linkPercent)*(i / this.numLabels - 1/2);
             context.beginPath();
             context.moveTo(startX ,startY);
@@ -293,93 +269,76 @@ AnimatedLinkedList.prototype.draw = function(context)
         }
     }
 
-    if (this.vertical && this.linkPositionEnd)
-    {
+    if (this.vertical && this.linkPositionEnd) {
         startX = this.left();
         startY = this.bottom() - this.h * this.linkPercent;
-
 
         context.beginPath();
         context.moveTo(startX + this.w ,startY);
         context.lineTo(startX, startY);
-        if (this.nullPointer)
-        {
+        if (this.nullPointer) {
             context.lineTo(this.startX + this.w, this.bottom());
         }
         context.closePath();
         context.stroke();
     }
-    else if (this.vertical && !this.linkPositionEnd)
-    {
+    else if (this.vertical && !this.linkPositionEnd) {
         startX = this.left();
         startY = this.top() + this.h * this.linkPercent;
 
         context.beginPath();
         context.moveTo(startX + this.w ,startY);
         context.lineTo(startX, startY);
-        if (this.nullPointer)
-        {
+        if (this.nullPointer) {
             context.lineTo(startX + this.w, this.top());
         }
         context.closePath();
         context.stroke();
-
     }
-    else if  (!this.vertical && this.linkPositionEnd)
-    {
+    else if (!this.vertical && this.linkPositionEnd) {
         startX = this.right() - this.w * this.linkPercent;
         startY = this.top();
 
         context.beginPath();
         context.moveTo(startX, startY + this.h);
         context.lineTo(startX, startY);
-        if (this.nullPointer)
-        {
+        if (this.nullPointer) {
             context.lineTo(this.right(), startY + this.h);
         }
         context.closePath();
         context.stroke();
-
     }
-    else // (!vertical && !linkPositionEnd)
-    {
+    else { // (!vertical && !linkPositionEnd)
         startX = this.left()  + this.w * this.linkPercent;
-        startY = this.top() ;
+        startY = this.top();
 
         context.beginPath();
         context.moveTo(startX, startY + this.h);
         context.lineTo(startX, startY);
-        if (this.nullPointer)
-        {
+        if (this.nullPointer) {
             context.lineTo(this.left(), startY);
         }
         context.closePath();
         context.stroke();
     }
 
-
     context.textAlign = 'center';
-    context.font         = '10px sans-serif';
-    context.textBaseline   = 'middle';
+    context.font = this.textHeight + 'px sans-serif';
+    context.textBaseline = 'middle';
     context.lineWidth = 1;
 
-
     this.resetTextPosition();
-    for (i = 0; i < this.numLabels; i++)
-    {
+    for (var i = 0; i < this.numLabels; i++) {
         context.fillStyle = this.labelColors[i];
         context.fillText(this.labels[i], this.labelPosX[i], this.labelPosY[i]);
     }
 }
 
 
-
 AnimatedLinkedList.prototype.setTextColor = function(color, textIndex)
 {
-
     this.labelColors[textIndex] = color;
 }
-
 
 
 AnimatedLinkedList.prototype.getTextColor = function(textIndex)
@@ -388,22 +347,17 @@ AnimatedLinkedList.prototype.getTextColor = function(textIndex)
 }
 
 
-
 AnimatedLinkedList.prototype.getText = function(index)
 {
     return this.labels[index];
 }
+
 
 AnimatedLinkedList.prototype.setText = function(newText, textIndex)
 {
     this.labels[textIndex] = newText;
     this.resetTextPosition();
 }
-
-
-
-
-
 
 
 AnimatedLinkedList.prototype.createUndoDelete = function()
@@ -413,14 +367,13 @@ AnimatedLinkedList.prototype.createUndoDelete = function()
                                     this.layer, this.nullPointer);
 }
 
+
 AnimatedLinkedList.prototype.setHighlight = function(value)
 {
-    if (value != this.highlighted)
-    {
+    if (value != this.highlighted) {
         this.highlighted = value;
     }
 }
-
 
 
 
@@ -453,8 +406,7 @@ UndoDeleteLinkedList.prototype.undoInitialStep =function(world)
     world.setNodePosition(this.objectID, this.posX, this.posY);
     world.setLayer(this.objectID, this.layer);
     world.setNull(this.objectID, this.nullPointer);
-    for (var i = 0; i < this.numLabels; i++)
-    {
+    for (var i = 0; i < this.numLabels; i++) {
         world.setText(this.objectID, this.labels[i], i);
         world.setTextColor(this.objectID, this.labelColors[i], i);
     }

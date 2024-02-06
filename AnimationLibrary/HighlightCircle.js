@@ -24,21 +24,15 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
-// "Class" animatedCircle
-
 
 var HighlightCircle = function(objectID, color, radius)
 {
-    // call superclass' constructor
     HighlightCircle.superclass.constructor.call(this);
 
     this.objectID = objectID;
     this.radius = radius;
     this.thickness = 4;
     this.foregroundColor = color;
-    this.x = 0;
-    this.y = 0;
-    this.alpha = 1;
 }
 HighlightCircle.inheritFrom(AnimatedObject);
 
@@ -49,7 +43,7 @@ HighlightCircle.prototype.draw = function(ctx)
     ctx.strokeStyle = this.foregroundColor;
     ctx.lineWidth = this.thickness;
     ctx.beginPath();
-    ctx.arc(this.x,this.y,this.radius,0,Math.PI*2, true);
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2, true);
     ctx.closePath();
     ctx.stroke();
 }

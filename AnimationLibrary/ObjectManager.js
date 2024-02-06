@@ -465,7 +465,7 @@ function ObjectManager(canvas)
         if (text == null) {
             return 3;
         }
-        this.ctx.font = '10px sans-serif';
+        this.ctx.font = AnimatedObject.DEFAULT_TEXT_HEIGHT + 'px sans-serif';
         var strList = text.split("\n");
         var width = 0;
         if (strList.length == 1) {
