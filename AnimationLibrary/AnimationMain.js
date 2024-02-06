@@ -75,10 +75,20 @@ function parseColor(clr, default_)
 }
 
 
-var ANIMATION_SPEED_DEFAULT = 75;
-var ANIMATION_SPEED_SLIDER_MIN = 25;
-var ANIMATION_SPEED_SLIDER_MAX = 100;
-var ANIMATION_SPEED_SLIDER_STEP = 25;
+var ANIMATION_SPEED_DEFAULT = "Fast";
+var ANIMATION_SPEEDS = {
+    "Slowest": 25,
+    "Slow": 50,
+    "Fast": 75,
+    "Fastest": 100,
+}
+
+var CANVAS_SIZE_DEFAULT = "Large";
+var CANVAS_SIZES = {
+    "Small":  {w: 500, h: 300},
+    "Medium": {w: 750, h: 450},
+    "Large":  {w:1000, h: 600},
+}
 
 
 function returnSubmit(field, funct, maxsize, intOnly)
@@ -139,7 +149,7 @@ function animEnded()
 {
     this.skipForwardButton.disabled = true;
     this.stepForwardButton.disabled = true;
-    if (this.skipBackButton.disabled == false && this.paused) {
+    if (this.skipBackButton.disabled == false && this.animationPaused) {
         this.stepBackButton.disabled = false;
     }
     // this.objectManager.statusReport.setText("Animation Completed");
@@ -148,7 +158,7 @@ function animEnded()
 }
 
 
-function anumUndoUnavailable()
+function animUndoUnavailable()
 {
     this.skipBackButton.disabled = true;
     this.stepBackButton.disabled = true;
@@ -165,19 +175,9 @@ function timeout()
 }
 
 
-function doPlayPause()
+function togglePlayPause()
 {
-    this.paused = !this.paused;
-    if (this.paused) {
-        this.playPauseBackButton.setAttribute("value", "play");
-        if (this.skipBackButton.disabled == false) {
-            this.stepBackButton.disabled = false;
-        }
-    }
-    else {
-        this.playPauseBackButton.setAttribute("value", "pause");
-    }
-    this.setPaused(this.paused);
+    this.setPaused(!this.animationPaused);
 }
 
 
@@ -185,7 +185,7 @@ function doPlayPause()
 function initCanvas(canvas, generalControlBar, algorithmControlBar)
 {
     // UI nodes should be given, otherwise use defaults.
-    if (!canvas) canvas = document.getElementById("canvas");
+    if (!(canvas instanceof HTMLElement)) canvas = document.getElementById(canvas || "canvas");
     generalControlBar = new Toolbar(generalControlBar || "generalAnimationControls");
     algorithmControlBar = new Toolbar(algorithmControlBar || "algorithmSpecificControls");
 
@@ -195,52 +195,43 @@ function initCanvas(canvas, generalControlBar, algorithmControlBar)
     animationManager.generalControlBar = generalControlBar;
     animationManager.algorithmControlBar = algorithmControlBar;
 
-    animationManager.skipBackButton = generalControlBar.addInput("Button", "Skip Back");
+    animationManager.skipBackButton = generalControlBar.addInput("Button", "⏮", {title: "Skip back"});
     animationManager.skipBackButton.onclick = animationManager.skipBack.bind(animationManager);
-    animationManager.stepBackButton = generalControlBar.addInput("Button", "Step Back");
+    animationManager.stepBackButton = generalControlBar.addInput("Button", "⏴", {title: "Step back"});
     animationManager.stepBackButton.onclick = animationManager.stepBack.bind(animationManager);
-    animationManager.playPauseBackButton = generalControlBar.addInput("Button", "Pause");
-    animationManager.playPauseBackButton.onclick = doPlayPause.bind(animationManager);
-    animationManager.stepForwardButton = generalControlBar.addInput("Button", "Step Forward");
+    animationManager.playPauseBackButton = generalControlBar.addInput("Button", "⏯︎", {title: "Run/pause animation"});
+    animationManager.playPauseBackButton.onclick = togglePlayPause.bind(animationManager);
+    animationManager.stepForwardButton = generalControlBar.addInput("Button", "⏵", {title: "Step forward"});
     animationManager.stepForwardButton.onclick = animationManager.step.bind(animationManager) ;
-    animationManager.skipForwardButton = generalControlBar.addInput("Button", "Skip Forward");
+    animationManager.skipForwardButton = generalControlBar.addInput("Button", "⏭", {title: "Skip forward"});
     animationManager.skipForwardButton.onclick = animationManager.skipForward.bind(animationManager);
 
-    var speed = getCookie("VisualizationSpeed");
-    speed = (speed == null || speed == "") ? ANIMATION_SPEED_DEFAULT : parseInt(speed);
+    animationManager.setPaused(false);
 
-    generalControlBar.addLabel("speed:");
-    animationManager.speedSlider = generalControlBar.addInput("Range", speed, {
-        min: ANIMATION_SPEED_SLIDER_MIN,
-        max: ANIMATION_SPEED_SLIDER_MAX,
-        step: ANIMATION_SPEED_SLIDER_STEP,
-    });
-    animationManager.speedSlider.onchange = animationManager.setAnimationSpeed.bind(animationManager);
+    generalControlBar.addBreak();
+
+    generalControlBar.addLabel("Animation speed:");
+    animationManager.speedSelector = generalControlBar.addSelect(Object.keys(ANIMATION_SPEEDS));
+    animationManager.speedSelector.onchange = animationManager.setAnimationSpeed.bind(animationManager);
+
+    var speed = getCookie("VisualizationSpeed");
+    if (!speed) speed = ANIMATION_SPEED_DEFAULT;
     animationManager.setAnimationSpeed(speed);
 
-    var width = getCookie("VisualizationWidth");
-    var height = getCookie("VisualizationHeight");
-    width = (width == null || width == "") ? canvas.width : parseInt(width);
-    height = (height == null || height == "") ? canvas.height : parseInt(height);
+    generalControlBar.addBreak();
 
-    canvas.width = width;
-    canvas.height = height;
+    generalControlBar.addLabel("Canvas size:");
+    animationManager.sizeSelector = generalControlBar.addSelect(Object.keys(CANVAS_SIZES));
+    animationManager.sizeSelector.onchange = animationManager.changeSize.bind(animationManager);
 
-    generalControlBar.addLabel("w:");
-    animationManager.widthEntry = generalControlBar.addInput("Text", canvas.width, {size: 4});
-    animationManager.widthEntry.onkeydown = returnSubmit(animationManager.widthEntry, animationManager.changeSize.bind(animationManager), 4, true);
-
-    generalControlBar.addLabel("h:");
-    animationManager.heightEntry = generalControlBar.addInput("Text", canvas.height);
-    animationManager.heightEntry.onkeydown = returnSubmit(animationManager.heightEntry, animationManager.changeSize.bind(animationManager), 4, true);
-
-    animationManager.sizeButton = generalControlBar.addInput("Button", "Change Canvas Size");
-    animationManager.sizeButton.onclick = animationManager.changeSize.bind(animationManager) ;
+    var size = getCookie("VisualizationSize");
+    if (!size) size = CANVAS_SIZE_DEFAULT;
+    animationManager.changeSize(size);
 
     animationManager.addListener("AnimationStarted", animationManager, animStarted);
     animationManager.addListener("AnimationEnded", animationManager, animEnded);
     animationManager.addListener("AnimationWaiting", animationManager, animWaiting);
-    animationManager.addListener("AnimationUndoUnavailable", animationManager, anumUndoUnavailable);
+    animationManager.addListener("AnimationUndoUnavailable", animationManager, animUndoUnavailable);
     return animationManager;
 }
 
@@ -256,9 +247,6 @@ function AnimationManager(objectManager)
     this.objectManager = objectManager;
 
     // Control variables for stopping / starting animation
-    // TODO: not sure what's the difference between paused and animationPaused
-    this.paused = false;
-
     this.animationPaused = false;
     this.awaitingStep = false;
     this.currentlyAnimating = false;
@@ -305,42 +293,51 @@ function AnimationManager(objectManager)
     this.setPaused = function(pausedValue)
     {
         this.animationPaused = pausedValue;
+        if (this.animationPaused) {
+            this.playPauseBackButton.setAttribute("value", "⏯︎");
+            this.playPauseBackButton.setAttribute("title", "Run animation");
+            if (this.skipBackButton.disabled == false) {
+                this.stepBackButton.disabled = false;
+            }
+        }
+        else {
+            this.playPauseBackButton.setAttribute("value", "⏸");
+            this.playPauseBackButton.setAttribute("title", "Pause animation");
+        }
         if (!this.animationPaused) {
             this.step();
         }
     }
 
-    // Set the speed of the animation, from 0 (slow) to 100 (fast)
-    this.setAnimationSpeed = function(newSpeed)
+    // Set the speed of the animation
+    this.setAnimationSpeed = function(speed)
     {
-        newSpeed = parseInt(newSpeed);
-        if (isNaN(newSpeed)) {
-            newSpeed = parseInt(this.speedSlider.value);
+        if (ANIMATION_SPEEDS.hasOwnProperty(speed)) {
+            this.speedSelector.value = speed;
+        } else {
+            speed = this.speedSelector.value;
         }
-        this.animationBlockLength = Math.floor((100-newSpeed) / 2);
-        setCookie("VisualizationSpeed", String(newSpeed), 30);
-        // console.log(`New speed: ${newSpeed}`);
+        var numericSpeed = ANIMATION_SPEEDS[speed];
+        this.animationBlockLength = Math.floor((100 - numericSpeed) / 2);
+        setCookie("VisualizationSpeed", speed, 30);
+        // console.log(`New animation speed: ${speed} = ${numericSpeed} --> animation block length: ${this.animationBlockLength}`);
     }
 
-
-    this.changeSize = function()
+    // Set the size of the canvas
+    this.changeSize = function(size)
     {
-        var width = parseInt(this.widthEntry.value);
-        var height = parseInt(this.heightEntry.value);
-
-        if (width > 100) {
-            this.canvas.width = width;
-            setCookie("VisualizationWidth", String(width), 30);
+        if (CANVAS_SIZES.hasOwnProperty(size)) {
+            this.sizeSelector.value = size;
+        } else {
+            size = this.sizeSelector.value;
         }
-        if (height > 100) {
-            this.canvas.height = height;
-            setCookie("VisualizationHeight", String(height), 30);
-        }
-        this.widthEntry.value = this.canvas.width;
-        this.heightEntry.value = this.canvas.height;
+        this.canvas.width = CANVAS_SIZES[size].w;
+        this.canvas.height = CANVAS_SIZES[size].h;
+        setCookie("VisualizationSize", size, 30);
+        // console.log(`New canvas size: ${size} = ${this.canvas.width} x ${this.canvas.height}`);
 
         this.animatedObjects.draw();
-        this.fireEvent("CanvasSizeChanged", {width:this.canvas.width, height:this.canvas.height});
+        this.fireEvent("CanvasSizeChanged", {width: this.canvas.width, height: this.canvas.height});
     }
 
 
@@ -365,7 +362,7 @@ function AnimationManager(objectManager)
 
         while (this.currentAnimation < this.AnimationSteps.length && !foundBreak) {
             var args = this.AnimationSteps[this.currentAnimation].split("<;>");
-            console.log(args);
+            // console.log("Command:", ...args);
             var cmd = args.shift().toUpperCase();
             var id = parseInt(args.shift());
             if (cmd == "CREATECIRCLE") {
@@ -535,7 +532,7 @@ function AnimationManager(objectManager)
                 var verticalOrientation = parseBool(args.shift(), true);
                 var linkPosEnd = parseBool(args.shift(), false);
                 var numLabels = parseInt(args.shift()) || 1;
-                var fgColor = "#FFFFFF", bgColor = "#000000";
+                var bgColor = "#FFFFFF", fgColor = "#000000";
                 this.animatedObjects.addLinkedListObject(
                     id, label, width, height, 
                     linkPercent, verticalOrientation, linkPosEnd, 
@@ -944,71 +941,83 @@ function Toolbar(toolbar)
         toolbar = document.getElementById(toolbar);
     }
     this.toolbar = toolbar;
-    if (toolbar.tagName.toLowerCase() == "table") {
-        toolbar.innerHTML = "<tr></tr>";
-    } else {
-        toolbar.innerHTML = "<table><tr></tr></table>";
-    }
+    toolbar.innerHTML = "";
+    toolbar.classList.add("toolbar");
 
-    this.addElement = function(element, attrs) 
+    this.element = function(tag, attrs, ...children)
     {
+        var element = document.createElement(tag);
         if (attrs) {
             for (var name in attrs) {
                 element.setAttribute(name, attrs[name]);
             }
         }
-        var td = document.createElement("td");
-        td.appendChild(element);
-        this.toolbar.getElementsByTagName("tr")[0].appendChild(td);
+        if (children) {
+            element.append(...children);
+        }
         return element;
     }
 
-    this.addControl = function(tag, attrs) 
-    {
-        var element = document.createElement(tag);
-        return this.addElement(element, attrs);
-    }
-
-    this.addLabel = function(label) 
-    {
-        return this.addElement(document.createTextNode(label));
-    }
-
-    this.addInput = function(type, value, attrs) 
+    this.input = function(type, value, attrs)
     {
         if (!attrs) attrs = {};
         attrs["type"] = type;
         attrs["value"] = value;
-        return this.addControl("input", attrs);
+        return this.element("input", attrs);
     }
 
-    this.addCheckbox = function(labelText) 
+    this.add = function(element)
     {
-        var label = document.createElement("label");
-        var checkbox = document.createElement("input");
-        checkbox.setAttribute("type", "checkbox");
-        label.append(checkbox, labelText);
-        this.addElement(label);
+        return this.toolbar.appendChild(element);
+    }
+
+    this.addBreak = function() 
+    {
+        return this.add(this.element("span", {class: "break"}));
+    }
+
+    this.addLabel = function(...content) 
+    {
+        return this.add(this.element("span", {class: "label"}, ...content));
+    }
+
+    this.addInput = function(type, value, attrs)
+    {
+        return this.add(this.input(type, value, attrs));
+    }
+
+    this.addCheckbox = function(label, attrs)
+    {
+        var checkbox = this.input("checkbox", label, attrs);
+        this.add(this.element("label", {}, checkbox, label));
         return checkbox;
     }
 
-    this.addRadioButtons = function(labelTexts, groupName) 
+    this.addRadio = function(label, group, attrs)
     {
-        var span = document.createElement("span");
+        var radio = this.input("radio", label, attrs);
+        radio.setAttribute("name", group);
+        this.add(this.element("label", {}, radio, label));
+        return radio;
+    }
+
+    this.addRadioButtons = function(labels, group, attrs)
+    {
         var radioList = [];
-        for (var i = 0; i < labelTexts.length; i++)
-        {
-            var label = document.createElement("label");
-            var radio = document.createElement("input");
-            radio.setAttribute("type", "radio");
-            radio.setAttribute("name", groupName);
-            radio.setAttribute("value", labelTexts[i]);
-            label.append(radio, labelTexts[i]);
-            if (i > 0) span.append(document.createElement("br"));
-            span.append(label);
-            radioList.push(radio);
+        for (var lbl of labels) {
+            radioList.push(this.addRadio(lbl, group, attrs));
         }
-        this.addElement(span);
         return radioList;
     }
+
+    this.addSelect = function(values, labels, attrs) {
+        var options = [];
+        for (var i = 0; i < values.length; i++) {
+            options.push(
+                this.element("option", {value: values[i]}, labels ? labels[i] : values[i])
+            );
+        }
+        return this.add(this.element("select", attrs, ...options));
+    }
 }
+

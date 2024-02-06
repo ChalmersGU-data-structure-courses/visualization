@@ -324,6 +324,10 @@ Algorithm.prototype.addRadioButtonGroupToAlgorithmBar = function(buttonNames, gr
     return this.animationManager.algorithmControlBar.addRadioButtons(buttonNames, groupName);
 }
 
+Algorithm.prototype.addSelectToAlgorithmBar = function(values, labels)
+{
+    return this.animationManager.algorithmControlBar.addSelect(values, labels);
+}
 
 Algorithm.prototype.addControlToAlgorithmBar = function(type, name)
 {
