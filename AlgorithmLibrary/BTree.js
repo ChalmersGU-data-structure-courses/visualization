@@ -138,19 +138,15 @@ BTree.prototype.addControls = function()
     this.clearButton.onclick = this.clearCallback.bind(this);
     this.controls.push(this.clearButton);
 
-    var i;
-    radioButtonNames = [];
-    for (i = BTree.MIN_MAX_DEGREE; i <= BTree.MAX_MAX_DEGREE; i++)
-    {
-        radioButtonNames.push("Max. Degree = " + String(i));
+    this.addLabelToAlgorithmBar("Max. degree");
+    var degreeValues = [], degreeLabels = [];
+    for (var i = BTree.MIN_MAX_DEGREE; i <= BTree.MAX_MAX_DEGREE; i++) {
+        degreeValues.push(i);
+        degreeLabels.push(`Max. degree ${i}`);
     }
-
-    this.maxDegreeRadioButtons = this.addRadioButtonGroupToAlgorithmBar(radioButtonNames, "MaxDegree");
-    this.maxDegreeRadioButtons[0].checked = true;
-    for (i = 0; i < this.maxDegreeRadioButtons.length; i++)
-    {
-        this.maxDegreeRadioButtons[i].onclick = this.maxDegreeChangedHandler.bind(this,i+BTree.MIN_MAX_DEGREE);
-    }
+    this.maxDegreeSelect = this.addSelectToAlgorithmBar(degreeValues, degreeLabels);
+    this.maxDegreeSelect.onchange = this.maxDegreeChangedHandler.bind(this);
+    this.controls.push(this.maxDegreeSelect);
 
     this.premptiveSplitBox = this.addCheckboxToAlgorithmBar("Preemtive Split / Merge (Even max degree only)");
     this.premptiveSplitBox.onclick = this.premtiveSplitCallback.bind(this);
@@ -188,18 +184,18 @@ BTree.prototype.enableUI = function(event)
     }
 
     // TODO  Only enable even maxdegree if preemptive merge is on
-    if (this.preemptiveSplit) {
-        var initialEven = BTree.MIN_MAX_DEGREE % 2;
-        for (var i = initialEven; i <= BTree.MAX_MAX_DEGREE - BTree.MIN_MAX_DEGREE; i+= 2)
-        {
-            this.maxDegreeRadioButtons[i].disabled = false;
-        }
-    }
-    else {
-        for (var i = 0; i < this.maxDegreeRadioButtons.length; i++) {
-            this.maxDegreeRadioButtons[i].disabled = false;
-        }
-    }
+    // if (this.preemptiveSplit) {
+    //     var initialEven = BTree.MIN_MAX_DEGREE % 2;
+    //     for (var i = initialEven; i <= BTree.MAX_MAX_DEGREE - BTree.MIN_MAX_DEGREE; i+= 2)
+    //     {
+    //         this.maxDegreeRadioButtons[i].disabled = false;
+    //     }
+    // }
+    // else {
+    //     for (var i = 0; i < this.maxDegreeRadioButtons.length; i++) {
+    //         this.maxDegreeRadioButtons[i].disabled = false;
+    //     }
+    // }
     if (this.max_degree % 2 == 0) {
         this.premptiveSplitBox.disabled = false;
     }
@@ -210,15 +206,15 @@ BTree.prototype.disableUI = function(event)
     for (var i = 0; i < this.controls.length; i++) {
         this.controls[i].disabled = true;
     }
-    for (var i = 0; i < this.maxDegreeRadioButtons.length; i++) {
-        this.maxDegreeRadioButtons[i].disabled = true;
-    }
     this.premptiveSplitBox.disabled = true;
 }
 
 
-BTree.prototype.maxDegreeChangedHandler = function(newMaxDegree, event)
+BTree.prototype.maxDegreeChangedHandler = function(event)
 {
+    var newMaxDegree = parseInt(this.maxDegreeSelect.value);
+    if (newMaxDegree < BTree.MIN_MAX_DEGREE) newMaxDegree = BTree.MIN_MAX_DEGREE;
+    if (newMaxDegree > BTree.MAX_MAX_DEGREE) newMaxDegree = BTree.MAX_MAX_DEGREE;
     if (this.max_degree != newMaxDegree) {
         this.implementAction(this.changeDegree.bind(this), newMaxDegree);
         this.animationManager.skipForward();
@@ -395,7 +391,8 @@ BTree.prototype.changeDegree = function(degree)
     var newDegree = degree;
     this.ignoreInputs = true;
     //TODO:  Check me!
-    this.maxDegreeRadioButtons[newDegree - BTree.MIN_MAX_DEGREE].checked = true;
+    this.maxDegreeSelect.value = newDegree;
+    // this.maxDegreeRadioButtons[newDegree - BTree.MIN_MAX_DEGREE].checked = true;
 
     this.ignoreInputs = false;
     this.max_degree = newDegree;
