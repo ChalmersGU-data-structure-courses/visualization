@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+
+<!-- Place your own title here -->
+<title>Example data structure visualization</title>
+
+<!-- CSS sheet for how the page is laid out -->
+<link rel="stylesheet" href="visualization.css">
+
+<!-- Javascript for the actual visualization code -->
+<script type="text/javascript" src="AnimationLibrary/CustomEvents.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/UndoFunctions.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/AnimatedObject.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/AnimatedLabel.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/AnimatedCircle.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/AnimatedRectangle.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/AnimatedLinkedList.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/AnimatedBTreeNode.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/HighlightCircle.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/Line.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/ObjectManager.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/AnimationMain.js"> </script>
+<script type="text/javascript" src="AlgorithmLibrary/Algorithm.js"> </script>
+
+<!-- Replace this with the file(s) of the algorithm/data structure you want to visualize -->
+<script type="text/javascript" src="AlgorithmLibrary/ExampleAlgorithm.js"> </script>
+
+</head>
+
+<body onload="init()">
+
+<header>
+  <!-- Place your header here -->
+  <h1>Example visualization (of a simple stack)</h1>
+</header>
+
+<!-- Any other content before... -->
+
+<section id="content">
+  <!-- Buttons to control specific animation (insert/find/etc) -->
+  <div id="algorithmSpecificControls"></div>
+  <!-- Drawing canvas where all animation is done. Note: can be resized in code -->
+  <canvas id="canvas"></canvas>
+  <!-- Buttons to control general animation (play/pause/undo/etc) -->
+  <div id="generalAnimationControls"></div>
+</section>
+
+<!-- ...or after the canvas -->
+
+<footer>
+<p>&copy;2011-2024 
+  <a href="http://www.cs.usfca.edu/galles">David Galles</a> (original code), 
+  <a href="https://github.com/chatziko">Kostas Chatzikokolakis</a> (updates), 
+  <a href="https://github.com/heatherleaf">Peter Ljunglöf</a> (updates)
+</p>
+</footer>
+
+</body>
+</html>
