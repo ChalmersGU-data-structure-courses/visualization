@@ -334,5 +334,8 @@ Algorithm.prototype.addControlToAlgorithmBar = function(type, name)
     return this.animationManager.algorithmControlBar.addInput(type, name);
 }
 
-
+Algorithm.prototype.addBreakToAlgorithmBar = function() 
+{
+    return this.animationManager.algorithmControlBar.addBreak();
+}
 
