@@ -988,16 +988,20 @@ function Toolbar(toolbar)
 
     this.addCheckbox = function(label, attrs)
     {
-        var checkbox = this.input("checkbox", label, attrs);
-        this.add(this.element("label", {}, checkbox, label));
+        if (!attrs) attrs = {};
+        if (!attrs.id) attrs.id = `${this.toolbar.id}-${this.toolbar.childElementCount}`;
+        var checkbox = this.addInput("checkbox", label, attrs);
+        this.add(this.element("label", {for: attrs.id}, label));
         return checkbox;
     }
 
     this.addRadio = function(label, group, attrs)
     {
-        var radio = this.input("radio", label, attrs);
-        radio.setAttribute("name", group);
-        this.add(this.element("label", {}, radio, label));
+        if (!attrs) attrs = {};
+        if (!attrs.id) attrs.id = `${this.toolbar.id}-${this.toolbar.childElementCount}`;
+        attrs.name = group;
+        var radio = this.addInput("radio", label, attrs);
+        this.add(this.element("label", {for: attrs.id}, label));
         return radio;
     }
 

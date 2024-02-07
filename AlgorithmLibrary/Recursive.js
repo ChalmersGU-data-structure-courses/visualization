@@ -113,26 +113,6 @@ Recursive.prototype.reset = function()
 
 
 
-
-Recursive.prototype.enableUI = function(event)
-{
-    for (var i = 0; i < this.controls.length; i++)
-    {
-        this.controls[i].disabled = false;
-    }
-
-
-}
-Recursive.prototype.disableUI = function(event)
-{
-    for (var i = 0; i < this.controls.length; i++)
-    {
-        this.controls[i].disabled = true;
-    }
-}
-
-
-
 Recursive.prototype.deleteActivation = function(activationRec)
 {
     var i;

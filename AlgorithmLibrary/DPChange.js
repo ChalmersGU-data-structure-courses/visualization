@@ -165,52 +165,34 @@ DPChange.prototype.init = function(am)
 
 DPChange.prototype.addControls = function()
 {
-    this.controls = [];
     this.fibField = this.addControlToAlgorithmBar("Text", "");
     this.fibField.onkeydown = this.returnSubmit(this.fibField,  this.emptyCallback.bind(this), 2, true);
-    this.controls.push(this.fibField);
 
     this.recursiveButton = this.addControlToAlgorithmBar("Button", "Change Recursive");
     this.recursiveButton.onclick = this.recursiveCallback.bind(this);
-    this.controls.push(this.recursiveButton);
 
     this.tableButton = this.addControlToAlgorithmBar("Button", "Change Table");
     this.tableButton.onclick = this.tableCallback.bind(this);
-    this.controls.push(this.tableButton);
 
     this.memoizedButton = this.addControlToAlgorithmBar("Button", "Change Memoized");
     this.memoizedButton.onclick = this.memoizedCallback.bind(this);
-    this.controls.push(this.memoizedButton);
-
 
     this.greedyButton = this.addControlToAlgorithmBar("Button", "Change Greedy");
     this.greedyButton.onclick = this.greedyCallback.bind(this);
-    this.controls.push(this.greedyButton);
-
-
-
 
     var coinLabels = [];
-    var i, j;
-    for (i = 0; i < DPChange.COINS.length; i++)
-    {
+    for (var i = 0; i < DPChange.COINS.length; i++) {
         var nextLabel = "Coins: [" + DPChange.COINS[i][0];
-        for (j = 1; j < DPChange.COINS[i].length; j++)
-        {
+        for (var j = 1; j < DPChange.COINS[i].length; j++) {
             nextLabel = nextLabel + ", " + DPChange.COINS[i][j];
         }
         nextLabel = nextLabel + "]";
         coinLabels.push(nextLabel);
     }
-
     this.coinTypeButtons = this.addRadioButtonGroupToAlgorithmBar(coinLabels, "CoinType");
-
-    for (i = 0; i < this.coinTypeButtons.length; i++)
-    {
+    for (var i = 0; i < this.coinTypeButtons.length; i++) {
         this.coinTypeButtons[i].onclick = this.coinTypeChangedCallback.bind(this, i);
-        this.controls.push(this.coinTypeButtons[i]);
     }
-
     this.coinTypeButtons[0].checked = true;
     this.coinIndex = 0;
 }
@@ -948,26 +930,6 @@ DPChange.prototype.changeMem = function(value, xPos, ID)
 
 
 }
-
-
-
-DPChange.prototype.enableUI = function(event)
-{
-    for (var i = 0; i < this.controls.length; i++)
-    {
-        this.controls[i].disabled = false;
-    }
-
-
-}
-DPChange.prototype.disableUI = function(event)
-{
-    for (var i = 0; i < this.controls.length; i++)
-    {
-        this.controls[i].disabled = true;
-    }
-}
-
 
 
 

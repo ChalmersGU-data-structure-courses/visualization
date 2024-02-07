@@ -332,21 +332,6 @@ Kruskal.prototype.reset = function()
 
 
 
-Kruskal.prototype.enableUI = function(event)
-{
-    this.startButton.disabled = false;
-
-
-    Kruskal.superclass.enableUI.call(this,event);
-}
-Kruskal.prototype.disableUI = function(event)
-{
-    this.startButton.disabled = true;
-
-    Kruskal.superclass.disableUI.call(this, event);
-}
-
-
 var currentAlg;
 
 function init()

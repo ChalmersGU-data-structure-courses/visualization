@@ -590,23 +590,6 @@ ComparisonSort.prototype.insertionSortSkip = function(inc, offset)
 }
 
 
-ComparisonSort.prototype.disableUI = function(event)
-{
-    this.resetButton.disabled = true;
-    this.sizeSelect.disabled = true;
-    this.algorithmSelect.disabled = true;
-    this.sortButton.disabled = true;
-}
-
-ComparisonSort.prototype.enableUI = function(event)
-{
-    this.resetButton.disabled = false;
-    this.sizeSelect.disabled = false;
-    this.algorithmSelect.disabled = false;
-    this.sortButton.disabled = false;
-}
-
-
 var currentAlg;
 
 function init()

@@ -856,28 +856,6 @@ function TernaryNode(val, id, initialX, initialY)
     this.parent = null;
 }
 
-Ternary.prototype.disableUI = function(event)
-{
-    this.insertField.disabled = true;
-    this.insertButton.disabled = true;
-    this.deleteField.disabled = true;
-    this.deleteButton.disabled = true;
-    this.findField.disabled = true;
-    this.findButton.disabled = true;
-    this.printButton.disabled = true;
-}
-
-Ternary.prototype.enableUI = function(event)
-{
-    this.insertField.disabled = false;
-    this.insertButton.disabled = false;
-    this.deleteField.disabled = false;
-    this.deleteButton.disabled = false;
-    this.findField.disabled = false;
-    this.findButton.disabled = false;
-    this.printButton.disabled = false;
-}
-
 
 var currentAlg;
 

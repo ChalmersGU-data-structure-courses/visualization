@@ -225,30 +225,10 @@ DFS.prototype.dfsVisit = function(startVertex, messageX)
 DFS.prototype.reset = function()
 {
     // Throw an error?
-
     this.messageID = new Array();
 }
 
 
-
-
-DFS.prototype.enableUI = function(event)
-{
-    this.startField.disabled = false;
-    this.startButton.disabled = false;
-    this.startButton
-
-
-    DFS.superclass.enableUI.call(this,event);
-}
-DFS.prototype.disableUI = function(event)
-{
-
-    this.startField.disabled = true;
-    this.startButton.disabled = true;
-
-    DFS.superclass.disableUI.call(this, event);
-}
 
 
 var currentAlg;

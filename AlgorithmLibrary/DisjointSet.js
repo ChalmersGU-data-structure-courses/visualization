@@ -65,21 +65,14 @@ DisjointSet.prototype.sizeChanged = function()
 
 DisjointSet.prototype.addControls = function()
 {
-    this.controls = [];
-
     this.findField = this.addControlToAlgorithmBar("Text", "");
     this.findField.onkeydown = this.returnSubmit(this.findField,  this.findCallback.bind(this), 4, true);
-    this.controls.push(this.findField);
 
     var findButton = this.addControlToAlgorithmBar("Button", "Find");
     findButton.onclick = this.findCallback.bind(this);
 
-    this.controls.push(findButton);
-
     this.unionField1 = this.addControlToAlgorithmBar("Text", "");
     this.unionField1.onkeydown = this.returnSubmit(this.unionField1,  this.unionCallback.bind(this), 4, true);
-
-    this.controls.push(this.unionField1);
 
     this.unionField2 = this.addControlToAlgorithmBar("Text", "");
     this.unionField2.onkeydown = this.returnSubmit(this.unionField2,  this.unionCallback.bind(this), 4, true);
@@ -87,30 +80,21 @@ DisjointSet.prototype.addControls = function()
     this.unionButton = this.addControlToAlgorithmBar("Button", "Union");
     this.unionButton.onclick = this.unionCallback.bind(this);
 
-    this.controls.push(this.unionField2);
-
     this.pathCompressionBox = this.addCheckboxToAlgorithmBar("Path Compression");
     this.pathCompressionBox.onclick = this.pathCompressionChangeCallback.bind(this);
-
-    this.controls.push(this.pathCompressionBox);
 
     this.unionByRankBox = this.addCheckboxToAlgorithmBar("Union By Rank");
     this.unionByRankBox.onclick = this.unionByRankChangeCallback.bind(this);
 
-    this.controls.push(this.unionByRankBox);
-
-    var radioButtonList = this.addRadioButtonGroupToAlgorithmBar([
-            "Rank = # of nodes",
-            "Rank = estimated height",
-        ],
-        "RankType");
+    var radioButtonList = this.addRadioButtonGroupToAlgorithmBar(
+        ["Rank = # of nodes", "Rank = estimated height"],
+        "RankType"
+    );
     this.rankNumberOfNodesButton = radioButtonList[0];
     this.rankNumberOfNodesButton.onclick = this.rankTypeChangedCallback.bind(this, false);
-    this.controls.push(this.rankNumberOfNodesButton);
 
     this.rankEstimatedHeightButton = radioButtonList[1];
     this.rankEstimatedHeightButton.onclick = this.rankTypeChangedCallback.bind(this, true);
-    this.controls.push(this.rankEstimatedHeightButton);
 
     this.rankNumberOfNodesButton.checked = !this.rankAsHeight;
     this.rankEstimatedHeightButton.checked = this.rankAsHeight;
@@ -186,23 +170,6 @@ DisjointSet.prototype.reset = function()
     this.unionByRankBox.selected = this.unionByRank;
     this.rankNumberOfNodesButton.checked = !this.rankAsHeight;
     this.rankEstimatedHeightButton.checked = this.rankAsHeight;
-}
-
-
-DisjointSet.prototype.enableUI = function(event)
-{
-    for (var i = 0; i < this.controls.length; i++)
-    {
-        this.controls[i].disabled = false;
-    }
-}
-
-DisjointSet.prototype.disableUI = function(event)
-{
-    for (var i = 0; i < this.controls.length; i++)
-    {
-        this.controls[i].disabled = true;
-    }
 }
 
 

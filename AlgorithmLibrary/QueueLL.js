@@ -78,40 +78,18 @@ QueueLL.prototype.sizeChanged = function()
 
 QueueLL.prototype.addControls = function()
 {
-    this.controls = [];
     this.enqueueField = this.addControlToAlgorithmBar("Text", "");
     this.enqueueField.onkeydown = this.returnSubmit(this.enqueueField,  this.enqueueCallback.bind(this), 6);
     this.enqueueButton = this.addControlToAlgorithmBar("Button", "Enqueue");
     this.enqueueButton.onclick = this.enqueueCallback.bind(this);
-    this.controls.push(this.enqueueField);
-    this.controls.push(this.enqueueButton);
 
     this.dequeueButton = this.addControlToAlgorithmBar("Button", "Dequeue");
     this.dequeueButton.onclick = this.dequeueCallback.bind(this);
-    this.controls.push(this.dequeueButton);
 
     this.clearButton = this.addControlToAlgorithmBar("Button", "Clear Queue");
     this.clearButton.onclick = this.clearCallback.bind(this);
-    this.controls.push(this.clearButton);
-
 }
 
-QueueLL.prototype.enableUI = function(event)
-{
-    for (var i = 0; i < this.controls.length; i++)
-    {
-        this.controls[i].disabled = false;
-    }
-
-
-}
-QueueLL.prototype.disableUI = function(event)
-{
-    for (var i = 0; i < this.controls.length; i++)
-    {
-        this.controls[i].disabled = true;
-    }
-}
 
 
 QueueLL.prototype.setup = function()

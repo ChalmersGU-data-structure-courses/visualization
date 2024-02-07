@@ -318,17 +318,6 @@ BucketSort.prototype.resetCallback = function(event)
 
 
 
-BucketSort.prototype.disableUI = function(event)
-{
-    this.resetButton.disabled = true;
-    this.bucketSortButton.disabled = true;
-}
-BucketSort.prototype.enableUI = function(event)
-{
-    this.resetButton.disabled = false;
-    this.bucketSortButton.disabled = false;
-}
-
 function LinkedListNode(label, id, x, y)
 {
     this.data = label;

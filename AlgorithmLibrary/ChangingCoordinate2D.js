@@ -499,75 +499,54 @@ ChangeCoordinate2D.prototype.setupObjectGraphic = function()
 
 ChangeCoordinate2D.prototype.addControls = function()
 {
-    this.controls = [];
-
     this.addLabelToAlgorithmBar("x");
 
     this.xField = this.addControlToAlgorithmBar("Text", "");
     this.xField.onkeydown = this.returnSubmitFloat(this.xField,  this.transformPointCallback.bind(this), 4, true);
-    this.controls.push(this.xField);
 
     this.addLabelToAlgorithmBar("y");
 
     this.yField = this.addControlToAlgorithmBar("Text", "");
     this.yField.onkeydown = this.returnSubmitFloat(this.yField,  this.transformPointCallback.bind(this), 4, true);
-    this.controls.push(this.yField);
 
     var transformButton = this.addControlToAlgorithmBar("Button", "Transform Point");
     transformButton.onclick = this.transformPointCallback.bind(this);
-    this.controls.push(transformButton);
 
 
 
 
-    var radioButtonList = this.addRadioButtonGroupToAlgorithmBar(["Hand Space -> World Space",
-                                                             "World Space -> Hand Space",
-                                                             ],
-                                                            "Transform Type");
+    var radioButtonList = this.addRadioButtonGroupToAlgorithmBar(
+        ["Hand Space -> World Space", "World Space -> Hand Space"],
+        "Transform Type"
+    );
     this.handToWorldButton = radioButtonList[0];
     this.handToWorldButton.onclick = this.transformTypeChangedCallback.bind(this, false);
-    this.controls.push(this.handToWorldButton);
-
 
     this.worldToHandButton = radioButtonList[1];
     this.worldToHandButton.onclick = this.transformTypeChangedCallback.bind(this, true);
-    this.controls.push(this.worldToHandButton);
 
     this.worldToHandButton.checked = this.lastLocalToGlobal;
     this.handToWorldButton.checked = !this.lastLocalToGlobal;
 
-
-
-
-    var radioButtonList = this.addRadioButtonGroupToAlgorithmBar(["Row Major",
-                                                             "Column Major",
-                                                             ],
-                                                            "RankType");
+    var radioButtonList = this.addRadioButtonGroupToAlgorithmBar(
+        ["Row Major", "Column Major"],
+        "RankType"
+    );
     this.rowMajorButton = radioButtonList[0];
     this.rowMajorButton.onclick = this.changeRowColMajorCallback.bind(this, true);
-    this.controls.push(this.rowMajorButton);
 
     this.colMajorButton = radioButtonList[1];
     this.colMajorButton.onclick = this.changeRowColMajorCallback.bind(this, false);
-    this.controls.push(this.colMajorButton);
 
     this.rowMajorButton.checked = this.rowMajor;
     this.colMajorButton.checked = !this.rowMajor;
-
 
     this.showAxisBox = this.addCheckboxToAlgorithmBar("Show all axes");
     this.showAxisBox.onclick = this.showAllAxesCallback.bind(this);
     this.showAxisBox.checked = true;
 
-    //this.controls.push(this.showAxisBox);
-
-
-
     var moveObjectsButton = this.addControlToAlgorithmBar("Button", "Move Objects");
     moveObjectsButton.onclick = this.moveObjectsCallback.bind(this);
-
-    this.controls.push(moveObjectsButton);
-
 }
 
 
@@ -594,23 +573,6 @@ ChangeCoordinate2D.prototype.reset = function()
     this.nextIndex = this.savedNextIndex;
 }
 
-
-ChangeCoordinate2D.prototype.enableUI = function(event)
-{
-    for (var i = 0; i < this.controls.length; i++)
-    {
-        this.controls[i].disabled = false;
-    }
-
-
-}
-ChangeCoordinate2D.prototype.disableUI = function(event)
-{
-    for (var i = 0; i < this.controls.length; i++)
-    {
-        this.controls[i].disabled = true;
-    }
-}
 
 
 ChangeCoordinate2D.prototype.transformTypeChangedCallback = function(globalToLocal)

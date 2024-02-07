@@ -391,17 +391,6 @@ Floyd.prototype.doFloydWarshall = function(ignored)
 }
 
 
-Floyd.prototype.enableUI = function(event)
-{
-    this.startButton.disabled = false;
-    Floyd.superclass.enableUI.call(this,event);
-}
-Floyd.prototype.disableUI = function(event)
-{
-    this.startButton.disabled = true;
-    Floyd.superclass.disableUI.call(this, event);
-}
-
 
 var currentAlg;
 

@@ -303,18 +303,6 @@ ClosedHashBucket.prototype.reset = function()
 }
 
 
-ClosedHashBucket.prototype.disableUI = function(event)
-{
-    ClosedHashBucket.superclass.disableUI.call(this);
-}
-
-ClosedHashBucket.prototype.enableUI = function(event)
-{
-    ClosedHashBucket.superclass.enableUI.call(this);
-
-}
-
-
 var currentAlg;
 
 function init()

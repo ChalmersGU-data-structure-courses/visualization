@@ -132,17 +132,13 @@ Search.prototype.sizeChanged = function()
 
 Search.prototype.addControls = function()
 {
-    this.controls = [];
     this.searchField = this.addControlToAlgorithmBar("Text", "");
     this.searchField.onkeydown = this.returnSubmit(this.searchField,  null,  6, true);
     this.linearSearchButton = this.addControlToAlgorithmBar("Button", "Linear Search");
     this.linearSearchButton.onclick = this.linearSearchCallback.bind(this);
-    this.controls.push(this.searchField);
-    this.controls.push(this.linearSearchButton);
 
     this.binarySearchButton = this.addControlToAlgorithmBar("Button", "Binary Search");
     this.binarySearchButton.onclick = this.binarySearchCallback.bind(this);
-    this.controls.push(this.binarySearchButton);
 
     var radioButtonList = this.addRadioButtonGroupToAlgorithmBar(["Small", "Large"], "List Size");
     this.smallListButton = radioButtonList[0];
@@ -169,23 +165,6 @@ Search.prototype.largeListCallback = function (event)
     {
         this.animationManager.resetAll();
         this.setup_large();
-    }
-}
-
-
-Search.prototype.enableUI = function(event)
-{
-    for (var i = 0; i < this.controls.length; i++)
-    {
-       this.controls[i].disabled = false;
-    }
-}
-
-Search.prototype.disableUI = function(event)
-{
-    for (var i = 0; i < this.controls.length; i++)
-    {
-       this.controls[i].disabled = true;
     }
 }
 

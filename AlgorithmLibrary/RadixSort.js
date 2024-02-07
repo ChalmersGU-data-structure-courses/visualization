@@ -341,16 +341,6 @@ RadixSort.prototype.resetCallback = function(event)
 }
 
 
-RadixSort.prototype.disableUI = function(event)
-{
-    this.resetButton.disabled = true;
-    this.radixSortButton.disabled = true;
-}
-RadixSort.prototype.enableUI = function(event)
-{
-    this.resetButton.disabled = false;
-    this.radixSortButton.disabled = false;
-}
 
 var currentAlg;
 

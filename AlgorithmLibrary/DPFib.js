@@ -103,23 +103,17 @@ DPFib.prototype.init = function(am)
 
 DPFib.prototype.addControls = function()
 {
-    this.controls = [];
     this.fibField = this.addControlToAlgorithmBar("Text", "");
     this.fibField.onkeydown = this.returnSubmit(this.fibField,  this.emptyCallback.bind(this), 2, true);
-    this.controls.push(this.fibField);
 
     this.recursiveButton = this.addControlToAlgorithmBar("Button", "Fibonacci Recursive");
     this.recursiveButton.onclick = this.recursiveCallback.bind(this);
-    this.controls.push(this.recursiveButton);
 
     this.tableButton = this.addControlToAlgorithmBar("Button", "Fibonacci Table");
     this.tableButton.onclick = this.tableCallback.bind(this);
-    this.controls.push(this.tableButton);
 
     this.memoizedButton = this.addControlToAlgorithmBar("Button", "Fibonacci Memoized");
     this.memoizedButton.onclick = this.memoizedCallback.bind(this);
-    this.controls.push(this.memoizedButton);
-
 }
 
 
@@ -487,25 +481,6 @@ DPFib.prototype.memoizedFib = function(value)
     this.cmd("SetText", functionCallID, "fib(" + String(value) + ") = " + String(final));
     return this.commands;
 }
-
-DPFib.prototype.enableUI = function(event)
-{
-    for (var i = 0; i < this.controls.length; i++)
-    {
-        this.controls[i].disabled = false;
-    }
-
-
-}
-DPFib.prototype.disableUI = function(event)
-{
-    for (var i = 0; i < this.controls.length; i++)
-    {
-        this.controls[i].disabled = true;
-    }
-}
-
-
 
 
 var currentAlg;

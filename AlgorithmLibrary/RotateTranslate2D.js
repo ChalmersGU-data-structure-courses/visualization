@@ -266,69 +266,52 @@ RotateTranslate2D.prototype.setupObjectGraphic = function()
 
 RotateTranslate2D.prototype.addControls = function()
 {
-    this.controls = [];
-
     this.addLabelToAlgorithmBar("Rotation Angle");
 
     this.rotationField = this.addControlToAlgorithmBar("Text", "");
     this.rotationField.onkeydown = this.returnSubmitFloat(this.rotationField,  this.transformCallback.bind(this), 4, true);
-    this.controls.push(this.rotationField);
 
     this.addLabelToAlgorithmBar("Translate X");
 
     this.scaleXField = this.addControlToAlgorithmBar("Text", "");
     this.scaleXField.onkeydown = this.returnSubmitFloat(this.scaleXField,  this.transformCallback.bind(this), 4, true);
-    this.controls.push(this.scaleXField);
-
 
     this.addLabelToAlgorithmBar("Translate Y");
 
     this.scaleYField = this.addControlToAlgorithmBar("Text", "");
     this.scaleYField.onkeydown = this.returnSubmitFloat(this.scaleYField,  this.transformCallback.bind(this), 4, true);
-    this.controls.push(this.scaleYField);
-
 
     var transformButton = this.addControlToAlgorithmBar("Button", "Transform");
     transformButton.onclick = this.transformCallback.bind(this);
 
-    this.controls.push(transformButton);
-
-    var radioButtonList = this.addRadioButtonGroupToAlgorithmBar(["Row Major",
-                                                             "Column Major",
-                                                             ],
-                                                            "RankType");
+    var radioButtonList = this.addRadioButtonGroupToAlgorithmBar(
+        ["Row Major", "Column Major"],
+        "RankType"
+    );
     this.rowMajorButton = radioButtonList[0];
     this.rowMajorButton.onclick = this.changeRowColMajorCallback.bind(this, true);
-    this.controls.push(this.rowMajorButton);
 
     this.colMajorButton = radioButtonList[1];
     this.colMajorButton.onclick = this.changeRowColMajorCallback.bind(this, false);
-    this.controls.push(this.colMajorButton);
 
     this.rowMajorButton.checked = this.rowMajor;
     this.colMajorButton.checked = !this.rowMajor;
 
-    var radioButtonList = this.addRadioButtonGroupToAlgorithmBar(["+y Up",
-                                                             "+y Down",
-                                                             ],
-                                                            "yAxisDirection");
+    var radioButtonList = this.addRadioButtonGroupToAlgorithmBar(
+        ["+y Up", "+y Down"],
+        "yAxisDirection"
+    );
     this.posYUpButton = radioButtonList[0];
     this.posYUpButton.onclick = this.changePosYCallback.bind(this, true);
-    this.controls.push(this.posYUpButton);
 
     this.posYDownButton = radioButtonList[1];
     this.posYDownButton.onclick = this.changePosYCallback.bind(this, false);
-    this.controls.push(this.posYDownButton);
 
     this.posYUpButton.checked = this.posYUp;
     this.posYDownButton.checked = !this.posYUp;
 
-
     var changeShapeButton = this.addControlToAlgorithmBar("Button", "Change Shape");
     changeShapeButton.onclick = this.changeShapeCallback.bind(this);
-
-    this.controls.push(changeShapeButton);
-
 }
 
 
@@ -349,25 +332,6 @@ RotateTranslate2D.prototype.reset = function()
     this.setupObject();
     this.setupObjectGraphic();
 }
-
-
-RotateTranslate2D.prototype.enableUI = function(event)
-{
-    for (var i = 0; i < this.controls.length; i++)
-    {
-        this.controls[i].disabled = false;
-    }
-
-
-}
-RotateTranslate2D.prototype.disableUI = function(event)
-{
-    for (var i = 0; i < this.controls.length; i++)
-    {
-        this.controls[i].disabled = true;
-    }
-}
-
 
 
 RotateTranslate2D.prototype.changePosYCallback = function(posYUp)

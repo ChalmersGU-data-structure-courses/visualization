@@ -77,32 +77,26 @@ FibonacciHeap.prototype.init = function(am)
 
 FibonacciHeap.prototype.addControls = function()
 {
-    this.controls = [];
     this.insertField = this.addControlToAlgorithmBar("Text", "");
     this.insertField.onkeydown = this.returnSubmit(this.insertField,  this.insertCallback.bind(this), 4);
-    this.controls.push(this.insertField);
 
     this.insertButton = this.addControlToAlgorithmBar("Button", "Insert");
     this.insertButton.onclick = this.insertCallback.bind(this);
-    this.controls.push(this.insertButton);
 
     this.removeSmallestButton = this.addControlToAlgorithmBar("Button", "Remove Smallest");
     this.removeSmallestButton.onclick = this.removeSmallestCallback.bind(this);
-    this.controls.push(this.removeSmallestButton);
 
     this.clearHeapButton = this.addControlToAlgorithmBar("Button", "Clear Heap");
     this.clearHeapButton.onclick = this.clearCallback.bind(this);
-    this.controls.push(this.clearHeapButton);
 
-    var radioButtonList = this.addRadioButtonGroupToAlgorithmBar(["Logical Representation",
-                                                             "Internal Representation",
-                                                             ],
-                                                            "BQueueRep");
+    var radioButtonList = this.addRadioButtonGroupToAlgorithmBar(
+        ["Logical Representation", "Internal Representation"],
+        "BQueueRep"
+    );
 
     radioButtonList[0].onclick = this.representationChangedHandler.bind(this, true);
     radioButtonList[1].onclick = this.representationChangedHandler.bind(this, false);
     radioButtonList[0].checked = true;
-
 }
 
 
@@ -825,23 +819,6 @@ FibonacciHeap.prototype.combineTrees = function(tree1, tree2)
 
     return tree1;
 
-}
-
-FibonacciHeap.prototype.enableUI = function(event)
-{
-    for (var i = 0; i < this.controls.length; i++)
-    {
-        this.controls[i].disabled = false;
-    }
-
-
-}
-FibonacciHeap.prototype.disableUI = function(event)
-{
-    for (var i = 0; i < this.controls.length; i++)
-    {
-        this.controls[i].disabled = true;
-    }
 }
 
 

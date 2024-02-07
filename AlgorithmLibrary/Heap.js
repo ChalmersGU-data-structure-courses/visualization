@@ -384,24 +384,6 @@ Heap.prototype.insertElement = function(insertedValue)
     return this.commands;
 }
 
-Heap.prototype.disableUI = function(event)
-{
-    this.insertField.disabled = true;
-    this.insertButton.disabled = true;
-    this.removeSmallestButton.disabled = true;
-    this.clearHeapButton.disabled = true;
-    this.buildHeapButton.disabled = true;
-}
-
-Heap.prototype.enableUI = function(event)
-{
-    this.insertField.disabled = false;
-    this.insertButton.disabled = false;
-    this.removeSmallestButton.disabled = false;
-    this.clearHeapButton.disabled = false;
-    this.buildHeapButton.disabled = false;
-}
-
 
 var currentAlg;
 

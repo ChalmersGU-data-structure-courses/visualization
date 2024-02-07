@@ -103,10 +103,6 @@ SimpleStack.prototype.addControls = function()
     // Here you add any necessary controls for your algorithm.
     // There are libraries that help with text entry, buttons, check boxes, dropdown menus.
 
-    // We add the controls to the controls array so that they can be
-    // enabled/disabled by the animation manager (see enableUI/disableUI below).
-    this.controls = [];
-
     // The text input field:
     this.pushField = this.addControlToAlgorithmBar("Text", "");
     this.pushField.onkeydown = this.returnSubmit(
@@ -115,22 +111,18 @@ SimpleStack.prototype.addControls = function()
         4,     // integer: max number of characters allowed
         false  // boolean: true if only digits can be entered
     );
-    this.controls.push(this.pushField);
 
     // The button for pushing onto the stack:
     this.pushButton = this.addControlToAlgorithmBar("Button", "Push");
     this.pushButton.onclick = this.pushCallback.bind(this);
-    this.controls.push(this.pushButton);
     
     // The button for popping from the stack:
     this.popButton = this.addControlToAlgorithmBar("Button", "Pop");
     this.popButton.onclick = this.popCallback.bind(this);
-    this.controls.push(this.popButton);
 
     // To add a checkbox:
     // this.myCheckbox = this.addCheckboxToAlgorithmBar("Checkbox Label");
     // this.myCheckbox.onclick = this.checkboxCallback.bind(this);
-    // this.controls.push(myCheckbox);
 
     // To add a dropdown menu:
     // this.mySelect = this.addSelectToAlgorithmBar(
@@ -138,7 +130,6 @@ SimpleStack.prototype.addControls = function()
     //     ["Label 1", "Label 2", "Label 3", ...]
     // );
     // this.mySelect.onchange = this.selectCallback.bind(this);
-    // this.controls.push(this.mySelect);
 }
 
 
@@ -280,32 +271,6 @@ SimpleStack.prototype.pop = function(unused)
         // nextIndex = this.stackID[this.stackTop];
     }
     return this.commands;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-// Additional functions
-///////////////////////////////////////////////////////////////////////////////
-
-// We're almost done!
-// Some code to enable/disable our algorithm controls while the animation is running.
-
-SimpleStack.prototype.disableUI = function(event)
-{
-    // Called by our superclass when we get an animation started event:
-    // need to wait for the event to finish before we start doing anything.
-    for (var i = 0; i < this.controls.length; i++) {
-        this.controls[i].disabled = true;
-    }
-}
-
-SimpleStack.prototype.enableUI = function(event)
-{
-    // Called by our superclass when we get an animation completed event:
-    // we can now interact again.
-    for (var i = 0; i < this.controls.length; i++) {
-        this.controls[i].disabled = false;
-    }
 }
 
 

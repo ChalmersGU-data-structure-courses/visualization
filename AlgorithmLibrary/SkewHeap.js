@@ -73,23 +73,17 @@ SkewHeap.prototype.init = function(am)
 
 SkewHeap.prototype.addControls = function()
 {
-    this.controls = [];
     this.insertField = this.addControlToAlgorithmBar("Text", "");
     this.insertField.onkeydown = this.returnSubmit(this.insertField,  this.insertCallback.bind(this), 4);
-    this.controls.push(this.insertField);
 
     this.insertButton = this.addControlToAlgorithmBar("Button", "Insert");
     this.insertButton.onclick = this.insertCallback.bind(this);
-    this.controls.push(this.insertButton);
 
     this.removeSmallestButton = this.addControlToAlgorithmBar("Button", "Remove Smallest");
     this.removeSmallestButton.onclick = this.removeSmallestCallback.bind(this);
-    this.controls.push(this.removeSmallestButton);
 
     this.clearHeapButton = this.addControlToAlgorithmBar("Button", "Clear Heap");
     this.clearHeapButton.onclick = this.clearCallback.bind(this);
-    this.controls.push(this.clearHeapButton);
-
 }
 
 
@@ -367,6 +361,7 @@ SkewHeap.prototype.setTreeAlpha = function(tree, newAlpha)
     }
 }
 
+
 SkewHeap.prototype.resizeWidths = function(tree)
 {
     if (tree == null)
@@ -377,26 +372,6 @@ SkewHeap.prototype.resizeWidths = function(tree)
     tree.rightWidth = Math.max(this.resizeWidths(tree.right), SkewHeap.WIDTH_DELTA / 2);
     return tree.leftWidth + tree.rightWidth;
 }
-
-
-
-SkewHeap.prototype.enableUI = function(event)
-{
-    for (var i = 0; i < this.controls.length; i++)
-    {
-        this.controls[i].disabled = false;
-    }
-
-
-}
-SkewHeap.prototype.disableUI = function(event)
-{
-    for (var i = 0; i < this.controls.length; i++)
-    {
-        this.controls[i].disabled = true;
-    }
-}
-
 
 
 SkewHeap.prototype.resizeTrees = function()

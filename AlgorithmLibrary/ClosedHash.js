@@ -363,23 +363,6 @@ function resetCallback(event)
 }
 
 
-ClosedHash.prototype.disableUI = function(event)
-{
-    ClosedHash.superclass.disableUI.call(this);
-    this.linearProblingButton.disabled = true;
-    this.quadraticProbingButton.disabled = true;
-    this.doubleHashingButton.disabled = true;
-}
-
-ClosedHash.prototype.enableUI = function(event)
-{
-    ClosedHash.superclass.enableUI.call(this);
-    this.linearProblingButton.disabled = false;
-    this.quadraticProbingButton.disabled = false;
-    this.doubleHashingButton.disabled = false;
-}
-
-
 var currentAlg;
 
 function init()

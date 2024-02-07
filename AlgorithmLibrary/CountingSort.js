@@ -290,17 +290,6 @@ CountingSort.prototype.resetCallback = function(event)
 }
 
 
-CountingSort.prototype.disableUI = function(event)
-{
-    this.resetButton.disabled = true;
-    this.countingsSortButton.disabled = true;
-}
-CountingSort.prototype.enableUI = function(event)
-{
-    this.resetButton.disabled = false;
-    this.countingsSortButton.disabled = false;
-}
-
 var currentAlg;
 
 function init()

@@ -405,25 +405,6 @@ DijkstraPrim.prototype.startCallback = function(event)
 }
 
 
-DijkstraPrim.prototype.enableUI = function(event)
-{
-    this.startField.disabled = false;
-    this.startButton.disabled = false;
-    this.startButton
-
-
-    DijkstraPrim.superclass.enableUI.call(this,event);
-}
-DijkstraPrim.prototype.disableUI = function(event)
-{
-
-    this.startField.disabled = true;
-    this.startButton.disabled = true;
-
-    DijkstraPrim.superclass.disableUI.call(this, event);
-}
-
-
 function Dijkstra(am, dir) {
     Dijkstra.superclass.constructor.call(this, am, true, dir);
 }

@@ -680,32 +680,6 @@ Graph.prototype.reset = function()
 }
 
 
-Graph.prototype.disableUI = function(event)
-{
-    this.newGraphButton.disabled = true;
-    if (this.directedGraphButton != null && this.directedGraphButton != undefined)
-        this.directedGraphButton.disabled = true;
-    if (this.undirectedGraphButton != null && this.undirectedGraphButton != undefined)
-        this.undirectedGraphButton.disabled = true;
-    this.smallGraphButton.disabled = true;
-    this.largeGraphButton.disabled = true;
-}
-
-
-
-Graph.prototype.enableUI = function(event)
-{
-
-    this.newGraphButton.disabled = false;
-    if (this.directedGraphButton != null && this.directedGraphButton != undefined)
-        this.directedGraphButton.disabled = false;
-    if (this.undirectedGraphButton != null && this.undirectedGraphButton != undefined)
-        this.undirectedGraphButton.disabled = false;
-    this.smallGraphButton.disabled = false;
-    this.largeGraphButton.disabled = false;
-}
-
-
 
 /* no init, this is only a base class! 
 var currentAlg;

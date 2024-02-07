@@ -265,18 +265,6 @@ HeapSort.prototype.buildHeap = function(ignored)
 }
 
 
-HeapSort.prototype.disableUI = function(event)
-{
-    this.heapsortButton.disabled = true;
-    this.randomizeArrayButton.disabled = true;
-}
-
-HeapSort.prototype.enableUI = function(event)
-{
-    this.heapsortButton.disabled = false;
-    this.randomizeArrayButton.disabled = false;
-}
-
 
 var currentAlg;
 

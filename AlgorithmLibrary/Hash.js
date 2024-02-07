@@ -424,28 +424,6 @@ Hash.prototype.reset = function()
 }
 
 
-Hash.prototype.disableUI = function(event)
-{
-    this.insertField.disabled = true;
-    this.insertButton.disabled = true;
-    this.deleteField.disabled = true;
-    this.deleteButton.disabled = true;
-    this.findField.disabled = true;
-    this.findButton.disabled = true;
-}
-
-Hash.prototype.enableUI = function(event)
-{
-
-    this.insertField.disabled = false;
-    this.insertButton.disabled = false;
-    this.deleteField.disabled = false;
-    this.deleteButton.disabled = false;
-    this.findField.disabled = false;
-    this.findButton.disabled = false;
-}
-
-
 /* no init, this is only a base class!
 var currentAlg;
 function init()

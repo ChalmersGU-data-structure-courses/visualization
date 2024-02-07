@@ -286,85 +286,58 @@ RotateScale3D.prototype.setupObjectGraphic = function()
 
 RotateScale3D.prototype.addControls = function()
 {
-    this.controls = [];
-
     this.addLabelToAlgorithmBar("X Angle");
 
     this.rotationFieldX = this.addControlToAlgorithmBar("Text", "");
     this.rotationFieldX.onkeydown = this.returnSubmitFloat(this.rotationFieldX,  this.rotateCallback.bind(this), 4, true);
-    this.controls.push(this.rotationFieldX);
 
     this.addLabelToAlgorithmBar("Y Angle");
 
     this.rotationFieldY = this.addControlToAlgorithmBar("Text", "");
     this.rotationFieldY.onkeydown = this.returnSubmitFloat(this.rotationFieldY,  this.rotateCallback.bind(this), 4, true);
-    this.controls.push(this.rotationFieldY);
 
     this.addLabelToAlgorithmBar("Z Angle");
 
     this.rotationFieldZ = this.addControlToAlgorithmBar("Text", "");
     this.rotationFieldZ.onkeydown = this.returnSubmitFloat(this.rotationFieldZ,  this.rotateCallback.bind(this), 4, true);
-    this.controls.push(this.rotationFieldZ);
-
-
 
     var rotateButton = this.addControlToAlgorithmBar("Button", "Rotate");
     rotateButton.onclick = this.rotateCallback.bind(this);
-
-    this.controls.push(rotateButton);
-
 
     this.addLabelToAlgorithmBar("Scale X");
 
     this.scaleXField = this.addControlToAlgorithmBar("Text", "");
     this.scaleXField.onkeydown = this.returnSubmitFloat(this.scaleXField,  this.scaleCallback.bind(this), 4, true);
-    this.controls.push(this.scaleXField);
-
 
     this.addLabelToAlgorithmBar("Scale Y");
 
     this.scaleYField = this.addControlToAlgorithmBar("Text", "");
     this.scaleYField.onkeydown = this.returnSubmitFloat(this.scaleYField,  this.scaleCallback.bind(this), 4, true);
-    this.controls.push(this.scaleYField);
 
     this.addLabelToAlgorithmBar("Scale Z");
 
     this.scaleZField = this.addControlToAlgorithmBar("Text", "");
     this.scaleZField.onkeydown = this.returnSubmitFloat(this.scaleZField,  this.scaleCallback.bind(this), 4, true);
-    this.controls.push(this.scaleZField);
-
-
 
     var scaleButton = this.addControlToAlgorithmBar("Button", "Scale");
     scaleButton.onclick = this.scaleCallback.bind(this);
 
-    this.controls.push(scaleButton);
-
-    var radioButtonList = this.addRadioButtonGroupToAlgorithmBar(["Row Major",
-                                                             "Column Major",
-                                                             ],
-                                                            "RankType");
+    var radioButtonList = this.addRadioButtonGroupToAlgorithmBar(
+        ["Row Major", "Column Major"],
+        "RankType"
+    );
     this.rowMajorButton = radioButtonList[0];
     this.rowMajorButton.onclick = this.changeRowColMajorCallback.bind(this, true);
-    this.controls.push(this.rowMajorButton);
 
     this.colMajorButton = radioButtonList[1];
     this.colMajorButton.onclick = this.changeRowColMajorCallback.bind(this, false);
-    this.controls.push(this.colMajorButton);
 
     this.rowMajorButton.checked = this.rowMajor;
     this.colMajorButton.checked = !this.rowMajor;
 
-
-
     var changeShapeButton = this.addControlToAlgorithmBar("Button", "Change Shape");
     changeShapeButton.onclick = this.changeShapeCallback.bind(this);
-
-    this.controls.push(changeShapeButton);
-
 }
-
-
 
 
 
@@ -381,25 +354,6 @@ RotateScale3D.prototype.reset = function()
     this.setupObject();
     this.setupObjectGraphic();
 }
-
-
-RotateScale3D.prototype.enableUI = function(event)
-{
-    for (var i = 0; i < this.controls.length; i++)
-    {
-        this.controls[i].disabled = false;
-    }
-
-
-}
-RotateScale3D.prototype.disableUI = function(event)
-{
-    for (var i = 0; i < this.controls.length; i++)
-    {
-        this.controls[i].disabled = true;
-    }
-}
-
 
 
 RotateScale3D.prototype.changePosYCallback = function(posYUp)

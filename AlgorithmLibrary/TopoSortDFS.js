@@ -371,21 +371,6 @@ TopoSortDFS.prototype.reset = function()
 
 
 
-TopoSortDFS.prototype.enableUI = function(event)
-{
-    this.startButton.disabled = false;
-
-    TopoSortDFS.superclass.enableUI.call(this,event);
-}
-TopoSortDFS.prototype.disableUI = function(event)
-{
-
-    this.startButton.disabled = true;
-
-    TopoSortDFS.superclass.disableUI.call(this, event);
-}
-
-
 var currentAlg;
 
 function init()

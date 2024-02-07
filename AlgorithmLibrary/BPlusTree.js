@@ -101,62 +101,39 @@ BPlusTree.prototype.sizeChanged = function()
 
 BPlusTree.prototype.addControls = function()
 {
-    this.controls = [];
-
     this.insertField = this.addControlToAlgorithmBar("Text", "");
     this.insertField.onkeydown = this.returnSubmit(this.insertField,  this.insertCallback.bind(this), 4);
-    this.controls.push(this.insertField);
 
     this.insertButton = this.addControlToAlgorithmBar("Button", "Insert");
     this.insertButton.onclick = this.insertCallback.bind(this);
-    this.controls.push(this.insertButton);
 
     this.deleteField = this.addControlToAlgorithmBar("Text", "");
     this.deleteField.onkeydown = this.returnSubmit(this.deleteField,  this.deleteCallback.bind(this), 4);
-    this.controls.push(this.deleteField);
 
     this.deleteButton = this.addControlToAlgorithmBar("Button", "Delete");
     this.deleteButton.onclick = this.deleteCallback.bind(this);
-    this.controls.push(this.deleteButton);
 
     this.findField = this.addControlToAlgorithmBar("Text", "");
     this.findField.onkeydown = this.returnSubmit(this.findField,  this.findCallback.bind(this), 4);
-    this.controls.push(this.findField);
 
     this.findButton = this.addControlToAlgorithmBar("Button", "Find");
     this.findButton.onclick = this.findCallback.bind(this);
-    this.controls.push(this.findButton);
 
     this.printButton = this.addControlToAlgorithmBar("Button", "Print");
     this.printButton.onclick = this.printCallback.bind(this);
-    this.controls.push(this.printButton);
 
     this.clearButton = this.addControlToAlgorithmBar("Button", "Clear");
     this.clearButton.onclick = this.clearCallback.bind(this);
-    this.controls.push(this.clearButton);
 
-    var i;
-    radioButtonNames = [];
-    for (i = BPlusTree.MIN_MAX_DEGREE; i <= BPlusTree.MAX_MAX_DEGREE; i++)
-    {
+    var radioButtonNames = [];
+    for (var i = BPlusTree.MIN_MAX_DEGREE; i <= BPlusTree.MAX_MAX_DEGREE; i++) {
         radioButtonNames.push("Max. Degree = " + String(i));
     }
-
     this.maxDegreeRadioButtons = this.addRadioButtonGroupToAlgorithmBar(radioButtonNames, "MaxDegree");
-
     this.maxDegreeRadioButtons[0].checked = true;
-    for(i = 0; i < this.maxDegreeRadioButtons.length; i++)
-    {
+    for(i = 0; i < this.maxDegreeRadioButtons.length; i++) {
         this.maxDegreeRadioButtons[i].onclick = this.maxDegreeChangedHandler.bind(this,i+BPlusTree.MIN_MAX_DEGREE);
     }
-
-
-//    this.premptiveSplitBox = this.addCheckboxToAlgorithmBar("Preemtive Split / Merge (Even max degree only)");
-//    this.premptiveSplitBox.onclick = this.premtiveSplitCallback.bind(this);
-
-
-    // Other buttons ...
-
 }
 
 
@@ -175,34 +152,6 @@ BPlusTree.prototype.reset = function()
     this.ignoreInputs = true;
     // maxDegreeButtonArray[this.max_degree].selected = true;
     this.ignoreInputs = false;
-}
-
-
-BPlusTree.prototype.enableUI = function(event)
-{
-    var i;
-    for (i = 0; i < this.controls.length; i++)
-    {
-        this.controls[i].disabled = false;
-    }
-    for (i = 0; i < this.maxDegreeRadioButtons.length; i++)
-    {
-        this.maxDegreeRadioButtons[i].disabled = false;
-    }
-}
-
-BPlusTree.prototype.disableUI = function(event)
-{
-    for (var i = 0; i < this.controls.length; i++)
-    {
-        this.controls[i].disabled = true;
-    }
-
-    for (i = 0; i < this.maxDegreeRadioButtons.length; i++)
-    {
-        this.maxDegreeRadioButtons[i].disabled = true;
-    }
-
 }
 
 

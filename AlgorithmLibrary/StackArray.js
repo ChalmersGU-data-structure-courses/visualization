@@ -68,39 +68,16 @@ StackArray.prototype.sizeChanged = function()
 
 StackArray.prototype.addControls = function()
 {
-    this.controls = [];
     this.pushField = this.addControlToAlgorithmBar("Text", "");
     this.pushField.onkeydown = this.returnSubmit(this.pushField,  this.pushCallback.bind(this), 6);
     this.pushButton = this.addControlToAlgorithmBar("Button", "Push");
     this.pushButton.onclick = this.pushCallback.bind(this);
-    this.controls.push(this.pushField);
-    this.controls.push(this.pushButton);
 
     this.popButton = this.addControlToAlgorithmBar("Button", "Pop");
     this.popButton.onclick = this.popCallback.bind(this);
-    this.controls.push(this.popButton);
 
     this.clearButton = this.addControlToAlgorithmBar("Button", "Clear Stack");
     this.clearButton.onclick = this.clearCallback.bind(this);
-    this.controls.push(this.clearButton);
-
-}
-
-StackArray.prototype.enableUI = function(event)
-{
-    for (var i = 0; i < this.controls.length; i++)
-    {
-        this.controls[i].disabled = false;
-    }
-
-
-}
-StackArray.prototype.disableUI = function(event)
-{
-    for (var i = 0; i < this.controls.length; i++)
-    {
-        this.controls[i].disabled = true;
-    }
 }
 
 

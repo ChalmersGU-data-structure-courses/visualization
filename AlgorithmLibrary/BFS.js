@@ -231,25 +231,6 @@ BFS.prototype.reset = function()
 
 
 
-BFS.prototype.enableUI = function(event)
-{
-    this.startField.disabled = false;
-    this.startButton.disabled = false;
-    this.startButton
-
-
-    BFS.superclass.enableUI.call(this,event);
-}
-BFS.prototype.disableUI = function(event)
-{
-
-    this.startField.disabled = true;
-    this.startButton.disabled = true;
-
-    BFS.superclass.disableUI.call(this, event);
-}
-
-
 var currentAlg;
 
 function init()

@@ -309,19 +309,6 @@ OpenHash.prototype.resetCallback = function(event)
 }
 
 
-OpenHash.prototype.disableUI = function(event)
-{
-    var sc = OpenHash.superclass;
-    var fn = sc.disableUI;
-    fn.call(this);
-}
-
-OpenHash.prototype.enableUI = function(event)
-{
-    OpenHash.superclass.enableUI.call(this);
-}
-
-
 function LinkedListNode(val, id, initialX, initialY)
 {
     this.data = val;

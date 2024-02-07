@@ -72,7 +72,7 @@ Algorithm.prototype.init = function(am)
 
     this.actionHistory = [];
     this.recordAnimation = true;
-    this.commands = []
+    this.commands = [];
 }
 
 
@@ -131,13 +131,13 @@ Algorithm.prototype.normalizeNumber = function(input)
 
 Algorithm.prototype.disableUI = function(event)
 {
-    // to be overridden in base class
+    this.animationManager.algorithmControlBar.toolbar.disabled = true;
 }
 
 
 Algorithm.prototype.enableUI = function(event)
 {
-    // to be overridden in base class
+    this.animationManager.algorithmControlBar.toolbar.disabled = false;
 }
 
 
@@ -245,10 +245,10 @@ Algorithm.prototype.reset = function()
 
 Algorithm.prototype.undo = function(event)
 {
-    // Remvoe the last action (the one that we are going to undo)
+    // Remove the last action (the one that we are going to undo)
     this.actionHistory.pop();
-    // Clear out our data structure.  Be sure to implement reset in
-    // every AlgorithmAnimation subclass!
+    // Clear out our data structure.
+    // Be sure to implement reset in every AlgorithmAnimation subclass!
     this.reset();
     // Redo all actions from the beginning, throwing out the animation
     // commands (the animation manager will update the animation on its own).

@@ -432,21 +432,6 @@ TopoSortIndegree.prototype.reset = function()
 
 
 
-TopoSortIndegree.prototype.enableUI = function(event)
-{
-    this.startButton.disabled = false;
-
-    TopoSortIndegree.superclass.enableUI.call(this,event);
-}
-TopoSortIndegree.prototype.disableUI = function(event)
-{
-
-    this.startButton.disabled = true;
-
-    TopoSortIndegree.superclass.disableUI.call(this, event);
-}
-
-
 var currentAlg;
 
 function init()

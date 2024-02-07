@@ -458,21 +458,6 @@ ConnectedComponent.prototype.reset = function()
 
 
 
-ConnectedComponent.prototype.enableUI = function(event)
-{
-    this.startButton.disabled = false;
-
-    ConnectedComponent.superclass.enableUI.call(this,event);
-}
-ConnectedComponent.prototype.disableUI = function(event)
-{
-
-    this.startButton.disabled = true;
-
-    ConnectedComponent.superclass.disableUI.call(this, event);
-}
-
-
 var currentAlg;
 
 function init()
