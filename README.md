@@ -47,6 +47,10 @@ In the Javascript file, you will create a function (an object, really, but funct
    the animation manager will then implement the animation, and handle all of the animation controls for you.
 3. Listens for an undo event from the animation manager.  When an undo event is detected, roll back the last operation.
 
+When you are ready your final visualization page will look something like this: 
+
+- https://chalmersgu-data-structure-courses.github.io/visualization/example.html
+
 ## Using the Algorithm "class"
 
 Creating the Javascript function is still farily complicated, even when using the rest of the library.
@@ -77,27 +81,12 @@ function (that way we can have our init function call the init function of the s
 
 *Note*: remember to replace all instances of `SimpleStack` with the name of your own data structure!
 
-```javascript
-function SimpleStack(am)
-{
-    this.init(am);
-}
-SimpleStack.inheritFrom(Algorithm);
-```
+https://github.com/ChalmersGU-data-structure-courses/visualization/blob/bf8668b2b75bc20e40e3e62698137439f912253f/AlgorithmLibrary/ExampleAlgorithm.js#L37-L41
 
 Next are some constants that are specific to the data structure.
 We placed them in the function's namespace to avoid symbol clashes:
 
-```javascript
-SimpleStack.ELEMENT_WIDTH = 30;
-SimpleStack.ELEMENT_HEIGHT = 30;
-SimpleStack.INSERT_X = 30;
-SimpleStack.INSERT_Y = 30;
-SimpleStack.STARTING_X = 30;
-SimpleStack.STARTING_Y = 100;
-SimpleStack.FOREGROUND_COLOR = "#000000"
-SimpleStack.BACKGROUND_COLOR = "#DDDDFF"
-```
+https://github.com/ChalmersGU-data-structure-courses/visualization/blob/bf8668b2b75bc20e40e3e62698137439f912253f/AlgorithmLibrary/ExampleAlgorithm.js#L47-L54
 
 Next, we initialize our object. In general, we will need to do the following:
 
@@ -118,21 +107,7 @@ Next, we initialize our object. In general, we will need to do the following:
     - an array that stores the actual stack (stackValues)
     - a variable that points to the top of the stack
 
-```javascript
-SimpleStack.prototype.init = function(am)
-{
-    // Call the unit function of our "superclass",
-    // which adds a couple of listeners, and sets up the undo stack
-    SimpleStack.superclass.init.call(this, am);
-
-    this.addControls();
-    this.nextIndex = 0;  // Useful for memory management
-
-    this.stackID = [];
-    this.stackValues = [];
-    this.stackTop = 0;
-}
-```
+https://github.com/ChalmersGU-data-structure-courses/visualization/blob/bf8668b2b75bc20e40e3e62698137439f912253f/AlgorithmLibrary/ExampleAlgorithm.js#L68-L80
 
 Next we have the function to add controls.
 There are several helper functions to add controls.
@@ -144,50 +119,7 @@ In the simple stack example we need three controls:
 - a button for pushing the new value onto the stack
 - a button for popping the topmost value from the stack
 
-```javascript
-SimpleStack.prototype.addControls = function()
-{    
-    // Here you add any necessary controls for your algorithm.
-    // There are libraries that help with text entry, buttons, check boxes, dropdown menus.
-
-    // We add the controls to the controls array so that they can be
-    // enabled/disabled by the animation manager (see enableUI/disableUI below).
-    this.controls = [];
-
-    // The text input field:
-    this.pushField = this.addControlToAlgorithmBar("Text", "");
-    this.pushField.onkeydown = this.returnSubmit(
-        this.pushField,
-        this.pushCallback.bind(this),  // callback to make when return is pressed
-        4,     // integer: max number of characters allowed
-        false  // boolean: true if only digits can be entered
-    );
-    this.controls.push(this.pushField);
-
-    // The button for pushing onto the stack:
-    this.pushButton = this.addControlToAlgorithmBar("Button", "Push");
-    this.pushButton.onclick = this.pushCallback.bind(this);
-    this.controls.push(this.pushButton);
-    
-    // The button for popping from the stack:
-    this.popButton = this.addControlToAlgorithmBar("Button", "Pop");
-    this.popButton.onclick = this.popCallback.bind(this);
-    this.controls.push(this.popButton);
-
-    // To add a checkbox:
-    // this.myCheckbox = this.addCheckboxToAlgorithmBar("Checkbox Label");
-    // this.myCheckbox.onclick = this.checkboxCallback.bind(this);
-    // this.controls.push(myCheckbox);
-
-    // To add a dropdown menu:
-    // this.mySelect = this.addSelectToAlgorithmBar(
-    //     [ value1,    value2,    value3,   ...],
-    //     ["Label 1", "Label 2", "Label 3", ...]
-    // );
-    // this.mySelect.onchange = this.selectCallback.bind(this);
-    // this.controls.push(this.mySelect);
-}
-```
+https://github.com/ChalmersGU-data-structure-courses/visualization/blob/bf8668b2b75bc20e40e3e62698137439f912253f/AlgorithmLibrary/ExampleAlgorithm.js#L101-L142
 
 We will need to "override" the reset method.
 Whenever the animation manager wants to undo an operation:
@@ -200,21 +132,7 @@ Whenever the animation manager wants to undo an operation:
 
 In our simple stack, we have four variables - nextIndex, stackTop, stackID and stackValues.
 
-```javascript
-SimpleStack.prototype.reset = function()
-{
-    // Reset the (very simple) memory manager.
-    // NOTE: If we had added a number of objects to the scene *before* any user input, 
-    // then we would want to set this to the appropriate value based on
-    // objects added to the scene before the first user input.
-    this.nextIndex = 0;
-
-    // Reset our data structure.
-    this.stackID = [];
-    this.stackValues = [];
-    this.stackTop = 0;
-}
-```
+https://github.com/ChalmersGU-data-structure-courses/visualization/blob/bf8668b2b75bc20e40e3e62698137439f912253f/AlgorithmLibrary/ExampleAlgorithm.js#L152-L164
 
 Next up, the callbacks.  Note that we don't do any action directly on a callback: 
 instead, we use the method `implementAction`, which takes a bound function (using 
@@ -225,30 +143,7 @@ so that undo will work nicely.
 *Note*: Your callbacks should *not* do any work directly, but instead should go through
 the implement action command. That way, undos are handled by ths system "behind the scenes".
 
-Here is a typical example:
-
-```javascript
-SimpleStack.prototype.pushCallback = function()
-{
-    // Get value to insert from textfield (created in addControls above).
-    // Also normalize it by parsing numbers, removing blanks, and converting to upper case.
-    var pushedValue = this.normalizeNumber(this.pushField.value.toUpperCase());
-
-    // Only push the value if the text field is not empty.
-    if (pushedValue) {
-       // Clear text field after operation.
-       this.pushField.value = "";
-       // Do the actual work. The function implementAction is defined in the Algorithm superclass.
-       this.implementAction(this.push.bind(this), pushedValue);
-    }
-}
-
-SimpleStack.prototype.popCallback = function()
-{
-    // Popping doesn't take any parameters, so we just call the pop function.
-    this.implementAction(this.pop.bind(this), "");
-}
-```
+https://github.com/ChalmersGU-data-structure-courses/visualization/blob/bf8668b2b75bc20e40e3e62698137439f912253f/AlgorithmLibrary/ExampleAlgorithm.js#L180-L199
 
 Finally, we get to the actual meat of our visualization: the code that does the work.
 The functions that are called by `implementAction` need to:
@@ -259,115 +154,19 @@ The functions that are called by `implementAction` need to:
 We strongly recommend that you use the function `this.cmd`, which is a handy utility function
 that appends commands onto the instance variable `this.commands`.
 
-```javascript
-SimpleStack.prototype.push = function(pushedValue)
-{
-    console.log("P", pushedValue)
-    // Empty out our commands variable, so it isn't corrupted by previous actions.
-    this.commands = [];
-
-    // Get a new memory ID for the rectangle that we are going to create.
-    var top = this.stackTop;
-    this.stackID[top] = this.nextIndex++;
-
-    // Create a rectangle that contains the pushed value.
-    this.cmd("CreateRectangle", 
-        this.stackID[top],
-        pushedValue,
-        SimpleStack.ELEMENT_WIDTH,
-        SimpleStack.ELEMENT_HEIGHT,
-        SimpleStack.INSERT_X,
-        SimpleStack.INSERT_Y
-    );
-    // Set the colors of the rectangle.
-    this.cmd("SetForegroundColor", this.stackID[top], SimpleStack.FOREGROUND_COLOR);
-    this.cmd("SetBackgroundColor", this.stackID[top], SimpleStack.BACKGROUND_COLOR);
-    // First animation step done.
-    this.cmd("Step");
-
-    // Calculate the coordinates of the rectangle.
-    var nextXPos = SimpleStack.STARTING_X + top * SimpleStack.ELEMENT_WIDTH;
-    var nextYPos = SimpleStack.STARTING_Y;
-    // Move it to its correct location.
-    this.cmd("Move", this.stackID[top], nextXPos, nextYPos);
-    // Next animation step done.
-    this.cmd("Step");
-
-    // Increase the stack top counter.
-    this.stackTop++;
-
-    // Return the commands that were generated by the "cmd" calls:
-    return this.commands;
-}
-
-SimpleStack.prototype.pop = function(unused)
-{
-    // Empty out our commands variable, so it isn't corrupted by previous actions.
-    this.commands = [];
-
-    // We can only pop values if the stack contains elements.
-    if (this.stackTop > 0) {
-        this.stackTop--;
-
-        // First we move the rectangle to the "base" position.
-        this.cmd("Move", this.stackID[this.stackTop], SimpleStack.INSERT_X, SimpleStack.INSERT_Y);
-        this.cmd("Step");
-
-        // Then we delete the rectangle.
-        this.cmd("Delete", this.stackID[this.stackTop]);
-        this.cmd("Step");
-
-        // OPTIONAL:  
-        // We can do a little better with memory leaks in our own memory manager by
-        // reclaiming this memory.  It is recommened that you *NOT* do this unless
-        // you really know what you are doing (memory management leads to tricky bugs!)
-        // *and* you really need to (very long runnning visualizaitons, not common).
-        // Because this is a stack, we can reclaim memory easily.
-        // Most of the time, this is not the case, and can be dangerous.
-        //
-        // nextIndex = this.stackID[this.stackTop];
-    }
-    return this.commands;
-}
-```
+https://github.com/ChalmersGU-data-structure-courses/visualization/blob/bf8668b2b75bc20e40e3e62698137439f912253f/AlgorithmLibrary/ExampleAlgorithm.js#L215-L283
 
 Now we're almost done!
 
 The functions `disableUI` and `enableUI` are called by our superclass
 when an animation is started resp. completed.
 
-```javascript
-SimpleStack.prototype.disableUI = function(event)
-{
-    // Called by our superclass when we get an animation started event:
-    // need to wait for the event to finish before we start doing anything.
-    for (var i = 0; i < this.controls.length; i++) {
-        this.controls[i].disabled = true;
-    }
-}
-
-SimpleStack.prototype.enableUI = function(event)
-{
-    // Called by our superclass when we get an animation completed event:
-    // we can now interact again.
-    for (var i = 0; i < this.controls.length; i++) {
-        this.controls[i].disabled = false;
-    }
-}
-```
+https://github.com/ChalmersGU-data-structure-courses/visualization/blob/bf8668b2b75bc20e40e3e62698137439f912253f/AlgorithmLibrary/ExampleAlgorithm.js#L293-L309
 
 Finally there is a simple function `init` to start everything up,
 it should be called from the webpage after it is loaded:
 
-```javascript
-var currentAlg;
-
-function init()
-{
-    var animManag = initCanvas();
-    currentAlg = new SimpleStack(animManag);
-}
-```
+https://github.com/ChalmersGU-data-structure-courses/visualization/blob/bf8668b2b75bc20e40e3e62698137439f912253f/AlgorithmLibrary/ExampleAlgorithm.js#L316-L324
 
 
 ## Animation commands
