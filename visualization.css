@@ -111,25 +111,30 @@ canvas, #selectorWrapper > select {
 
 
 canvas {
-	background-color: #FFFFFF;
+	background-color: white;
 	width: 100%;
 	max-width: 1000px;
 }
 
-.toolbar > * {
-	margin-right: 6px;
+
+.toolbar > *, .toolbar > label > * {
+	margin: 3px 6px 3px 0;
 }
 
-.break {
+.toolbar .break {
 	padding-right: 12px;
 }
 
-input {
+.toolbar select, .toolbar input {
 	padding: 3px 6px;
+	background-color: white;
+	border: solid 1px green;
+	border-radius: 5px;
 }
 
-input[type="checkbox"], input[type="radio"] {
-	width: 1.3em;
-	height: 1em;
+.toolbar input[type="checkbox"], 
+.toolbar input[type="radio"] {
+	width: 18px;
+	height: 18px;
+	vertical-align: middle;
 }
-
