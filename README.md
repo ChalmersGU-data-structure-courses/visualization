@@ -1,12 +1,18 @@
 # Visualizations of data structures and algorithms
 
-## About
-
 The best way to understand complex data structures is to see them in action. We've developed interactive animations for a
 variety of data structures and algorithms. Our visualization tool is written in Javascript using the HTML5 canvas element,
 and run in just about any modern browser – including iOS devices like the iPhone and iPad, and even the web browser in
 the Kindle!  (The frame rate is low enough in the Kindle that the visualizations aren't terribly useful, but the tree-based
 visualizations – BSTs and AVL Trees – seem to work well enough)
+
+### Try the visualizations yourself
+
+Please visit the published web pages if you want to try everything out for yourself:
+
+- https://chalmersgu-data-structure-courses.github.io/visualization/
+
+If you are interested in how the code works, you can continue reading.
 
 ### History
 
@@ -17,7 +23,7 @@ Some updates were made by [Kostas Chatzikokolakis](https://github.com/chatziko),
 and this current repository is maintained by [Peter Ljunglöf](https://github.com/heatherleaf), University of Gothenburg & Chalmers University of Technology.
 
 
-# Visualization creation tutorial
+## Visualization creation tutorial
 
 A few notes / warnings:
 
@@ -33,7 +39,7 @@ A few notes / warnings:
   I've done some going back to clean stuff up, but there is still a quite a lot of ugliness.
   *Next time* all my code will be pretty:)
 
-## Creating a new visualization
+### Creating a new visualization
 
 To create a new visualization, you need to create a Javascript file and an HTML file.
 The HTML file can just be copied from the example template (i.e., the file [example.html](example.html)),
@@ -51,7 +57,7 @@ When you are ready your final visualization page will look something like this:
 
 - https://chalmersgu-data-structure-courses.github.io/visualization/example.html
 
-## Using the Algorithm "class"
+### Using the Algorithm "class"
 
 Creating the Javascript function is still farily complicated, even when using the rest of the library.
 
@@ -62,7 +68,7 @@ To get you started, there is a simple example data structure (a simple stack) in
 [AlgorithmLibrary/ExampleAlgorithm.js](AlgorithmLibrary/ExampleAlgorithm.js),
 which we will look into in detail below.
 
-### Looking at various pieces of the file in turn
+### Looking at various pieces of the file ExampleAlgorithm.js in turn
 
 Copyright: The code is released under in a FreeBSD license.
 
@@ -166,7 +172,7 @@ it should be called from the webpage after it is loaded:
 https://github.com/ChalmersGU-data-structure-courses/visualization/blob/bf8668b2b75bc20e40e3e62698137439f912253f/AlgorithmLibrary/ExampleAlgorithm.js#L316-L324
 
 
-## Animation commands
+## Digging deeper: Animation commands
 
 The commands that we give to the animation manager are a list (array) of strings.
 Each string starts with the name of the command (case-insensitive) followed by a list of arguments,
@@ -439,9 +445,9 @@ objectID of the "to" object.  Any object can be connected to any other object.
     - layer:  The new layer for this object.  Each object must live in one and only one layer (though any combination of layers can be shown at any given time).
 
 
-## Quirks and Advanced Techniques
+### Quirks and Advanced Techniques
 
-### Object Display Order
+#### Object Display Order
 
 If two object overlap, which one is placed on top?  The animation system uses the following rules to determine draw order:
 
