@@ -405,7 +405,7 @@ function AnimationManager(objectManager)
                 var toY = parseInt(args.shift());
                 var nextAnim = new SingleAnimation(id, fromX, fromY, toX, toY);
                 this.currentBlock.push(nextAnim);
-                undoBlock.push(new UndoMove(id, fromX, fromY, toX, toY));
+                undoBlock.push(new UndoMove(id, toX, toY, fromX, fromY));
                 anyAnimations = true;
             }
             else if (cmd == "MOVETOALIGNRIGHT") {
@@ -415,7 +415,7 @@ function AnimationManager(objectManager)
                 var [toX, toY] = this.animatedObjects.getAlignRightPos(id, otherId);
                 var nextAnim = new SingleAnimation(id, fromX, fromY, toX, toY);
                 this.currentBlock.push(nextAnim);
-                undoBlock.push(new UndoMove(id, fromX, fromY, toX, toY));
+                undoBlock.push(new UndoMove(id, toX, toY, fromX, fromY));
                 anyAnimations = true;
             }
             else if (cmd == "STEP") {
