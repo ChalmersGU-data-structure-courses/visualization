@@ -66,10 +66,7 @@ which we will look into in detail below.
 
 Copyright: The code is released under in a FreeBSD license.
 
-```javascript
-// Copyright 2011 David Galles, University of San Francisco. All rights reserved.
-// (...)
-```
+https://github.com/ChalmersGU-data-structure-courses/visualization/blob/3a8f9ee03a1bcec3e571aab398a5eaef55b5a524/AlgorithmLibrary/ExampleAlgorithm.js#L1-L25
 
 Next, the algorithm definition.  We are doing a sort of "faked" inheritance within Javascript.
 We define our function, set the prototype of our function to the prototype of our superclass,
