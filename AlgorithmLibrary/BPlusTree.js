@@ -447,7 +447,7 @@ BPlusTree.prototype.insertElement = function(insertedValue)
 
     if (this.treeRoot == null)
     {
-        this.treeRoot = new BTreeNode(this.nextIndex++, this.starting_x, BPlusTree.STARTING_Y);
+        this.treeRoot = new BPlusTreeNode(this.nextIndex++, this.starting_x, BPlusTree.STARTING_Y);
         this.cmd("CreateBTreeNode",this.treeRoot.graphicID, BPlusTree.WIDTH_PER_ELEM, BPlusTree.NODE_HEIGHT, 1, this.starting_x, BPlusTree.STARTING_Y, BPlusTree.BACKGROUND_COLOR,  BPlusTree.FOREGROUND_COLOR);
         this.treeRoot.keys[0] = insertedValue;
         this.cmd("SetText", this.treeRoot.graphicID, insertedValue, 0);
@@ -544,7 +544,7 @@ BPlusTree.prototype.split = function(tree)
     this.cmd("SetHighlight", tree.graphicID, 1);
     this.cmd("Step");
     this.cmd("SetHighlight", tree.graphicID, 0);
-    var rightNode = new BTreeNode(this.nextIndex++, tree.x + 100, tree.y);
+    var rightNode = new BPlusTreeNode(this.nextIndex++, tree.x + 100, tree.y);
 
     var risingNode = tree.keys[this.split_index];
 
@@ -682,7 +682,7 @@ BPlusTree.prototype.split = function(tree)
     }
     else //            if (tree.parent == null)
     {
-        this.treeRoot = new BTreeNode(this.nextIndex++, this.starting_x, BPlusTree.STARTING_Y);
+        this.treeRoot = new BPlusTreeNode(this.nextIndex++, this.starting_x, BPlusTree.STARTING_Y);
         this.cmd("CreateBTreeNode",this.treeRoot.graphicID, BPlusTree.WIDTH_PER_ELEM, BPlusTree.NODE_HEIGHT, 1, this.starting_x, BPlusTree.STARTING_Y,BPlusTree.BACKGROUND_COLOR,  BPlusTree.FOREGROUND_COLOR);
         this.treeRoot.keys[0] = risingNode;
         this.cmd("SetText", this.treeRoot.graphicID, risingNode, 0);
@@ -1332,7 +1332,7 @@ BPlusTree.prototype.resizeWidths = function(tree)
 
 
 
-function BTreeNode(id, initialX, initialY)
+function BPlusTreeNode(id, initialX, initialY)
 {
     this.widths = [];
     this.keys = [];
