@@ -47,9 +47,7 @@ function ObjectManager(canvas)
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
     this.framenum = 0;
-    this.statusReport = new AnimatedLabel(-1, "XXX", false, 30, this.ctx);
-    this.statusReport.x = 30;
-
+    this.statusReport = new AnimatedLabel(-1, "...", false, 30, this.ctx);
 
     this.draw = function()
     {
@@ -58,7 +56,6 @@ function ObjectManager(canvas)
             this.framenum = 0;
 
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); // clear canvas
-        this.statusReport.y = this.canvas.height - 15;
 
         for (var i = 0; i < this.Nodes.length; i++) {
             if (this.Nodes[i] != null && !this.Nodes[i].highlighted && this.Nodes[i].addedToScene && !this.Nodes[i].alwaysOnTop) {
@@ -91,6 +88,14 @@ function ObjectManager(canvas)
             }
         }
 
+        this.drawStatusReport();
+    }
+
+
+    this.drawStatusReport = function()
+    {
+        this.statusReport.x = 25;
+        this.statusReport.y = this.canvas.height - this.statusReport.textHeight - 5;
         this.statusReport.draw(this.ctx);
     }
 

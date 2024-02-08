@@ -113,8 +113,7 @@ function returnSubmit(field, funct, maxsize, intOnly)
         else if (keyASCII == 59  || keyASCII == 45 || keyASCII == 46 || keyASCII == 190 || keyASCII == 173) {
             return false;
         } 
-        else if (maxsize != undefined && field.value.length >= maxsize || intOnly && (keyASCII < 48 || keyASCII > 57))
-        {
+        else if (maxsize != undefined && field.value.length >= maxsize || intOnly && (keyASCII < 48 || keyASCII > 57)) {
             if (!controlKey(keyASCII))
                 return false;
         }
@@ -152,8 +151,7 @@ function animEnded()
     if (this.skipBackButton.disabled == false && this.animationPaused) {
         this.stepBackButton.disabled = false;
     }
-    // this.objectManager.statusReport.setText("Animation Completed");
-    this.objectManager.statusReport.setText("");
+    this.objectManager.statusReport.setText("Animation Completed");
     this.objectManager.statusReport.setForegroundColor("#000000");
 }
 
@@ -362,7 +360,6 @@ function AnimationManager(objectManager)
 
         while (this.currentAnimation < this.AnimationSteps.length && !foundBreak) {
             var args = this.AnimationSteps[this.currentAnimation].split("<;>");
-            // console.log("Command:", ...args);
             var cmd = args.shift().toUpperCase();
             var id = parseInt(args.shift());
             if (cmd == "CREATECIRCLE") {

@@ -274,14 +274,13 @@ Algorithm.prototype.clearHistory = function()
 
 
 // Helper method to create a command string from a bunch of arguments
-Algorithm.prototype.cmd = function()
+Algorithm.prototype.cmd = function(...args)
 {
     if (this.recordAnimation) {
-        var command = arguments[0];
-        for(i = 1; i < arguments.length; i++) {
-            command = command + "<;>" + String(arguments[i]);
+        if (args[0].toUpperCase() == "SETTEXT" && args[1] == this.messageID && args[2]) {
+            console.log(args[2]);
         }
-        this.commands.push(command);
+        this.commands.push(args.join("<;>"));
     }
 }
 
