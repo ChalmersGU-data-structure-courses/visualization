@@ -1,6 +1,6 @@
 # Visualizations of data structures and algorithms
 
-The best way to understand complex data structures is to see them in action. We've developed interactive animations for a
+A useful aid to understand complex data structures is to see them in action. We've developed interactive animations for a
 variety of data structures and algorithms. Our visualization tool is written in Javascript using the HTML5 canvas element,
 and run in just about any modern browser – including iOS devices like the iPhone and iPad, and even the web browser in
 the Kindle!  (The frame rate is low enough in the Kindle that the visualizations aren't terribly useful, but the tree-based
