@@ -43,7 +43,7 @@ function AnimatedObject()
     this.range = 5;
     this.highlightIndex = -1;
     this.highlightIndexDirty = true;
-    this.textHeight = this.DEFAULT_TEXT_HEIGHT;
+    this.textHeight = AnimatedObject.DEFAULT_TEXT_HEIGHT;
 }
 
 AnimatedObject.prototype.alwaysOnTop = false;

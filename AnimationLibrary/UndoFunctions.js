@@ -138,10 +138,10 @@ UndoSetWidth.prototype.undoInitialStep = function(world)
 ////////////////////////////////////////////////////////////
 // UndoSetNumElements
 ////////////////////////////////////////////////////////////
-function UndoSetNumElements(obj, newNumElems)
+function UndoSetNumElements(obj, oldNumElems, newNumElems)
 {
     this.objectID = obj.objectID;
-    this.sizeBeforeChange = obj.getNumElements();
+    this.sizeBeforeChange = oldNumElems;
     this.sizeAfterChange = newNumElems;
     if (this.sizeBeforeChange > this.sizeAfterChange)
     {

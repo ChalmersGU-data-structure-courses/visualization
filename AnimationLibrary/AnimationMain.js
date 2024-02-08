@@ -578,9 +578,10 @@ function AnimationManager(objectManager)
             }
             else if (cmd == "SETNUMELEMENTS") {
                 var numElems = parseInt(args.shift());
-                var oldElem = this.animatedObjects.getObject(id);
+                var oldID = this.animatedObjects.getObject(id);
+                var oldNumElems = oldID.getNumElements();
                 this.animatedObjects.setNumElements(id, numElems);
-                undoBlock.push(new UndoSetNumElements(oldElem, numElems));
+                undoBlock.push(new UndoSetNumElements(oldID, oldNumElems, numElems));
             }
             else if (cmd == "SETPOSITION") {
                 var x = parseInt(args.shift());
