@@ -30,57 +30,25 @@ function ComparisonSort(am)
     this.init(am);
 }
 
-ComparisonSort.DEFAULT_ARRAY_SIZE = "Small (30)";
-ComparisonSort.ARRAY_DATA = {
-    "Small (30)": {
-        labels: true,
-        size: 30,
-        width: 22,
-        bar_width: 12,
-        initial_x: 20,
-        y_pos: 250,
-        label_y_pos: 260,
-    },
-    "Medium (80)": {
-        labels: false,
-        size: 80,
-        width: 9,
-        bar_width: 5,
-        initial_x: 10,
-        y_pos: 250,
-        label_y_pos: 260,
-    },
-    "Large (160)": {
-        labels: false,
-        size: 160,
-        width: 6,
-        bar_width: 2,
-        initial_x: 15,
-        y_pos: 250,
-        label_y_pos: 260,
-    },
-    "Huge (320)": {
-        labels: false,
-        size: 320,
-        width: 3,
-        bar_width: 1,
-        initial_x: 15,
-        y_pos: 250,
-        label_y_pos: 260,
-    },
+ComparisonSort.DEFAULT_ARRAY_SIZE = 25;
+ComparisonSort.ARRAY_SIZES = {
+    "Small (25)": 25,
+    "Medium (50)": 50,
+    "Large (100)": 100,
+    "Huge (200)": 200,
 };
 
-ComparisonSort.LOWER_ARRAY_Y_POS = 500;
-ComparisonSort.LOWER_ARRAY_LABEL_Y_POS = 510;
+ComparisonSort.Y_MARGINAL = 50;
+ComparisonSort.LABEL_Y_ADD = 10;
 
-ComparisonSort.SCALE_FACTOR = 2.0;
+ComparisonSort.MAX_VALUE = 99;
+ComparisonSort.MAX_SCALE_FACTOR = 2.0;
 
 ComparisonSort.BAR_FOREGROUND_COLOR = "#0000FF";
 ComparisonSort.BAR_BACKGROUND_COLOR ="#AAAAFF";
 ComparisonSort.INDEX_COLOR = "#0000FF";
 ComparisonSort.HIGHLIGHT_BAR_COLOR = "#FF0000";
 ComparisonSort.HIGHLIGHT_BAR_BACKGROUND_COLOR = "#FFAAAA";
-
 ComparisonSort.QUICKSORT_LINE_COLOR = "#FF0000";
 
 
@@ -90,28 +58,23 @@ ComparisonSort.prototype.init = function(am)
 {
     ComparisonSort.superclass.init.call(this, am);
     this.addControls();
-    this.nextIndex = 0;
-
-    this.setArraySize();
-    this.arrayData = new Array(ComparisonSort.ARRAY_SIZE_LARGE);
-    this.arraySwap = new Array(ComparisonSort.ARRAY_SIZE_LARGE);
-    this.labelsSwap = new Array(ComparisonSort.ARRAY_SIZE_LARGE);
-    this.objectsSwap = new Array(ComparisonSort.ARRAY_SIZE_LARGE);
-
-    this.createVisualObjects();
+    this.resetAll();
 }
 
 
 ComparisonSort.prototype.addControls = function()
 {
     this.resetButton = this.addControlToAlgorithmBar("Button", "Randomize Array");
-    this.resetButton.onclick = this.resetCallback.bind(this);
+    this.resetButton.onclick = this.resetAll.bind(this);
     this.addBreakToAlgorithmBar();
 
     this.addLabelToAlgorithmBar("Array size:");
-    this.sizeSelect = this.addSelectToAlgorithmBar(Object.keys(ComparisonSort.ARRAY_DATA));
+    this.sizeSelect = this.addSelectToAlgorithmBar(
+        Object.values(ComparisonSort.ARRAY_SIZES),
+        Object.keys(ComparisonSort.ARRAY_SIZES)
+    );
     this.sizeSelect.value = ComparisonSort.DEFAULT_ARRAY_SIZE;
-    this.sizeSelect.onchange = this.changeSizeCallback.bind(this);
+    this.sizeSelect.onchange = this.resetAll.bind(this);
     this.addBreakToAlgorithmBar();
 
     this.addLabelToAlgorithmBar("Algorithm:");
@@ -124,36 +87,49 @@ ComparisonSort.prototype.addControls = function()
 }
 
 
-ComparisonSort.prototype.setArraySize = function ()
+ComparisonSort.prototype.sizeChanged = function()
 {
-    var size = this.sizeSelect.value || ComparisonSort.DEFAULT_ARRAY_SIZE;
-    this.array = ComparisonSort.ARRAY_DATA[size];
+    this.resetAll();
 }
 
 
 ComparisonSort.prototype.resetAll = function()
 {
     this.animationManager.resetAll();
-    this.setArraySize();
     this.nextIndex = 0;
+
+    this.info = {};
+    this.info.size = parseInt(this.sizeSelect.value) || ComparisonSort.DEFAULT_ARRAY_SIZE;
+    this.info.width = Math.floor((this.getCanvasWidth() - 50) / this.info.size);
+    this.info.initial_x = Math.floor((this.getCanvasWidth() - this.info.width * (1 + this.info.size)) / 2);
+    this.info.bar_width = Math.max(1, Math.floor(this.info.width * 0.8) - 2);
+    this.info.labels = this.info.width >= 13;
+    this.info.scale_factor = Math.min(
+        ComparisonSort.MAX_SCALE_FACTOR, 
+        this.getCanvasHeight() / (3 * ComparisonSort.MAX_VALUE)
+    );
+    this.info.y_pos = ComparisonSort.Y_MARGINAL + ComparisonSort.MAX_VALUE * this.info.scale_factor;
+    this.info.lower_y_pos = Math.min(
+        2 * this.info.y_pos,
+        this.getCanvasHeight() - ComparisonSort.Y_MARGINAL - ComparisonSort.LABEL_Y_ADD
+    );
+
     this.createVisualObjects();
 }
 
 
 ComparisonSort.prototype.randomizeArray = function()
 {
-    this.commands = new Array();
-    for (var i = 0; i < this.array.size; i++) {
-        this.arrayData[i] = Math.floor(1 + Math.random()*99);
-        this.oldData[i] = this.arrayData[i];
-        var label = this.array.labels ? this.arrayData[i] : "";
+    this.commands = [];
+    for (var i = 0; i < this.info.size; i++) {
+        this.oldArrayData[i] = this.arrayData[i] = Math.floor(1 + Math.random() * ComparisonSort.MAX_VALUE);
+        var label = this.info.labels ? this.arrayData[i] : "";
         this.cmd("SetText", this.barLabels[i], label);
-        this.cmd("SetHeight", this.barObjects[i], this.arrayData[i] * ComparisonSort.SCALE_FACTOR);
+        this.cmd("SetHeight", this.barObjects[i], this.arrayData[i] * this.info.scale_factor);
     }
     this.animationManager.StartNewAnimation(this.commands);
     this.animationManager.skipForward();
     this.animationManager.clearHistory();
-
 }
 
 
@@ -171,55 +147,60 @@ ComparisonSort.prototype.swap = function(index1, index2)
     this.barLabels[index1] = this.barLabels[index2];
     this.barLabels[index2] = tmp;
 
-    this.cmd("Move", this.barObjects[index1], this.barPositionsX[index1], this.array.y_pos);
-    this.cmd("Move", this.barObjects[index2], this.barPositionsX[index2], this.array.y_pos);
-    this.cmd("Move", this.barLabels[index1], this.barPositionsX[index1], this.array.label_y_pos);
-    this.cmd("Move", this.barLabels[index2], this.barPositionsX[index2], this.array.label_y_pos);
+    this.cmd("Move", this.barObjects[index1], this.barPositionsX[index1], this.info.y_pos);
+    this.cmd("Move", this.barObjects[index2], this.barPositionsX[index2], this.info.y_pos);
+    this.cmd("Move", this.barLabels[index1], this.barPositionsX[index1], this.info.y_pos + ComparisonSort.LABEL_Y_ADD);
+    this.cmd("Move", this.barLabels[index2], this.barPositionsX[index2], this.info.y_pos + ComparisonSort.LABEL_Y_ADD);
     this.cmd("Step");
 }
 
 
 ComparisonSort.prototype.createVisualObjects = function()
 {
-    this.barObjects = new Array(this.array.size);
-    this.oldBarObjects= new Array(this.array.size);
-    this.oldbarLabels= new Array(this.array.size);
+    var size = this.info.size;
 
-    this.barLabels = new Array(this.array.size);
-    this.barPositionsX = new Array(this.array.size);
-    this.oldData = new Array(this.array.size);
-    this.obscureObject = new Array(this.array.size);
+    this.arrayData = new Array(size);
+    this.oldArrayData = new Array(size);
+    this.barObjects = new Array(size);
+    this.oldBarObjects = new Array(size);
+    this.barLabels = new Array(size);
+    this.oldBarLabels= new Array(size);
 
-    var xPos = this.array.initial_x;
-    var yPos = this.array.y_pos;
-    var yLabelPos = this.array.label_y_pos;
+    this.arraySwap = new Array(size);
+    this.labelsSwap = new Array(size);
+    this.objectsSwap = new Array(size);
+    
+    this.barPositionsX = new Array(size);
+    this.obscureObject = new Array(size);
 
-    this.commands = new Array();
-    for (var i = 0; i < this.array.size; i++) {
-        xPos = xPos + this.array.width;
+    var xPos = this.info.initial_x;
+    var yPos = this.info.y_pos;
+    var yLabelPos = yPos + ComparisonSort.LABEL_Y_ADD;
+
+    this.commands = [];
+    for (var i = 0; i < size; i++) {
+        xPos = xPos + this.info.width;
         this.barPositionsX[i] = xPos;
-        this.cmd("CreateRectangle", this.nextIndex, "", this.array.bar_width, 200, xPos, yPos,"center","bottom");
-        this.cmd("SetForegroundColor", this.nextIndex, ComparisonSort.BAR_FOREGROUND_COLOR);
-        this.cmd("SetBackgroundColor", this.nextIndex, ComparisonSort.BAR_BACKGROUND_COLOR);
-        this.barObjects[i] = this.nextIndex;
-        this.oldBarObjects[i] = this.barObjects[i];
-        this.nextIndex += 1;
-        var label = this.array.labels ? "99" : "";
-        this.cmd("CreateLabel", this.nextIndex, label, xPos, yLabelPos);
-        this.cmd("SetHeight", this.nextIndex, 12);
-        this.cmd("SetForegroundColor", this.nextIndex, ComparisonSort.INDEX_COLOR);
+        this.obscureObject[i] = false;
+        this.oldArrayData[i] = this.arrayData[i] = Math.floor(1 + Math.random() * ComparisonSort.MAX_VALUE);
 
-        this.barLabels[i] = this.nextIndex;
-        this.oldbarLabels[i] = this.barLabels[i];
-        ++this.nextIndex;
+        var rectID = this.nextIndex++;
+        var barHeight = this.arrayData[i] * this.info.scale_factor;
+        this.cmd("CreateRectangle", rectID, "", this.info.bar_width, barHeight, xPos, yPos, "center", "bottom");
+        this.cmd("SetForegroundColor", rectID, ComparisonSort.BAR_FOREGROUND_COLOR);
+        this.cmd("SetBackgroundColor", rectID, ComparisonSort.BAR_BACKGROUND_COLOR);
+        this.oldBarObjects[i] = this.barObjects[i] = rectID;
+
+        var labelID = this.nextIndex++;
+        var label = this.info.labels ? this.arrayData[i] : "";
+        this.cmd("CreateLabel", labelID, label, xPos, yLabelPos);
+        this.cmd("SetHeight", labelID, 10); // this.array.bar_width);
+        this.cmd("SetForegroundColor", labelID, ComparisonSort.INDEX_COLOR);
+        this.oldBarLabels[i] = this.barLabels[i] = labelID;
     }
     this.animationManager.StartNewAnimation(this.commands);
     this.animationManager.skipForward();
-    this.randomizeArray();
-    for (i = 0; i < this.array.size; i++) {
-        this.obscureObject[i] = false;
-    }
-    this.lastCreatedIndex = this.nextIndex;
+    this.animationManager.clearHistory();
 }
 
 
@@ -239,7 +220,7 @@ ComparisonSort.prototype.highlightRange = function(lowIndex, highIndex)
             this.cmd("SetAlpha", this.barLabels[i], 1.0);
         }
     }
-    for (i = highIndex+1; i < this.array.size; i++) {
+    for (i = highIndex+1; i < this.info.size; i++) {
         if (!this.obscureObject[i]) {
             this.obscureObject[i] = true;
             this.cmd("SetAlpha", this.barObjects[i], 0.08);
@@ -251,27 +232,14 @@ ComparisonSort.prototype.highlightRange = function(lowIndex, highIndex)
 
 ComparisonSort.prototype.reset = function()
 {
-    for (var i = 0; i < this.array.size; i++) {
-        this.arrayData[i]= this.oldData[i];
+    for (var i = 0; i < this.info.size; i++) {
+        this.arrayData[i]= this.oldArrayData[i];
         this.barObjects[i] = this.oldBarObjects[i];
-        this.barLabels[i] = this.oldbarLabels[i];
-        var label = this.array.labels ? this.arrayData[i] : "";
+        this.barLabels[i] = this.oldBarLabels[i];
+        var label = this.info.labels ? this.arrayData[i] : "";
         this.cmd("SetText", this.barLabels[i], label);
-        this.cmd("SetHeight", this.barObjects[i], this.arrayData[i] * ComparisonSort.SCALE_FACTOR);
+        this.cmd("SetHeight", this.barObjects[i], this.arrayData[i] * this.info.scale_factor);
     }
-    this.commands = new Array();
-}
-
-
-ComparisonSort.prototype.resetCallback = function(event)
-{
-    this.randomizeArray();
-}
-
-
-ComparisonSort.prototype.changeSizeCallback = function(event)
-{
-    this.resetAll();
 }
 
 
@@ -311,11 +279,11 @@ ComparisonSort.prototype.insertionSort = function()
 
 ComparisonSort.prototype.selectionSort = function()
 {
-    for (var i = 0; i < this.array.size - 1; i++) {
+    for (var i = 0; i < this.info.size - 1; i++) {
         var smallestIndex = i;
         this.cmd("SetForegroundColor", this.barObjects[smallestIndex], ComparisonSort.HIGHLIGHT_BAR_COLOR);
         this.cmd("SetBackgroundColor", this.barObjects[smallestIndex], ComparisonSort.HIGHLIGHT_BAR_BACKGROUND_COLOR);
-        for (var j = i+1; j < this.array.size; j++) {
+        for (var j = i+1; j < this.info.size; j++) {
             this.cmd("SetForegroundColor", this.barObjects[j], ComparisonSort.HIGHLIGHT_BAR_COLOR);
             this.cmd("SetBackgroundColor", this.barObjects[j], ComparisonSort.HIGHLIGHT_BAR_BACKGROUND_COLOR);
             this.cmd("Step");
@@ -340,7 +308,7 @@ ComparisonSort.prototype.selectionSort = function()
 
 ComparisonSort.prototype.bubbleSort = function()
 {
-    for (var i = this.array.size-1; i > 0; i--) {
+    for (var i = this.info.size-1; i > 0; i--) {
         for (var j = 0; j < i; j++) {
             this.cmd("SetForegroundColor", this.barObjects[j], ComparisonSort.HIGHLIGHT_BAR_COLOR);
             this.cmd("SetBackgroundColor", this.barObjects[j], ComparisonSort.HIGHLIGHT_BAR_BACKGROUND_COLOR);
@@ -349,7 +317,7 @@ ComparisonSort.prototype.bubbleSort = function()
             this.cmd("SetBackgroundColor", this.barObjects[j+1], ComparisonSort.HIGHLIGHT_BAR_BACKGROUND_COLOR);
             this.cmd("Step");
             if (this.compare(this.arrayData[j], this.arrayData[j+1]) > 0) {
-                this.swap(j,j+1);
+                this.swap(j, j+1);
             }
             this.cmd("SetForegroundColor", this.barObjects[j], ComparisonSort.BAR_FOREGROUND_COLOR);
             this.cmd("SetBackgroundColor", this.barObjects[j], ComparisonSort.BAR_BACKGROUND_COLOR);
@@ -363,21 +331,22 @@ ComparisonSort.prototype.bubbleSort = function()
 
 ComparisonSort.prototype.mergeSort = function()
 {
-    this.recursiveMergeSort(0, this.array.size - 1);
+    this.recursiveMergeSort(0, this.info.size - 1);
 }
 
 
 ComparisonSort.prototype.quickSort = function()
 {
     this.iID = this.nextIndex++;
-    this.jID= this.nextIndex++;
-    this.cmd("CreateLabel", this.iID, "i", this.barObjects[0], this.array.label_y_pos + 20);
-    this.cmd("CreateLabel", this.jID, "j", this.barObjects[this.array.size - 1], this.array.label_y_pos + 20);
+    this.jID = this.nextIndex++;
+    this.info.y_ij_pos = this.info.y_pos + ComparisonSort.LABEL_Y_ADD * (this.info.labels ? 3 : 1);
+    this.cmd("CreateLabel", this.iID, "↑", this.barPositionsX[0], this.info.y_ij_pos);
+    this.cmd("CreateLabel", this.jID, "↑", this.barPositionsX[this.info.size - 1], this.info.y_ij_pos);
     this.cmd("SetForegroundColor", this.iID, ComparisonSort.HIGHLIGHT_BAR_COLOR);
     this.cmd("SetBackgroundColor", this.iID, ComparisonSort.HIGHLIGHT_BAR_BACKGROUND_COLOR);
     this.cmd("SetForegroundColor", this.jID, ComparisonSort.HIGHLIGHT_BAR_COLOR);
     this.cmd("SetBackgroundColor", this.jID, ComparisonSort.HIGHLIGHT_BAR_BACKGROUND_COLOR);
-    this.recursiveQuickSort(0, this.array.size - 1);
+    this.recursiveQuickSort(0, this.info.size - 1);
     this.cmd("Delete", this.iID);
     this.cmd("Delete", this.jID);
 }
@@ -392,13 +361,23 @@ ComparisonSort.prototype.recursiveQuickSort = function(low, high)
     this.cmd("Step");
     var lineID = this.nextIndex;
     var pivot = this.arrayData[low];
-    this.cmd("CreateRectangle", lineID, "", (this.array.size + 1) * this.array.width, 0, this.array.initial_x, this.array.y_pos - pivot * 2, "left", "bottom");
+    this.cmd(
+        "CreateRectangle", 
+        lineID, 
+        "", 
+        (this.info.size + 1) * this.info.width, 
+        0, 
+        this.info.initial_x, 
+        this.info.y_pos - pivot * this.info.scale_factor, 
+        "left", 
+        "bottom"
+    );
     this.cmd("SetForegroundColor", lineID, ComparisonSort.QUICKSORT_LINE_COLOR);
     var i = low + 1;
     var j = high;
 
-    this.cmd("Move", this.iID, this.barPositionsX[i], this.array.label_y_pos + 20);
-    this.cmd("Move", this.jID, this.barPositionsX[j], this.array.label_y_pos + 20);
+    this.cmd("Move", this.iID, this.barPositionsX[i], this.info.y_ij_pos);
+    this.cmd("Move", this.jID, this.barPositionsX[j], this.info.y_ij_pos);
     this.cmd("Step");
 
     while (i <= j) {
@@ -414,7 +393,7 @@ ComparisonSort.prototype.recursiveQuickSort = function(low, high)
         this.cmd("SetBackgroundColor", this.barObjects[i], ComparisonSort.BAR_BACKGROUND_COLOR);
         while (i <= j && this.compare(this.arrayData[i], pivot) < 0) {
             ++i;
-            this.cmd("Move", this.iID, this.barPositionsX[i], this.array.label_y_pos + 20);
+            this.cmd("Move", this.iID, this.barPositionsX[i], this.info.y_ij_pos);
             this.cmd("Step");
             this.cmd("SetForegroundColor", this.barObjects[low], ComparisonSort.HIGHLIGHT_BAR_COLOR);
             this.cmd("SetBackgroundColor", this.barObjects[low], ComparisonSort.HIGHLIGHT_BAR_BACKGROUND_COLOR);
@@ -442,7 +421,7 @@ ComparisonSort.prototype.recursiveQuickSort = function(low, high)
 
         while (j >= i && this.compare(this.arrayData[j], pivot) > 0) {
             --j;
-            this.cmd("Move", this.jID, this.barPositionsX[j], this.array.label_y_pos + 20);
+            this.cmd("Move", this.jID, this.barPositionsX[j], this.info.y_ij_pos);
             this.cmd("Step");
             this.cmd("SetForegroundColor", this.barObjects[j], ComparisonSort.HIGHLIGHT_BAR_COLOR);
             this.cmd("SetBackgroundColor", this.barObjects[j], ComparisonSort.HIGHLIGHT_BAR_BACKGROUND_COLOR);
@@ -457,10 +436,9 @@ ComparisonSort.prototype.recursiveQuickSort = function(low, high)
             this.cmd("SetBackgroundColor", this.barObjects[low], ComparisonSort.BAR_BACKGROUND_COLOR);
         }
         if (i <= j) {
-            this.cmd("Move", this.jID, this.barPositionsX[j-1], this.array.label_y_pos + 20);
-            this.cmd("Move", this.iID, this.barPositionsX[i+1], this.array.label_y_pos + 20);
-
-            this.swap(i,j);
+            this.cmd("Move", this.jID, this.barPositionsX[j-1], this.info.y_ij_pos);
+            this.cmd("Move", this.iID, this.barPositionsX[i+1], this.info.y_ij_pos);
+            this.swap(i, j);
             ++i;
             --j;
         }
@@ -501,8 +479,8 @@ ComparisonSort.prototype.recursiveMergeSort = function(low, high)
         while (insertIndex <= high) {
             if (leftIndex <= mid && (rightIndex > high || this.compare(this.arrayData[leftIndex], this.arrayData[rightIndex]) <= 0)) {
                 this.arraySwap[insertIndex] = this.arrayData[leftIndex];
-                this.cmd("Move", this.barObjects[leftIndex], this.barPositionsX[insertIndex], ComparisonSort.LOWER_ARRAY_Y_POS);
-                this.cmd("Move", this.barLabels[leftIndex], this.barPositionsX[insertIndex], ComparisonSort.LOWER_ARRAY_LABEL_Y_POS);
+                this.cmd("Move", this.barObjects[leftIndex], this.barPositionsX[insertIndex], this.info.lower_y_pos);
+                this.cmd("Move", this.barLabels[leftIndex], this.barPositionsX[insertIndex], this.info.lower_y_pos + ComparisonSort.LABEL_Y_ADD);
                 this.cmd("Step");
                 this.labelsSwap[insertIndex] = this.barLabels[leftIndex];
                 this.objectsSwap[insertIndex] = this.barObjects[leftIndex];
@@ -511,8 +489,8 @@ ComparisonSort.prototype.recursiveMergeSort = function(low, high)
             }
             else {
                 this.arraySwap[insertIndex] = this.arrayData[rightIndex];
-                this.cmd("Move", this.barLabels[rightIndex], this.barPositionsX[insertIndex], ComparisonSort.LOWER_ARRAY_LABEL_Y_POS);
-                this.cmd("Move", this.barObjects[rightIndex], this.barPositionsX[insertIndex], ComparisonSort.LOWER_ARRAY_Y_POS);
+                this.cmd("Move", this.barObjects[rightIndex], this.barPositionsX[insertIndex], this.info.lower_y_pos);
+                this.cmd("Move", this.barLabels[rightIndex], this.barPositionsX[insertIndex], this.info.lower_y_pos + ComparisonSort.LABEL_Y_ADD);
                 this.cmd("Step");
                 this.labelsSwap[insertIndex] = this.barLabels[rightIndex];
                 this.objectsSwap[insertIndex] = this.barObjects[rightIndex];
@@ -524,8 +502,8 @@ ComparisonSort.prototype.recursiveMergeSort = function(low, high)
             this.barObjects[insertIndex] = this.objectsSwap[insertIndex];
             this.barLabels[insertIndex] = this.labelsSwap[insertIndex];
             this.arrayData[insertIndex] = this.arraySwap[insertIndex];
-            this.cmd("Move", this.barObjects[insertIndex], this.barPositionsX[insertIndex], this.array.y_pos);
-            this.cmd("Move", this.barLabels[insertIndex], this.barPositionsX[insertIndex], this.array.label_y_pos);
+            this.cmd("Move", this.barObjects[insertIndex], this.barPositionsX[insertIndex], this.info.y_pos);
+            this.cmd("Move", this.barLabels[insertIndex], this.barPositionsX[insertIndex], this.info.y_pos + ComparisonSort.LABEL_Y_ADD);
         }
         this.cmd("Step");
     }
@@ -537,9 +515,9 @@ ComparisonSort.prototype.recursiveMergeSort = function(low, high)
 
 ComparisonSort.prototype.shellSort = function()
 {
-    for (var inc = Math.floor(this.array.size / 2); inc >=1; inc = Math.floor(inc / 2)) {
+    for (var inc = Math.floor(this.info.size / 2); inc >=1; inc = Math.floor(inc / 2)) {
         for (var offset = 0; offset < inc; offset = offset + 1) {
-            for (var k = 0; k < this.array.size; k++) {
+            for (var k = 0; k < this.info.size; k++) {
                 if ((k - offset) % inc == 0) {
                     if (this.obscureObject[k]) {
                         this.obscureObject[k] = false;
@@ -564,26 +542,26 @@ ComparisonSort.prototype.shellSort = function()
 
 ComparisonSort.prototype.insertionSortSkip = function(inc, offset)
 {
-    for (var i =inc + offset; i < this.array.size; i = i + inc) {
+    for (var i =inc + offset; i < this.info.size; i = i + inc) {
         var j = i;
         while (j > inc - 1) {
             this.cmd("SetForegroundColor", this.barObjects[j], ComparisonSort.HIGHLIGHT_BAR_COLOR);
             this.cmd("SetForegroundColor", this.barObjects[j-inc], ComparisonSort.HIGHLIGHT_BAR_COLOR);
             this.cmd("SetBackgroundColor", this.barObjects[j], ComparisonSort.HIGHLIGHT_BAR_BACKGROUND_COLOR);
-            this.cmd("SetBackgroundColor", this.barObjects[j - inc], ComparisonSort.HIGHLIGHT_BAR_BACKGROUND_COLOR);
+            this.cmd("SetBackgroundColor", this.barObjects[j-inc], ComparisonSort.HIGHLIGHT_BAR_BACKGROUND_COLOR);
             this.cmd("Step");
             if (this.compare(this.arrayData[j-inc], this.arrayData[j]) <= 0) {
                 this.cmd("SetForegroundColor", this.barObjects[j], ComparisonSort.BAR_FOREGROUND_COLOR);
                 this.cmd("SetForegroundColor", this.barObjects[j-inc], ComparisonSort.BAR_FOREGROUND_COLOR);
                 this.cmd("SetBackgroundColor", this.barObjects[j], ComparisonSort.BAR_BACKGROUND_COLOR);
-                this.cmd("SetBackgroundColor", this.barObjects[j - inc], ComparisonSort.BAR_BACKGROUND_COLOR);
+                this.cmd("SetBackgroundColor", this.barObjects[j-inc], ComparisonSort.BAR_BACKGROUND_COLOR);
                 break;
             }
-            this.swap(j,j-inc);
+            this.swap(j, j-inc);
             this.cmd("SetForegroundColor", this.barObjects[j], ComparisonSort.BAR_FOREGROUND_COLOR);
             this.cmd("SetForegroundColor", this.barObjects[j-inc], ComparisonSort.BAR_FOREGROUND_COLOR);
             this.cmd("SetBackgroundColor", this.barObjects[j], ComparisonSort.BAR_BACKGROUND_COLOR);
-            this.cmd("SetBackgroundColor", this.barObjects[j - inc], ComparisonSort.BAR_BACKGROUND_COLOR);
+            this.cmd("SetBackgroundColor", this.barObjects[j-inc], ComparisonSort.BAR_BACKGROUND_COLOR);
             j = j - inc;
         }
     }
