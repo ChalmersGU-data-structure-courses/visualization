@@ -404,8 +404,8 @@ SplayTree.prototype.insertElement = function(insertedValue)
         this.cmd("SetForegroundColor", this.nextIndex, SplayTree.FOREGROUND_COLOR);
         this.cmd("SetBackgroundColor", this.nextIndex, SplayTree.BACKGROUND_COLOR);
         this.cmd("Step");
-        this.treeRoot = new BSTNode(insertedValue, this.nextIndex, this.startingX, SplayTree.STARTING_Y)
-        this.nextIndex += 1;
+        this.treeRoot = new SplayNode(insertedValue, this.nextIndex, this.startingX, SplayTree.STARTING_Y)
+        this.nextIndex++;
     }
     else
     {
@@ -413,10 +413,10 @@ SplayTree.prototype.insertElement = function(insertedValue)
         this.cmd("SetForegroundColor", this.nextIndex, SplayTree.FOREGROUND_COLOR);
         this.cmd("SetBackgroundColor", this.nextIndex, SplayTree.BACKGROUND_COLOR);
         this.cmd("Step");
-        var insertElem = new BSTNode(insertedValue, this.nextIndex, 100, 100)
+        var insertElem = new SplayNode(insertedValue, this.nextIndex, 100, 100)
 
 
-        this.nextIndex += 1;
+        this.nextIndex++;
         this.cmd("SetHighlight", insertElem.graphicID, 1);
         this.insert(insertElem, this.treeRoot)
         this.resizeTree();
@@ -1054,7 +1054,7 @@ SplayTree.prototype.resizeWidths = function(tree)
 
 
 
-function BSTNode(val, id, initialX, initialY)
+function SplayNode(val, id, initialX, initialY)
 {
     this.data = val;
     this.x = initialX;
@@ -1065,7 +1065,7 @@ function BSTNode(val, id, initialX, initialY)
     this.parent = null;
 }
 
-BSTNode.prototype.isLeftChild = function()
+SplayNode.prototype.isLeftChild = function()
 {
     if (this.parent == null)
     {
