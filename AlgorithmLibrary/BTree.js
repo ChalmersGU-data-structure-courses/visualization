@@ -32,10 +32,11 @@ BTree.PRINT_MAX = 990;
 BTree.PRINT_HORIZONTAL_GAP = 50;
 
 BTree.MAX_DEGREES = [3, 4, 5, 6, 7];
+BTree.MAX_DEGREE_LABELS = ["2/3-tree", "2/3/4-tree", "Max. degree 5", "Max. degree 6", "Max. degree 7"];
 BTree.INITIAL_MAX_DEGREE = 3;
 
 BTree.HEIGHT_DELTA = 50;
-BTree.NODE_SPACING = 3;
+BTree.NODE_SPACING = 20;
 BTree.STARTING_Y = 30;
 BTree.WIDTH_PER_ELEM = 40;
 BTree.NODE_HEIGHT = 20;
@@ -120,7 +121,6 @@ BTree.prototype.addControls = function()
 
     this.findField = this.addControlToAlgorithmBar("Text", "");
     this.findField.onkeydown = this.returnSubmit(this.findField,  this.findCallback.bind(this), 4);
-
     this.findButton = this.addControlToAlgorithmBar("Button", "Find");
     this.findButton.onclick = this.findCallback.bind(this);
     this.addBreakToAlgorithmBar();
@@ -133,10 +133,7 @@ BTree.prototype.addControls = function()
     this.clearButton.onclick = this.clearCallback.bind(this);
     this.addBreakToAlgorithmBar();
 
-    this.maxDegreeSelect = this.addSelectToAlgorithmBar(
-        BTree.MAX_DEGREES,
-        BTree.MAX_DEGREES.map((d) => `Max. degree ${d}`)
-    );
+    this.maxDegreeSelect = this.addSelectToAlgorithmBar(BTree.MAX_DEGREES, BTree.MAX_DEGREE_LABELS);
     this.maxDegreeSelect.value = this.initial_max_degree;
     this.maxDegreeSelect.onchange = this.maxDegreeChangedHandler.bind(this);
     this.addBreakToAlgorithmBar();
@@ -152,6 +149,9 @@ BTree.prototype.reset = function()
     this.treeRoot = null;
 }
 
+
+///////////////////////////////////////////////////////////////////////////////
+// Information about the type of BTree
 
 BTree.prototype.preemptiveSplit = function()
 {
@@ -184,13 +184,15 @@ BTree.prototype.getSplitIndex = function() {
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
+// Callback functions for the algorithm control bar
+
 BTree.prototype.maxDegreeChangedHandler = function(event)
 {
     this.implementAction(this.clearTree.bind(this));
     this.animationManager.skipForward();
     this.animationManager.clearHistory();
 }
-
 
 BTree.prototype.insertCallback = function(event)
 {
@@ -210,6 +212,15 @@ BTree.prototype.deleteCallback = function(event)
     }
 }
 
+BTree.prototype.findCallback = function(event)
+{
+    var findValue = this.normalizeNumber(this.findField.value.toUpperCase());
+    if (findValue != "") {
+        this.findField.value = "";
+        this.implementAction(this.findElement.bind(this),findValue);
+    }
+}
+
 BTree.prototype.clearCallback = function(event)
 {
     this.implementAction(this.clearTree.bind(this), "");
@@ -222,8 +233,12 @@ BTree.prototype.printCallback = function(event)
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
+// Functions that do the actual work
+
 BTree.prototype.printTree = function(unused)
 {
+    if (this.treeRoot == null) return [];
     this.commands = [];
     this.cmd("SetText", this.messageID, "Printing tree");
     var firstLabel = this.nextIndex;
@@ -236,7 +251,7 @@ BTree.prototype.printTree = function(unused)
     for (var i = firstLabel; i < this.nextIndex; i++) {
         this.cmd("Delete", i);
     }
-    this.nextIndex = firstLabel;
+    this.nextIndex = firstLabel;  // Reuse objects. Not necessary.
     this.cmd("SetText", this.messageID, "");
     return this.commands;
 }
@@ -310,34 +325,10 @@ BTree.prototype.deleteTree = function(tree)
             for (var i = 0; i <= tree.numKeys; i++) {
                 this.cmd("Disconnect", tree.graphicID, tree.children[i].graphicID);
                 this.deleteTree(tree.children[i]);
-                tree.children[i] == null;
+                tree.children[i] = null;
             }
         }
         this.cmd("Delete", tree.graphicID);
-    }
-}
-
-
-BTree.prototype.changeDegree = function()
-{
-    this.updateMaxDegree();
-    this.commands = [];
-    this.deleteTree(this.treeRoot);
-    this.treeRoot = null;
-    this.nextIndex = this.initialIndex;
-    if (this.commands.length == 0) {
-        this.cmd("Step");
-    }
-    return this.commands;
-}
-
-
-BTree.prototype.findCallback = function(event)
-{
-    var findValue = this.normalizeNumber(this.findField.value.toUpperCase());
-    if (findValue != "") {
-        this.findField.value = "";
-        this.implementAction(this.findElement.bind(this),findValue);
     }
 }
 
@@ -419,6 +410,7 @@ BTree.prototype.insertElement = function(insertedValue)
             BTree.FOREGROUND_COLOR
         );
         this.treeRoot.keys[0] = insertedValue;
+        this.treeRoot.numKeys = 1;
         this.cmd("SetText", this.treeRoot.graphicID, insertedValue, 0);
     }
     else {
@@ -653,6 +645,7 @@ BTree.prototype.split = function(tree)
             BTree.FOREGROUND_COLOR
         );
         this.treeRoot.keys[0] = risingNode;
+        this.treeRoot.numKeys = 1;
         this.cmd("SetText", this.treeRoot.graphicID, risingNode, 0);
         this.treeRoot.children[0] = leftNode;
         this.treeRoot.children[1] = rightNode;
@@ -1286,7 +1279,6 @@ BTree.prototype.validateTree = function(tree, parent)
 }
 
 
-
 BTree.prototype.getLabelX = function(tree, index)
 {
     return tree.x - BTree.WIDTH_PER_ELEM * tree.numKeys / 2 + BTree.WIDTH_PER_ELEM / 2 + index * BTree.WIDTH_PER_ELEM;
@@ -1355,6 +1347,8 @@ BTree.prototype.resizeWidths = function(tree)
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
+// BTree nodes
 
 function BTreeNode(id, initialX, initialY)
 {
@@ -1364,7 +1358,7 @@ function BTreeNode(id, initialX, initialY)
     this.x = initialX;
     this.y = initialY;
     this.graphicID = id;
-    this.numKeys = 1;
+    this.numKeys = 0;
     this.isLeaf = true;
     this.parent = null;
     this.leftWidth = 0;
@@ -1374,7 +1368,8 @@ function BTreeNode(id, initialX, initialY)
 }
 
 
-
+///////////////////////////////////////////////////////////////////////////////
+// Initialization
 
 var currentAlg;
 

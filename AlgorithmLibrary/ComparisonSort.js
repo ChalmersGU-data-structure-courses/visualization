@@ -31,12 +31,12 @@ function ComparisonSort(am)
 }
 
 ComparisonSort.DEFAULT_ARRAY_SIZE = 25;
-ComparisonSort.ARRAY_SIZES = {
-    "Small (25)": 25,
-    "Medium (50)": 50,
-    "Large (100)": 100,
-    "Huge (200)": 200,
-};
+ComparisonSort.ARRAY_SIZES = [25, 50, 100, 200];
+ComparisonSort.ARRAY_SIZE_LABELS = ["Small (25)", "Medium (50)", "Large (100)", "Huge (200)"];
+
+ComparisonSort.DEFAULT_ALGORITHM = "insertion";
+ComparisonSort.ALGORITHMS = ["insertion", "selection", "bubble", "quick", "merge", "shell"];
+ComparisonSort.ALGORITHM_LABELS = ["Insertion sort", "Selection sort", "Bubble sort", "Quicksort", "Merge sort", "Shellsort"];
 
 ComparisonSort.Y_MARGINAL = 50;
 ComparisonSort.LABEL_Y_ADD = 10;
@@ -69,19 +69,14 @@ ComparisonSort.prototype.addControls = function()
     this.addBreakToAlgorithmBar();
 
     this.addLabelToAlgorithmBar("Array size:");
-    this.sizeSelect = this.addSelectToAlgorithmBar(
-        Object.values(ComparisonSort.ARRAY_SIZES),
-        Object.keys(ComparisonSort.ARRAY_SIZES)
-    );
+    this.sizeSelect = this.addSelectToAlgorithmBar(ComparisonSort.ARRAY_SIZES, ComparisonSort.ARRAY_SIZE_LABELS);
     this.sizeSelect.value = ComparisonSort.DEFAULT_ARRAY_SIZE;
     this.sizeSelect.onchange = this.resetAll.bind(this);
     this.addBreakToAlgorithmBar();
 
     this.addLabelToAlgorithmBar("Algorithm:");
-    this.algorithmSelect = this.addSelectToAlgorithmBar(
-        ["insertion",      "selection",      "bubble",      "quick",     "merge",      "shell"    ],
-        ["Insertion sort", "Selection sort", "Bubble sort", "Quicksort", "Merge sort", "Shellsort"],
-    );
+    this.algorithmSelect = this.addSelectToAlgorithmBar(ComparisonSort.ALGORITHMS, ComparisonSort.ALGORITHM_LABELS);
+    this.algorithmSelect.value = ComparisonSort.DEFAULT_ALGORITHM;
     this.sortButton = this.addControlToAlgorithmBar("Button", "Run");
     this.sortButton.onclick = this.runSortCallback.bind(this);
 }
@@ -130,28 +125,6 @@ ComparisonSort.prototype.randomizeArray = function()
     this.animationManager.StartNewAnimation(this.commands);
     this.animationManager.skipForward();
     this.animationManager.clearHistory();
-}
-
-
-ComparisonSort.prototype.swap = function(index1, index2)
-{
-    var tmp = this.arrayData[index1];
-    this.arrayData[index1] = this.arrayData[index2];
-    this.arrayData[index2] = tmp;
-
-    tmp = this.barObjects[index1];
-    this.barObjects[index1] = this.barObjects[index2];
-    this.barObjects[index2] = tmp;
-
-    tmp = this.barLabels[index1];
-    this.barLabels[index1] = this.barLabels[index2];
-    this.barLabels[index2] = tmp;
-
-    this.cmd("Move", this.barObjects[index1], this.barPositionsX[index1], this.info.y_pos);
-    this.cmd("Move", this.barObjects[index2], this.barPositionsX[index2], this.info.y_pos);
-    this.cmd("Move", this.barLabels[index1], this.barPositionsX[index1], this.info.y_pos + ComparisonSort.LABEL_Y_ADD);
-    this.cmd("Move", this.barLabels[index2], this.barPositionsX[index2], this.info.y_pos + ComparisonSort.LABEL_Y_ADD);
-    this.cmd("Step");
 }
 
 
@@ -204,32 +177,6 @@ ComparisonSort.prototype.createVisualObjects = function()
 }
 
 
-ComparisonSort.prototype.highlightRange = function(lowIndex, highIndex)
-{
-    for (var i = 0; i < lowIndex; i++) {
-        if (!this.obscureObject[i]) {
-            this.obscureObject[i] = true;
-            this.cmd("SetAlpha", this.barObjects[i], 0.08);
-            this.cmd("SetAlpha", this.barLabels[i], 0.08);
-        }
-    }
-    for (i = lowIndex; i <= highIndex; i++) {
-        if (this.obscureObject[i]) {
-            this.obscureObject[i] = false;
-            this.cmd("SetAlpha", this.barObjects[i], 1.0);
-            this.cmd("SetAlpha", this.barLabels[i], 1.0);
-        }
-    }
-    for (i = highIndex+1; i < this.info.size; i++) {
-        if (!this.obscureObject[i]) {
-            this.obscureObject[i] = true;
-            this.cmd("SetAlpha", this.barObjects[i], 0.08);
-            this.cmd("SetAlpha", this.barLabels[i], 0.08);
-        }
-    }
-}
-
-
 ComparisonSort.prototype.reset = function()
 {
     for (var i = 0; i < this.info.size; i++) {
@@ -242,6 +189,9 @@ ComparisonSort.prototype.reset = function()
     }
 }
 
+
+///////////////////////////////////////////////////////////////////////////////
+// Callback functions for the algorithm control bar
 
 ComparisonSort.prototype.runSortCallback = function(event)
 {
@@ -270,6 +220,9 @@ ComparisonSort.prototype.runSortCallback = function(event)
     this.animationManager.StartNewAnimation(this.commands);
 }
 
+
+///////////////////////////////////////////////////////////////////////////////
+// Functions that do the actual work
 
 ComparisonSort.prototype.insertionSort = function()
 {
@@ -566,6 +519,58 @@ ComparisonSort.prototype.insertionSortSkip = function(inc, offset)
         }
     }
 }
+
+
+ComparisonSort.prototype.swap = function(index1, index2)
+{
+    var tmp = this.arrayData[index1];
+    this.arrayData[index1] = this.arrayData[index2];
+    this.arrayData[index2] = tmp;
+
+    tmp = this.barObjects[index1];
+    this.barObjects[index1] = this.barObjects[index2];
+    this.barObjects[index2] = tmp;
+
+    tmp = this.barLabels[index1];
+    this.barLabels[index1] = this.barLabels[index2];
+    this.barLabels[index2] = tmp;
+
+    this.cmd("Move", this.barObjects[index1], this.barPositionsX[index1], this.info.y_pos);
+    this.cmd("Move", this.barObjects[index2], this.barPositionsX[index2], this.info.y_pos);
+    this.cmd("Move", this.barLabels[index1], this.barPositionsX[index1], this.info.y_pos + ComparisonSort.LABEL_Y_ADD);
+    this.cmd("Move", this.barLabels[index2], this.barPositionsX[index2], this.info.y_pos + ComparisonSort.LABEL_Y_ADD);
+    this.cmd("Step");
+}
+
+
+ComparisonSort.prototype.highlightRange = function(lowIndex, highIndex)
+{
+    for (var i = 0; i < lowIndex; i++) {
+        if (!this.obscureObject[i]) {
+            this.obscureObject[i] = true;
+            this.cmd("SetAlpha", this.barObjects[i], 0.08);
+            this.cmd("SetAlpha", this.barLabels[i], 0.08);
+        }
+    }
+    for (i = lowIndex; i <= highIndex; i++) {
+        if (this.obscureObject[i]) {
+            this.obscureObject[i] = false;
+            this.cmd("SetAlpha", this.barObjects[i], 1.0);
+            this.cmd("SetAlpha", this.barLabels[i], 1.0);
+        }
+    }
+    for (i = highIndex+1; i < this.info.size; i++) {
+        if (!this.obscureObject[i]) {
+            this.obscureObject[i] = true;
+            this.cmd("SetAlpha", this.barObjects[i], 0.08);
+            this.cmd("SetAlpha", this.barLabels[i], 0.08);
+        }
+    }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Initialization
 
 
 var currentAlg;
