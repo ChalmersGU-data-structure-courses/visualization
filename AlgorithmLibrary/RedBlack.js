@@ -93,7 +93,7 @@ RedBlack.prototype.sizeChanged = function()
     var h = this.getCanvasHeight();
 
     this.startingX  = w / 2;
-    this.first_print_pos_y = h - 2 * RedBlack.PRINT_VERTICAL_GAP;
+    this.first_print_pos_y = h - 3 * RedBlack.PRINT_VERTICAL_GAP;
     this.print_max = w - RedBlack.PRINT_HORIZONTAL_GAP;
 
     this.implementAction(() => {
@@ -329,8 +329,6 @@ RedBlack.prototype.doFind = function(tree, value)
         }
     }
     else {
-        this.cmd("SetText", this.messageID, `Searching for ${value}: <Empty Tree> (element not found)`);
-        this.cmd("Step");
         return false;
     }
 }

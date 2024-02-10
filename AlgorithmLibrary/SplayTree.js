@@ -86,7 +86,7 @@ SplayTree.prototype.sizeChanged = function()
     var h = this.getCanvasHeight();
 
     this.startingX = w / 2;
-    this.first_print_pos_y = h - 2 * SplayTree.PRINT_VERTICAL_GAP;
+    this.first_print_pos_y = h - 3 * SplayTree.PRINT_VERTICAL_GAP;
     this.print_max = w - SplayTree.PRINT_HORIZONTAL_GAP;
     
     this.implementAction(() => {
@@ -294,6 +294,8 @@ SplayTree.prototype.doFind = function(tree, value)
                 return this.doFind(tree.left, value);
             }
             else {
+                this.cmd("SetText", this.messageID, `Searching for ${value}: Element not found`);
+                this.cmd("Step");
                 this.splayUp(tree);
                 return false;
             }
@@ -310,14 +312,14 @@ SplayTree.prototype.doFind = function(tree, value)
                 return this.doFind(tree.right, value);
             }
             else {
+                this.cmd("SetText", this.messageID, `Searching for ${value}: Element not found`);
+                this.cmd("Step");
                 this.splayUp(tree);
                 return false;
             }
         }
     }
     else {
-        this.cmd("SetText", this.messageID, `Searching for ${value}: <Empty Tree> (element not found)`);
-        this.cmd("Step");
         return false;
     }
 }
