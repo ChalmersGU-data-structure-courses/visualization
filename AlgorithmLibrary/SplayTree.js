@@ -25,16 +25,25 @@
 // or implied, of the University of San Francisco
 
 
-// Constants.
+function SplayTree(am)
+{
+    this.init(am);
+}
+SplayTree.inheritFrom(Algorithm);
 
-SplayTree.LINK_COLOR = "#007700";
-SplayTree.HIGHLIGHT_CIRCLE_COLOR = "#007700";
+
+// Various constants
+
 SplayTree.FOREGROUND_COLOR = "#007700";
 SplayTree.BACKGROUND_COLOR = "#EEFFEE";
+
+SplayTree.LINK_COLOR = SplayTree.FOREGROUND_COLOR;
+SplayTree.HIGHLIGHT_CIRCLE_COLOR = SplayTree.FOREGROUND_COLOR;
 SplayTree.PRINT_COLOR = SplayTree.FOREGROUND_COLOR;
 
-SplayTree.WIDTH_DELTA = 50;
-SplayTree.HEIGHT_DELTA = 50;
+SplayTree.NODE_SIZE = 40;
+SplayTree.WIDTH_DELTA = SplayTree.NODE_SIZE + 10;
+SplayTree.HEIGHT_DELTA = SplayTree.NODE_SIZE + 10;
 SplayTree.STARTING_Y = 50;
 
 
@@ -42,29 +51,34 @@ SplayTree.FIRST_PRINT_POS_X = 50;
 SplayTree.PRINT_VERTICAL_GAP = 20;
 SplayTree.PRINT_HORIZONTAL_GAP = 50;
 
+SplayTree.MESSAGE_X = 10;
+SplayTree.MESSAGE_Y = 10;
 
 
-function SplayTree(am)
-{
-    this.init(am);
-}
-SplayTree.inheritFrom(Algorithm);
 
 SplayTree.prototype.init = function(am)
 {
     SplayTree.superclass.init.call(this, am);
     this.addControls();
+    this.setup();
+}
 
+
+SplayTree.prototype.setup = function() 
+{
     this.nextIndex = 0;
     this.commands = [];
-    this.cmd("CreateLabel", 0, "", 20, 10, 0);
-    this.nextIndex = 1;
+    this.messageID = this.nextIndex++;
+    this.cmd("CreateLabel", this.messageID, "", SplayTree.MESSAGE_X, SplayTree.MESSAGE_Y, 0);
+
+    this.initialIndex = this.nextIndex;
     this.animationManager.StartNewAnimation(this.commands);
     this.animationManager.skipForward();
     this.animationManager.clearHistory();
 
     this.sizeChanged();
 }
+
 
 SplayTree.prototype.sizeChanged = function()
 {
@@ -73,7 +87,7 @@ SplayTree.prototype.sizeChanged = function()
 
     this.startingX = w / 2;
     this.first_print_pos_y = h - 2 * SplayTree.PRINT_VERTICAL_GAP;
-    this.print_max = w - 10;
+    this.print_max = w - SplayTree.PRINT_HORIZONTAL_GAP;
     
     this.implementAction(() => {
         this.commands = [];
@@ -85,32 +99,46 @@ SplayTree.prototype.sizeChanged = function()
 SplayTree.prototype.addControls = function()
 {
     this.insertField = this.addControlToAlgorithmBar("Text", "");
-    this.insertField.onkeydown = this.returnSubmit(this.insertField,  this.insertCallback.bind(this), 4);
+    this.insertField.onkeydown = this.returnSubmit(this.insertField, this.insertCallback.bind(this), 4);
     this.insertButton = this.addControlToAlgorithmBar("Button", "Insert");
     this.insertButton.onclick = this.insertCallback.bind(this);
+    this.addBreakToAlgorithmBar();
+
     this.deleteField = this.addControlToAlgorithmBar("Text", "");
-    this.deleteField.onkeydown = this.returnSubmit(this.deleteField,  this.deleteCallback.bind(this), 4);
+    this.deleteField.onkeydown = this.returnSubmit(this.deleteField, this.deleteCallback.bind(this), 4);
     this.deleteButton = this.addControlToAlgorithmBar("Button", "Delete");
     this.deleteButton.onclick = this.deleteCallback.bind(this);
+    this.addBreakToAlgorithmBar();
+
     this.findField = this.addControlToAlgorithmBar("Text", "");
-    this.findField.onkeydown = this.returnSubmit(this.findField,  this.findCallback.bind(this), 4);
+    this.findField.onkeydown = this.returnSubmit(this.findField, this.findCallback.bind(this), 4);
     this.findButton = this.addControlToAlgorithmBar("Button", "Find");
     this.findButton.onclick = this.findCallback.bind(this);
+    this.addBreakToAlgorithmBar();
+
     this.printButton = this.addControlToAlgorithmBar("Button", "Print");
     this.printButton.onclick = this.printCallback.bind(this);
+    this.addBreakToAlgorithmBar();
+
+    this.clearButton = this.addControlToAlgorithmBar("Button", "Clear");
+    this.clearButton.onclick = this.clearCallback.bind(this);
 }
+
 
 SplayTree.prototype.reset = function()
 {
-    this.nextIndex = 1;
+    this.nextIndex = this.initialIndex;
     this.treeRoot = null;
 }
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Callback functions for the algorithm control bar
 
 SplayTree.prototype.insertCallback = function(event)
 {
     var insertedValue = this.normalizeNumber(this.insertField.value.toUpperCase());
-    if (insertedValue != "")
-    {
+    if (insertedValue != "") {
         this.insertField.value = "";
         this.implementAction(this.insertElement.bind(this), insertedValue);
     }
@@ -119,145 +147,62 @@ SplayTree.prototype.insertCallback = function(event)
 SplayTree.prototype.deleteCallback = function(event)
 {
     var deletedValue = this.normalizeNumber(this.deleteField.value.toUpperCase());
-    if (deletedValue != "")
-    {
+    if (deletedValue != "") {
         this.deleteField.value = "";
         this.implementAction(this.deleteElement.bind(this),deletedValue);
     }
 }
 
-
-
-//  TODO:  This top-down version is broken.  Don't use
-SplayTree.prototype.splay = function(value)
+SplayTree.prototype.findCallback = function(event)
 {
-    if (this.treeRoot == null)
-    {
-        return false;
+    var findValue = this.normalizeNumber(this.findField.value.toUpperCase());
+    if (findValue != "") {
+        this.findField.value = "";
+        this.implementAction(this.findElement.bind(this), findValue);
     }
-    if (this.treeRoot.data == value)
-    {
-        return true;
-    }
-    if (value < this.treeRoot.data)
-    {
-        if (this.treeRoot.left == null)
-        {
-            return false;
-        }
-        else if (this.treeRoot.left.data == value)
-        {
-            this.singleRotateRight(this.treeRoot);
-            return true;
-        }
-        else if (value < this.treeRoot.left.data)
-        {
-            if (this.treeRoot.left.left == null)
-            {
-                this.singleRotateRight(this.treeRoot);
-                return this.splay(value);
-            }
-            else
-            {
-                this.zigZigRight(this.treeRoot);
-                return this.splay(value);
-            }
-        }
-        else
-        {
-            if (this.treeRoot.left.right == null)
-            {
-                this.singleRotateRight(this.treeRoot);
-                return this.splay(value);
-            }
-            else
-            {
-                this.doubleRotateRight(this.treeRoot);
-                return this.splay(value);
-            }
-
-        }
-    }
-    else
-    {
-        if (this.treeRoot.right == null)
-        {
-            return false;
-        }
-        else if (this.treeRoot.right.data == value)
-        {
-            this.singleRotateLeft(this.treeRoot);
-            return true;
-        }
-        else if (value > this.treeRoot.right.data)
-        {
-            if (this.treeRoot.right.right == null)
-            {
-                this.singleRotateLeft(this.treeRoot);
-                return this.splay(value);
-            }
-            else
-            {
-                this.zigZigLeft(this.treeRoot);
-                return this.splay(value);
-            }
-        }
-        else
-        {
-            if (this.treeRoot.right.left == null)
-            {
-                this.singleRotateLeft(this.treeRoot);
-                return this.splay(value);
-            }
-            else
-            {
-                this.doubleRotateLeft(this.treeRot);
-                return this.splay(value);
-            }
-
-        }
-
-
-    }
-
 }
 
-
+SplayTree.prototype.clearCallback = function(event)
+{
+    this.implementAction(this.clearTree.bind(this), "");
+}
 
 SplayTree.prototype.printCallback = function(event)
 {
-    this.implementAction(this.printTree.bind(this),"");
+    this.implementAction(this.printTree.bind(this), "");
 }
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Functions that do the actual work
 
 SplayTree.prototype.printTree = function(unused)
 {
+    if (this.treeRoot == null) return [];
     this.commands = [];
+    this.cmd("SetText", this.messageID, "Printing tree");
+    this.highlightID = this.nextIndex++;
+    this.cmd("CreateHighlightCircle", this.highlightID, SplayTree.HIGHLIGHT_CIRCLE_COLOR, this.treeRoot.x, this.treeRoot.y);
+    var firstLabel = this.nextIndex;
 
-    if (this.treeRoot != null)
-    {
-        this.highlightID = this.nextIndex++;
-        var firstLabel = this.nextIndex;
-        this.cmd("CreateHighlightCircle", this.highlightID, SplayTree.HIGHLIGHT_CIRCLE_COLOR, this.treeRoot.x, this.treeRoot.y);
-        this.xPosOfNextLabel = SplayTree.FIRST_PRINT_POS_X;
-        this.yPosOfNextLabel = this.first_print_pos_y;
-        this.printTreeRec(this.treeRoot);
-        this.cmd("Delete",  this.highlightID);
-        this.cmd("Step")
+    this.xPosOfNextLabel = SplayTree.FIRST_PRINT_POS_X;
+    this.yPosOfNextLabel = this.first_print_pos_y;
 
-        for (var i = firstLabel; i < this.nextIndex; i++)
-        {
-            this.cmd("Delete", i);
-        }
-        this.nextIndex = this.highlightID;  /// Reuse objects.  Not necessary.
+    this.printTreeRec(this.treeRoot);
+    this.cmd("Delete",  this.highlightID);
+    this.cmd("Step")
+    for (var i = firstLabel; i < this.nextIndex; i++) {
+        this.cmd("Delete", i);
     }
+    this.nextIndex = this.highlightID;  // Reuse objects. Not necessary.
+    this.cmd("SetText", this.messageID, "");
     return this.commands;
 }
 
 SplayTree.prototype.printTreeRec = function(tree)
 {
     this.cmd("Step");
-    if (tree.left != null)
-    {
+    if (tree.left != null) {
         this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
         this.printTreeRec(tree.left);
         this.cmd("Move", this.highlightID, tree.x, tree.y);
@@ -270,162 +215,145 @@ SplayTree.prototype.printTreeRec = function(tree)
     this.cmd("Step");
 
     this.xPosOfNextLabel +=  SplayTree.PRINT_HORIZONTAL_GAP;
-    if (this.xPosOfNextLabel > this.print_max)
-    {
+    if (this.xPosOfNextLabel > this.print_max) {
         this.xPosOfNextLabel = SplayTree.FIRST_PRINT_POS_X;
         this.yPosOfNextLabel += SplayTree.PRINT_VERTICAL_GAP;
-
     }
-    if (tree.right != null)
-    {
+    if (tree.right != null) {
         this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
         this.printTreeRec(tree.right);
         this.cmd("Move", this.highlightID, tree.x, tree.y);
         this.cmd("Step");
     }
-    return;
 }
 
-SplayTree.prototype.findCallback = function(event)
+
+SplayTree.prototype.clearTree = function(ignored)
 {
-    var findValue = this.normalizeNumber(this.findField.value.toUpperCase());
-    if (findValue != "")
-    {
-        this.findField.value = "";
-        this.implementAction(this.findElement.bind(this),findValue);
+    this.commands = [];
+    this.deleteTree(this.treeRoot);
+    this.treeRoot = null;
+    this.nextIndex = this.initialIndex;
+    return this.commands;
+}
+
+
+SplayTree.prototype.deleteTree = function(tree)
+{
+    if (tree != null) {
+        if (tree.left) {
+            this.cmd("Disconnect", tree.graphicID, tree.left.graphicID);
+            this.deleteTree(tree.left);
+            tree.left == null;
+        }
+        if (tree.right) {
+            this.cmd("Disconnect", tree.graphicID, tree.right.graphicID);
+            this.deleteTree(tree.right);
+            tree.right == null;
+        }
+        this.cmd("Delete", tree.graphicID);
     }
 }
+
 
 SplayTree.prototype.findElement = function(findValue)
 {
     this.commands = [];
-
+    this.cmd("SetText", this.messageID, `Searching for ${findValue}`);
     this.highlightID = this.nextIndex++;
-
-
-
     var found = this.doFind(this.treeRoot, findValue);
-
-    if (found)
-    {
-        this.cmd("SetText", 0, "Element " + findValue + " found.");
-
-    }
-    else
-    {
-        this.cmd("SetText", 0, "Element " + findValue + " not found.");
-
-    }
-
-
+    this.cmd("SetText", this.messageID, `Element ${findValue} ${found?"found":"not found"}`);
+    this.validateTree();
     return this.commands;
 }
 
 
 SplayTree.prototype.doFind = function(tree, value)
 {
-    this.cmd("SetText", 0, "Searching for "+value);
-    if (tree != null)
-    {
+    if (tree != null) {
         this.cmd("SetHighlight", tree.graphicID, 1);
-        if (tree.data == value)
-        {
-            this.cmd("SetText", 0, "Searching for "+value+" : " + value + " = " + value + " (Element found!)");
+        var cmp = this.compare(tree.data, value);
+        if (cmp == 0) {
+            this.cmd("SetText", this.messageID, `Searching for ${value}: ${value} = ${tree.data} (element found!)`);
             this.cmd("Step");
-            this.cmd("SetText", 0, "Splaying found node to root of tree");
+            this.cmd("SetText", this.messageID, `Found ${value}`);
             this.cmd("Step");
             this.cmd("SetHighlight", tree.graphicID, 0);
             this.splayUp(tree);
             return true;
         }
-        else
-        {
-            if (tree.data > value)
-            {
-                this.cmd("SetText", 0, "Searching for "+value+" : " + value + " < " + tree.data + " (look to left subtree)");
+        else if (cmp > 0) {
+            this.cmd("SetText", this.messageID, `Searching for ${value}: ${value} < ${tree.data} (look to left subtree)`);
+            this.cmd("Step");
+            this.cmd("SetHighlight", tree.graphicID, 0);
+            if (tree.left != null) {
+                this.cmd("CreateHighlightCircle", this.highlightID, SplayTree.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+                this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
                 this.cmd("Step");
-                this.cmd("SetHighlight", tree.graphicID, 0);
-                if (tree.left!= null)
-                {
-                    this.cmd("CreateHighlightCircle", this.highlightID, SplayTree.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
-                    this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
-                    this.cmd("Step");
-                    this.cmd("Delete", this.highlightID);
-                    return this.doFind(tree.left, value);
-                }
-                else
-                {
-                    this.splayUp(tree);
-                    return false;
-                }
+                this.cmd("Delete", this.highlightID);
+                return this.doFind(tree.left, value);
             }
-            else
-            {
-                this.cmd("SetText", 0, "Searching for "+value+" : " + value + " > " + tree.data + " (look to right subtree)");
-                this.cmd("Step");
-                this.cmd("SetHighlight", tree.graphicID, 0);
-                if (tree.right!= null)
-                {
-                    this.cmd("CreateHighlightCircle", this.highlightID, SplayTree.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
-                    this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
-                    this.cmd("Step");
-                    this.cmd("Delete", this.highlightID);
-                    return this.doFind(tree.right, value);
-                }
-                else
-                {
-                    this.splayUp(tree);
-                    return false;
-
-                }
+            else {
+                this.splayUp(tree);
+                return false;
             }
-
         }
-
+        else {
+            this.cmd("SetText", this.messageID, `Searching for ${value}: ${value} > ${tree.data} (look to right subtree)`);
+            this.cmd("Step");
+            this.cmd("SetHighlight", tree.graphicID, 0);
+            if (tree.right!= null) {
+                this.cmd("CreateHighlightCircle", this.highlightID, SplayTree.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+                this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
+                this.cmd("Step");
+                this.cmd("Delete", this.highlightID);
+                return this.doFind(tree.right, value);
+            }
+            else {
+                this.splayUp(tree);
+                return false;
+            }
+        }
     }
-    else
-    {
-        this.cmd("SetText", 0, "Searching for "+value+" : " + "< Empty Tree > (Element not found)");
+    else {
+        this.cmd("SetText", this.messageID, `Searching for ${value}: <Empty Tree> (element not found)`);
         this.cmd("Step");
-        this.cmd("SetText", 0, "Searching for "+value+" : " + " (Element not found)");
         return false;
     }
 }
 
+
 SplayTree.prototype.insertElement = function(insertedValue)
 {
-    this.commands = new Array();
-    this.cmd("SetText", 0, "Inserting "+insertedValue);
+    this.commands = [];
+    this.cmd("SetText", this.messageID, `Inserting ${insertedValue}`);
     this.highlightID = this.nextIndex++;
+    var treeNodeID = this.nextIndex++;
 
-    if (this.treeRoot == null)
-    {
-        this.cmd("CreateCircle", this.nextIndex, insertedValue,  this.startingX, SplayTree.STARTING_Y);
-        this.cmd("SetForegroundColor", this.nextIndex, SplayTree.FOREGROUND_COLOR);
-        this.cmd("SetBackgroundColor", this.nextIndex, SplayTree.BACKGROUND_COLOR);
+    if (this.treeRoot == null) {
+        var x = this.startingX, y = SplayTree.STARTING_Y;
+        this.cmd("CreateCircle", treeNodeID, insertedValue, x, y);
+        this.cmd("SetForegroundColor", treeNodeID, SplayTree.FOREGROUND_COLOR);
+        this.cmd("SetBackgroundColor", treeNodeID, SplayTree.BACKGROUND_COLOR);
         this.cmd("Step");
-        this.treeRoot = new SplayNode(insertedValue, this.nextIndex, this.startingX, SplayTree.STARTING_Y)
-        this.nextIndex++;
+        this.treeRoot = new SplayNode(insertedValue, treeNodeID, x, y);
     }
-    else
-    {
-        this.cmd("CreateCircle", this.nextIndex, insertedValue, 100, 100);
-        this.cmd("SetForegroundColor", this.nextIndex, SplayTree.FOREGROUND_COLOR);
-        this.cmd("SetBackgroundColor", this.nextIndex, SplayTree.BACKGROUND_COLOR);
+    else {
+        var x = SplayTree.STARTING_Y, y = 2 * SplayTree.STARTING_Y;
+        this.cmd("CreateCircle", treeNodeID, insertedValue, x, y);
+        this.cmd("SetForegroundColor", treeNodeID, SplayTree.FOREGROUND_COLOR);
+        this.cmd("SetBackgroundColor", treeNodeID, SplayTree.BACKGROUND_COLOR);
         this.cmd("Step");
-        var insertElem = new SplayNode(insertedValue, this.nextIndex, 100, 100)
-
-
-        this.nextIndex++;
+        var insertElem = new SplayNode(insertedValue, treeNodeID, x, y);
         this.cmd("SetHighlight", insertElem.graphicID, 1);
-        this.insert(insertElem, this.treeRoot)
+        this.insert(insertElem, this.treeRoot);
         this.resizeTree();
-        this.cmd("SetText", 0 , "Splay inserted element to root of tree");
+        this.cmd("SetText", this.messageID, "Splay inserted element to root of tree");
         this.cmd("Step");
         this.splayUp(insertElem);
-
     }
-    this.cmd("SetText", 0, "");
+    this.cmd("SetText", this.messageID, "");
+    this.validateTree();
     return this.commands;
 }
 
@@ -435,31 +363,26 @@ SplayTree.prototype.insert = function(elem, tree)
     this.cmd("SetHighlight", tree.graphicID , 1);
     this.cmd("SetHighlight", elem.graphicID , 1);
 
-    if (elem.data < tree.data)
-    {
-        this.cmd("SetText", 0,  elem.data + " < " + tree.data + ".  Looking at left subtree");
+    var cmp = this.compare(elem.data, tree.data);
+    if (cmp < 0) {
+        this.cmd("SetText", this.messageID, `${elem.data} < ${tree.data}: Looking at left subtree`);
     }
-    else
-    {
-        this.cmd("SetText",  0, elem.data + " >= " + tree.data + ".  Looking at right subtree");
+    else {
+        this.cmd("SetText", this.messageID, `${elem.data} >= ${tree.data}: Looking at right subtree`);
     }
     this.cmd("Step");
     this.cmd("SetHighlight", tree.graphicID, 0);
     this.cmd("SetHighlight", elem.graphicID, 0);
 
-    if (elem.data < tree.data)
-    {
-        if (tree.left == null)
-        {
-            this.cmd("SetText", 0,"Found null tree, inserting element");
-
+    if (cmp < 0) {
+        if (tree.left == null) {
+            this.cmd("SetText", this.messageID,"Found null tree, inserting element");
             this.cmd("SetHighlight", elem.graphicID, 0);
-            tree.left=elem;
+            tree.left = elem;
             elem.parent = tree;
             this.cmd("Connect", tree.graphicID, elem.graphicID, SplayTree.LINK_COLOR);
         }
-        else
-        {
+        else {
             this.cmd("CreateHighlightCircle", this.highlightID, SplayTree.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
             this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
             this.cmd("Step");
@@ -467,21 +390,18 @@ SplayTree.prototype.insert = function(elem, tree)
             this.insert(elem, tree.left);
         }
     }
-    else
-    {
-        if (tree.right == null)
-        {
-            this.cmd("SetText",  0, "Found null tree, inserting element");
+    else {
+        if (tree.right == null) {
+            this.cmd("SetText", this.messageID, "Found null tree, inserting element");
             this.cmd("SetHighlight", elem.graphicID, 0);
-            tree.right=elem;
+            tree.right = elem;
             elem.parent = tree;
             this.cmd("Connect", tree.graphicID, elem.graphicID, SplayTree.LINK_COLOR);
-            elem.x = tree.x + SplayTree.WIDTH_DELTA/2;
-            elem.y = tree.y + SplayTree.HEIGHT_DELTA
+            elem.x = tree.x + SplayTree.WIDTH_DELTA / 2;
+            elem.y = tree.y + SplayTree.HEIGHT_DELTA;
             this.cmd("Move", elem.graphicID, elem.x, elem.y);
         }
-        else
-        {
+        else {
             this.cmd("CreateHighlightCircle", this.highlightID, SplayTree.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
             this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
             this.cmd("Step");
@@ -489,66 +409,61 @@ SplayTree.prototype.insert = function(elem, tree)
             this.insert(elem, tree.right);
         }
     }
-
-
 }
+
 
 SplayTree.prototype.deleteElement = function(deletedValue)
 {
     this.commands = [];
-    this.cmd("SetText", 0, "Deleting "+deletedValue);
+    this.cmd("SetText", this.messageID, `Deleting ${deletedValue}`);
     this.cmd("Step");
-    this.cmd("SetText", 0, "");
+    this.cmd("SetText", this.messageID, "");
     this.highlightID = this.nextIndex++;
     this.treeDelete(this.treeRoot, deletedValue);
-    this.cmd("SetText", 0, "");
-    // Do delete
+    this.cmd("SetText", this.messageID, "");
+    this.validateTree();
     return this.commands;
 }
 
 SplayTree.prototype.treeDelete = function(tree, valueToDelete)
 {
-    this.cmd("SetText", 0, "Finding "+valueToDelete + " and splaying to rooot");
+    this.cmd("SetText", this.messageID, `Finding ${valueToDelete} and splaying to rooot`);
     this.cmd("Step");
-
     var inTree = this.doFind(this.treeRoot, valueToDelete);
-    this.cmd("SetText", 0, "Removing root, leaving left and right trees");
-    this.cmd("Step")
-    if (inTree)
-    {
-        if (this.treeRoot.right == null)
-        {
+
+    if (inTree) {
+        this.cmd("SetText", this.messageID, "Removing root, leaving left and right trees");
+        this.cmd("Step");
+        if (this.treeRoot.right == null) {
             this.cmd("Delete", this.treeRoot.graphicID);
-            this.cmd("SetText", 0, "No right tree, make left tree the root.");
+            this.cmd("SetText", this.messageID, "No right tree, make left tree the root");
             this.cmd("Step");
             this.treeRoot = this.treeRoot.left;
             this.treeRoot.parent = null;
             this.resizeTree();
         }
-        else if (this.treeRoot.left == null)
-        {
+        else if (this.treeRoot.left == null) {
             this.cmd("Delete", this.treeRoot.graphicID);
-            this.cmd("SetText", 0, "No left tree, make right tree the root.");
+            this.cmd("SetText", this.messageID, "No left tree, make right tree the root");
             this.cmd("Step");
             this.treeRoot = this.treeRoot.right
             this.treeRoot.parent = null;
             this.resizeTree();
         }
-        else
-        {
+        else {
             var right = this.treeRoot.right;
             var left = this.treeRoot.left;
             var oldGraphicID = this.treeRoot.graphicID;
             this.cmd("Disconnect", this.treeRoot.graphicID, left.graphicID);
             this.cmd("Disconnect", this.treeRoot.graphicID, right.graphicID);
             this.cmd("SetAlpha", this.treeRoot.graphicID, 0);
-            this.cmd("SetText", 0, "Splay largest element in left tree to root");
-            this.cmd("Step")
+            this.cmd("SetText", this.messageID, "Splay largest element in left tree to root");
+            this.cmd("Step");
 
             left.parent = null;
             var largestLeft = this.findMax(left);
             this.splayUp(largestLeft);
-            this.cmd("SetText", 0, "Left tree now has no right subtree, connect left and right trees");
+            this.cmd("SetText", this.messageID, "Left tree now has no right subtree, connect left and right trees");
             this.cmd("Step");
             this.cmd("Connect", largestLeft.graphicID, right.graphicID, SplayTree.LINK_COLOR);
             largestLeft.parent = null;
@@ -557,29 +472,41 @@ SplayTree.prototype.treeDelete = function(tree, valueToDelete)
             this.treeRoot = largestLeft;
             this.cmd("Delete", oldGraphicID);
             this.resizeTree();
-
         }
     }
 }
 
 
+SplayTree.prototype.findMax = function(tree)
+{
+    if (tree.right != null) {
+        this.highlightID = this.nextIndex++;
+        this.cmd("CreateHighlightCircle", this.highlightID, SplayTree.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+        this.cmd("Step");
+        while (tree.right != null) {
+            this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
+            this.cmd("Step");
+            tree = tree.right;
+        }
+        this.cmd("Delete", this.highlightID);
+    }
+    return tree;
+}
 
 
 SplayTree.prototype.singleRotateRight = function(tree)
 {
-    var B = tree;
-    var t3 = B.right;
     var A = tree.left;
+    var B = tree;
     var t1 = A.left;
     var t2 = A.right;
+    var t3 = B.right;
 
-    this.cmd("SetText", 0, "Zig Right");
+    this.cmd("SetText", this.messageID, "Zig Right");
     this.cmd("SetEdgeHighlight", B.graphicID, A.graphicID, 1);
     this.cmd("Step");
 
-
-    if (t2 != null)
-    {
+    if (t2 != null) {
         this.cmd("Disconnect", A.graphicID, t2.graphicID);
         this.cmd("Connect", B.graphicID, t2.graphicID, SplayTree.LINK_COLOR);
         t2.parent = B;
@@ -587,20 +514,16 @@ SplayTree.prototype.singleRotateRight = function(tree)
     this.cmd("Disconnect", B.graphicID, A.graphicID);
     this.cmd("Connect", A.graphicID, B.graphicID, SplayTree.LINK_COLOR);
     A.parent = B.parent;
-    if (B.parent == null)
-    {
+    if (B.parent == null) {
         this.treeRoot = A;
     }
-    else
-    {
+    else {
         this.cmd("Disconnect", B.parent.graphicID, B.graphicID, SplayTree.LINK_COLOR);
         this.cmd("Connect", B.parent.graphicID, A.graphicID, SplayTree.LINK_COLOR)
-        if (B.isLeftChild())
-        {
+        if (B.isLeftChild()) {
             B.parent.left = A;
         }
-        else
-        {
+        else {
             B.parent.right = A;
         }
     }
@@ -611,50 +534,196 @@ SplayTree.prototype.singleRotateRight = function(tree)
 }
 
 
+SplayTree.prototype.singleRotateLeft = function(tree)
+{
+    var A = tree;
+    var B = tree.right;
+    var t1 = A.left;
+    var t2 = B.left;
+    var t3 = B.right;
+
+    this.cmd("SetText", this.messageID, "Zig Left");
+    this.cmd("SetEdgeHighlight", A.graphicID, B.graphicID, 1);
+    this.cmd("Step");
+
+    if (t2 != null) {
+        this.cmd("Disconnect", B.graphicID, t2.graphicID);
+        this.cmd("Connect", A.graphicID, t2.graphicID, SplayTree.LINK_COLOR);
+        t2.parent = A;
+    }
+    this.cmd("Disconnect", A.graphicID, B.graphicID);
+    this.cmd("Connect", B.graphicID, A.graphicID, SplayTree.LINK_COLOR);
+    B.parent = A.parent;
+    if (A.parent == null) {
+        this.treeRoot = B;
+    }
+    else {
+        this.cmd("Disconnect", A.parent.graphicID, A.graphicID, SplayTree.LINK_COLOR);
+        this.cmd("Connect", A.parent.graphicID, B.graphicID, SplayTree.LINK_COLOR)
+        if (A.isLeftChild()) {
+            A.parent.left = B;
+        } else {
+            A.parent.right = B;
+        }
+    }
+    B.left = A;
+    A.parent = B;
+    A.right = t2;
+    this.resizeTree();
+}
+
+
+SplayTree.prototype.doubleRotateRight = function(tree)
+{
+    var A = tree.left;
+    var B = tree.left.right;
+    var C = tree;
+    var t1 = A.left;
+    var t2 = B.left;
+    var t3 = B.right;
+    var t4 = C.right;
+    
+    this.cmd("SetText", this.messageID, "Zig-Zag Right");
+    this.cmd("SetEdgeHighlight", C.graphicID, A.graphicID, 1);
+    this.cmd("SetEdgeHighlight", A.graphicID, B.graphicID, 1);
+    this.cmd("Step");
+
+    if (t2 != null) {
+        this.cmd("Disconnect",B.graphicID, t2.graphicID);
+        t2.parent = A;
+        A.right = t2;
+        this.cmd("Connect", A.graphicID, t2.graphicID, SplayTree.LINK_COLOR);
+    }
+    if (t3 != null) {
+        this.cmd("Disconnect",B.graphicID, t3.graphicID);
+        t3.parent = C;
+        C.left = t2;
+        this.cmd("Connect", C.graphicID, t3.graphicID, SplayTree.LINK_COLOR);
+    }
+    if (C.parent == null) {
+        B.parent = null;
+        this.treeRoot = B;
+    }
+    else {
+        this.cmd("Disconnect",C.parent.graphicID, C.graphicID);
+        this.cmd("Connect",C.parent.graphicID, B.graphicID, SplayTree.LINK_COLOR);
+        if (C.isLeftChild()) {
+            C.parent.left = B
+        } else {
+            C.parent.right = B;
+        }
+        B.parent = C.parent;
+        C.parent = B;
+    }
+    this.cmd("Disconnect", C.graphicID, A.graphicID);
+    this.cmd("Disconnect", A.graphicID, B.graphicID);
+    this.cmd("Connect", B.graphicID, A.graphicID, SplayTree.LINK_COLOR);
+    this.cmd("Connect", B.graphicID, C.graphicID, SplayTree.LINK_COLOR);
+
+    B.left = A;
+    A.parent = B;
+    B.right = C;
+    C.parent = B;
+    A.right = t2;
+    C.left = t3;
+    this.resizeTree();
+}
+
+
+SplayTree.prototype.doubleRotateLeft = function(tree)
+{
+    var A = tree;
+    var B = tree.right.left;
+    var C = tree.right;
+    var t1 = A.left;
+    var t2 = B.left;
+    var t3 = B.right;
+    var t4 = C.right;
+    
+    this.cmd("SetText", this.messageID, "Zig-Zag Left");
+    this.cmd("SetEdgeHighlight", A.graphicID, C.graphicID, 1);
+    this.cmd("SetEdgeHighlight", C.graphicID, B.graphicID, 1);
+    this.cmd("Step");
+
+    if (t2 != null) {
+        this.cmd("Disconnect",B.graphicID, t2.graphicID);
+        t2.parent = A;
+        A.right = t2;
+        this.cmd("Connect", A.graphicID, t2.graphicID, SplayTree.LINK_COLOR);
+    }
+    if (t3 != null) {
+        this.cmd("Disconnect",B.graphicID, t3.graphicID);
+        t3.parent = C;
+        C.left = t2;
+        this.cmd("Connect", C.graphicID, t3.graphicID, SplayTree.LINK_COLOR);
+    }
+
+    if (A.parent == null) {
+        B.parent = null;
+        this.treeRoot = B;
+    }
+    else {
+        this.cmd("Disconnect",A.parent.graphicID, A.graphicID);
+        this.cmd("Connect",A.parent.graphicID, B.graphicID, SplayTree.LINK_COLOR);
+        if (A.isLeftChild()) {
+            A.parent.left = B
+        } else {
+            A.parent.right = B;
+        }
+        B.parent = A.parent;
+        A.parent = B;
+    }
+    this.cmd("Disconnect", A.graphicID, C.graphicID);
+    this.cmd("Disconnect", C.graphicID, B.graphicID);
+    this.cmd("Connect", B.graphicID, A.graphicID, SplayTree.LINK_COLOR);
+    this.cmd("Connect", B.graphicID, C.graphicID, SplayTree.LINK_COLOR);
+
+    B.left = A;
+    A.parent = B;
+    B.right = C;
+    C.parent = B;
+    A.right = t2;
+    C.left = t3;
+    this.resizeTree();
+}
+
+
 SplayTree.prototype.zigZigRight = function(tree)
 {
-    var C = tree;
-    var B = tree.left;
     var A = tree.left.left;
+    var B = tree.left;
+    var C = tree;
     var t1 = A.left;
     var t2 = A.right;
     var t3 = B.right;
     var t4 = C.right;
 
-    this.cmd("SetText", 0, "Zig-Zig Right");
+    this.cmd("SetText", this.messageID, "Zig-Zig Right");
     this.cmd("SetEdgeHighlight", C.graphicID, B.graphicID, 1);
     this.cmd("SetEdgeHighlight", B.graphicID, A.graphicID, 1);
     this.cmd("Step");
     this.cmd("SetEdgeHighlight", C.graphicID, B.graphicID, 0);
     this.cmd("SetEdgeHighlight", B.graphicID, A.graphicID, 0);
 
-
-    if (C.parent != null)
-    {
+    if (C.parent != null) {
         this.cmd("Disconnect", C.parent.graphicID, C.graphicID);
         this.cmd("Connect", C.parent.graphicID, A.graphicID, SplayTree.LINK_COLOR);
-        if (C.isLeftChild())
-        {
+        if (C.isLeftChild()) {
             C.parent.left = A;
-        }
-        else
-        {
+        } else {
             C.parent.right = A;
         }
     }
-    else
-    {
+    else {
         this.treeRoot = A;
     }
 
-    if (t2 != null)
-    {
+    if (t2 != null) {
         this.cmd("Disconnect", A.graphicID, t2.graphicID);
         this.cmd("Connect", B.graphicID, t2.graphicID, SplayTree.LINK_COLOR);
         t2.parent = B;
     }
-    if (t3 != null)
-    {
+    if (t3 != null) {
         this.cmd("Disconnect", B.graphicID, t3.graphicID);
         this.cmd("Connect", C.graphicID, t3.graphicID, SplayTree.LINK_COLOR);
         t3.parent = C;
@@ -685,7 +754,7 @@ SplayTree.prototype.zigZigLeft = function(tree)
     var t3 = C.left;
     var t4 = C.right;
 
-    this.cmd("SetText", 0, "Zig-Zig Left");
+    this.cmd("SetText", this.messageID, "Zig-Zig Left");
     this.cmd("SetEdgeHighlight", A.graphicID, B.graphicID, 1);
     this.cmd("SetEdgeHighlight", B.graphicID, C.graphicID, 1);
     this.cmd("Step");
@@ -693,33 +762,25 @@ SplayTree.prototype.zigZigLeft = function(tree)
     this.cmd("SetEdgeHighlight", B.graphicID, C.graphicID, 0);
 
 
-
-    if (A.parent != null)
-    {
+    if (A.parent != null) {
         this.cmd("Disconnect", A.parent.graphicID, A.graphicID);
         this.cmd("Connect", A.parent.graphicID, C.graphicID, SplayTree.LINK_COLOR);
-        if (A.isLeftChild())
-        {
+        if (A.isLeftChild()) {
             A.parent.left = C;
-        }
-        else
-        {
+        } else {
             A.parent.right = C;
         }
     }
-    else
-    {
+    else {
         this.treeRoot = C;
     }
 
-    if (t2 != null)
-    {
+    if (t2 != null) {
         this.cmd("Disconnect", B.graphicID, t2.graphicID);
         this.cmd("Connect", A.graphicID, t2.graphicID, SplayTree.LINK_COLOR);
         t2.parent = A;
     }
-    if (t3 != null)
-    {
+    if (t3 != null) {
         this.cmd("Disconnect", C.graphicID, t3.graphicID);
         this.cmd("Connect", B.graphicID, t3.graphicID, SplayTree.LINK_COLOR);
         t3.parent = B;
@@ -728,6 +789,7 @@ SplayTree.prototype.zigZigLeft = function(tree)
     this.cmd("Disconnect", B.graphicID, C.graphicID);
     this.cmd("Connect", C.graphicID, B.graphicID, SplayTree.LINK_COLOR);
     this.cmd("Connect", B.graphicID, A.graphicID, SplayTree.LINK_COLOR);
+
     C.parent = A.parent;
     A.right = t2;
     B.left = A;
@@ -735,257 +797,116 @@ SplayTree.prototype.zigZigLeft = function(tree)
     B.right = t3;
     C.left = B;
     B.parent = C;
-
     this.resizeTree();
-
 }
 
-SplayTree.prototype.singleRotateLeft = function(tree)
+
+//  TODO: This top-down version is broken. Don't use
+SplayTree.prototype.splayDown = function(value)
 {
-    var A = tree;
-    var B = tree.right;
-    var t1 = A.left;
-    var t2 = B.left;
-    var t3 = B.right;
-
-    this.cmd("SetText", 0, "Zig Left");
-    this.cmd("SetEdgeHighlight", A.graphicID, B.graphicID, 1);
-    this.cmd("Step");
-
-    if (t2 != null)
-    {
-        this.cmd("Disconnect", B.graphicID, t2.graphicID);
-        this.cmd("Connect", A.graphicID, t2.graphicID, SplayTree.LINK_COLOR);
-        t2.parent = A;
+    if (this.treeRoot == null) {
+        return false;
     }
-    this.cmd("Disconnect", A.graphicID, B.graphicID);
-    this.cmd("Connect", B.graphicID, A.graphicID, SplayTree.LINK_COLOR);
-    B.parent = A.parent;
-    if (A.parent == null)
-    {
-        this.treeRoot = B;
-    }
-    else
-    {
-        this.cmd("Disconnect", A.parent.graphicID, A.graphicID, SplayTree.LINK_COLOR);
-        this.cmd("Connect", A.parent.graphicID, B.graphicID, SplayTree.LINK_COLOR)
-
-        if (A.isLeftChild())
-        {
-            A.parent.left = B;
+    else if (this.treeRoot.data == value) {
+        return true;
+    } 
+    else if (value < this.treeRoot.data) {
+        if (this.treeRoot.left == null) {
+            return false;
         }
-        else
-        {
-            A.parent.right = B;
+        else if (this.treeRoot.left.data == value) {
+            this.singleRotateRight(this.treeRoot);
+            return true;
+        }
+        else if (value < this.treeRoot.left.data) {
+            if (this.treeRoot.left.left == null) {
+                this.singleRotateRight(this.treeRoot);
+            } else {
+                this.zigZigRight(this.treeRoot);
+            }
+            return this.splayDown(value);
+        }
+        else {
+            if (this.treeRoot.left.right == null) {
+                this.singleRotateRight(this.treeRoot);
+            } else {
+                this.doubleRotateRight(this.treeRoot);
+            }
+            return this.splayDown(value);
         }
     }
-    B.left = A;
-    A.parent = B;
-    A.right = t2;
-
-    this.resizeTree();
+    else {
+        if (this.treeRoot.right == null) {
+            return false;
+        }
+        else if (this.treeRoot.right.data == value) {
+            this.singleRotateLeft(this.treeRoot);
+            return true;
+        }
+        else if (value > this.treeRoot.right.data) {
+            if (this.treeRoot.right.right == null) {
+                this.singleRotateLeft(this.treeRoot);
+            } else {
+                this.zigZigLeft(this.treeRoot);
+            }
+            return this.splayDown(value);
+        }
+        else {
+            if (this.treeRoot.right.left == null) {
+                this.singleRotateLeft(this.treeRoot);
+            }
+            else {
+                this.doubleRotateLeft(this.treeRot);
+            }
+            return this.splayDown(value);
+        }
+    }
 }
-
 
 
 SplayTree.prototype.splayUp = function(tree)
 {
-    if (tree.parent == null)
-    {
+    if (tree.parent == null) {
         return;
     }
-    else if (tree.parent.parent == null)
-    {
-        if (tree.isLeftChild())
-        {
+    else if (tree.parent.parent == null) {
+        if (tree.isLeftChild()) {
             this.singleRotateRight(tree.parent);
-
-        }
-        else
-        {
+        } else {
             this.singleRotateLeft(tree.parent);
         }
     }
-    else if (tree.isLeftChild() && !tree.parent.isLeftChild())
-    {
+    else if (tree.isLeftChild() && !tree.parent.isLeftChild()) {
         this.doubleRotateLeft(tree.parent.parent);
         this.splayUp(tree);
-
     }
-    else if (!tree.isLeftChild() && tree.parent.isLeftChild())
-    {
+    else if (!tree.isLeftChild() && tree.parent.isLeftChild()) {
         this.doubleRotateRight(tree.parent.parent);
         this.splayUp(tree);
     }
-    else if (tree.isLeftChild())
-    {
+    else if (tree.isLeftChild()) {
         this.zigZigRight(tree.parent.parent);
         this.splayUp(tree);
     }
-    else
-    {
+    else {
         this.zigZigLeft(tree.parent.parent);
         this.splayUp(tree);
     }
 }
 
 
-SplayTree.prototype.findMax = function(tree)
+SplayTree.prototype.validateTree = function(tree, parent)
 {
-    if (tree.right != null)
-    {
-        this.highlightID = this.nextIndex++;
-        this.cmd("CreateHighlightCircle", this.highlightID, SplayTree.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
-        this.cmd("Step");
-        while(tree.right != null)
-        {
-            this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
-            this.cmd("Step");
-            tree = tree.right;
-        }
-        this.cmd("Delete", this.highlightID);
-        return tree;
+    if (!tree) {
+        tree = this.treeRoot;
+        if (!tree) return;
+        // console.log("Validating tree", tree);
+    } else {
+        if (tree.parent !== parent) console.error("Parent mismatch:", tree, parent);
     }
-    else
-    {
-        return tree;
-    }
-}
-
-
-SplayTree.prototype.doubleRotateRight = function(tree)
-{
-    this.cmd("SetText", 0, "Zig-Zag Right");
-    var A = tree.left;
-    var B = tree.left.right;
-    var C = tree;
-    var t1 = A.left;
-    var t2 = B.left;
-    var t3 = B.right;
-    var t4 = C.right;
-
-    this.cmd("SetEdgeHighlight", C.graphicID, A.graphicID, 1);
-    this.cmd("SetEdgeHighlight", A.graphicID, B.graphicID, 1);
-
-    this.cmd("Step");
-
-    if (t2 != null)
-    {
-        this.cmd("Disconnect",B.graphicID, t2.graphicID);
-        t2.parent = A;
-        A.right = t2;
-        this.cmd("Connect", A.graphicID, t2.graphicID, SplayTree.LINK_COLOR);
-    }
-    if (t3 != null)
-    {
-        this.cmd("Disconnect",B.graphicID, t3.graphicID);
-        t3.parent = C;
-        C.left = t2;
-        this.cmd("Connect", C.graphicID, t3.graphicID, SplayTree.LINK_COLOR);
-    }
-    if (C.parent == null)
-    {
-        B.parent = null;
-        this.treeRoot = B;
-    }
-    else
-    {
-        this.cmd("Disconnect",C.parent.graphicID, C.graphicID);
-        this.cmd("Connect",C.parent.graphicID, B.graphicID, SplayTree.LINK_COLOR);
-        if (C.isLeftChild())
-        {
-            C.parent.left = B
-        }
-        else
-        {
-            C.parent.right = B;
-        }
-        B.parent = C.parent;
-        C.parent = B;
-    }
-    this.cmd("Disconnect", C.graphicID, A.graphicID);
-    this.cmd("Disconnect", A.graphicID, B.graphicID);
-    this.cmd("Connect", B.graphicID, A.graphicID, SplayTree.LINK_COLOR);
-    this.cmd("Connect", B.graphicID, C.graphicID, SplayTree.LINK_COLOR);
-    B.left = A;
-    A.parent = B;
-    B.right=C;
-    C.parent=B;
-    A.right=t2;
-    C.left = t3;
-
-    this.resizeTree();
-
-
-}
-
-SplayTree.prototype.doubleRotateLeft = function(tree)
-{
-    this.cmd("SetText", 0, "Zig-Zag Left");
-    var A = tree;
-    var B = tree.right.left;
-    var C = tree.right;
-    var t1 = A.left;
-    var t2 = B.left;
-    var t3 = B.right;
-    var t4 = C.right;
-
-    this.cmd("SetEdgeHighlight", A.graphicID, C.graphicID, 1);
-    this.cmd("SetEdgeHighlight", C.graphicID, B.graphicID, 1);
-
-    this.cmd("Step");
-
-    if (t2 != null)
-    {
-        this.cmd("Disconnect",B.graphicID, t2.graphicID);
-        t2.parent = A;
-        A.right = t2;
-        this.cmd("Connect", A.graphicID, t2.graphicID, SplayTree.LINK_COLOR);
-    }
-    if (t3 != null)
-    {
-        this.cmd("Disconnect",B.graphicID, t3.graphicID);
-        t3.parent = C;
-        C.left = t2;
-        this.cmd("Connect", C.graphicID, t3.graphicID, SplayTree.LINK_COLOR);
-    }
-
-
-    if (A.parent == null)
-    {
-        B.parent = null;
-        this.treeRoot = B;
-    }
-    else
-    {
-        this.cmd("Disconnect",A.parent.graphicID, A.graphicID);
-        this.cmd("Connect",A.parent.graphicID, B.graphicID, SplayTree.LINK_COLOR);
-        if (A.isLeftChild())
-        {
-            A.parent.left = B
-        }
-        else
-        {
-            A.parent.right = B;
-        }
-        B.parent = A.parent;
-        A.parent = B;
-
-    }
-    this.cmd("Disconnect", A.graphicID, C.graphicID);
-    this.cmd("Disconnect", C.graphicID, B.graphicID);
-    this.cmd("Connect", B.graphicID, A.graphicID, SplayTree.LINK_COLOR);
-    this.cmd("Connect", B.graphicID, C.graphicID, SplayTree.LINK_COLOR);
-    B.left = A;
-    A.parent = B;
-    B.right=C;
-    C.parent=B;
-    A.right=t2;
-    C.left = t3;
-
-    this.resizeTree();
-
-
+    if (!tree.graphicID) console.error("Tree missing ID:", tree);
+    if (tree.left) this.validateTree(tree.left, tree);
+    if (tree.right) this.validateTree(tree.right, tree);
 }
 
 
@@ -994,46 +915,40 @@ SplayTree.prototype.resizeTree = function()
 {
     var startingPoint = this.startingX;
     this.resizeWidths(this.treeRoot);
-    if (this.treeRoot != null)
-    {
-        if (this.treeRoot.leftWidth > startingPoint)
-        {
+    if (this.treeRoot != null) {
+        if (this.treeRoot.leftWidth > startingPoint) {
             startingPoint = this.treeRoot.leftWidth;
         }
-        else if (this.treeRoot.rightWidth > startingPoint)
-        {
+        else if (this.treeRoot.rightWidth > startingPoint) {
             startingPoint = Math.max(this.treeRoot.leftWidth, 2 * startingPoint - this.treeRoot.rightWidth);
         }
         this.setNewPositions(this.treeRoot, startingPoint, SplayTree.STARTING_Y, 0);
         this.animateNewPositions(this.treeRoot);
         this.cmd("Step");
     }
-
 }
+
 
 SplayTree.prototype.setNewPositions = function(tree, xPosition, yPosition, side)
 {
-    if (tree != null)
-    {
+    if (tree != null) {
         tree.y = yPosition;
-        if (side == -1)
-        {
+        if (side < 0) {
             xPosition = xPosition - tree.rightWidth;
         }
-        else if (side == 1)
-        {
+        else if (side > 0) {
             xPosition = xPosition + tree.leftWidth;
         }
         tree.x = xPosition;
-        this.setNewPositions(tree.left, xPosition, yPosition + SplayTree.HEIGHT_DELTA, -1)
-        this.setNewPositions(tree.right, xPosition, yPosition + SplayTree.HEIGHT_DELTA, 1)
+        this.setNewPositions(tree.left, xPosition, yPosition + SplayTree.HEIGHT_DELTA, -1);
+        this.setNewPositions(tree.right, xPosition, yPosition + SplayTree.HEIGHT_DELTA, 1);
     }
-
 }
+
+
 SplayTree.prototype.animateNewPositions = function(tree)
 {
-    if (tree != null)
-    {
+    if (tree != null) {
         this.cmd("Move", tree.graphicID, tree.x, tree.y);
         this.animateNewPositions(tree.left);
         this.animateNewPositions(tree.right);
@@ -1042,8 +957,7 @@ SplayTree.prototype.animateNewPositions = function(tree)
 
 SplayTree.prototype.resizeWidths = function(tree)
 {
-    if (tree == null)
-    {
+    if (tree == null) {
         return 0;
     }
     tree.leftWidth = Math.max(this.resizeWidths(tree.left), SplayTree.WIDTH_DELTA / 2);
@@ -1053,6 +967,8 @@ SplayTree.prototype.resizeWidths = function(tree)
 
 
 
+///////////////////////////////////////////////////////////////////////////////
+// Splay tree nodes are ordinary BST nodes
 
 function SplayNode(val, id, initialX, initialY)
 {
@@ -1063,18 +979,15 @@ function SplayNode(val, id, initialX, initialY)
     this.left = null;
     this.right = null;
     this.parent = null;
-}
+    this.leftWidth = 0;
+    this.rightWidth = 0;
 
-SplayNode.prototype.isLeftChild = function()
-{
-    if (this.parent == null)
-    {
-        return true;
-    }
-    return this.parent.left == this;
+    this.isLeftChild = () => this.parent == null || this.parent.left == this;
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
+// Initialization
 
 var currentAlg;
 
