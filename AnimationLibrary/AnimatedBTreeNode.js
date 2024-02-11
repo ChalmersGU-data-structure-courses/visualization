@@ -25,7 +25,7 @@
 // or implied, of the University of San Francisco
 
 
-function AnimatedBTreeNode(id, widthPerElem, h, numElems,  fillColor, edgeColor)
+function AnimatedBTreeNode(id, widthPerElem, h, numElems, fillColor, edgeColor, highlightColor)
 {
     AnimatedBTreeNode.superclass.constructor.call(this);
 
@@ -33,19 +33,25 @@ function AnimatedBTreeNode(id, widthPerElem, h, numElems,  fillColor, edgeColor)
     this.widthPerElement = widthPerElem;
     this.nodeHeight = h;
     this.numLabels = numElems;
-    this.backgroundColor = (fillColor == undefined)? "#FFFFFF" : fillColor;
-    this.foregroundColor = (edgeColor == undefined)? "#000000" : edgeColor;
+    this.backgroundColor = fillColor || AnimatedBTreeNode.BACKGROUND_COLOR;
+    this.foregroundColor = edgeColor || AnimatedBTreeNode.FOREGROUND_COLOR;
+    this.highlightColor = highlightColor || AnimatedBTreeNode.HIGHLIGHT_COLOR;
 
     this.labels = new Array(this.numLabels);
     this.labelColors = new Array(this.numLabels);
-    for (var i = 0; i < this.numLabels; i++)
-    {
+    for (var i = 0; i < this.numLabels; i++) {
         this.labelColors[i] = this.foregroundColor;
     }
 }
 AnimatedBTreeNode.inheritFrom(AnimatedObject);
 
+
+AnimatedBTreeNode.BACKGROUND_COLOR = "#FFFFFF";
+AnimatedBTreeNode.FOREGROUND_COLOR = "#000000";
+AnimatedBTreeNode.HIGHLIGHT_COLOR = "#FF0000";
+
 AnimatedBTreeNode.MIN_WIDTH = 10;
+AnimatedBTreeNode.CORNER_RADIUS = 10;
 AnimatedBTreeNode.EDGE_POINTER_DISPLACEMENT = 5;
 
 
@@ -86,77 +92,73 @@ AnimatedBTreeNode.prototype.setNumElements = function(newNumElements)
 
 AnimatedBTreeNode.prototype.left = function()
 {
-    return this.x - this.getWidth() / 2.0;
+    return this.x - this.getWidth() / 2;
 }
-
 
 AnimatedBTreeNode.prototype.right = function()
 {
-    return this.x + this.getWidth() / 2.0;
+    return this.x + this.getWidth() / 2;
 }
-
 
 AnimatedBTreeNode.prototype.top = function()
 {
-    return this.y - this.nodeHeight / 2.0;
+    return this.y - this.nodeHeight / 2;
 }
-
 
 AnimatedBTreeNode.prototype.bottom = function()
 {
-    return this.y + this.nodeHeight / 2.0;
+    return this.y + this.nodeHeight / 2;
 }
 
 
 AnimatedBTreeNode.prototype.draw = function(context)
 {
-    var startX;
-    var startY;
-
-    startX = this.left();
-    if (startX == NaN) {
-        startX = 0;
-    }
-    startY = this.top();
+    var x0 = this.left();
+    var y0 = this.top();
+    if (isNaN(x0)) x0 = 0;
 
     if (this.highlighted) {
-        context.strokeStyle = "#ff0000";
-        context.fillStyle = "#ff0000";
+        context.strokeStyle = this.highlightColor;
+        context.fillStyle = this.highlightColor;
+        context.lineWidth = 2;
 
         context.beginPath();
-        context.moveTo(startX - this.highlightDiff,startY- this.highlightDiff);
-        context.lineTo(startX+this.getWidth() + this.highlightDiff,startY- this.highlightDiff);
-        context.lineTo(startX+this.getWidth() + this.highlightDiff,startY+this.nodeHeight + this.highlightDiff);
-        context.lineTo(startX - this.highlightDiff,startY+this.nodeHeight + this.highlightDiff);
-        context.lineTo(startX - this.highlightDiff,startY - this.highlightDiff);
-        context.closePath();
+        context.roundRect(
+            x0 - this.highlightDiff, 
+            y0 - this.highlightDiff, 
+            this.getWidth() + 2 * this.highlightDiff, 
+            this.nodeHeight + 2 * this.highlightDiff, 
+            AnimatedBTreeNode.CORNER_RADIUS
+        );
         context.stroke();
         context.fill();
     }
 
     context.strokeStyle = this.foregroundColor;
     context.fillStyle = this.backgroundColor;
+    context.lineWidth = 2;
 
     context.beginPath();
-    context.moveTo(startX ,startY);
-    context.lineTo(startX + this.getWidth(), startY);
-    context.lineTo(startX + this.getWidth(), startY + this.nodeHeight);
-    context.lineTo(startX, startY + this.nodeHeight);
-    context.lineTo(startX, startY);
-    context.closePath();
+    context.roundRect(x0, y0, this.getWidth(), this.nodeHeight, AnimatedBTreeNode.CORNER_RADIUS);
     context.stroke();
     context.fill();
+
+    context.lineWidth = 1;
+    context.beginPath();
+    for (var i = 1; i < this.numLabels; i++) {
+        var x = x0 + i * this.widthPerElement;
+        context.moveTo(x, y0);
+        context.lineTo(x, y0 + this.nodeHeight);
+    }
+    context.stroke();
 
     context.textAlign = 'center';
     context.textBaseline = 'middle';
 
-
     for (var i = 0; i < this.numLabels; i++) {
         var labelx = this.x - this.widthPerElement * this.numLabels / 2 + this.widthPerElement / 2 + i * this.widthPerElement;
-        var labely = this.y
-
         context.fillStyle = this.labelColors[i];
-        context.fillText(this.labels[i], labelx, labely);
+        context.fillText(this.labels[i], labelx, this.y);
     }
 }
 
@@ -176,7 +178,6 @@ AnimatedBTreeNode.prototype.setForegroundColor = function(newColor)
 }
 
 
-// TODO:  Kill the magic numbers here
 AnimatedBTreeNode.prototype.getTailPointerAttachPos = function(fromX, fromY, anchor)
 {
     if (anchor == 0) {
@@ -216,31 +217,24 @@ AnimatedBTreeNode.prototype.createUndoDelete = function()
 
 AnimatedBTreeNode.prototype.getTextColor = function(textIndex)
 {
-    textIndex = (textIndex == undefined) ? 0 : textIndex;
-    return this.labelColors[textIndex];
+    return this.labelColors[textIndex || 0];
+}
+
+AnimatedBTreeNode.prototype.setTextColor = function(color, textIndex)
+{
+    this.labelColors[textIndex || 0] = color;
 }
 
 
 AnimatedBTreeNode.prototype.getText = function(index)
 {
-    index = (index == undefined) ? 0 : index;
-    return this.labels[index];
-}
-
-
-AnimatedBTreeNode.prototype.setTextColor = function(color, textIndex)
-{
-    textIndex = (textIndex == undefined) ? 0 : textIndex;
-    this.labelColors[textIndex] = color;
-}
-
+    return this.labels[index || 0];
+}    
 
 AnimatedBTreeNode.prototype.setText = function(newText, textIndex)
 {
-    textIndex = (textIndex == undefined) ? 0 : textIndex;
-    this.labels[textIndex] = newText;
+    this.labels[textIndex || 0] = newText;
 }
-
 
 
 function UndoDeleteBTreeNode(id, numLab, labelText, x, y, wPerElement, nHeight, lColors, bgColor, fgColor, l, highlighted)
@@ -261,6 +255,7 @@ function UndoDeleteBTreeNode(id, numLab, labelText, x, y, wPerElement, nHeight, 
 }
 
 UndoDeleteBTreeNode.inheritFrom(UndoBlock);
+
 
 UndoDeleteBTreeNode.prototype.undoInitialStep = function(world)
 {
