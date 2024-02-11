@@ -122,8 +122,7 @@ StackLL.prototype.resetLinkedListPositions = function()
 {
     var nextX = QueueLL.LINKED_LIST_START_X;
     var nextY = QueueLL.LINKED_LIST_START_Y;
-    for (var i = this.top - 1; i >= 0; i--)
-    {
+    for (var i = this.top - 1; i >= 0; i--) {
         this.cmd("Move", this.linkedListElemID[i], nextX, nextY);
         nextX += QueueLL.LINKED_LIST_ELEM_SPACING;
         if (nextX > this.getCanvasWidth() - QueueLL.LINKED_LIST_ELEM_SPACING) {

@@ -89,8 +89,7 @@ StackArray.prototype.setup = function()
 
     this.arrayID = new Array(StackArray.SIZE);
     this.arrayLabelID = new Array(StackArray.SIZE);
-    for (var i = 0; i < StackArray.SIZE; i++)
-    {
+    for (var i = 0; i < StackArray.SIZE; i++) {
 
         this.arrayID[i]= this.nextIndex++;
         this.arrayLabelID[i]= this.nextIndex++;
@@ -106,8 +105,7 @@ StackArray.prototype.setup = function()
 
     var xpos = StackArray.ARRAY_START_X;
     var ypos = StackArray.ARRAY_START_Y;
-    for (var i = 0; i < StackArray.SIZE; i++)
-    {
+    for (var i = 0; i < StackArray.SIZE; i++) {
         this.cmd("CreateRectangle", this.arrayID[i], "", StackArray.ARRAY_ELEM_WIDTH, StackArray.ARRAY_ELEM_HEIGHT,xpos, ypos);
         this.cmd("CreateLabel",this.arrayLabelID[i], i, xpos, ypos + StackArray.ARRAY_ELEM_HEIGHT);
         this.cmd("SetForegroundColor", this.arrayLabelID[i], "#0000FF");
@@ -143,8 +141,7 @@ StackArray.prototype.reset = function()
 
 StackArray.prototype.pushCallback = function(event)
 {
-    if (this.top < StackArray.SIZE && this.pushField.value != "")
-    {
+    if (this.top < StackArray.SIZE && this.pushField.value != "") {
         var pushVal = this.pushField.value;
         this.pushField.value = ""
         this.implementAction(this.push.bind(this), pushVal);
@@ -154,8 +151,7 @@ StackArray.prototype.pushCallback = function(event)
 
 StackArray.prototype.popCallback = function(event)
 {
-    if (this.top > 0)
-    {
+    if (this.top > 0) {
         this.implementAction(this.pop.bind(this), "");
     }
 }
@@ -170,8 +166,7 @@ StackArray.prototype.clearCallback = function(event)
 StackArray.prototype.getXYPos = function(index) {
     var xpos = StackArray.ARRAY_START_X;
     var ypos = StackArray.ARRAY_START_Y;
-    for (var i = 0; i < index; i++)
-    {
+    for (var i = 0; i < index; i++) {
         xpos += StackArray.ARRAY_ELEM_WIDTH;
         if (xpos > this.getCanvasWidth() - StackArray.ARRAY_LINE_SPACING) {
             xpos = StackArray.ARRAY_START_X;

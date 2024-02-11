@@ -93,13 +93,11 @@ BinomialQueue.prototype.addControls = function()
 
 BinomialQueue.prototype.representationChangedHandler = function(logicalRep, event)
 {
-    if (logicalRep)
-    {
+    if (logicalRep) {
         this.animationManager.setAllLayers([0,1]);
         this.currentLayer = 1;
     }
-    else
-    {
+    else {
         this.animationManager.setAllLayers([0,2]);
         this.currentLayer = 2;
     }
@@ -110,23 +108,19 @@ BinomialQueue.prototype.representationChangedHandler = function(logicalRep, even
 
 BinomialQueue.prototype.setPositions = function(tree, xPosition, yPosition)
 {
-    if (tree != null)
-    {
-        if (tree.degree == 0)
-        {
+    if (tree != null) {
+        if (tree.degree == 0) {
             tree.x = xPosition;
             tree.y = yPosition;
             return this.setPositions(tree.rightSib, xPosition + BinomialQueue.NODE_WIDTH, yPosition);
         }
-        else if (tree.degree == 1)
-        {
+        else if (tree.degree == 1) {
             tree.x = xPosition;
             tree.y = yPosition;
             this.setPositions(tree.leftChild, xPosition, yPosition + BinomialQueue.NODE_HEIGHT);
             return this.setPositions(tree.rightSib, xPosition + BinomialQueue.NODE_WIDTH, yPosition);
         }
-        else
-        {
+        else {
             var treeWidth = Math.pow(2, tree.degree - 1);
             tree.x = xPosition + (treeWidth - 1) * BinomialQueue.NODE_WIDTH;
             tree.y = yPosition;
@@ -139,8 +133,7 @@ BinomialQueue.prototype.setPositions = function(tree, xPosition, yPosition)
 
 BinomialQueue.prototype.moveTree = function(tree)
 {
-    if (tree != null)
-    {
+    if (tree != null) {
         this.cmd("Move", tree.graphicID, tree.x, tree.y);
         this.cmd("Move", tree.internalGraphicID, tree.x, tree.y);
         this.cmd("Move", tree.degreeID, tree.x + BinomialQueue.DEGREE_OFFSET_X, tree.y + BinomialQueue.DEGREE_OFFSET_Y);
@@ -154,8 +147,7 @@ BinomialQueue.prototype.moveTree = function(tree)
 BinomialQueue.prototype.insertCallback = function(event)
 {
     var insertedValue = this.normalizeNumber(this.insertField.value.toUpperCase());
-    if (insertedValue != "")
-    {
+    if (insertedValue != "") {
         this.insertField.value = "";
         this.implementAction(this.insertElement.bind(this), insertedValue);
     }
@@ -194,8 +186,7 @@ BinomialQueue.prototype.removeSmallest = function(dummy)
 {
     this.commands = new Array();
 
-    if (this.treeRoot != null)
-    {
+    if (this.treeRoot != null) {
         var tmp;
         var prev;
         var smallest = this.treeRoot;
@@ -203,19 +194,16 @@ BinomialQueue.prototype.removeSmallest = function(dummy)
         this.cmd("SetHighlight", smallest.graphicID, 1);
         this.cmd("SetHighlight", smallest.internalGraphicID, 1);
 
-        for (tmp = this.treeRoot.rightSib; tmp != null; tmp = tmp.rightSib)
-        {
+        for (tmp = this.treeRoot.rightSib; tmp != null; tmp = tmp.rightSib) {
             this.cmd("SetHighlight", tmp.graphicID, 1);
             this.cmd("SetHighlight", tmp.internalGraphicID, 1);
             this.cmd("Step");
-            if (this.compare(tmp.data, smallest.data) < 0)
-            {
+            if (this.compare(tmp.data, smallest.data) < 0) {
                 this.cmd("SetHighlight", smallest.graphicID, 0);
                 this.cmd("SetHighlight", smallest.internalGraphicID, 0);
                 smallest = tmp;
             }
-            else
-            {
+            else {
                 this.cmd("SetHighlight", tmp.graphicID, 0);
                 this.cmd("SetHighlight", tmp.internalGraphicID, 0);
             }
@@ -225,8 +213,7 @@ BinomialQueue.prototype.removeSmallest = function(dummy)
             this.treeRoot = this.treeRoot.rightSib;
             prev = null;
         }
-        else
-        {
+        else {
             for (prev = this.treeRoot; prev.rightSib != smallest; prev = prev.rightSib) ;
             prev.rightSib = prev.rightSib.rightSib;
 
@@ -237,8 +224,7 @@ BinomialQueue.prototype.removeSmallest = function(dummy)
         this.cmd("CreateLabel", moveLabel, smallest.data, smallest.x, smallest.y);
         this.cmd("Move", moveLabel, BinomialQueue.DELETE_LAB_X, BinomialQueue.DELETE_LAB_Y);
         this.cmd("Step");
-        if (prev != null && prev.rightSib != null)
-        {
+        if (prev != null && prev.rightSib != null) {
             this.cmd("Connect", prev.internalGraphicID,
                      prev.rightSib.internalGraphicID,
                      BinomialQueue.FOREGROUND_COLOR,
@@ -264,10 +250,8 @@ BinomialQueue.prototype.reverse = function(tree)
 {
     var newTree = null;
     var tmp;
-    while (tree != null)
-    {
-        if (tree.rightSib != null)
-        {
+    while (tree != null) {
+        if (tree.rightSib != null) {
             this.cmd("Disconnect", tree.internalGraphicID, tree.rightSib.internalGraphicID);
             this.cmd("Connect", tree.rightSib.internalGraphicID,
                      tree.internalGraphicID,
@@ -306,14 +290,12 @@ BinomialQueue.prototype.insertElement = function(insertedValue)
     this.cmd("SetLayer", insertNode.degreeID, 2);
     this.cmd("Step");
 
-    if (this.treeRoot == null)
-    {
+    if (this.treeRoot == null) {
         this.treeRoot = insertNode;
         this.setPositions(this.treeRoot, BinomialQueue.STARTING_X, BinomialQueue.STARTING_Y);
         this.moveTree(this.treeRoot);
     }
-    else
-    {
+    else {
         this.secondaryTreeRoot = insertNode;
         this.merge();
     }
@@ -324,8 +306,7 @@ BinomialQueue.prototype.insertElement = function(insertedValue)
 
 BinomialQueue.prototype.merge = function()
 {
-    if (this.treeRoot != null)
-    {
+    if (this.treeRoot != null) {
         var leftSize = this.setPositions(this.treeRoot, BinomialQueue.STARTING_X, BinomialQueue.STARTING_Y);
         this.setPositions(this.secondaryTreeRoot, leftSize + BinomialQueue.NODE_WIDTH, BinomialQueue.STARTING_Y);
         this.moveTree(this.secondaryTreeRoot);
@@ -336,24 +317,20 @@ BinomialQueue.prototype.merge = function()
         this.cmd("SetLayer", lineID, 0);
         this.cmd("Step");
     }
-    else
-    {
+    else {
         this.treeRoot = this.secondaryTreeRoot;
         this.secondaryTreeRoot = null;
         this.setPositions(this.treeRoot, BinomialQueue.NODE_WIDTH, BinomialQueue.STARTING_Y);
         this.moveTree(this.treeRoot);
         return;
     }
-    while (this.secondaryTreeRoot != null)
-    {
+    while (this.secondaryTreeRoot != null) {
         var tmp = this.secondaryTreeRoot;
         this.secondaryTreeRoot = this.secondaryTreeRoot.rightSib;
-        if (this.secondaryTreeRoot != null)
-        {
+        if (this.secondaryTreeRoot != null) {
             this.cmd("Disconnect", tmp.internalGraphicID, this.secondaryTreeRoot.internalGraphicID);
         }
-        if (tmp.degree <= this.treeRoot.degree)
-        {
+        if (tmp.degree <= this.treeRoot.degree) {
             tmp.rightSib = this.treeRoot;
             this.treeRoot = tmp;
             this.cmd("Connect", this.treeRoot.internalGraphicID,
@@ -363,15 +340,12 @@ BinomialQueue.prototype.merge = function()
                      1, // Directed
                      ""); // Label
         }
-        else
-        {
+        else {
             var tmp2 = this.treeRoot;
-            while (tmp2.rightSib != null && tmp2.rightSib.degree < tmp.degree)
-            {
+            while (tmp2.rightSib != null && tmp2.rightSib.degree < tmp.degree) {
                 tmp2 = tmp2.rightSib;
             }
-            if (tmp2.rightSib != null)
-            {
+            if (tmp2.rightSib != null) {
                 this.cmd("Disconnect", tmp2.internalGraphicID, tmp2.rightSib.internalGraphicID);
                 this.cmd("Connect", tmp.internalGraphicID,
                          tmp2.rightSib.internalGraphicID,
@@ -406,23 +380,19 @@ BinomialQueue.prototype.combineNodes = function()
     var tmp;
     var tmp2;
     while ((this.treeRoot != null && this.treeRoot.rightSib != null && this.treeRoot.degree == this.treeRoot.rightSib.degree) &&
-           (this.treeRoot.rightSib.rightSib == null || this.treeRoot.rightSib.degree != this.treeRoot.rightSib.rightSib.degree))
-    {
+           (this.treeRoot.rightSib.rightSib == null || this.treeRoot.rightSib.degree != this.treeRoot.rightSib.rightSib.degree)) {
         this.cmd("Disconnect", this.treeRoot.internalGraphicID, this.treeRoot.rightSib.internalGraphicID);
-        if (this.treeRoot.rightSib.rightSib != null)
-        {
+        if (this.treeRoot.rightSib.rightSib != null) {
             this.cmd("Disconnect", this.treeRoot.rightSib.internalGraphicID, this.treeRoot.rightSib.rightSib.internalGraphicID);
         }
-        if (this.compare(this.treeRoot.data, this.treeRoot.rightSib.data) < 0)
-        {
+        if (this.compare(this.treeRoot.data, this.treeRoot.rightSib.data) < 0) {
             tmp = this.treeRoot.rightSib;
             this.treeRoot.rightSib = tmp.rightSib;
             tmp.rightSib = this.treeRoot.leftChild;
             this.treeRoot.leftChild = tmp;
             tmp.parent = this.treeRoot;
         }
-        else
-        {
+        else {
             tmp = this.treeRoot;
             this.treeRoot = this.treeRoot.rightSib;
             tmp.rightSib = this.treeRoot.leftChild;
@@ -450,8 +420,7 @@ BinomialQueue.prototype.combineNodes = function()
                  0, // Curve
                  1, // Directed
                  ""); // Label
-        if (this.treeRoot.leftChild.rightSib != null)
-        {
+        if (this.treeRoot.leftChild.rightSib != null) {
             this.cmd("Disconnect", this.treeRoot.internalGraphicID, this.treeRoot.leftChild.rightSib.internalGraphicID);
             this.cmd("Connect", this.treeRoot.leftChild.internalGraphicID,
                      this.treeRoot.leftChild.rightSib.internalGraphicID,
@@ -460,8 +429,7 @@ BinomialQueue.prototype.combineNodes = function()
                      1, // Directed
                      ""); // Label
         }
-        if (this.treeRoot.rightSib != null)
-        {
+        if (this.treeRoot.rightSib != null) {
             this.cmd("Connect", this.treeRoot.internalGraphicID,
                      this.treeRoot.rightSib.internalGraphicID,
                      BinomialQueue.FOREGROUND_COLOR,
@@ -481,28 +449,22 @@ BinomialQueue.prototype.combineNodes = function()
     }
 
     tmp2 = this.treeRoot;
-    while (tmp2 != null && tmp2.rightSib != null && tmp2.rightSib.rightSib != null)
-    {
-        if (tmp2.rightSib.degree != tmp2.rightSib.rightSib.degree)
-        {
+    while (tmp2 != null && tmp2.rightSib != null && tmp2.rightSib.rightSib != null) {
+        if (tmp2.rightSib.degree != tmp2.rightSib.rightSib.degree) {
             tmp2 = tmp2.rightSib;
         } else if ((tmp2.rightSib.rightSib.rightSib != null) &&
-                   (tmp2.rightSib.rightSib.degree == tmp2.rightSib.rightSib.rightSib.degree))
-        {
+                   (tmp2.rightSib.rightSib.degree == tmp2.rightSib.rightSib.rightSib.degree)) {
             tmp2 = tmp2.rightSib;
         }
-        else
-        {
+        else {
             this.cmd("Disconnect", tmp2.rightSib.internalGraphicID,  tmp2.rightSib.rightSib.internalGraphicID);
             this.cmd("Disconnect", tmp2.internalGraphicID,  tmp2.rightSib.internalGraphicID);
-            if (tmp2.rightSib.rightSib.rightSib != null)
-            {
+            if (tmp2.rightSib.rightSib.rightSib != null) {
                 this.cmd("Disconnect", tmp2.rightSib.rightSib.internalGraphicID,  tmp2.rightSib.rightSib.rightSib.internalGraphicID);
             }
 
             var tempRoot;
-            if (this.compare(tmp2.rightSib.data, tmp2.rightSib.rightSib.data) < 0)
-            {
+            if (this.compare(tmp2.rightSib.data, tmp2.rightSib.rightSib.data) < 0) {
                 tmp = tmp2.rightSib.rightSib;
                 tmp2.rightSib.rightSib = tmp.rightSib;
 
@@ -514,8 +476,7 @@ BinomialQueue.prototype.combineNodes = function()
                 tempRoot = tmp2.rightSib;
 
             }
-            else
-            {
+            else {
                 tmp = tmp2.rightSib;
                 tmp2.rightSib = tmp2.rightSib.rightSib;
                 tmp.rightSib = tmp2.rightSib.leftChild;
@@ -553,8 +514,7 @@ BinomialQueue.prototype.combineNodes = function()
                      1, // Directed
                      ""); // Label
 
-            if (tempRoot.leftChild.rightSib != null)
-            {
+            if (tempRoot.leftChild.rightSib != null) {
                 this.cmd("Disconnect",tempRoot.internalGraphicID, tempRoot.leftChild.rightSib.internalGraphicID);
                 this.cmd("Connect",tempRoot.leftChild.internalGraphicID,
                          tempRoot.leftChild.rightSib.internalGraphicID,
@@ -563,8 +523,7 @@ BinomialQueue.prototype.combineNodes = function()
                          1, // Directed
                          ""); // Label);
             }
-            if (tempRoot.rightSib != null)
-            {
+            if (tempRoot.rightSib != null) {
                 this.cmd("Connect",tempRoot.internalGraphicID,
                          tempRoot.rightSib.internalGraphicID,
                          BinomialQueue.FOREGROUND_COLOR,

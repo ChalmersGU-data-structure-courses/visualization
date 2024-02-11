@@ -92,8 +92,7 @@ Reverse.prototype.reverseCallback = function(event)
 {
     var factValue;
 
-    if (this.reverseField.value != "")
-    {
+    if (this.reverseField.value != "") {
         var revValue =this.reverseField.value;
         this.implementAction(this.doReverse.bind(this),revValue);
     }
@@ -129,8 +128,7 @@ Reverse.prototype.reverse = function(value)
     var oldX = this.currentX;
     var oldY = this.currentY;
     this.currentY += Reverse.RECURSIVE_DELTA_Y;
-    if (this.currentY + Recursive.RECURSIVE_DELTA_Y > this.getCanvasHeight())
-    {
+    if (this.currentY + Recursive.RECURSIVE_DELTA_Y > this.getCanvasHeight()) {
         this.currentY = Reverse.ACTIVATION_RECORT_START_Y;
         this.currentX += Recursive.ACTIVATION_RECORD_SPACING;
     }
@@ -140,8 +138,7 @@ Reverse.prototype.reverse = function(value)
     this.cmd("SetForegroundColor", this.codeID[1][1], Recursive.CODE_HIGHLIGHT_COLOR);
     this.cmd("Step");
     this.cmd("SetForegroundColor", this.codeID[1][1], Recursive.CODE_STANDARD_COLOR);
-    if (value  != "")
-    {
+    if (value  != "") {
         this.cmd("SetForegroundColor", this.codeID[4][0], Recursive.CODE_HIGHLIGHT_COLOR);
         this.cmd("SetForegroundColor", this.codeID[4][1], Recursive.CODE_HIGHLIGHT_COLOR);
         var subProblem = value.substr(1);
@@ -193,8 +190,7 @@ Reverse.prototype.reverse = function(value)
 
         return solution;
     }
-    else
-    {
+    else {
         this.cmd("SetForegroundColor", this.codeID[2][0], Recursive.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");
         this.cmd("SetForegroundColor", this.codeID[2][0], Recursive.CODE_STANDARD_COLOR);

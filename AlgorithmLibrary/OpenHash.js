@@ -77,13 +77,11 @@ OpenHash.prototype.insertElement = function(elem)
     var index = this.doHash(elem);
     var node = new LinkedListNode(elem,this.nextIndex++, 100, 75);
     this.cmd("CreateLinkedList", node.graphicID, elem, OpenHash.LINKED_ITEM_WIDTH, OpenHash.LINKED_ITEM_HEIGHT, 100, 75);
-    if (this.hashTableValues[index] != null && this.hashTableValues[index] != undefined)
-    {
+    if (this.hashTableValues[index] != null && this.hashTableValues[index] != undefined) {
         this.cmd("connect", node.graphicID, this.hashTableValues[index].graphicID);
         this.cmd("disconnect", this.hashTableVisual[index], this.hashTableValues[index].graphicID);
     }
-    else
-    {
+    else {
         this.cmd("SetNull", node.graphicID, 1);
         this.cmd("SetNull", this.hashTableVisual[index], 0);
     }
@@ -104,8 +102,7 @@ OpenHash.prototype.repositionList = function(index)
     var startX = OpenHash.POINTER_ARRAY_ELEM_START_X + index *OpenHash.POINTER_ARRAY_ELEM_WIDTH;
     var startY = this.POINTER_ARRAY_ELEM_Y - OpenHash.LINKED_ITEM_Y_DELTA;
     var tmp = this.hashTableValues[index];
-    while (tmp != null)
-    {
+    while (tmp != null) {
         tmp.x = startX;
         tmp.y = startY;
         this.cmd("Move", tmp.graphicID, tmp.x, tmp.y);
@@ -120,22 +117,18 @@ OpenHash.prototype.deleteElement = function(elem)
     this.commands = new Array();
     this.cmd("SetText", this.ExplainLabel, "Deleting element: " + elem);
     var index = this.doHash(elem);
-    if (this.hashTableValues[index] == null)
-    {
+    if (this.hashTableValues[index] == null) {
         this.cmd("SetText", this.ExplainLabel, "Deleting element: " + elem + "  Element not in table");
         return this.commands;
     }
     this.cmd("SetHighlight", this.hashTableValues[index].graphicID, 1);
     this.cmd("Step");
     this.cmd("SetHighlight", this.hashTableValues[index].graphicID, 0);
-    if (this.hashTableValues[index].data == elem)
-    {
-        if (this.hashTableValues[index].next != null)
-        {
+    if (this.hashTableValues[index].data == elem) {
+        if (this.hashTableValues[index].next != null) {
             this.cmd("Connect", this.hashTableVisual[index], this.hashTableValues[index].next.graphicID);
         }
-        else
-        {
+        else {
             this.cmd("SetNull", this.hashTableVisual[index], 1);
         }
         this.cmd("Delete", this.hashTableValues[index].graphicID);
@@ -146,35 +139,29 @@ OpenHash.prototype.deleteElement = function(elem)
     var tmpPrev = this.hashTableValues[index];
     var tmp = this.hashTableValues[index].next;
     var found = false;
-    while (tmp != null && !found)
-    {
+    while (tmp != null && !found) {
         this.cmd("SetHighlight", tmp.graphicID, 1);
         this.cmd("Step");
         this.cmd("SetHighlight", tmp.graphicID, 0);
-        if (tmp.data == elem)
-        {
+        if (tmp.data == elem) {
             found = true;
             this.cmd("SetText", this.ExplainLabel, "Deleting element: " + elem + "  Element deleted");
-            if (tmp.next != null)
-            {
+            if (tmp.next != null) {
                 this.cmd("Connect", tmpPrev.graphicID, tmp.next.graphicID);
             }
-            else
-            {
+            else {
                 this.cmd("SetNull", tmpPrev.graphicID, 1);
             }
             tmpPrev.next = tmpPrev.next.next;
             this.cmd("Delete", tmp.graphicID);
             this.repositionList(index);
         }
-        else
-        {
+        else {
             tmpPrev = tmp;
             tmp = tmp.next;
         }
     }
-    if (!found)
-    {
+    if (!found) {
         this.cmd("SetText", this.ExplainLabel, "Deleting element: " + elem + "  Element not in table");
     }
     return this.commands;
@@ -190,28 +177,23 @@ OpenHash.prototype.findElement = function(elem)
     var found = false;
     var tmp = this.hashTableValues[index];
     this.cmd("CreateLabel", compareIndex, "", 10, 40, 0);
-    while (tmp != null && !found)
-    {
+    while (tmp != null && !found) {
         this.cmd("SetHighlight", tmp.graphicID, 1);
-        if (tmp.data == elem)
-        {
+        if (tmp.data == elem) {
             this.cmd("SetText", compareIndex,  tmp.data  + "==" + elem)
             found = true;
         }
-        else
-        {
+        else {
             this.cmd("SetText", compareIndex,  tmp.data  + "!=" + elem)
         }
         this.cmd("Step");
         this.cmd("SetHighlight", tmp.graphicID, 0);
         tmp = tmp.next;
     }
-    if (found)
-    {
+    if (found) {
         this.cmd("SetText", this.ExplainLabel, "Finding Element: " + elem+ "  Found!")
     }
-    else
-    {
+    else {
         this.cmd("SetText", this.ExplainLabel, "Finding Element: " + elem+ "  Not Found!")
 
     }
@@ -243,8 +225,7 @@ OpenHash.prototype.setup = function()
     this.table_size = OpenHash.HASH_TABLE_SIZE;
 
     this.commands = [];
-    for (var i = 0; i < OpenHash.HASH_TABLE_SIZE; i++)
-    {
+    for (var i = 0; i < OpenHash.HASH_TABLE_SIZE; i++) {
         var nextID = this.nextIndex++;
 
         this.cmd("CreateRectangle", nextID, "", OpenHash.POINTER_ARRAY_ELEM_WIDTH, OpenHash.POINTER_ARRAY_ELEM_HEIGHT, OpenHash.POINTER_ARRAY_ELEM_START_X + i *OpenHash.POINTER_ARRAY_ELEM_WIDTH, this.POINTER_ARRAY_ELEM_Y)
@@ -272,13 +253,10 @@ OpenHash.prototype.resetAll = function()
 {
     var tmp;
     this.commands = OpenHash.superclass.resetAll.call(this);
-    for (var i = 0; i < this.hashTableValues.length; i++)
-    {
+    for (var i = 0; i < this.hashTableValues.length; i++) {
         tmp = this.hashTableValues[i];
-        if (tmp != null)
-        {
-            while (tmp != null)
-            {
+        if (tmp != null) {
+            while (tmp != null) {
                 this.cmd("Delete", tmp.graphicID);
                 tmp = tmp.next;
             }
@@ -294,8 +272,7 @@ OpenHash.prototype.resetAll = function()
 // NEED TO OVERRIDE IN PARENT
 OpenHash.prototype.reset = function()
 {
-    for (var i = 0; i < this.table_size; i++)
-    {
+    for (var i = 0; i < this.table_size; i++) {
         this.hashTableValues[i] = null;
     }
     this.nextIndex = this.resetIndex;

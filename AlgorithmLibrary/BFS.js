@@ -80,8 +80,7 @@ BFS.prototype.setup = function()
     this.parentID = new Array(this.size);
     this.parentIndexID = new Array(this.size);
 
-    for (var i = 0; i < this.size; i++)
-    {
+    for (var i = 0; i < this.size; i++) {
         this.visitedID[i] = this.nextIndex++;
         this.visitedIndexID[i] = this.nextIndex++;
         this.parentID[i] = this.nextIndex++;
@@ -110,8 +109,7 @@ BFS.prototype.startCallback = function(event)
 {
     var startValue;
 
-    if (this.startField.value != "")
-    {
+    if (this.startField.value != "") {
         startvalue = this.startField.value;
         this.startField.value = "";
         if (parseInt(startvalue) < this.size)
@@ -131,18 +129,15 @@ BFS.prototype.doBFS = function(startVetex)
     var queueID = new Array(this.size);
     var queueSize = 0;
 
-    if (this.messageID != null)
-    {
-        for (var i = 0; i < this.messageID.length; i++)
-        {
+    if (this.messageID != null) {
+        for (var i = 0; i < this.messageID.length; i++) {
             this.cmd("Delete", this.messageID[i]);
         }
     }
 
     this.rebuildEdges();
     this.messageID = new Array();
-    for (i = 0; i < this.size; i++)
-    {
+    for (i = 0; i < this.size; i++) {
         this.cmd("SetText", this.visitedID[i], "f");
         this.cmd("SetText", this.parentID[i], "");
         this.visited[i] = false;
@@ -157,8 +152,7 @@ BFS.prototype.doBFS = function(startVetex)
     tail = (tail + 1) % (this.size);
 
 
-    while (queueSize > 0)
-    {
+    while (queueSize > 0) {
         vertex = this.queue[head];
         this.cmd("CreateHighlightCircle", this.highlightCircleL, BFS.HIGHLIGHT_CIRCLE_COLOR, this.x_pos_logical[vertex], this.y_pos_logical[vertex]);
         this.cmd("SetLayer", this.highlightCircleL, 1);
@@ -170,15 +164,12 @@ BFS.prototype.doBFS = function(startVetex)
         this.cmd("SetTextColor", queueID[head], BFS.BFS_QUEUE_HEAD_COLOR);
 
 
-        for (var neighbor = 0; neighbor < this.size; neighbor++)
-        {
-            if (this.adj_matrix[vertex][neighbor] > 0)
-            {
+        for (var neighbor = 0; neighbor < this.size; neighbor++) {
+            if (this.adj_matrix[vertex][neighbor] > 0) {
                 this.highlightEdge(vertex, neighbor, 1);
                 this.cmd("SetHighlight", this.visitedID[neighbor], 1);
                 this.cmd("Step");
-                if (!this.visited[neighbor])
-                {
+                if (!this.visited[neighbor]) {
                     this.visited[neighbor] = true;
                     this.cmd("SetText", this.visitedID[neighbor], "T");
                     this.cmd("SetText", this.parentID[neighbor], vertex);
@@ -190,8 +181,7 @@ BFS.prototype.doBFS = function(startVetex)
                     tail = (tail + 1) % (this.size);
                     queueSize = queueSize + 1;
                 }
-                else
-                {
+                else {
                     this.highlightEdge(vertex, neighbor, 0);
                 }
                 this.cmd("SetHighlight", this.visitedID[neighbor], 0);
@@ -202,8 +192,7 @@ BFS.prototype.doBFS = function(startVetex)
         this.cmd("Delete", queueID[head]);
         head = (head + 1) % (this.size);
         queueSize = queueSize - 1;
-        for (i = 0; i < queueSize; i++)
-        {
+        for (i = 0; i < queueSize; i++) {
             var nextQueueIndex = (i + head) % this.size;
             this.cmd("Move", queueID[nextQueueIndex], BFS.QUEUE_START_X + i * BFS.QUEUE_SPACING, BFS.QUEUE_START_Y);
         }

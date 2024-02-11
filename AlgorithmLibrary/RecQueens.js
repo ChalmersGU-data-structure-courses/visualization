@@ -126,8 +126,7 @@ Queens.prototype.queensCallback = function(event)
 {
     var queensValue;
 
-    if (this.sizeField.value != "")
-    {
+    if (this.sizeField.value != "") {
         var queenSize = parseInt(this.sizeField.value);
         queenSize = Math.min(queenSize, 8);
         this.sizeField.value = String(queenSize);
@@ -167,8 +166,7 @@ Queens.prototype.doQueens = function(size)
     this.cmd("SetForegroundColor", this.codeID[1][1], Recursive.CODE_HIGHLIGHT_COLOR);
 
 
-    for (var i = 0; i < size; i++)
-    {
+    for (var i = 0; i < size; i++) {
         this.boardInternalID[i] = this.nextIndex++;
         this.oldIDs.push(this.boardInternalID[i])
         this.cmd("CreateRectangle", this.boardInternalID[i],
@@ -185,8 +183,7 @@ Queens.prototype.doQueens = function(size)
         this.cmd("SetForegroundColor", this.boardInternalIndexID[i], Queens.INDEX_COLOR);
 
         this.boardLogicalID[i] = new Array(size);
-        for (var j = 0; j < size; j++)
-        {
+        for (var j = 0; j < size; j++) {
             this.boardLogicalID[i][j] = this.nextIndex++;
             this.oldIDs.push(this.boardLogicalID[i][j]);
 
@@ -234,12 +231,10 @@ Queens.prototype.queens = function(board, current, size)
 
     this.cmd("SetText", activationRec.fieldIDs[1], current);
     this.cmd("SetText", activationRec.fieldIDs[2], size);
-    if (this.activationLeft)
-    {
+    if (this.activationLeft) {
         this.cmd("Connect", activationRec.fieldIDs[0], this.boardInternalID[0]);
     }
-    else
-    {
+    else {
         this.cmd("Connect", activationRec.fieldIDs[0], this.boardInternalID[size-1]);
     }
     this.cmd("Step");
@@ -251,15 +246,13 @@ Queens.prototype.queens = function(board, current, size)
 
 
     this.currentY += Queens.RECURSIVE_DELTA_Y_QUEEN;
-    if (this.currentY + Queens.RECURSIVE_DELTA_Y_QUEEN > this.getCanvasHeight())
-    {
+    if (this.currentY + Queens.RECURSIVE_DELTA_Y_QUEEN > this.getCanvasHeight()) {
         this.currentY = Queens.ACTIVATION_RECORT_START_Y;
         this.currentX += Queens.ACTIVATION_RECORD_SPACING;
         this.activationLeft = false;
     }
 
-    if (current == size)
-    {
+    if (current == size) {
         this.cmd("SetForegroundColor", this.codeID[6][0], Recursive.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");
         this.cmd("SetForegroundColor", this.codeID[6][0], Recursive.CODE_STANDARD_COLOR);
@@ -275,8 +268,7 @@ Queens.prototype.queens = function(board, current, size)
     }
 
     var i;
-    for (i = 0; i < size; i++)
-    {
+    for (i = 0; i < size; i++) {
         this.cmd("SetTextColor", this.codeID[8][0], Recursive.CODE_HIGHLIGHT_COLOR);
         board[current] = i;
         this.cmd("SetText", activationRec.fieldIDs[3], i);
@@ -304,8 +296,7 @@ Queens.prototype.queens = function(board, current, size)
 
 
 
-        if (moveLegal)
-        {
+        if (moveLegal) {
             this.cmd("SetTextColor", this.codeID[11][2], Recursive.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
             this.cmd("SetTextColor", this.codeID[11][2], Recursive.CODE_STANDARD_COLOR);
@@ -323,8 +314,7 @@ Queens.prototype.queens = function(board, current, size)
             this.cmd("Step");
             this.cmd("SetTextColor", this.codeID[12][0], Recursive.CODE_STANDARD_COLOR);
 
-            if (done)
-            {
+            if (done) {
                 this.cmd("SetTextColor", this.codeID[13][0], Recursive.CODE_HIGHLIGHT_COLOR);
                 this.cmd("Step");
                 this.cmd("SetTextColor", this.codeID[13][0], Recursive.CODE_STANDARD_COLOR);
@@ -361,12 +351,10 @@ Queens.prototype.legal = function(board, current)
 {
     var activationRec = this.createActivation("noConflicts", Queens.CHECK_ACTIVATION_FIELDS, this.currentX, this.currentY, this.activationLeft);
     this.cmd("SetText", activationRec.fieldIDs[1], current);
-    if (this.activationLeft)
-    {
+    if (this.activationLeft) {
         this.cmd("Connect", activationRec.fieldIDs[0], this.boardInternalID[0]);
     }
-    else
-    {
+    else {
         this.cmd("Connect", activationRec.fieldIDs[0], this.boardInternalID[this.boardInternalID.length - 1]);
     }
     this.cmd("SetForegroundColor", this.codeID[16][1], Recursive.CODE_HIGHLIGHT_COLOR);
@@ -376,14 +364,12 @@ Queens.prototype.legal = function(board, current)
 
     var i;
     var OK = true;
-    if (current == 0)
-    {
+    if (current == 0) {
         this.cmd("SetForegroundColor", this.codeID[17][0], Recursive.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step")
         this.cmd("SetForegroundColor", this.codeID[17][0], Recursive.CODE_STANDARD_COLOR);
     }
-    for (i = 0; i < current; i++)
-    {
+    for (i = 0; i < current; i++) {
         this.cmd("SetText", activationRec.fieldIDs[2], i);
         this.cmd("SetTextColor", activationRec.fieldIDs[2], Recursive.CODE_HIGHLIGHT_COLOR)
         this.cmd("SetForegroundColor", this.codeID[17][0], Recursive.CODE_HIGHLIGHT_COLOR);
@@ -398,8 +384,7 @@ Queens.prototype.legal = function(board, current)
         this.cmd("SetTextColor", this.boardLogicalID[board[i]][i], Recursive.CODE_STANDARD_COLOR);
         this.cmd("SetForegroundColor", this.codeID[18][1], Recursive.CODE_STANDARD_COLOR);
 
-        if (board[i] == board[current])
-        {
+        if (board[i] == board[current]) {
             this.cmd("SetForegroundColor", this.codeID[19][0], Recursive.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
             this.cmd("SetForegroundColor", this.codeID[19][0], Recursive.CODE_STANDARD_COLOR);
@@ -415,8 +400,7 @@ Queens.prototype.legal = function(board, current)
         this.cmd("SetTextColor", this.boardLogicalID[board[i]][i], Recursive.CODE_STANDARD_COLOR);
         this.cmd("SetForegroundColor", this.codeID[20][1], Recursive.CODE_STANDARD_COLOR);
 
-        if (current - i == Math.abs(board[current] - board[i]))
-        {
+        if (current - i == Math.abs(board[current] - board[i])) {
             this.cmd("SetForegroundColor", this.codeID[21][0], Recursive.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
             this.cmd("SetForegroundColor", this.codeID[21][0], Recursive.CODE_STANDARD_COLOR);
@@ -426,8 +410,7 @@ Queens.prototype.legal = function(board, current)
         }
 
     }
-    if (OK)
-    {
+    if (OK) {
         this.cmd("SetForegroundColor", this.codeID[22][0], Recursive.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");
         this.cmd("SetForegroundColor", this.codeID[22][0], Recursive.CODE_STANDARD_COLOR);

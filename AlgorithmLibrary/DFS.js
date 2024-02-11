@@ -78,8 +78,7 @@ DFS.prototype.setup = function()
     this.visitedIndexID = new Array(this.size);
     this.parentID = new Array(this.size);
     this.parentIndexID = new Array(this.size);
-    for (var i = 0; i < this.size; i++)
-    {
+    for (var i = 0; i < this.size; i++) {
         this.visitedID[i] = this.nextIndex++;
         this.visitedIndexID[i] = this.nextIndex++;
         this.parentID[i] = this.nextIndex++;
@@ -107,8 +106,7 @@ DFS.prototype.startCallback = function(event)
 {
     var startValue;
 
-    if (this.startField.value != "")
-    {
+    if (this.startField.value != "") {
         startvalue = this.startField.value;
         this.startField.value = "";
         if (parseInt(startvalue) < this.size)
@@ -122,17 +120,14 @@ DFS.prototype.doDFS = function(startVetex)
 {
     this.visited = new Array(this.size);
     this.commands = new Array();
-    if (this.messageID != null)
-    {
-        for (var i = 0; i < this.messageID.length; i++)
-        {
+    if (this.messageID != null) {
+        for (var i = 0; i < this.messageID.length; i++) {
             this.cmd("Delete", this.messageID[i]);
         }
     }
     this.rebuildEdges();
     this.messageID = new Array();
-    for (i = 0; i < this.size; i++)
-    {
+    for (i = 0; i < this.size; i++) {
         this.cmd("SetText", this.visitedID[i], "f");
         this.cmd("SetText", this.parentID[i], "");
         this.visited[i] = false;
@@ -163,32 +158,26 @@ DFS.prototype.dfsVisit = function(startVertex, messageX)
 
     this.cmd("CreateLabel",nextMessage, "DFS(" +  String(startVertex) +  ")", messageX, this.messageY, 0);
     this.messageY = this.messageY + 20;
-    if (!this.visited[startVertex])
-    {
+    if (!this.visited[startVertex]) {
         this.visited[startVertex] = true;
         this.cmd("SetText", this.visitedID[startVertex], "T");
         this.cmd("Step");
-        for (var neighbor = 0; neighbor < this.size; neighbor++)
-        {
-            if (this.adj_matrix[startVertex][neighbor] > 0)
-            {
+        for (var neighbor = 0; neighbor < this.size; neighbor++) {
+            if (this.adj_matrix[startVertex][neighbor] > 0) {
                 this.highlightEdge(startVertex, neighbor, 1);
                 this.cmd("SetHighlight", this.visitedID[neighbor], 1);
-                if (this.visited[neighbor])
-                {
+                if (this.visited[neighbor]) {
                     nextMessage = this.nextIndex;
                     this.cmd("CreateLabel", nextMessage, "Vertex " + String(neighbor) + " already visited.", messageX, this.messageY, 0);
                 }
                 this.cmd("Step");
                 this.highlightEdge(startVertex, neighbor, 0);
                 this.cmd("SetHighlight", this.visitedID[neighbor], 0);
-                if (this.visited[neighbor])
-                {
+                if (this.visited[neighbor]) {
                     this.cmd("Delete", nextMessage);
                 }
 
-                if (!this.visited[neighbor])
-                {
+                if (!this.visited[neighbor]) {
                     this.cmd("Disconnect", this.circleID[startVertex], this.circleID[neighbor]);
                     this.cmd("Connect", this.circleID[startVertex], this.circleID[neighbor], DFS.DFS_TREE_COLOR, this.curve[startVertex][neighbor], 1, "");
                     this.cmd("Move", this.highlightCircleL, this.x_pos_logical[neighbor], this.y_pos_logical[neighbor]);

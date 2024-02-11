@@ -81,27 +81,22 @@ ClosedHash.prototype.addControls = function()
 
 ClosedHash.prototype.changeProbeType = function(newProbingType)
 {
-    if (newProbingType == this.linearProblingButton)
-    {
+    if (newProbingType == this.linearProblingButton) {
         this.linearProblingButton.checked = true;
         this.currentHashingTypeButtonState = this.linearProblingButton;
-        for (var i = 0; i < this.table_size; i++)
-        {
+        for (var i = 0; i < this.table_size; i++) {
             this.skipDist[i] = i;
         }
     }
-    else if (newProbingType == this.quadraticProbingButton)
-    {
+    else if (newProbingType == this.quadraticProbingButton) {
         this.quadraticProbingButton.checked = true;
         this.currentHashingTypeButtonState = this.quadraticProbingButton;
 
-        for (var i = 0; i < this.table_size; i++)
-        {
+        for (var i = 0; i < this.table_size; i++) {
             this.skipDist[i] = i * i;
         }
     }
-    else if (newProbingType == this.doubleHashingButton)
-    {
+    else if (newProbingType == this.doubleHashingButton) {
         this.doubleHashingButton.checked = true;
         this.currentHashingTypeButtonState = this.doubleHashingButton;
     }
@@ -112,8 +107,7 @@ ClosedHash.prototype.changeProbeType = function(newProbingType)
 
 ClosedHash.prototype.quadraticProbeCallback = function(event)
 {
-    if (this.currentHashingTypeButtonState != this.quadraticProbingButton)
-    {
+    if (this.currentHashingTypeButtonState != this.quadraticProbingButton) {
         this.implementAction(this.changeProbeType.bind(this),this.quadraticProbingButton);
     }
 }
@@ -121,16 +115,14 @@ ClosedHash.prototype.quadraticProbeCallback = function(event)
 
 ClosedHash.prototype.doubleHashingCallback = function(event)
 {
-    if (this.currentHashingTypeButtonState != this.doubleHashingButton)
-    {
+    if (this.currentHashingTypeButtonState != this.doubleHashingButton) {
         this.implementAction(this.changeProbeType.bind(this),this.doubleHashingButton);
     }
 }
 
 ClosedHash.prototype.linearProbeCallback = function(event)
 {
-    if (this.currentHashingTypeButtonState != this.linearProblingButton)
-    {
+    if (this.currentHashingTypeButtonState != this.linearProblingButton) {
         this.implementAction(this.changeProbeType.bind(this),this.linearProblingButton);
     }
 }
@@ -144,8 +136,7 @@ ClosedHash.prototype.insertElement = function(elem)
 
     index = this.getEmptyIndex(index, elem);
     this.cmd("SetText", this.ExplainLabel, "");
-    if (index != -1)
-    {
+    if (index != -1) {
         var labID = this.nextIndex++;
         this.cmd("CreateLabel", labID, elem, 20, 25);
         this.cmd("Move", labID, this.indexXPos[index], this.indexYPos[index] - ClosedHash.ARRAY_ELEM_HEIGHT);
@@ -165,8 +156,7 @@ ClosedHash.prototype.resetSkipDist = function(elem, labelID)
     var skipVal = 7 - (this.currHash % 7);
     this.cmd("CreateLabel", labelID, "hash2("+String(elem) +") = 1 - " + String(this.currHash)  +" % 7 = " + String(skipVal),  20, 45, 0);
     this.skipDist[0] = 0;
-    for (var i = 1; i < this.table_size; i++)
-    {
+    for (var i = 1; i < this.table_size; i++) {
         this.skipDist[i] = this.skipDist[i-1] + skipVal;
     }
 }
@@ -174,25 +164,21 @@ ClosedHash.prototype.resetSkipDist = function(elem, labelID)
 
 ClosedHash.prototype.getEmptyIndex = function(index, elem)
 {
-    if (this.currentHashingTypeButtonState == this.doubleHashingButton)
-    {
+    if (this.currentHashingTypeButtonState == this.doubleHashingButton) {
         this.resetSkipDist(elem, this.nextIndex++);
     }
     var foundIndex = -1;
-    for (var i = 0; i < this.table_size; i++)
-    {
+    for (var i = 0; i < this.table_size; i++) {
         var candidateIndex   = (index + this.skipDist[i]) % this.table_size;
         this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 1);
         this.cmd("Step");
         this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 0);
-        if (this.empty[candidateIndex])
-        {
+        if (this.empty[candidateIndex]) {
             foundIndex = candidateIndex;
             break;
         }
     }
-    if (this.currentHashingTypeButtonState == this.doubleHashingButton)
-    {
+    if (this.currentHashingTypeButtonState == this.doubleHashingButton) {
         this.cmd("Delete", --this.nextIndex);
     }
     return foundIndex;
@@ -201,29 +187,24 @@ ClosedHash.prototype.getEmptyIndex = function(index, elem)
 
 ClosedHash.prototype.getElemIndex = function(index, elem)
 {
-    if (this.currentHashingTypeButtonState == this.doubleHashingButton)
-    {
+    if (this.currentHashingTypeButtonState == this.doubleHashingButton) {
         resetSkipDist(elem, this.nextIndex++);
     }
     var foundIndex = -1;
-    for (var i = 0; i < this.table_size; i++)
-    {
+    for (var i = 0; i < this.table_size; i++) {
         var candidateIndex   = (index + this.skipDist[i]) % this.table_size;
         this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 1);
         this.cmd("Step");
         this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 0);
-        if (!this.empty[candidateIndex] && this.hashTableValues[candidateIndex] == elem)
-        {
+        if (!this.empty[candidateIndex] && this.hashTableValues[candidateIndex] == elem) {
             foundIndex= candidateIndex;
             break;
         }
-        else if (this.empty[candidateIndex] && !this.deleted[candidateIndex])
-        {
+        else if (this.empty[candidateIndex] && !this.deleted[candidateIndex]) {
             break;
         }
     }
-    if (this.currentHashingTypeButtonState == this.doubleHashingButton)
-    {
+    if (this.currentHashingTypeButtonState == this.doubleHashingButton) {
         this.cmd("Delete", --this.nextIndex);
     }
     return foundIndex;
@@ -238,15 +219,13 @@ ClosedHash.prototype.deleteElement = function(elem)
 
     index = this.getElemIndex(index, elem);
 
-    if (index > 0)
-    {
+    if (index > 0) {
         this.cmd("SetText", this.ExplainLabel, "Deleting element: " + elem + "  Element deleted");
         this.empty[index] = true;
         this.deleted[index] = true;
         this.cmd("SetText", this.hashTableVisual[index], "<deleted>");
     }
-    else
-    {
+    else {
         this.cmd("SetText", this.ExplainLabel, "Deleting element: " + elem + "  Element not in table");
     }
     return this.commands;
@@ -262,12 +241,10 @@ ClosedHash.prototype.findElement = function(elem)
     var index = this.doHash(elem);
 
     var found = this.getElemIndex(index, elem) != -1;
-    if (found)
-    {
+    if (found) {
         this.cmd("SetText", this.ExplainLabel, "Finding Element: " + elem+ "  Found!")
     }
-    else
-    {
+    else {
         this.cmd("SetText", this.ExplainLabel, "Finding Element: " + elem+ "  Not Found!")
     }
     return this.commands;
@@ -301,8 +278,7 @@ ClosedHash.prototype.setup = function()
 
     this.commands = [];
 
-    for (var i = 0; i < this.table_size; i++)
-    {
+    for (var i = 0; i < this.table_size; i++) {
         this.skipDist[i] = i; // Start with linear probing
         var nextID = this.nextIndex++;
         this.empty[i] = true;
@@ -332,8 +308,7 @@ ClosedHash.prototype.resetAll = function()
 {
     this.commands = ClosedHash.superclass.resetAll.call(this);
 
-    for (var i = 0; i < this.table_size; i++)
-    {
+    for (var i = 0; i < this.table_size; i++) {
         this.empty[i] = true;
         this.deleted[i] = false;
         this.cmd("SetText", this.hashTableVisual[i], "");
@@ -346,8 +321,7 @@ ClosedHash.prototype.resetAll = function()
 // NEED TO OVERRIDE IN PARENT
 ClosedHash.prototype.reset = function()
 {
-    for (var i = 0; i < this.table_size; i++)
-    {
+    for (var i = 0; i < this.table_size; i++) {
         this.empty[i]= true;
         this.deleted[i] = false;
     }

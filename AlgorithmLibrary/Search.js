@@ -151,8 +151,7 @@ Search.prototype.addControls = function()
 
 Search.prototype.smallListCallback = function (event)
 {
-    if (this.size != Search.SMALL_SIZE)
-    {
+    if (this.size != Search.SMALL_SIZE) {
         this.animationManager.resetAll();
         this.setup_small();
     }
@@ -161,8 +160,7 @@ Search.prototype.smallListCallback = function (event)
 
 Search.prototype.largeListCallback = function (event)
 {
-    if (this.size != Search.LARGE_SIZE)
-    {
+    if (this.size != Search.LARGE_SIZE) {
         this.animationManager.resetAll();
         this.setup_large();
     }
@@ -200,8 +198,7 @@ Search.prototype.setup = function()
     this.arrayData = new Array(SIZE);
     this.arrayID = new Array(SIZE);
     this.arrayLabelID = new Array(SIZE);
-    for (var i = 0; i < SIZE; i++)
-    {
+    for (var i = 0; i < SIZE; i++) {
         this.arrayData[i] = Math.floor(1+Math.random()*999);
         this.arrayID[i]= this.nextIndex++;
         this.arrayLabelID[i]= this.nextIndex++;
@@ -220,8 +217,7 @@ Search.prototype.setup = function()
     this.leftoverLabelID = this.nextIndex++;
     this.commands = [];
 
-    for (var i = 0; i < SIZE; i++)
-    {
+    for (var i = 0; i < SIZE; i++) {
         var xLabelpos = this.getIndexX(i);
         var yLabelpos = this.getIndexY(i);
         this.cmd("CreateRectangle", this.arrayID[i],this.arrayData[i], Search.ARRAY_ELEM_WIDTH, Search.ARRAY_ELEM_HEIGHT,xLabelpos, yLabelpos - Search.ARRAY_ELEM_HEIGHT);
@@ -421,12 +417,10 @@ Search.prototype.binarySearch = function(searchVal)
         this.cmd("SetHighlight", this.highBoxID, 0)
         this.cmd("SetHighlight", this.lowBoxID, 0)
         this.cmd("SetForegroundColor", this.binaryCodeID[3][1], Search.CODE_STANDARD_COLOR);
-        if (low > high)
-        {
+        if (low > high) {
             keepGoing = false;
         } 
-        else 
-        {
+        else {
             var mid = Math.floor((high + low) / 2);
             this.cmd("SetForegroundColor", this.binaryCodeID[4][0], Search.CODE_HIGHLIGHT_COLOR);
             this.cmd("SetHighlight", this.highBoxID, 1)
@@ -451,8 +445,7 @@ Search.prototype.binarySearch = function(searchVal)
                 // HIGHLIGHT CODE!
                 keepGoing = false;
             }
-            else 
-            {
+            else {
                 this.cmd("SetForegroundColor", this.binaryCodeID[7][1], Search.CODE_HIGHLIGHT_COLOR);
                 this.cmd("SetHighlight", this.searchForBoxID, 1)
                 this.cmd("SetHighlight", this.arrayID[mid],1);
@@ -576,8 +569,7 @@ Search.prototype.linearSearch = function(searchVal)
             this.cmd("SetHighlight", this.arrayID[foundIndex],0);
             this.cmd("SetHighlight", this.searchForBoxID,0);
             goOn = this.compare(this.arrayData[foundIndex], searchVal) < 0
-            if (goOn)
-            {
+            if (goOn) {
                 foundIndex++;
 
                 this.cmd("SetForegroundColor", this.linearCodeID[3][0], Search.CODE_HIGHLIGHT_COLOR);
@@ -591,8 +583,7 @@ Search.prototype.linearSearch = function(searchVal)
             }
         }
     }
-    if (foundIndex ==SIZE)
-    {
+    if (foundIndex ==SIZE) {
         this.cmd("SetForegroundColor", this.linearCodeID[4][1], Search.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");
         this.cmd("SetForegroundColor", this.linearCodeID[4][1], Search.CODE_STANDARD_COLOR);
@@ -600,8 +591,7 @@ Search.prototype.linearSearch = function(searchVal)
         this.cmd("Step");
         this.cmd("SetForegroundColor", this.linearCodeID[5][0], Search.CODE_STANDARD_COLOR);
     }
-    else if (this.compare(this.arrayData[foundIndex], searchVal) == 0)
-    {
+    else if (this.compare(this.arrayData[foundIndex], searchVal) == 0) {
         this.cmd("SetForegroundColor", this.linearCodeID[4][1], Search.CODE_HIGHLIGHT_COLOR);
         this.cmd("SetForegroundColor", this.linearCodeID[4][2], Search.CODE_HIGHLIGHT_COLOR);
         this.cmd("SetForegroundColor", this.linearCodeID[4][3], Search.CODE_HIGHLIGHT_COLOR);
@@ -626,8 +616,7 @@ Search.prototype.linearSearch = function(searchVal)
         this.cmd("Step");
         this.cmd("SetForegroundColor", this.linearCodeID[6][0], Search.CODE_STANDARD_COLOR);
     }
-    else
-    {
+    else {
         this.cmd("SetHighlight", this.arrayID[foundIndex],1);
         this.cmd("SetHighlight", this.searchForBoxID,1);
         this.cmd("SetForegroundColor", this.linearCodeID[4][3], Search.CODE_HIGHLIGHT_COLOR);

@@ -80,8 +80,7 @@ HeapSort.prototype.createArray = function()
     this.oldData = new Array(HeapSort.ARRAY_SIZE);
     this.currentHeapSize = 0;
 
-    for (var i = 1; i < HeapSort.ARRAY_SIZE; i++)
-    {
+    for (var i = 1; i < HeapSort.ARRAY_SIZE; i++) {
         this.arrayData[i] = Math.floor(1 + Math.random()*999);
         this.oldData[i] = this.arrayData[i];
 
@@ -111,16 +110,14 @@ HeapSort.prototype.createArray = function()
 HeapSort.prototype.heapsortCallback = function(event)
 {
     this.commands = this.buildHeap("");
-    for (var i = HeapSort.ARRAY_SIZE - 1; i > 1; i--)
-    {
+    for (var i = HeapSort.ARRAY_SIZE - 1; i > 1; i--) {
         this.swap(i, 1);
         this.cmd("SetAlpha", this.arrayRects[i], 0.2);
         this.cmd("Delete", this.circleObjs[i]);
         this.currentHeapSize = i-1;
         this.pushDown(1);
     }
-    for (i = 1; i < HeapSort.ARRAY_SIZE; i++)
-    {
+    for (i = 1; i < HeapSort.ARRAY_SIZE; i++) {
         this.cmd("SetAlpha", this.arrayRects[i], 1);
     }
     this.cmd("Delete", this.circleObjs[1]);
@@ -136,8 +133,7 @@ HeapSort.prototype.randomizeCallback = function(ignored)
 HeapSort.prototype.randomizeArray = function()
 {
     this.commands = new Array();
-    for (var i = 1; i < HeapSort.ARRAY_SIZE; i++)
-    {
+    for (var i = 1; i < HeapSort.ARRAY_SIZE; i++) {
         this.arrayData[i] = Math.floor(1 + Math.random()*999);
         this.cmd("SetText", this.arrayRects[i], this.arrayData[i]);
         this.oldData[i] = this.arrayData[i];
@@ -150,8 +146,7 @@ HeapSort.prototype.randomizeArray = function()
 
 HeapSort.prototype.reset = function()
 {
-    for (var i = 1; i < HeapSort.ARRAY_SIZE; i++)
-    {
+    for (var i = 1; i < HeapSort.ARRAY_SIZE; i++) {
 
         this.arrayData[i]= this.oldData[i];
         this.cmd("SetText", this.arrayRects[i],this.arrayData[i]);
@@ -200,24 +195,20 @@ HeapSort.prototype.pushDown = function(index)
 {
     var smallestIndex;
 
-    while(true)
-    {
-        if (index*2 > this.currentHeapSize)
-        {
+    while(true) {
+        if (index*2 > this.currentHeapSize) {
             return;
         }
 
         smallestIndex = 2*index;
 
-        if (index*2 + 1 <= this.currentHeapSize)
-        {
+        if (index*2 + 1 <= this.currentHeapSize) {
             this.setIndexHighlight(2*index, 1);
             this.setIndexHighlight(2*index + 1, 1);
             this.cmd("Step");
             this.setIndexHighlight(2*index, 0);
             this.setIndexHighlight(2*index + 1, 0);
-            if (this.compare(this.arrayData[2*index + 1], this.arrayData[2*index]) > 0)
-            {
+            if (this.compare(this.arrayData[2*index + 1], this.arrayData[2*index]) > 0) {
                 smallestIndex = 2*index + 1;
             }
         }
@@ -227,13 +218,11 @@ HeapSort.prototype.pushDown = function(index)
         this.setIndexHighlight(index, 0);
         this.setIndexHighlight(smallestIndex, 0);
 
-        if (this.compare(this.arrayData[smallestIndex], this.arrayData[index]) > 0)
-        {
+        if (this.compare(this.arrayData[smallestIndex], this.arrayData[index]) > 0) {
             this.swap(smallestIndex, index);
             index = smallestIndex;
         }
-        else
-        {
+        else {
             return;
         }
     }
@@ -243,12 +232,10 @@ HeapSort.prototype.pushDown = function(index)
 HeapSort.prototype.buildHeap = function(ignored)
 {
     this.commands = new Array();
-    for (var i = 1; i < HeapSort.ARRAY_SIZE; i++)
-    {
+    for (var i = 1; i < HeapSort.ARRAY_SIZE; i++) {
         this.cmd("CreateCircle", this.circleObjs[i], this.arrayData[i], this.HeapXPositions[i], this.HeapYPositions[i]);
         this.cmd("SetText", this.arrayRects[i], this.arrayData[i]);
-        if (i > 1)
-        {
+        if (i > 1) {
             this.cmd("Connect", this.circleObjs[Math.floor(i/2)], this.circleObjs[i]);
         }
 
@@ -256,8 +243,7 @@ HeapSort.prototype.buildHeap = function(ignored)
     this.cmd("Step");
     this.currentHeapSize = HeapSort.ARRAY_SIZE - 1;
     var nextElem = this.currentHeapSize;
-    while(nextElem > 0)
-    {
+    while(nextElem > 0) {
         this.pushDown(nextElem);
         nextElem = nextElem - 1;
     }

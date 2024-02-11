@@ -52,8 +52,7 @@ function AnimatedLinkedList(id, val, wth, hgt, linkPer, verticalOrientation, lin
     this.maxHeightDiff = 5;
     this.minHeightDiff = 3;
 
-    for (var i = 0; i < this.numLabels; i++)
-    {
+    for (var i = 0; i < this.numLabels; i++) {
         this.labels[i] = "";
         this.labelPosX[i] = 0;
         this.labelPosY[i] = 0;

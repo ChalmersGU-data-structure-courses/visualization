@@ -96,20 +96,17 @@ RadixTree.prototype.findIndexDifference = function(s1, s2, id, wordIndex)
     var index = 0;
     this.cmd("SetText", 2, "Comparing next letter in search term \n to next letter in prefix of current node");
 
-    while  (index < s1.length && index < s2.length)
-    {
+    while  (index < s1.length && index < s2.length) {
         this.cmd("SetHighlightIndex", 1, index);
         this.cmd("SetHighlightIndex", id, index);
         this.cmd("Step");
         this.cmd("SetHighlightIndex", 1, -1);
         this.cmd("SetHighlightIndex", id, -1);
 
-        if (s1.charAt(index) == s2.charAt(index))
-        {
+        if (s1.charAt(index) == s2.charAt(index)) {
             index++;
         }
-        else
-        {
+        else {
             break;
         }
     }
@@ -146,8 +143,7 @@ RadixTree.prototype.insertCallback = function(event)
     var insertedValue = this.insertField.value.toUpperCase();
     insertedValue = insertedValue.replace(/[^a-z]/gi,'');
 
-    if (insertedValue != "")
-    {
+    if (insertedValue != "") {
         // set text value
         this.insertField.value = "";
         this.implementAction(this.add.bind(this), insertedValue);
@@ -158,8 +154,7 @@ RadixTree.prototype.deleteCallback = function(event)
 {
     var deletedValue = this.deleteField.value.toUpperCase();
     deletedValue = deletedValue.replace(/[^a-z]/gi,'');
-    if (deletedValue != "")
-    {
+    if (deletedValue != "") {
         this.deleteField.value = "";
         this.implementAction(this.deleteElement.bind(this),deletedValue);
     }
@@ -177,8 +172,7 @@ RadixTree.prototype.printTree = function(unused)
 {
     this.commands = [];
 
-    if (this.root != null)
-    {
+    if (this.root != null) {
         this.highlightID = this.nextIndex++;
         this.printLabel1 = this.nextIndex++;
         this.printLabel2 = this.nextIndex++;
@@ -201,8 +195,7 @@ RadixTree.prototype.printTree = function(unused)
         this.cmd("Delete",  this.printLabel2);
         this.cmd("Step")
 
-        for (var i = firstLabel; i < this.nextIndex; i++)
-        {
+        for (var i = firstLabel; i < this.nextIndex; i++) {
             this.cmd("Delete", i);
         }
         this.nextIndex = this.highlightID;  /// Reuse objects.  Not necessary.
@@ -213,8 +206,7 @@ RadixTree.prototype.printTree = function(unused)
 
 RadixTree.prototype.printTreeRec = function(tree, stringSoFar)
 {
-    if (tree.wordRemainder != "")
-    {
+    if (tree.wordRemainder != "") {
         stringSoFar = stringSoFar + tree.wordRemainder;
         var nextLabelID = this.nextIndex++;
         this.cmd("CreateLabel", nextLabelID, tree.wordRemainder, tree.x, tree.y, 0);
@@ -224,8 +216,7 @@ RadixTree.prototype.printTreeRec = function(tree, stringSoFar)
         this.nextIndex--;
         this.cmd("SetText", this.printLabel2, stringSoFar);
     }
-    if (tree.isword)
-    {
+    if (tree.isword) {
         var nextLabelID = this.nextIndex++;
         this.cmd("CreateLabel", nextLabelID, stringSoFar + "  ", 20, 10, 0);
         this.cmd("SetForegroundColor", nextLabelID, RadixTree.PRINT_COLOR);
@@ -234,16 +225,13 @@ RadixTree.prototype.printTreeRec = function(tree, stringSoFar)
         this.cmd("Step");
 
         this.xPosOfNextLabel +=  RadixTree.PRINT_HORIZONTAL_GAP;
-        if (this.xPosOfNextLabel > this.print_max)
-        {
+        if (this.xPosOfNextLabel > this.print_max) {
             this.xPosOfNextLabel = RadixTree.FIRST_PRINT_POS_X;
             this.yPosOfNextLabel += RadixTree.PRINT_VERTICAL_GAP;
         }
     }
-    for (var i = 0; i < 26; i++)
-    {
-        if (tree.children[i] != null)
-        {
+    for (var i = 0; i < 26; i++) {
+        if (tree.children[i] != null) {
             this.cmd("Move", this.highlightID, tree.children[i].x, tree.children[i].y);
             this.cmd("Step");
             this.printTreeRec(tree.children[i], stringSoFar);
@@ -272,12 +260,10 @@ RadixTree.prototype.findElement = function(findValue)
     this.highlightID = this.nextIndex++;
 
     var res = this.doFind(this.root, findValue);
-    if (res)
-    {
+    if (res) {
         this.cmd("SetText", 0, "String " + findValue + " found");
     }
-    else
-    {
+    else {
         this.cmd("SetText", 0, "String " + findValue + " not found");
     }
     this.cmd("SetText", 1, "");
@@ -289,8 +275,7 @@ RadixTree.prototype.findElement = function(findValue)
 
 RadixTree.prototype.doFind = function(tree, value)
 {
-    if (tree == null)
-    {
+    if (tree == null) {
          this.cmd("SetText", 2, "Empty tree found.   String not in the tree");
          this.cmd("step");
          return null;
@@ -300,13 +285,11 @@ RadixTree.prototype.doFind = function(tree, value)
     var remain = tree.wordRemainder
     var indexDifference = this.findIndexDifference(value, remain, tree.graphicID, 0);
 
-    if (indexDifference == remain.length)
-    {
+    if (indexDifference == remain.length) {
         this.cmd("SetText", 2, "Reached the end of the prefix stored at this node");
         this.cmd("Step");
 
-        if (value.length > indexDifference)
-        {
+        if (value.length > indexDifference) {
             this.cmd("SetText", 2, "Recusively search remaining string  \nin the '" +value.charAt(indexDifference) +  "' child");
             this.cmd("Step");
             this.cmd("SetHighlight", tree.graphicID , 0);
@@ -315,14 +298,12 @@ RadixTree.prototype.doFind = function(tree, value)
             var index = value.charCodeAt(indexDifference) - "A".charCodeAt(0);
             var noChild = tree.children[index] == null;
 
-            if (noChild)
-            {
+            if (noChild) {
                 this.cmd("SetText", 2, "Child '" +value.charAt(indexDifference) +  "' does not exit.  \nString is not in the tree.");
                 this.cmd("Step");
                 return null;
             } 
-            else 
-            {
+            else {
                 this.cmd("CreateHighlightCircle", this.highlightID, RadixTree.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
                 this.cmd("SetWidth", this.highlightID, RadixTree.NODE_WIDTH);
 
@@ -341,8 +322,7 @@ RadixTree.prototype.doFind = function(tree, value)
         this.cmd("Step");
         this.cmd("SetText", 2, "")
 
-        if (tree.isword)
-        {
+        if (tree.isword) {
             this.cmd("SetText", 2, "Node is \"True\", string is in tree")
             this.cmd("Step");
             this.cmd("SetText", 2, "")
@@ -350,8 +330,7 @@ RadixTree.prototype.doFind = function(tree, value)
             return tree;
 
         }
-        else
-        {
+        else {
             this.cmd("SetText", 2, "Node is \"False\", string is not in tree")
             this.cmd("Step");
             this.cmd("SetText", 2, "")
@@ -360,8 +339,7 @@ RadixTree.prototype.doFind = function(tree, value)
 
         }
     }
-    else
-    {
+    else {
         this.cmd("SetText", 2, "Reached end of search string, \nStill characters remaining at node\nString not in tree")
         this.cmd("Step");
         this.cmd("SetHighlight", tree.graphicID , 0);
@@ -380,16 +358,14 @@ RadixTree.prototype.deleteElement = function(deletedValue)
 
     var node = this.doFind(this.root, deletedValue);
 
-    if (node == null)
-    {
+    if (node == null) {
         this.cmd("SetText", 2, "String not in the tree, nothing to delete");
         this.cmd("Step");
         this.cmd("SetText", 0, "");
         this.cmd("SetText", 1, "");
         this.cmd("SetText", 2, "");
     }
-    else
-    {
+    else {
         node.isword = false;
         this.cmd("SetText", 2, "Found string to delete, setting node to \"False\"")
         this.cmd("Step");
@@ -408,15 +384,12 @@ RadixTree.prototype.deleteElement = function(deletedValue)
 
 RadixTree.prototype.numChildren = function(tree)
 {
-    if (tree == null)
-    {
+    if (tree == null) {
         return 0;
     }
     var children = 0
-    for (var i = 0; i < 26; i++)
-    {
-        if (tree.children[i] != null)
-        {
+    for (var i = 0; i < 26; i++) {
+        if (tree.children[i] != null) {
             children++;
         }
     }
@@ -426,14 +399,11 @@ RadixTree.prototype.numChildren = function(tree)
 
 RadixTree.prototype.isLeaf = function(tree)
 {
-    if (tree == null)
-    {
+    if (tree == null) {
         return false;
     }
-    for (var i = 0; i < 26; i++)
-    {
-        if (tree.children[i] != null)
-        {
+    for (var i = 0; i < 26; i++) {
+        if (tree.children[i] != null) {
             return false;
         }
     }
@@ -443,15 +413,12 @@ RadixTree.prototype.isLeaf = function(tree)
 
 RadixTree.prototype.getParentIndex = function(tree)
 {
-     if (tree.parent == null)
-     {
+     if (tree.parent == null) {
         return -1;
      }
      var par = tree.parent;
-     for (var i = 0; i < 26; i++)
-     {
-        if (par.children[i] == tree)
-        {
+     for (var i = 0; i < 26; i++) {
+        if (par.children[i] == tree) {
             return i;
         }
      }
@@ -462,17 +429,14 @@ RadixTree.prototype.cleanupAfterDelete = function(tree)
 {
     var children = this.numChildren(tree)
 
-    if (children == 0 && !tree.isword)
-    {
+    if (children == 0 && !tree.isword) {
         this.cmd("SetText", 2, "Deletion left us with a \"False\" leaf\nRemoving false leaf");
         this.cmd("SetHighlight" ,tree.graphicID , 1);
         this.cmd("Step");
         this.cmd("SetHighlight", tree.graphicID , 0);
-        if (tree.parent != null)
-        {
+        if (tree.parent != null) {
             var index = 0
-            while (tree.parent.children[index] != tree)
-            {
+            while (tree.parent.children[index] != tree) {
                index++;
             }
             this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
@@ -480,19 +444,15 @@ RadixTree.prototype.cleanupAfterDelete = function(tree)
             tree.parent.children[index] = null;
             this.cleanupAfterDelete(tree.parent);
         }
-        else
-        {
+        else {
             this.cmd("Delete", tree.graphicID , 0);
             this.root = null;
         }
     }
-    else if (children == 1 && !tree.isword)
-    {
+    else if (children == 1 && !tree.isword) {
         var childIndex = -1;
-        for (var i = 0; i < 26; i++)
-        {
-            if (tree.children[i] != null)
-            {
+        for (var i = 0; i < 26; i++) {
+            if (tree.children[i] != null) {
                 childIndex = i;
                 break;
             }
@@ -507,14 +467,12 @@ RadixTree.prototype.cleanupAfterDelete = function(tree)
         this.cmd("SetText", child.graphicID, child.wordRemainder);
         this.cmd("Disconnect", tree.graphicID , child.graphicID);
 
-        if (tree.parent == null)
-        {
+        if (tree.parent == null) {
             child.parent = null
             this.root = child;
             this.cmd("Delete",  tree.graphicID);
         }
-        else
-        {
+        else {
             var parIndex = this.getParentIndex(tree);
             this.cmd("Disconnect",  tree.parent.graphicID, tree.graphicID);
             tree.parent.children[parIndex] = child;
@@ -534,8 +492,7 @@ RadixTree.prototype.treeDelete = function(tree, valueToDelete)
 RadixTree.prototype.resizeTree = function()
 {
     this.resizeWidths(this.root);
-    if (this.root != null)
-    {
+    if (this.root != null) {
         var startingPoint = this.root.width / 2 + 1 + RadixTree.LeftMargin;
         this.setNewPositions(this.root, startingPoint, RadixTree.STARTING_Y);
         this.animateNewPositions(this.root);
@@ -563,8 +520,7 @@ RadixTree.prototype.add = function(word)
 
 RadixTree.prototype.addR = function(s, rt, startX, startY, wordIndex)
 {
-    if (rt == null)
-    {
+    if (rt == null) {
         this.cmd("CreateCircle", this.nextIndex, s, RadixTree.NEW_NODE_X, RadixTree.NEW_NODE_Y);
         this.cmd("SetForegroundColor", this.nextIndex, RadixTree.FOREGROUND_COLOR);
         this.cmd("SetBackgroundColor", this.nextIndex, RadixTree.BACKGROUND_COLOR);
@@ -573,7 +529,7 @@ RadixTree.prototype.addR = function(s, rt, startX, startY, wordIndex)
         this.cmd("Step");
         this.cmd("SetText", 2, "" );
         rt = new RadixNode(s, this.nextIndex, startX, startY)
-        this.nextIndex += 1;
+        this.nextIndex++;
         rt.isword = true;
         return rt;
     }
@@ -586,13 +542,11 @@ RadixTree.prototype.addR = function(s, rt, startX, startY, wordIndex)
     // this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
     // this.cmd("Step");
 
-    if (indexDifference == rt.wordRemainder.length)
-    {
+    if (indexDifference == rt.wordRemainder.length) {
         this.cmd("SetText", 2, "Reached the end of the prefix stored at this node");
         this.cmd("Step");
 
-        if (s.length > indexDifference)
-        {
+        if (s.length > indexDifference) {
             this.cmd("SetText", 2, "Recusively insert remaining string  \ninto the '" +s.charAt(indexDifference) +  "' child");
             this.cmd("Step");
             this.cmd("SetHighlight", rt.graphicID , 0);
@@ -602,13 +556,11 @@ RadixTree.prototype.addR = function(s, rt, startX, startY, wordIndex)
             var index = s.charCodeAt(indexDifference) - "A".charCodeAt(0);
             var noChild = rt.children[index] == null;
 
-            if (noChild)
-            {
+            if (noChild) {
                 this.cmd("SetText", 2, "Child '" +s.charAt(indexDifference) +  "' does not exit.  Creating ...");
                 this.cmd("Step");
             }
-            else
-            {
+            else {
                 this.cmd("CreateHighlightCircle", this.highlightID, RadixTree.HIGHLIGHT_CIRCLE_COLOR, rt.x, rt.y);
                 this.cmd("SetWidth", this.highlightID, RadixTree.NODE_WIDTH);
 
@@ -623,8 +575,7 @@ RadixTree.prototype.addR = function(s, rt, startX, startY, wordIndex)
             var connect = rt.children[index] == null;
             rt.children[index] = this.addR(s.substring(indexDifference), rt.children[index], rt.x, rt.y, wordIndex+indexDifference);
             rt.children[index].parent = rt;
-            if (connect)
-            {
+            if (connect) {
                 this.cmd("Connect", rt.graphicID, rt.children[index].graphicID, RadixTree.FOREGROUND_COLOR, 0, false, s.charAt(indexDifference));
             }
             return rt;
@@ -653,23 +604,21 @@ RadixTree.prototype.addR = function(s, rt, startX, startY, wordIndex)
     this.cmd("Step")
 
     var newNode = new RadixNode(firstRemainder, this.nextIndex, 0, 0);
-    this.nextIndex += 1;
+    this.nextIndex++;
 
     newNode.wordRemainder = firstRemainder;
 
     var index = rt.wordRemainder.charCodeAt(indexDifference) - "A".charCodeAt(0);
     newNode.parent = rt.parent;
     newNode.children[index] = rt;
-    if (rt.parent != null)
-    {
+    if (rt.parent != null) {
         this.cmd("Disconnect", rt.parent.graphicID, rt.graphicID);
         this.cmd("Connect", rt.parent.graphicID, newNode.graphicID, RadixTree.FOREGROUND_COLOR, 0, false, newNode.wordRemainder.charAt(0));
         var childIndex = newNode.wordRemainder.charCodeAt(0) - 'A'.charCodeAt(0);
         rt.parent.children[childIndex] = newNode;
         rt.parent = newNode;
     }
-    else
-    {
+    else {
         this.root = newNode;
     }
     this.cmd("SetHighlight", rt.graphicID, 0);
@@ -685,13 +634,11 @@ RadixTree.prototype.addR = function(s, rt, startX, startY, wordIndex)
 
     this.resizeTree();
 
-    if (indexDifference == s.length)
-    {
+    if (indexDifference == s.length) {
         newNode.isword = true;
         this.cmd("SetBackgroundColor", newNode.graphicID, RadixTree.BACKGROUND_COLOR);
     }
-    else
-    {
+    else {
         this.cmd("SetBackgroundColor", newNode.graphicID, RadixTree.FALSE_COLOR);
         index = s.charCodeAt(indexDifference) - "A".charCodeAt(0)
         this.cmd("SetText", 1, s.substring(indexDifference));
@@ -705,16 +652,13 @@ RadixTree.prototype.addR = function(s, rt, startX, startY, wordIndex)
 
 RadixTree.prototype.setNewPositions = function(tree, xPosition, yPosition)
 {
-    if (tree != null)
-    {
+    if (tree != null) {
         tree.x = xPosition;
         tree.y = yPosition;
         var newX = xPosition - tree.width / 2;
         var newY = yPosition + RadixTree.HEIGHT_DELTA;
-        for (var i = 0; i < 26; i++)
-        {
-            if (tree.children[i] != null)
-            {
+        for (var i = 0; i < 26; i++) {
+            if (tree.children[i] != null) {
                 this.setNewPositions(tree.children[i], newX + tree.children[i].width / 2, newY);
                 newX = newX + tree.children[i].width;
             }
@@ -724,11 +668,9 @@ RadixTree.prototype.setNewPositions = function(tree, xPosition, yPosition)
 
 RadixTree.prototype.animateNewPositions = function(tree)
 {
-    if (tree != null)
-    {
+    if (tree != null) {
         this.cmd("Move", tree.graphicID, tree.x, tree.y);
-        for (var i = 0; i < 26; i++)
-        {
+        for (var i = 0; i < 26; i++) {
             this.animateNewPositions(tree.children[i])
         }
     }
@@ -736,13 +678,11 @@ RadixTree.prototype.animateNewPositions = function(tree)
 
 RadixTree.prototype.resizeWidths = function(tree)
 {
-    if (tree == null)
-    {
+    if (tree == null) {
         return 0;
     }
     var size = 0;
-    for (var i = 0; i < 26; i++)
-    {
+    for (var i = 0; i < 26; i++) {
         tree.childWidths[i] = this.resizeWidths(tree.children[i]);
         size += tree.childWidths[i]
     }
@@ -760,8 +700,7 @@ function RadixNode(val, id, initialX, initialY)
     this.graphicID = id;
     this.children = new Array(26);
     this.childWidths = new Array(26);
-    for (var i = 0; i < 26; i++)
-    {
+    for (var i = 0; i < 26; i++) {
         this.children[i] = null;
         this.childWidths[i] =0;
     }

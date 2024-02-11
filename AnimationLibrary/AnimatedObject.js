@@ -46,7 +46,9 @@ function AnimatedObject()
     this.textHeight = AnimatedObject.DEFAULT_TEXT_HEIGHT;
 }
 
+
 AnimatedObject.prototype.alwaysOnTop = false;
+
 
 AnimatedObject.prototype.setBackgroundColor = function(newColor)
 {
@@ -56,17 +58,19 @@ AnimatedObject.prototype.setBackgroundColor = function(newColor)
 AnimatedObject.prototype.setForegroundColor = function(newColor)
 {
     this.foregroundColor = newColor;
+    this.labelColor = newColor;
 }
+
 
 AnimatedObject.prototype.setNull = function()
 {
-
 }
 
 AnimatedObject.prototype.getNull = function()
 {
     return false;
 }
+
 
 AnimatedObject.prototype.setAlpha = function(newAlpha)
 {
@@ -78,11 +82,6 @@ AnimatedObject.prototype.getAlpha = function()
     return this.alpha;
 }
 
-AnimatedObject.prototype.setForegroundColor = function(newColor)
-{
-    this.foregroundColor = newColor;
-    this.labelColor = newColor;
-}
 
 
 AnimatedObject.prototype.getHighlight = function()
@@ -90,38 +89,39 @@ AnimatedObject.prototype.getHighlight = function()
     return this.highlighted;
 }
 
-AnimatedObject.prototype.getWidth = function()
-{
-    // TODO:  Do we want to throw here?  Should always override this ...
-    return 0;
-}
-
-AnimatedObject.prototype.getHeight = function()
-{
-    // TODO:  Do we want to throw here?  Should always override this ...
-    return 0;
-}
-
 AnimatedObject.prototype.setHighlight = function(value)
 {
     this.highlighted = value;
 }
 
-AnimatedObject.prototype.centerX = function()
+
+AnimatedObject.prototype.getWidth = function()
 {
-    return this.x;
-}
-
-
-
+    // TODO:  Do we want to throw here?  Should always override this ...
+    return 0;
+}    
 
 AnimatedObject.prototype.setWidth = function(newWidth)
 {
     // TODO:  Do we want to throw here?  Should always override this ...
+}    
+
+AnimatedObject.prototype.getHeight = function()
+{
+    // TODO:  Do we want to throw here?  Should always override this ...
+    return 0;
+}    
+
+AnimatedObject.prototype.setHeight = function()
+{
+    // TODO:  Do we want to throw here?  Should always override this ...
+}    
+
+
+AnimatedObject.prototype.centerX = function()
+{
+    return this.x;
 }
-
-
-
 
 AnimatedObject.prototype.centerY = function()
 {
@@ -136,15 +136,14 @@ AnimatedObject.prototype.getAlignLeftPos = function(otherObject)
 
 AnimatedObject.prototype.getAlignRightPos = function(otherObject)
 {
-
     return [otherObject.left() - this.getWidth() / 2, otherObject.centerY()];
 }
 
 AnimatedObject.prototype.getAlignTopPos = function(otherObject)
 {
-
     return [otherObject.centerX(), otherObject.top() - this.getHeight() / 2];
 }
+
 AnimatedObject.prototype.getAlignBottomPos = function(otherObject)
 {
     return [otherObject.centerX(), otherObject.bottom() + this.getHeight() / 2];
@@ -153,16 +152,15 @@ AnimatedObject.prototype.getAlignBottomPos = function(otherObject)
 
 AnimatedObject.prototype.alignLeft = function(otherObject)
 {
-    // Assuming centering.  Overridden method could modify if not centered
-    //  (See AnimatedLabel, for instance)
+    // Assuming centering. Overridden method could modify if not centered
+    // (See AnimatedLabel, for instance)
     this.y = otherObject.centerY();
     this.x = otherObject.right() + this.getWidth() / 2;
 }
 
 AnimatedObject.prototype.alignRight = function(otherObject)
 {
-    // Assuming centering.  Overridden method could modify if not centered
-    //  (See AnimatedLabel, for instance)
+    // Assuming centering. Overridden method could modify if not centered
     this.y = otherObject.centerY();
     this.x = otherObject.left() - this.getWidth() / 2;
 }
@@ -170,22 +168,18 @@ AnimatedObject.prototype.alignRight = function(otherObject)
 
 AnimatedObject.prototype.alignTop = function(otherObject)
 {
-    // Assuming centering.  Overridden method could modify if not centered
-
+    // Assuming centering. Overridden method could modify if not centered
     this.x = otherObject.centerX();
     this.y = otherObject.top() - this.getHeight() / 2;
-
-
 }
-
 
 AnimatedObject.prototype.alignBottom = function(otherObject)
 {
+    // Assuming centering. Overridden method could modify if not centered
     this.x = otherObject.centerX();
     this.y = otherObject.bottom() + this.getHeight() / 2;
 
 }
-
 
 
 /* TODO:  Do we need these in the base?
@@ -228,44 +222,36 @@ AnimatedObject.prototype.getClosestCardinalPoint = function(fromX, fromY)
     var xPos;
     var yPos;
 
-    if (fromX < this.left())
-    {
+    if (fromX < this.left()) {
         xDelta = this.left() - fromX;
         xPos = this.left();
      }
-    else if (fromX > this.right())
-    {
+    else if (fromX > this.right()) {
         xDelta = fromX - this.right();
         xPos = this.right();
     }
-    else
-    {
+    else {
         xDelta = 0;
         xPos = this.centerX();
     }
 
-    if (fromY < this.top())
-    {
+    if (fromY < this.top()) {
         yDelta = this.top() - fromY;
         yPos = this.top();
     }
-    else if (fromY > this.bottom())
-    {
+    else if (fromY > this.bottom()) {
         yDelta = fromY - this.bottom();
         yPos = this.bottom();
     }
-    else
-    {
+    else {
         yDelta = 0;
         yPos = this.centerY();
     }
 
-    if (yDelta > xDelta)
-    {
+    if (yDelta > xDelta) {
         xPos = this.centerX();
     }
-    else
-    {
+    else {
         yPos = this.centerY();
     }
 
@@ -281,14 +267,13 @@ AnimatedObject.prototype.centered = function()
 
 AnimatedObject.prototype.pulseHighlight = function(frameNum)
 {
-    if (this.highlighted)
-    {
-                var frameMod = frameNum / 7.0;
-                var delta = Math.abs((frameMod) % (2 * this.range - 2) - this.range + 1)
-                this.highlightDiff = delta + this.minHeightDiff;
+    if (this.highlighted) {
+        var frameMod = frameNum / 7.0;
+        var delta = Math.abs((frameMod) % (2 * this.range - 2) - this.range + 1)
+        this.highlightDiff = delta + this.minHeightDiff;
     }
-
 }
+
 
 AnimatedObject.prototype.getTailPointerAttachPos = function(fromX, fromY, anchorPoint)
 {
@@ -307,6 +292,7 @@ AnimatedObject.prototype.getHeadPointerAttachPos = function(fromX, fromY)
             return null;
 }
 */
+
 AnimatedObject.prototype.identifier = function()
 {
     return this.objectID;

@@ -121,8 +121,7 @@ DisjointSet.prototype.setup = function()
     this.treeIndexToLocation = new Array(SIZE);
     this.locationToTreeIndex = new Array(SIZE);
     this.heights = new Array(SIZE);
-    for (var i = 0; i < SIZE; i++)
-    {
+    for (var i = 0; i < SIZE; i++) {
         this.treeIndexToLocation[i] = i;
         this.locationToTreeIndex[i] = i;
         this.arrayID[i]= this.nextIndex++;
@@ -139,8 +138,7 @@ DisjointSet.prototype.setup = function()
 
     this.commands = [];
 
-    for (var i = 0; i < SIZE; i++)
-    {
+    for (var i = 0; i < SIZE; i++) {
         this.cmd("CreateRectangle", this.arrayID[i], this.setData[i], DisjointSet.ARRAY_WIDTH, DisjointSet.ARRAY_HEIGHT, DisjointSet.ARRAY_START_X + i *DisjointSet.ARRAY_WIDTH, this.array_start_y);
         this.cmd("CreateLabel",this.arrayLabelID[i],  i,  DisjointSet.ARRAY_START_X + i *DisjointSet.ARRAY_WIDTH, this.array_start_y + DisjointSet.ARRAY_HEIGHT);
         this.cmd("SetForegroundColor", this.arrayLabelID[i], "#0000FF");
@@ -159,8 +157,7 @@ DisjointSet.prototype.setup = function()
 
 DisjointSet.prototype.reset = function()
 {
-    for (var i = 0; i < SIZE; i++)
-    {
+    for (var i = 0; i < SIZE; i++) {
         this.setData[i] = -1;
     }
     this.pathCompression = false;
@@ -175,8 +172,7 @@ DisjointSet.prototype.reset = function()
 
 DisjointSet.prototype.rankTypeChangedCallback = function(rankAsHeight, event)
 {
-    if (this.rankAsHeight != rankAsHeight)
-    {
+    if (this.rankAsHeight != rankAsHeight) {
         this.implementAction(this.changeRankType.bind(this),  rankAsHeight);
     }
 }
@@ -184,8 +180,7 @@ DisjointSet.prototype.rankTypeChangedCallback = function(rankAsHeight, event)
 
 DisjointSet.prototype.pathCompressionChangeCallback = function(event)
 {
-    if (this.pathCompression != this.pathCompressionBox.checked)
-    {
+    if (this.pathCompression != this.pathCompressionBox.checked) {
         this.implementAction(this.changePathCompression.bind(this), this.pathCompressionBox.checked);
     }
 }
@@ -193,8 +188,7 @@ DisjointSet.prototype.pathCompressionChangeCallback = function(event)
 
 DisjointSet.prototype.unionByRankChangeCallback = function(event)
 {
-    if (this.unionByRank != this.unionByRankBox.checked)
-    {
+    if (this.unionByRank != this.unionByRankBox.checked) {
         this.implementAction(this.changeUnionByRank.bind(this), this.unionByRankBox.checked);
     }
 }
@@ -204,12 +198,10 @@ DisjointSet.prototype.changeRankType = function(newValue)
 {
     this.commands = new Array();
     this.rankAsHeight = newValue
-    if (this.rankNumberOfNodesButton.checked == this.rankAsHeight)
-    {
+    if (this.rankNumberOfNodesButton.checked == this.rankAsHeight) {
         this.rankNumberOfNodesButton.checked = !this.rankAsHeight;
     }
-    if (this.rankEstimatedHeightButton.checked != this.rankAsHeight)
-    {
+    if (this.rankEstimatedHeightButton.checked != this.rankAsHeight) {
         this.rankEstimatedHeightButton.checked = this.rankAsHeight;
     }
     // When we change union by rank, we can either create a blank slate using clearAll,
@@ -225,8 +217,7 @@ DisjointSet.prototype.changeUnionByRank = function(newValue)
 {
     this.commands = new Array();
     this.unionByRank = newValue;
-    if (this.unionByRankBox.selected != this.unionByRank)
-    {
+    if (this.unionByRankBox.selected != this.unionByRank) {
         this.unionByRankBox.selected = this.unionByRank;
     }
     // When we change union by rank, we can either create a blank slate using clearAll,
@@ -243,8 +234,7 @@ DisjointSet.prototype.changePathCompression = function(newValue)
     this.commands = new Array();
     this.cmd("Step");
     this.pathCompression = newValue;
-    if (this.pathCompressionBox.selected != this.pathCompression)
-    {
+    if (this.pathCompressionBox.selected != this.pathCompression) {
         this.pathCompressionBox.selected = this.pathCompression;
     }
         this.rebuildRootValues();
@@ -256,8 +246,7 @@ DisjointSet.prototype.changePathCompression = function(newValue)
 DisjointSet.prototype.findCallback = function(event)
 {
     var findValue = this.findField.value;
-    if (findValue != "" && parseInt(findValue) < SIZE)
-    {
+    if (findValue != "" && parseInt(findValue) < SIZE) {
         this.findField.value.value = "";
         this.implementAction(this.findElement.bind(this), findValue);
     }
@@ -281,18 +270,14 @@ DisjointSet.prototype.clearData = function(ignored)
 DisjointSet.prototype.getSizes = function()
 {
     var sizes = new Array(SIZE);
-    for (var i = 0; i < SIZE; i++)
-    {
+    for (var i = 0; i < SIZE; i++) {
         sizes[i] = 1;
     }
     var changed = true;
-    while (changed)
-    {
+    while (changed) {
         changed = false;
-        for (i = 0; i < SIZE; i++)
-        {
-            if (sizes[i] > 0 && this.setData[i] >= 0)
-            {
+        for (i = 0; i < SIZE; i++) {
+            if (sizes[i] > 0 && this.setData[i] >= 0) {
                 sizes[this.setData[i]] += sizes[i];
                 sizes[i] = 0;
                 changed = true;
@@ -305,39 +290,29 @@ DisjointSet.prototype.getSizes = function()
 
 DisjointSet.prototype.rebuildRootValues = function()
 {
-    if (this.unionByRank)
-    {
-        if (!this.rankAsHeight)
-        {
+    if (this.unionByRank) {
+        if (!this.rankAsHeight) {
             var sizes = this.getSizes();
         }
-        for (var i = 0; i < SIZE; i++)
-        {
-            if (this.setData[i] < 0)
-            {
-                if (this.rankAsHeight)
-                {
+        for (var i = 0; i < SIZE; i++) {
+            if (this.setData[i] < 0) {
+                if (this.rankAsHeight) {
                     this.setData[i] = 0 - this.heights[i] - 1;
                 }
-                else
-                {
+                else {
                     this.setData[i] = - sizes[i];
                 }
             }
         }
     }
-    else
-    {
-        for (i = 0; i < SIZE; i++)
-        {
-            if (this.setData[i] < 0)
-            {
+    else {
+        for (i = 0; i < SIZE; i++) {
+            if (this.setData[i] < 0) {
                 this.setData[i] = -1;
             }
         }
     }
-    for (i = 0; i < SIZE; i++)
-    {
+    for (i = 0; i < SIZE; i++) {
         this.cmd("SetText", this.arrayID[i], this.setData[i]);
     }
 }
@@ -349,8 +324,7 @@ DisjointSet.prototype.unionCallback = function(event)
     var union2 = this.unionField2.value;
 
     if ( union1 != "" && parseInt(union1) < SIZE &&
-         union2 != "" && parseInt(union2) < SIZE)
-    {
+         union2 != "" && parseInt(union2) < SIZE) {
         this.unionField1.value = "";
         this.unionField2.value = "";
         this.implementAction(this.doUnion.bind(this), union1 + ";" + union2);
@@ -360,10 +334,8 @@ DisjointSet.prototype.unionCallback = function(event)
 
 DisjointSet.prototype.clearAll = function()
 {
-    for (var i = 0; i < SIZE; i++)
-    {
-        if (this.setData[i] >= 0)
-        {
+    for (var i = 0; i < SIZE; i++) {
+        if (this.setData[i] >= 0) {
             this.cmd("Disconnect", this.treeID[i], this.treeID[this.setData[i]]);
         }
         this.setData[i] = -1;
@@ -382,11 +354,9 @@ DisjointSet.prototype.findElement = function(findValue)
 
     var found = this.doFind(parseInt(findValue));
 
-    if (this.pathCompression)
-    {
+    if (this.pathCompression) {
         var changed = this.adjustHeights();
-        if (changed)
-        {
+        if (changed) {
             this.animateNewPositions();
         }
     }
@@ -401,13 +371,10 @@ DisjointSet.prototype.doFind = function(elem)
     this.cmd("Step");
     this.cmd("SetHighlight", this.treeID[elem], 0);
     this.cmd("SetHighlight", this.arrayID[elem], 0);
-    if (this.setData[elem] >= 0)
-    {
+    if (this.setData[elem] >= 0) {
         var treeRoot = this.doFind(this.setData[elem]);
-        if (this.pathCompression)
-        {
-            if (this.setData[elem] != treeRoot)
-            {
+        if (this.pathCompression) {
+            if (this.setData[elem] != treeRoot) {
                 this.cmd("Disconnect", this.treeID[elem], this.treeID[this.setData[elem]]);
                 this.setData[elem] = treeRoot;
                 this.cmd("SetText", this.arrayID[elem], this.setData[elem]);
@@ -421,8 +388,7 @@ DisjointSet.prototype.doFind = function(elem)
         }
         return treeRoot;
     }
-    else
-    {
+    else {
         return elem;
     }
 }
@@ -439,54 +405,43 @@ DisjointSet.prototype.findRoot = function (elem)
 DisjointSet.prototype.adjustXPos = function(pos1, pos2)
 {
     var left1 = this.treeIndexToLocation[pos1];
-    while (left1 > 0 && this.findRoot(this.locationToTreeIndex[left1 - 1]) == pos1)
-    {
+    while (left1 > 0 && this.findRoot(this.locationToTreeIndex[left1 - 1]) == pos1) {
         left1--;
     }
     var right1 = this.treeIndexToLocation[pos1];
-    while (right1 < SIZE - 1 && this.findRoot(this.locationToTreeIndex[right1 + 1]) == pos1)
-    {
+    while (right1 < SIZE - 1 && this.findRoot(this.locationToTreeIndex[right1 + 1]) == pos1) {
         right1++;
     }
     var left2 = this.treeIndexToLocation[pos2];
-    while (left2 > 0 && this.findRoot(this.locationToTreeIndex[left2-1]) == pos2)
-    {
+    while (left2 > 0 && this.findRoot(this.locationToTreeIndex[left2-1]) == pos2) {
         left2--;
     }
     var right2 = this.treeIndexToLocation[pos2];
-    while (right2 < SIZE - 1 && this.findRoot(this.locationToTreeIndex[right2 + 1]) == pos2)
-    {
+    while (right2 < SIZE - 1 && this.findRoot(this.locationToTreeIndex[right2 + 1]) == pos2) {
         right2++;
     }
-    if (right1 == left2-1)
-    {
+    if (right1 == left2-1) {
         return false;
     }
 
     var tmpLocationToTreeIndex = new Array(SIZE);
     var nextInsertIndex = 0;
-    for (var i = 0; i <= right1; i++)
-    {
+    for (var i = 0; i <= right1; i++) {
         tmpLocationToTreeIndex[nextInsertIndex++] = this.locationToTreeIndex[i];
     }
-    for (i = left2; i <= right2; i++)
-    {
+    for (i = left2; i <= right2; i++) {
         tmpLocationToTreeIndex[nextInsertIndex++] = this.locationToTreeIndex[i];
     }
-    for (i = right1+1; i < left2; i++)
-    {
+    for (i = right1+1; i < left2; i++) {
         tmpLocationToTreeIndex[nextInsertIndex++] = this.locationToTreeIndex[i];
     }
-    for (i = right2+1; i < SIZE; i++)
-    {
+    for (i = right2+1; i < SIZE; i++) {
         tmpLocationToTreeIndex[nextInsertIndex++] = this.locationToTreeIndex[i];
     }
-    for (i = 0; i < SIZE; i++)
-    {
+    for (i = 0; i < SIZE; i++) {
         this.locationToTreeIndex[i] = tmpLocationToTreeIndex[i];
     }
-    for (i = 0; i < SIZE; i++)
-    {
+    for (i = 0; i < SIZE; i++) {
         this.treeIndexToLocation[this.locationToTreeIndex[i]] = i;
     }
     return true;
@@ -504,8 +459,7 @@ DisjointSet.prototype.doUnion = function(value)
     var arg2 = this.doFind(parseInt(args[1]));
     this.cmd("CreateHighlightCircle", this.highlight2ID, DisjointSet.HIGHLIGHT_CIRCLE_COLOR, DisjointSet.TREE_START_X + this.treeIndexToLocation[arg2] * DisjointSet.TREE_ELEM_WIDTH, this.treeY[arg2]);
 
-    if (arg1 == arg2)
-    {
+    if (arg1 == arg2) {
         this.cmd("Delete", this.highlight1ID);
         this.cmd("Delete", this.highlight2ID);
         return this.commands;
@@ -513,31 +467,25 @@ DisjointSet.prototype.doUnion = function(value)
 
     var changed;
 
-    if (this.treeIndexToLocation[arg1] < this.treeIndexToLocation[arg2])
-    {
+    if (this.treeIndexToLocation[arg1] < this.treeIndexToLocation[arg2]) {
         changed = this.adjustXPos(arg1, arg2) || changed
     }
-    else
-    {
+    else {
         changed = this.adjustXPos(arg2, arg1) || changed
     }
 
-    if (this.unionByRank && this.setData[arg1] < this.setData[arg2])
-    {
+    if (this.unionByRank && this.setData[arg1] < this.setData[arg2]) {
         var tmp = arg1;
         arg1 = arg2;
         arg2 = tmp;
     }
 
-    if (this.unionByRank && this.rankAsHeight)
-    {
-        if (this.setData[arg2] == this.setData[arg1])
-        {
-            this.setData[arg2] -= 1;
+    if (this.unionByRank && this.rankAsHeight) {
+        if (this.setData[arg2] == this.setData[arg1]) {
+            this.setData[arg2]--;
         }
     }
-    else if (this.unionByRank)
-    {
+    else if (this.unionByRank) {
         this.setData[arg2] = this.setData[arg2] + this.setData[arg1];
     }
 
@@ -553,20 +501,17 @@ DisjointSet.prototype.doUnion = function(value)
                        1, // Directed
                        ""); // Label
 
-    if (this.adjustHeights())
-    {
+    if (this.adjustHeights()) {
         changed = true;
     }
 
-    if (changed)
-    {
+    if (changed) {
         this.cmd("Step");
         this.cmd("Delete", this.highlight1ID);
         this.cmd("Delete", this.highlight2ID);
         this.animateNewPositions();
     }
-    else
-    {
+    else {
         this.cmd("Delete", this.highlight1ID);
         this.cmd("Delete", this.highlight2ID);
     }
@@ -577,38 +522,29 @@ DisjointSet.prototype.doUnion = function(value)
 DisjointSet.prototype.adjustHeights = function()
 {
     var changed = false;
-    for (var i = 0; i < SIZE; i++)
-    {
+    for (var i = 0; i < SIZE; i++) {
         this.heights[i] = 0;
     }
 
-    for (var j = 0; j < SIZE; j++)
-    {
-        for (i = 0; i < SIZE; i++)
-        {
-            if (this.setData[i] >= 0)
-            {
+    for (var j = 0; j < SIZE; j++) {
+        for (i = 0; i < SIZE; i++) {
+            if (this.setData[i] >= 0) {
                 this.heights[this.setData[i]] = Math.max(this.heights[this.setData[i]], this.heights[i] + 1);
             }
 
         }
     }
-    for (j = 0; j < SIZE; j++)
-    {
-        for (i = 0; i < SIZE; i++)
-        {
-            if (this.setData[i] >= 0)
-            {
+    for (j = 0; j < SIZE; j++) {
+        for (i = 0; i < SIZE; i++) {
+            if (this.setData[i] >= 0) {
                 this.heights[i] = this.heights[this.setData[i]] - 1;
             }
 
         }
     }
-    for (i = 0; i < SIZE; i++)
-    {
+    for (i = 0; i < SIZE; i++) {
         var newY = this.tree_start_y - this.heights[i] * DisjointSet.TREE_ELEM_HEIGHT;
-        if (this.treeY[i] != newY)
-        {
+        if (this.treeY[i] != newY) {
             this.treeY[i] = newY;
             changed = true;
         }
@@ -619,8 +555,7 @@ DisjointSet.prototype.adjustHeights = function()
 
 DisjointSet.prototype.animateNewPositions = function()
 {
-    for (var i = 0; i < SIZE; i++)
-    {
+    for (var i = 0; i < SIZE; i++) {
         this.cmd("Move", this.treeID[i], DisjointSet.TREE_START_X + this.treeIndexToLocation[i] * DisjointSet.TREE_ELEM_WIDTH, this.treeY[i]);
     }
 }

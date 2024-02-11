@@ -93,8 +93,7 @@ SkewHeap.prototype.addControls = function()
 SkewHeap.prototype.insertCallback = function(event)
 {
     var insertedValue = this.normalizeNumber(this.insertField.value.toUpperCase());
-    if (insertedValue != "")
-    {
+    if (insertedValue != "") {
         this.insertField.value = "";
         this.implementAction(this.insertElement.bind(this), insertedValue);
     }
@@ -116,8 +115,7 @@ SkewHeap.prototype.clear = function(ignored)
 
 SkewHeap.prototype.clearTree = function(tree)
 {
-        if (tree != null)
-        {
+        if (tree != null) {
             this.cmd("Delete", tree.graphicID);
             this.clearTree(tree.left);
             this.clearTree(tree.right);
@@ -144,18 +142,15 @@ SkewHeap.prototype.removeSmallest = function(dummy)
 
     this.commands = new Array();
 
-    if (this.treeRoot != null)
-    {
+    if (this.treeRoot != null) {
         this.highlightLeft = this.nextIndex++;
         this.highlightRight = this.nextIndex++;
 
         this.cmd("SetText", SkewHeap.MESSAGE_ID, "Remove root element, leaving two subtrees");
-        if (this.treeRoot.left != null)
-        {
+        if (this.treeRoot.left != null) {
             this.cmd("Disconnect", this.treeRoot.graphicID, this.treeRoot.left.graphicID);
         }
-        if (this.treeRoot.right != null)
-        {
+        if (this.treeRoot.right != null) {
             this.cmd("Disconnect", this.treeRoot.graphicID, this.treeRoot.right.graphicID);
         }
         var oldElem = this.treeRoot.graphicID;
@@ -163,17 +158,14 @@ SkewHeap.prototype.removeSmallest = function(dummy)
         this.cmd("Step");
         this.cmd("SetText", SkewHeap.MESSAGE_ID, "Merge the two subtrees");
 
-        if (this.treeRoot.left == null)
-        {
+        if (this.treeRoot.left == null) {
             this.treeRoot = null;
         }
-        else if (this.treeRoot.right == null)
-        {
+        else if (this.treeRoot.right == null) {
             this.treeRoot = this.treeRoot.left;
             this.resizeTrees();
         }
-        else
-        {
+        else {
             var secondTree = this.treeRoot.right;
             this.secondaryRoot = secondTree;
             this.treeRoot = this.treeRoot.left;
@@ -209,8 +201,7 @@ SkewHeap.prototype.insertElement = function(insertedValue)
     this.cmd("SetBackgroundColor", this.secondaryRoot.graphicID, SkewHeap.BACKGROUND_COLOR);
 
 
-    if (this.treeRoot != null)
-    {
+    if (this.treeRoot != null) {
         this.resizeTrees();
         this.highlightLeft = this.nextIndex++;
         this.highlightRight = this.nextIndex++;
@@ -226,8 +217,7 @@ SkewHeap.prototype.insertElement = function(insertedValue)
 
         this.resizeTrees();
     }
-    else
-    {
+    else {
         this.treeRoot = this.secondaryRoot;
         this.secondaryRoot = null;
         this.resizeTrees();
@@ -241,8 +231,7 @@ SkewHeap.prototype.insertElement = function(insertedValue)
 
 SkewHeap.prototype.merge = function(tree1, tree2)
 {
-    if (tree1 == null)
-    {
+    if (tree1 == null) {
         this.cmd("SetText", SkewHeap.MESSAGE_ID, "Merging right heap with empty heap, return right heap");
         this.cmd("Step");
         this.cmd("Delete", this.highlightRight);
@@ -250,8 +239,7 @@ SkewHeap.prototype.merge = function(tree1, tree2)
 
         return tree2;
     }
-    if (tree2 == null)
-    {
+    if (tree2 == null) {
         this.cmd("SetText", SkewHeap.MESSAGE_ID, "Merging left heap with empty heap, return left heap");
         this.cmd("Step");
         this.cmd("Delete", this.highlightRight);
@@ -262,8 +250,7 @@ SkewHeap.prototype.merge = function(tree1, tree2)
     var tmp;
     this.cmd("SetHighlight", tree1.graphicID, 1);
     this.cmd("SetHighlight", tree2.graphicID, 1);
-    if (tree2.data  < tree1.data)
-    {
+    if (tree2.data  < tree1.data) {
         this.cmd("SetText", SkewHeap.MESSAGE_ID, "Min element is in right heap.  Recursively merge right subtree of right heap with left heap");
         tmp = tree1;
         tree1 = tree2;
@@ -272,47 +259,39 @@ SkewHeap.prototype.merge = function(tree1, tree2)
         this.highlightRight = this.highlightLeft;
         this.highlightLeft = tmp;
     }
-    else
-    {
+    else {
         this.cmd("SetText", SkewHeap.MESSAGE_ID, "Min element is in left heap.  Recursively merge right subtree of left heap with right heap");
     }
     this.cmd("Step");
     this.cmd("SetHighlight", tree1.graphicID, 0);
     this.cmd("SetHighlight", tree2.graphicID, 0);
-    if (tree1.right == null)
-    {
+    if (tree1.right == null) {
         this.cmd("Move", this.highlightLeft, tree1.x + SkewHeap.WIDTH_DELTA / 2, tree1.y + SkewHeap.HEIGHT_DELTA);
     }
-    else
-    {
+    else {
         this.cmd("Move", this.highlightLeft, tree1.right.x, tree1.right.y);
 
     }
     this.cmd("Step");
-    if (tree1.right != null)
-    {
+    if (tree1.right != null) {
         this.cmd("Disconnect", tree1.graphicID, tree1.right.graphicID,  SkewHeap.LINK_COLOR);
     }
     var next = tree1.right;
     this.cmd("SetAlpha", tree1.graphicID, SkewHeap.BACKGROUND_ALPHA);
-    if (tree1.left != null)
-    {
+    if (tree1.left != null) {
         this.cmd("SetEdgeAlpha", tree1.graphicID, tree1.left.graphicID, SkewHeap.BACKGROUND_ALPHA);
         this.setTreeAlpha(tree1.left, SkewHeap.BACKGROUND_ALPHA);
 
     }
     this.cmd("Step");
     tree1.right = this.merge(next, tree2);
-    if (this.secondaryRoot == tree1.right)
-    {
+    if (this.secondaryRoot == tree1.right) {
         this.secondaryRoot = null;
     }
-    if (this.treeRoot == tree1.right)
-    {
+    if (this.treeRoot == tree1.right) {
         this.treeRoot = null;
     }
-    if (tree1.right.parent != tree1)
-    {
+    if (tree1.right.parent != tree1) {
         tree1.right.disconnectFromParent();
     }
     tree1.right.parent = tree1;
@@ -322,8 +301,7 @@ SkewHeap.prototype.merge = function(tree1, tree2)
     this.cmd("SetAlpha", tree1.graphicID, 1);
 
     this.resizeTrees();
-    if (tree1.left != null)
-    {
+    if (tree1.left != null) {
         this.cmd("SetEdgeAlpha", tree1.graphicID, tree1.left.graphicID, 1);
         this.setTreeAlpha(tree1.left, 1);
         this.cmd("Step");
@@ -345,16 +323,13 @@ SkewHeap.prototype.merge = function(tree1, tree2)
 
 SkewHeap.prototype.setTreeAlpha = function(tree, newAlpha)
 {
-    if (tree != null)
-    {
+    if (tree != null) {
         this.cmd("SetAlpha", tree.graphicID, newAlpha);
-        if (tree.left != null)
-        {
+        if (tree.left != null) {
             this.cmd("SetEdgeAlpha", tree.graphicID, tree.left.graphicID, newAlpha);
             this.setTreeAlpha(tree.left, newAlpha);
         }
-        if (tree.right != null)
-        {
+        if (tree.right != null) {
             this.cmd("SetEdgeAlpha", tree.graphicID, tree.right.graphicID, newAlpha);
             this.setTreeAlpha(tree.right, newAlpha);
         }
@@ -364,8 +339,7 @@ SkewHeap.prototype.setTreeAlpha = function(tree, newAlpha)
 
 SkewHeap.prototype.resizeWidths = function(tree)
 {
-    if (tree == null)
-    {
+    if (tree == null) {
         return 0;
     }
     tree.leftWidth = Math.max(this.resizeWidths(tree.left), SkewHeap.WIDTH_DELTA / 2);
@@ -381,13 +355,11 @@ SkewHeap.prototype.resizeTrees = function()
     this.resizeWidths(this.treeRoot);
     this.resizeWidths(this.secondaryRoot);
 
-    if (this.treeRoot != null)
-    {
+    if (this.treeRoot != null) {
         startingPoint = this.treeRoot.leftWidth;
         this.setNewPositions(this.treeRoot, startingPoint, SkewHeap.STARTING_Y, 0);
         this.animateNewPositions(this.treeRoot);
-        if (this.secondaryRoot != null)
-        {
+        if (this.secondaryRoot != null) {
             secondTreeStart = this.treeRoot.leftWidth + this.treeRoot.rightWidth + this.secondaryRoot.leftWidth + 50;
             this.setNewPositions(this.secondaryRoot, secondTreeStart, SkewHeap.STARTING_Y, 0);
             this.animateNewPositions(this.secondaryRoot);
@@ -395,8 +367,7 @@ SkewHeap.prototype.resizeTrees = function()
 
         this.cmd("Step");
     }
-    else if (this.secondaryRoot != null)
-    {
+    else if (this.secondaryRoot != null) {
         startingPoint = this.secondaryRoot.leftWidth;
         this.setNewPositions(this.secondaryRoot, startingPoint, SkewHeap.STARTING_Y, 0);
         this.animateNewPositions(this.secondaryRoot);
@@ -406,19 +377,15 @@ SkewHeap.prototype.resizeTrees = function()
 
 SkewHeap.prototype.setNewPositions = function(tree, xPosition, yPosition, side)
 {
-    if (tree != null)
-    {
+    if (tree != null) {
         tree.y = yPosition;
-        if (side == -1)
-        {
+        if (side == -1) {
             xPosition = xPosition - tree.rightWidth;
         }
-        else if (side == 1)
-        {
+        else if (side == 1) {
             xPosition = xPosition + tree.leftWidth;
         }
-        else
-        {
+        else {
 // ???            tree.heightLabelX = xPosition - SkewHeap.NPL_OFFSET_Y;
         }
         tree.x = xPosition;
@@ -431,8 +398,7 @@ SkewHeap.prototype.setNewPositions = function(tree, xPosition, yPosition, side)
 
 SkewHeap.prototype.animateNewPositions = function(tree)
 {
-    if (tree != null)
-    {
+    if (tree != null) {
         this.cmd("Move", tree.graphicID, tree.x, tree.y);
         this.animateNewPositions(tree.left);
         this.animateNewPositions(tree.right);
@@ -468,14 +434,11 @@ function SkewHeapNode(val, id, initialX, initialY)
 
 SkewHeapNode.prototype.disconnectFromParent = function()
 {
-    if (this.parent != null)
-    {
-        if (this.parent.right == this)
-        {
+    if (this.parent != null) {
+        if (this.parent.right == this) {
             this.parent.right = null;
         }
-        else if (this.parent.left === this)
-        {
+        else if (this.parent.left === this) {
             this.parent.left == null;
         }
     }

@@ -93,8 +93,7 @@ Kruskal.prototype.setup = function()
     this.setData = new Array(this.size);
 
     var i;
-    for (i = 0; i < this.size; i++)
-    {
+    for (i = 0; i < this.size; i++) {
         this.setID[i] = this.nextIndex++;
         this.setIndexID[i] = this.nextIndex++;
         this.cmd("CreateRectangle", this.setID[i], "-1", Kruskal.SET_ARRAY_ELEM_WIDTH, Kruskal.SET_ARRAY_ELEM_HEIGHT, Kruskal.SET_ARRAY_START_X, Kruskal.SET_ARRAY_START_Y + i*Kruskal.SET_ARRAY_ELEM_HEIGHT);
@@ -121,8 +120,7 @@ Kruskal.prototype.disjointSetFind = function(valueToFind, highlightCircleID)
 {
     this.cmd("SetTextColor", this.setID[valueToFind], "#FF0000");
     this.cmd("Step");
-    while (this.setData[valueToFind] >= 0)
-    {
+    while (this.setData[valueToFind] >= 0) {
         this.cmd("SetTextColor", this.setID[valueToFind], "#000000");
         this.cmd("Move", highlightCircleID,  Kruskal.SET_ARRAY_START_X - Kruskal.SET_ARRAY_ELEM_WIDTH ,Kruskal.SET_ARRAY_START_Y + this.setData[valueToFind]*Kruskal.SET_ARRAY_ELEM_HEIGHT);
         this.cmd("Step");
@@ -147,8 +145,7 @@ Kruskal.prototype.doKruskal = function(ignored)
 
     var i;
     var j;
-    for (i = 0; i < this.size; i++)
-    {
+    for (i = 0; i < this.size; i++) {
         this.setData[i] = -1;
         this.cmd("SetText", this.setID[i], "-1");
     }
@@ -157,12 +154,9 @@ Kruskal.prototype.doKruskal = function(ignored)
 
     // Create Edge List
     var top;
-    for (i = 0; i < this.size; i++)
-    {
-        for (j = i+1; j < this.size; j++)
-        {
-            if (this.adj_matrix[i][j] >= 0)
-            {
+    for (i = 0; i < this.size; i++) {
+        for (j = i+1; j < this.size; j++) {
+            if (this.adj_matrix[i][j] >= 0) {
                 this.edgesListLeftID.push(this.nextIndex++);
                 this.edgesListRightID.push(this.nextIndex++);
                 top = this.edgesListLeftID.length - 1;
@@ -184,15 +178,13 @@ Kruskal.prototype.doKruskal = function(ignored)
     var tmpRightID;
     var tmpLeft;
     var tmpRight;
-    for (i = 1; i < edgeCount; i++)
-    {
+    for (i = 1; i < edgeCount; i++) {
         tmpLeftID = this.edgesListLeftID[i];
         tmpRightID = this.edgesListRightID[i];
         tmpLeft = this.edgesListLeft[i];
         tmpRight = this.edgesListRight[i];
         j = i;
-        while (j > 0 && this.adj_matrix[this.edgesListLeft[j-1]][this.edgesListRight[j-1]] > this.adj_matrix[tmpLeft][tmpRight])
-        {
+        while (j > 0 && this.adj_matrix[this.edgesListLeft[j-1]][this.edgesListRight[j-1]] > this.adj_matrix[tmpLeft][tmpRight]) {
             this.edgesListLeft[j] = this.edgesListLeft[j-1];
             this.edgesListRight[j] = this.edgesListRight[j-1];
             this.edgesListLeftID[j] = this.edgesListLeftID[j-1];
@@ -204,8 +196,7 @@ Kruskal.prototype.doKruskal = function(ignored)
         this.edgesListLeftID[j] = tmpLeftID;
         this.edgesListRightID[j] = tmpRightID;
     }
-    for (i = 0; i < edgeCount; i++)
-    {
+    for (i = 0; i < edgeCount; i++) {
         this.cmd("Move", this.edgesListLeftID[i], Kruskal.EDGE_LIST_START_X + Math.floor(i / Kruskal.EDGE_LIST_MAX_PER_COLUMN) * Kruskal.EDGE_LIST_COLUMN_WIDTH,
             Kruskal.EDGE_LIST_START_Y + (i % Kruskal.EDGE_LIST_MAX_PER_COLUMN) * Kruskal.EDGE_LIST_ELEM_HEIGHT);
         this.cmd("Move",  this.edgesListRightID[i], Kruskal.EDGE_LIST_START_X +Kruskal.EDGE_LIST_ELEM_WIDTH + Math.floor(i / Kruskal.EDGE_LIST_MAX_PER_COLUMN) * Kruskal.EDGE_LIST_COLUMN_WIDTH,
@@ -227,8 +218,7 @@ Kruskal.prototype.doKruskal = function(ignored)
     this.cmd("CreateLabel", findLabelLeft, "",  Kruskal.FIND_LABEL_1_X, Kruskal.FIND_LABEL_1_Y, 0);
     this.cmd("CreateLabel", findLabelRight, "",  Kruskal.FIND_LABEL_2_X, Kruskal.FIND_LABEL_2_Y, 0);
 
-    while (edgesAdded < this.size - 1 && nextListIndex < edgeCount)
-    {
+    while (edgesAdded < this.size - 1 && nextListIndex < edgeCount) {
         this.cmd("SetEdgeHighlight", this.edgesListLeftID[nextListIndex],this.edgesListRightID[nextListIndex], 1);
 
         this.highlightEdge(this.edgesListLeft[nextListIndex], this.edgesListRight[nextListIndex], 1)
@@ -260,8 +250,7 @@ Kruskal.prototype.doKruskal = function(ignored)
 
         this.cmd("Step");
 
-        if (left != right)
-        {
+        if (left != right) {
             this.cmd("CreateLabel", messageLabelID, "Vertices in different trees.  Add edge to tree: Union(" + String(left) + "," + String(right) + ")",  Kruskal.MESSAGE_LABEL_X, Kruskal.MESSAGE_LABEL_Y, 0);
             this.cmd("Step");
             this.highlightEdge(this.edgesListLeft[nextListIndex], this.edgesListRight[nextListIndex], 1)
@@ -269,8 +258,7 @@ Kruskal.prototype.doKruskal = function(ignored)
             edgesAdded++;
             this.setEdgeColor(this.edgesListLeft[nextListIndex], this.edgesListRight[nextListIndex], "#FF0000");
             this.setEdgeColor( this.edgesListRight[nextListIndex], this.edgesListLeft[nextListIndex], "#FF0000");
-            if (this.setData[left] < this.setData[right])
-            {
+            if (this.setData[left] < this.setData[right]) {
                 this.cmd("SetText", this.setID[right], "")
                 this.cmd("CreateLabel", moveLabelID, this.setData[right], Kruskal.SET_ARRAY_START_X, Kruskal.SET_ARRAY_START_Y + right*Kruskal.SET_ARRAY_ELEM_HEIGHT);
                 this.cmd("Move", moveLabelID,  Kruskal.SET_ARRAY_START_X, Kruskal.SET_ARRAY_START_Y + left*Kruskal.SET_ARRAY_ELEM_HEIGHT);
@@ -279,8 +267,7 @@ Kruskal.prototype.doKruskal = function(ignored)
                 this.setData[left] = this.setData[left] + this.setData[right]
                 this.setData[right] = left;
             }
-            else
-            {
+            else {
                 this.cmd("SetText", this.setID[left], "")
                 this.cmd("CreateLabel", moveLabelID, this.setData[left], Kruskal.SET_ARRAY_START_X, Kruskal.SET_ARRAY_START_Y + left*Kruskal.SET_ARRAY_ELEM_HEIGHT);
                 this.cmd("Move", moveLabelID,  Kruskal.SET_ARRAY_START_X, Kruskal.SET_ARRAY_START_Y + right*Kruskal.SET_ARRAY_ELEM_HEIGHT);
@@ -292,8 +279,7 @@ Kruskal.prototype.doKruskal = function(ignored)
             this.cmd("SetText", this.setID[left], this.setData[left]);
             this.cmd("SetText", this.setID[right], this.setData[right]);
         }
-        else
-        {
+        else {
             this.cmd("CreateLabel", messageLabelID, "Vertices in the same tree.  Skip edge",  Kruskal.MESSAGE_LABEL_X, Kruskal.MESSAGE_LABEL_Y, 0);
             this.cmd("Step");
 

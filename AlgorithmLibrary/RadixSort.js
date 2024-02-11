@@ -101,8 +101,7 @@ RadixSort.prototype.setup = function()
 
     this.commands = new Array();
 
-    for (var i = 0; i < RadixSort.ARRAY_SIZE; i++)
-    {
+    for (var i = 0; i < RadixSort.ARRAY_SIZE; i++) {
         var nextID = this.nextIndex++;
         this.arrayData[i] = Math.floor(Math.random()*RadixSort.MAX_DATA_VALUE);
         this.cmd("CreateRectangle", nextID, this.arrayData[i], RadixSort.ARRAY_ELEM_WIDTH, RadixSort.ARRAY_ELEM_HEIGHT, RadixSort.ARRAY_ELEM_START_X + i *RadixSort.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y)
@@ -121,8 +120,7 @@ RadixSort.prototype.setup = function()
         this.cmd("SetForegroundColor", nextID, "#0000FF");
 
     }
-    for (i = RadixSort.COUNTER_ARRAY_SIZE - 1; i >= 0; i--)
-    {
+    for (i = RadixSort.COUNTER_ARRAY_SIZE - 1; i >= 0; i--) {
         nextID = this.nextIndex++;
         this.cmd("CreateRectangle", nextID,"", RadixSort.COUNTER_ARRAY_ELEM_WIDTH, RadixSort.COUNTER_ARRAY_ELEM_HEIGHT, RadixSort.COUNTER_ARRAY_ELEM_START_X + i *RadixSort.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y)
         this.counterRects[i] = nextID;
@@ -154,33 +152,27 @@ RadixSort.prototype.radixSortCallback = function(event)
     var animatedCircleID4 = this.nextIndex++;
 
     var digits = new Array(RadixSort.NUM_DIGITS);
-    for (var k = 0; k < RadixSort.NUM_DIGITS; k++)
-    {
+    for (var k = 0; k < RadixSort.NUM_DIGITS; k++) {
         digits[k] = this.nextIndex++;
     }
 
-    for (var radix = 0;  radix < RadixSort.NUM_DIGITS; radix++)
-    {
-        for (var i = 0; i < RadixSort.COUNTER_ARRAY_SIZE; i++)
-        {
+    for (var radix = 0;  radix < RadixSort.NUM_DIGITS; radix++) {
+        for (var i = 0; i < RadixSort.COUNTER_ARRAY_SIZE; i++) {
             this.counterData[i] = 0;
             this.cmd("SetText", this.counterRects[i], 0);
         }
-        for (i = 0; i < RadixSort.ARRAY_SIZE; i++)
-        {
+        for (i = 0; i < RadixSort.ARRAY_SIZE; i++) {
             this.cmd("CreateHighlightCircle", animatedCircleID, "#0000FF",  RadixSort.ARRAY_ELEM_START_X + i *RadixSort.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
             this.cmd("CreateHighlightCircle", animatedCircleID2, "#0000FF",  RadixSort.ARRAY_ELEM_START_X + i *RadixSort.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
 
 
             this.cmd("SetText", this.arrayRects[i], "");
 
-            for (k = 0; k < RadixSort.NUM_DIGITS; k++)
-            {
+            for (k = 0; k < RadixSort.NUM_DIGITS; k++) {
                 var digitXPos = RadixSort.ARRAY_ELEM_START_X + i *RadixSort.ARRAY_ELEM_WIDTH - RadixSort.ARRAY_ELEM_WIDTH/2 + (RadixSort.NUM_DIGITS - k ) * (RadixSort.ARRAY_ELEM_WIDTH / RadixSort.NUM_DIGITS - 3);
                 var digitYPos = this.ARRAY_ELEM_Y;
                 this.cmd("CreateLabel", digits[k], Math.floor(this.arrayData[i] / Math.pow(10,k)) % 10, digitXPos, digitYPos);
-                if (k != radix)
-                {
+                if (k != radix) {
                     this.cmd("SetAlpha", digits[k], 0.2);
                 }
                 //                        else
@@ -199,13 +191,11 @@ RadixSort.prototype.radixSortCallback = function(event)
             this.cmd("Delete", animatedCircleID);
             this.cmd("Delete", animatedCircleID2);
             this.cmd("SetText", this.arrayRects[i], this.arrayData[i]);
-            for (k = 0; k < RadixSort.NUM_DIGITS; k++)
-            {
+            for (k = 0; k < RadixSort.NUM_DIGITS; k++) {
                 this.cmd("Delete", digits[k]);
             }
         }
-        for (i=1; i < RadixSort.COUNTER_ARRAY_SIZE; i++)
-        {
+        for (i=1; i < RadixSort.COUNTER_ARRAY_SIZE; i++) {
             this.cmd("SetHighlight", this.counterRects[i-1], 1);
             this.cmd("SetHighlight", this.counterRects[i], 1);
             this.cmd("Step")
@@ -219,21 +209,18 @@ RadixSort.prototype.radixSortCallback = function(event)
         //                {
         //                    this.cmd("SetAlpha", this.arrayRects[i], 1.0);
         //                }
-        for (i=RadixSort.ARRAY_SIZE - 1; i >= 0; i--)
-        {
+        for (i=RadixSort.ARRAY_SIZE - 1; i >= 0; i--) {
             this.cmd("CreateHighlightCircle", animatedCircleID, "#0000FF",  RadixSort.ARRAY_ELEM_START_X + i *RadixSort.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
             this.cmd("CreateHighlightCircle", animatedCircleID2, "#0000FF",  RadixSort.ARRAY_ELEM_START_X + i *RadixSort.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
 
             this.cmd("SetText", this.arrayRects[i], "");
 
-            for (k = 0; k < RadixSort.NUM_DIGITS; k++)
-            {
+            for (k = 0; k < RadixSort.NUM_DIGITS; k++) {
                 digits[k] = this.nextIndex++;
                 digitXPos = RadixSort.ARRAY_ELEM_START_X + i *RadixSort.ARRAY_ELEM_WIDTH - RadixSort.ARRAY_ELEM_WIDTH/2 + (RadixSort.NUM_DIGITS - k ) * (RadixSort.ARRAY_ELEM_WIDTH / RadixSort.NUM_DIGITS - 3);
                 digitYPos = this.ARRAY_ELEM_Y;
                 this.cmd("CreateLabel", digits[k], Math.floor(this.arrayData[i] / Math.pow(10,k)) % 10, digitXPos, digitYPos);
-                if (k != radix)
-                {
+                if (k != radix) {
                     this.cmd("SetAlpha", digits[k], 0.2);
                 }
             }
@@ -258,8 +245,7 @@ RadixSort.prototype.radixSortCallback = function(event)
             this.cmd("Move", moveLabel, RadixSort.ARRAY_ELEM_START_X + insertIndex *RadixSort.ARRAY_ELEM_WIDTH, this.SWAP_ARRAY_ELEM_Y);
             this.swapData[insertIndex] = this.arrayData[i];
 
-            for (k = 0; k < RadixSort.NUM_DIGITS; k++)
-            {
+            for (k = 0; k < RadixSort.NUM_DIGITS; k++) {
                 this.cmd("Delete", digits[k]);
             }
             this.cmd("Step");
@@ -272,34 +258,29 @@ RadixSort.prototype.radixSortCallback = function(event)
             this.cmd("Delete", animatedCircleID4);
         }
 
-        for (i= 0; i < RadixSort.ARRAY_SIZE; i++)
-        {
+        for (i= 0; i < RadixSort.ARRAY_SIZE; i++) {
             this.cmd("SetText", this.arrayRects[i], "");
         }
 
-        for (i= 0; i < RadixSort.COUNTER_ARRAY_SIZE; i++)
-        {
+        for (i= 0; i < RadixSort.COUNTER_ARRAY_SIZE; i++) {
             this.cmd("SetAlpha", this.counterRects[i], 0.05);
             this.cmd("SetAlpha", this.counterIndices[i], 0.05);
         }
 
         this.cmd("Step");
         var startLab = this.nextIndex;
-        for (i = 0; i < RadixSort.ARRAY_SIZE; i++)
-        {
+        for (i = 0; i < RadixSort.ARRAY_SIZE; i++) {
             this.cmd("CreateLabel", startLab+i, this.swapData[i], RadixSort.ARRAY_ELEM_START_X + i *RadixSort.ARRAY_ELEM_WIDTH, this.SWAP_ARRAY_ELEM_Y);
             this.cmd("Move", startLab+i,  RadixSort.ARRAY_ELEM_START_X + i *RadixSort.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
             this.cmd("SetText", this.swapRects[i], "");
         }
         this.cmd("Step");
-        for (i = 0; i < RadixSort.ARRAY_SIZE; i++)
-        {
+        for (i = 0; i < RadixSort.ARRAY_SIZE; i++) {
             this.arrayData[i] = this.swapData[i];
             this.cmd("SetText", this.arrayRects[i], this.arrayData[i]);
             this.cmd("Delete", startLab + i);
         }
-        for (i= 0; i < RadixSort.COUNTER_ARRAY_SIZE; i++)
-        {
+        for (i= 0; i < RadixSort.COUNTER_ARRAY_SIZE; i++) {
             this.cmd("SetAlpha", this.counterRects[i], 1);
             this.cmd("SetAlpha", this.counterIndices[i], 1);
         }
@@ -311,14 +292,12 @@ RadixSort.prototype.radixSortCallback = function(event)
 RadixSort.prototype.randomizeArray = function()
 {
     this.commands = new Array();
-    for (var i = 0; i < RadixSort.ARRAY_SIZE; i++)
-    {
+    for (var i = 0; i < RadixSort.ARRAY_SIZE; i++) {
         this.arrayData[i] = Math.floor(1 + Math.random()*RadixSort.MAX_DATA_VALUE);
         this.cmd("SetText", this.arrayRects[i], this.arrayData[i]);
     }
 
-    for (i = 0; i < RadixSort.COUNTER_ARRAY_SIZE; i++)
-    {
+    for (i = 0; i < RadixSort.COUNTER_ARRAY_SIZE; i++) {
         this.cmd("SetText", this.counterRects[i], "");
     }
 

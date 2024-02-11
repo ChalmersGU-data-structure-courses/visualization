@@ -115,17 +115,14 @@ ConnectedComponent.prototype.setup = function()
     this.old_adj_list_list = new Array(this.size);
     this.old_adj_list_index = new Array(this.size);
     this.old_adj_list_edges = new Array(this.size);
-    for (var i = 0; i < this.size; i++)
-    {
+    for (var i = 0; i < this.size; i++) {
         this.old_adj_matrix[i] = new Array(this.size);
         this.old_adj_list_index[i] = this.adj_list_index[i];
         this.old_adj_list_list[i] = this.adj_list_list[i];
         this.old_adj_list_edges[i] = new Array(this.size);
-        for (var j = 0; j < this.size; j++)
-        {
+        for (var j = 0; j < this.size; j++) {
             this.old_adj_matrix[i][j] = this.adj_matrix[i][j];
-            if (this.adj_matrix[i][j] > 0)
-            {
+            if (this.adj_matrix[i][j] > 0) {
                 this.old_adj_list_edges[i][j] = this.adj_list_edges[i][j];
             }
 
@@ -142,10 +139,8 @@ ConnectedComponent.prototype.startCallback = function(event)
 
 ConnectedComponent.prototype.transpose = function()
 {
-    for (var i = 0; i < this.size; i++)
-    {
-        for (var j = i+1; j <this.size; j++)
-        {
+    for (var i = 0; i < this.size; i++) {
+        for (var j = i+1; j <this.size; j++) {
             var tmp = this.adj_matrix[i][j];
             this.adj_matrix[i][j] = this.adj_matrix[j][i];
             this.adj_matrix[j][i] = tmp;
@@ -159,10 +154,8 @@ ConnectedComponent.prototype.doCC = function(ignored)
     this.visited = new Array(this.size);
     this.commands = new Array();
     var i;
-    if (this.messageID != null)
-    {
-        for (i = 0; i < this.messageID.length; i++)
-        {
+    if (this.messageID != null) {
+        for (i = 0; i < this.messageID.length; i++) {
             this.cmd("Delete", this.messageID[i], 1);
         }
     }
@@ -176,8 +169,7 @@ ConnectedComponent.prototype.doCC = function(ignored)
     this.d_times = new Array(this.size);
     this.f_times = new Array(this.size);
     this.currentTime = 1
-    for (i = 0; i < this.size; i++)
-    {
+    for (i = 0; i < this.size; i++) {
         this.d_timesID_L[i] = this.nextIndex++;
         this.f_timesID_L[i] = this.nextIndex++;
         this.d_timesID_AL[i] = this.nextIndex++;
@@ -186,10 +178,8 @@ ConnectedComponent.prototype.doCC = function(ignored)
 
     this.messageY = 30;
     var vertex;
-    for (vertex = 0; vertex < this.size; vertex++)
-    {
-        if (!this.visited[vertex])
-        {
+    for (vertex = 0; vertex < this.size; vertex++) {
+        if (!this.visited[vertex]) {
             this.cmd("CreateHighlightCircle", this.highlightCircleL, ConnectedComponent.HIGHLIGHT_CIRCLE_COLOR, this.x_pos_logical[vertex], this.y_pos_logical[vertex]);
             this.cmd("SetLayer", this.highlightCircleL, 1);
             this.cmd("CreateHighlightCircle", this.highlightCircleAL, ConnectedComponent.HIGHLIGHT_CIRCLE_COLOR,this.adj_list_x_start - this.adj_list_width, this.adj_list_y_start + vertex*this.adj_list_height);
@@ -198,8 +188,7 @@ ConnectedComponent.prototype.doCC = function(ignored)
             this.cmd("CreateHighlightCircle", this.highlightCircleAM, ConnectedComponent.HIGHLIGHT_CIRCLE_COLOR,this.adj_matrix_x_start - this.adj_matrix_width, this.adj_matrix_y_start + vertex*this.adj_matrix_height);
             this.cmd("SetLayer", this.highlightCircleAM, 3);
 
-            if (vertex > 0)
-            {
+            if (vertex > 0) {
                 var breakID = this.nextIndex++;
                 this.messageID.push(breakID);
                 this.cmd("CreateRectangle", breakID, "", 200, 0, 10, this.messageY,"left","bottom");
@@ -218,24 +207,19 @@ ConnectedComponent.prototype.doCC = function(ignored)
     this.buildAdjList();
     this.currentTime = 1
 
-    for (i=0; i < this.size; i++)
-    {
-        for (j = 0; j < this.size; j++)
-        {
-            if (this.adj_matrix[i][j] >= 0)
-            {
+    for (i=0; i < this.size; i++) {
+        for (j = 0; j < this.size; j++) {
+            if (this.adj_matrix[i][j] >= 0) {
                 this.cmd("SetText", this.adj_matrixID[i][j], "1");
             }
-            else
-            {
+            else {
                 this.cmd("SetText", this.adj_matrixID[i][j], "");
             }
         }
     }
 
 
-    for (vertex = 0; vertex < this.size; vertex++)
-    {
+    for (vertex = 0; vertex < this.size; vertex++) {
         this.visited[vertex] = false;
         this.cmd("Delete", this.d_timesID_L[vertex], 5);
         this.cmd("Delete", this.f_timesID_L[vertex], 6);
@@ -245,22 +229,19 @@ ConnectedComponent.prototype.doCC = function(ignored)
 
     var sortedVertex = new Array(this.size);
     var sortedID = new Array(this.size);
-    for (vertex = 0; vertex < this.size; vertex++)
-    {
+    for (vertex = 0; vertex < this.size; vertex++) {
         sortedVertex[vertex] = vertex;
         sortedID[vertex] = this.nextIndex++;
         this.cmd("CreateLabel", sortedID[vertex], "Vertex: " + String(vertex)+ " f = " + String(this.f_times[vertex]), 400, 110 + vertex*20, 0);
     }
     this.cmd("Step");
 
-    for (i = 1; i < this.size; i++)
-    {
+    for (i = 1; i < this.size; i++) {
         var j = i;
         var tmpTime = this.f_times[i];
         var tmpIndex = sortedVertex[i];
         var tmpID = sortedID[i];
-        while (j > 0 && this.f_times[j-1] < tmpTime)
-        {
+        while (j > 0 && this.f_times[j-1] < tmpTime) {
             this.f_times[j] = this.f_times[j-1];
             sortedVertex[j] = sortedVertex[j-1];
             sortedID[j] = sortedID[j-1];
@@ -270,13 +251,11 @@ ConnectedComponent.prototype.doCC = function(ignored)
         sortedVertex[j] = tmpIndex;
         sortedID[j] = tmpID;
     }
-    for (vertex = 0; vertex < this.size; vertex++)
-    {
+    for (vertex = 0; vertex < this.size; vertex++) {
         this.cmd("Move", sortedID[vertex],  400, 110 + vertex*20);
     }
 
-    for (i = 0; i < this.messageID.length; i++)
-    {
+    for (i = 0; i < this.messageID.length; i++) {
         this.cmd("Delete", this.messageID[i], 9);
     }
 
@@ -284,11 +263,9 @@ ConnectedComponent.prototype.doCC = function(ignored)
     this.messageY = 30;
 
     var ccNum = 1;
-    for (i = 0; i < this.size; i++)
-    {
+    for (i = 0; i < this.size; i++) {
         vertex = sortedVertex[i];
-        if (!this.visited[vertex])
-        {
+        if (!this.visited[vertex]) {
 
             var breakID1 = this.nextIndex++;
             this.messageID.push(breakID1);
@@ -320,8 +297,7 @@ ConnectedComponent.prototype.doCC = function(ignored)
         this.cmd("Delete", sortedID[i], 13);
     }
 
-    for (vertex = 0; vertex < this.size; vertex++)
-    {
+    for (vertex = 0; vertex < this.size; vertex++) {
         this.cmd("Delete", this.d_timesID_L[vertex], 14);
         this.cmd("Delete", this.f_timesID_L[vertex], 15);
         this.cmd("Delete", this.d_timesID_AL[vertex], 16);
@@ -355,8 +331,7 @@ ConnectedComponent.prototype.setup_small = function()
 
 ConnectedComponent.prototype.dfsVisit = function(startVertex, messageX, printCCNum)
 {
-    if (printCCNum)
-    {
+    if (printCCNum) {
         var ccNumberID = this.nextIndex++;
         this.messageID.push(ccNumberID);
         this.cmd("CreateLabel",ccNumberID, "Vertex " +  String(startVertex), 5, this.messageY, 0);
@@ -367,8 +342,7 @@ ConnectedComponent.prototype.dfsVisit = function(startVertex, messageX, printCCN
     this.cmd("CreateLabel",nextMessage, "DFS(" +  String(startVertex) +  ")", messageX, this.messageY, 0);
 
     this.messageY = this.messageY + 20;
-    if (!this.visited[startVertex])
-    {
+    if (!this.visited[startVertex]) {
         this.d_times[startVertex] = this.currentTime++;
         this.cmd("CreateLabel", this.d_timesID_L[startVertex], "d = " + String(this.d_times[startVertex]), this.d_x_pos[startVertex], this.d_y_pos[startVertex]);
         this.cmd("CreateLabel", this.d_timesID_AL[startVertex], "d = " + String(this.d_times[startVertex]), this.adj_list_x_start - 2*this.adj_list_width, this.adj_list_y_start + startVertex*this.adj_list_height - 1/4*this.adj_list_height);
@@ -377,25 +351,20 @@ ConnectedComponent.prototype.dfsVisit = function(startVertex, messageX, printCCN
 
         this.visited[startVertex] = true;
         this.cmd("Step");
-        for (var neighbor = 0; neighbor < this.size; neighbor++)
-        {
-            if (this.adj_matrix[startVertex][neighbor] > 0)
-            {
+        for (var neighbor = 0; neighbor < this.size; neighbor++) {
+            if (this.adj_matrix[startVertex][neighbor] > 0) {
                 this.highlightEdge(startVertex, neighbor, 1);
-                if (this.visited[neighbor])
-                {
+                if (this.visited[neighbor]) {
                     nextMessage = this.nextIndex;
                     this.cmd("CreateLabel", nextMessage, "Vertex " + String(neighbor) + " already this.visited.", messageX, this.messageY, 0);
                 }
                 this.cmd("Step");
                 this.highlightEdge(startVertex, neighbor, 0);
-                if (this.visited[neighbor])
-                {
+                if (this.visited[neighbor]) {
                     this.cmd("Delete", nextMessage, "DNM");
                 }
 
-                if (!this.visited[neighbor])
-                {
+                if (!this.visited[neighbor]) {
                     this.cmd("Disconnect", this.circleID[startVertex], this.circleID[neighbor]);
                     this.cmd("Connect", this.circleID[startVertex], this.circleID[neighbor], ConnectedComponent.DFS_TREE_COLOR, this.curve[startVertex][neighbor], 1, "");
                     this.cmd("Move", this.highlightCircleL, this.x_pos_logical[neighbor], this.y_pos_logical[neighbor]);
@@ -439,16 +408,13 @@ ConnectedComponent.prototype.reset = function()
     // TODO:  Fix undo messing with setup vars.
     this.messageID = new Array();
     this.nextIndex = this.initialIndex;
-    for (var i = 0; i < this.size; i++)
-    {
+    for (var i = 0; i < this.size; i++) {
         this.adj_list_list[i] = this.old_adj_list_list[i];
         this.adj_list_index[i] = this.old_adj_list_index[i];
 
-        for (var j = 0; j < this.size; j++)
-        {
+        for (var j = 0; j < this.size; j++) {
             this.adj_matrix[i][j] = this.old_adj_matrix[i][j];
-            if (this.adj_matrix[i][j] > 0)
-            {
+            if (this.adj_matrix[i][j] > 0) {
                 this.adj_list_edges[i][j] = this.old_adj_list_edges[i][j];
             }
         }

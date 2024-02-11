@@ -220,13 +220,11 @@ ChangeCoordinate3D.prototype.init = function(am)
     this.HandPointHandIDs = new Array(ChangeCoordinate3D.HAND_POINTS.length);
     this.RobotHandAttachRobotID = this.nextIndex++;
     this.RobotHandAttachWorldID = this.nextIndex++;
-    for (i = 0; i < ChangeCoordinate3D.ROBOT_POINTS.length; i++)
-    {
+    for (i = 0; i < ChangeCoordinate3D.ROBOT_POINTS.length; i++) {
         this.RobotPointWorldIDs[i] = this.nextIndex++;
         this.RobotPointRobotIDs[i] = this.nextIndex++;
     }
-    for (i = 0; i < ChangeCoordinate3D.HAND_POINTS.length; i++)
-    {
+    for (i = 0; i < ChangeCoordinate3D.HAND_POINTS.length; i++) {
         this.HandPointWorldIDs[i] = this.nextIndex++;
         this.HandPointRobotIDs[i] = this.nextIndex++;
         this.HandPointHandIDs[i] = this.nextIndex++;
@@ -344,8 +342,7 @@ ChangeCoordinate3D.prototype.setupExtraAxes = function()
 
     this.otherAxes.push(tmpAxis);
 
-    for (var i = 0; i < tmpAxis.length; i++)
-    {
+    for (var i = 0; i < tmpAxis.length; i++) {
         this.cmd("SetLayer", tmpAxis[i], 1);
     }
     this.setAxisAlpha(tmpAxis, 0.5);
@@ -369,8 +366,7 @@ ChangeCoordinate3D.prototype.setupExtraAxes = function()
                            this.worldToScreenSpace(z2, 1),
                            ChangeCoordinate3D.AXIS_COLOR_0);
 
-    for (var i = 0; i < tmpAxis.length; i++)
-    {
+    for (var i = 0; i < tmpAxis.length; i++) {
         this.cmd("SetLayer", tmpAxis[i], 1);
     }
     this.setAxisAlpha(tmpAxis, 0.5);
@@ -396,8 +392,7 @@ ChangeCoordinate3D.prototype.setupExtraAxes = function()
                            this.worldToScreenSpace(z1, 2),
                            this.worldToScreenSpace(z2, 2),
                            ChangeCoordinate3D.AXIS_COLOR_0);
-    for (var i = 0; i < tmpAxis.length; i++)
-    {
+    for (var i = 0; i < tmpAxis.length; i++) {
         this.cmd("SetLayer", tmpAxis[i], 1);
     }
 
@@ -452,11 +447,9 @@ ChangeCoordinate3D.prototype.setupAxis = function()
 
 ChangeCoordinate3D.prototype.setAxisAlpha = function(axisList, newAlpha)
 {
-    for (var i = 0; i < axisList.length; i++)
-    {
+    for (var i = 0; i < axisList.length; i++) {
         this.cmd("SetAlpha", axisList[i], newAlpha);
-        if (i > 0)
-        {
+        if (i > 0) {
             this.cmd("SetEdgeAlpha", axisList[0], axisList[i], newAlpha);
         }
     }
@@ -467,14 +460,12 @@ ChangeCoordinate3D.prototype.setupObjects = function()
 {
 
     var i;
-    for (i = 0; i < ChangeCoordinate3D.ROBOT_POINTS.length; i++)
-    {
+    for (i = 0; i < ChangeCoordinate3D.ROBOT_POINTS.length; i++) {
 
 
         var point = this.worldToScreenSpace(ChangeCoordinate3D.ROBOT_POINTS[i], 1);
         this.cmd("CreateRectangle", this.RobotPointRobotIDs[i], "", 0, 0, point[0], point[1]);
-        if (i > 0)
-        {
+        if (i > 0) {
             this.cmd("Connect", this.RobotPointRobotIDs[i-1], this.RobotPointRobotIDs[i], "#000000", 0, 0);
         }
 
@@ -482,28 +473,24 @@ ChangeCoordinate3D.prototype.setupObjects = function()
         point = this.worldToScreenSpace(point, 2);
 
         this.cmd("CreateRectangle", this.RobotPointWorldIDs[i], "", 0, 0, point[0], point[1]);
-        if (i > 0)
-        {
+        if (i > 0) {
             this.cmd("Connect", this.RobotPointWorldIDs[i-1], this.RobotPointWorldIDs[i], "#000000", 0, 0);
         }
     }
 
-    for (var i = 0; i < ChangeCoordinate3D.ROBOT_EXTRA_CONNECTIONS.length; i++)
-    {
+    for (var i = 0; i < ChangeCoordinate3D.ROBOT_EXTRA_CONNECTIONS.length; i++) {
         this.cmd("Connect", this.RobotPointRobotIDs[ChangeCoordinate3D.ROBOT_EXTRA_CONNECTIONS[i][0]], this.RobotPointRobotIDs[ChangeCoordinate3D.ROBOT_EXTRA_CONNECTIONS[i][1]], "#000000", 0, 0, "");
         this.cmd("Connect", this.RobotPointWorldIDs[ChangeCoordinate3D.ROBOT_EXTRA_CONNECTIONS[i][0]], this.RobotPointWorldIDs[ChangeCoordinate3D.ROBOT_EXTRA_CONNECTIONS[i][1]], "#000000", 0, 0, "");
     }
 
 
 
-    for (i = 0; i < ChangeCoordinate3D.HAND_POINTS.length; i++)
-    {
+    for (i = 0; i < ChangeCoordinate3D.HAND_POINTS.length; i++) {
 
 
         var point = this.worldToScreenSpace(ChangeCoordinate3D.HAND_POINTS[i], 0);
         this.cmd("CreateRectangle", this.HandPointHandIDs[i], "", 0, 0, point[0], point[1]);
-        if (i > 0)
-        {
+        if (i > 0) {
             this.cmd("Connect", this.HandPointHandIDs[i-1], this.HandPointHandIDs[i], "#000000", 0, 0);
         }
 
@@ -511,8 +498,7 @@ ChangeCoordinate3D.prototype.setupObjects = function()
         var point2 = this.worldToScreenSpace(point, 1);
 
         this.cmd("CreateRectangle", this.HandPointRobotIDs[i], "", 0, 0, point2[0], point2[1]);
-        if (i > 0)
-        {
+        if (i > 0) {
             this.cmd("Connect", this.HandPointRobotIDs[i-1], this.HandPointRobotIDs[i], "#000000", 0, 0);
         }
 
@@ -520,13 +506,11 @@ ChangeCoordinate3D.prototype.setupObjects = function()
         point = this.worldToScreenSpace(point,2);
 
         this.cmd("CreateRectangle", this.HandPointWorldIDs[i], "", 0, 0, point[0], point[1]);
-        if (i > 0)
-        {
+        if (i > 0) {
             this.cmd("Connect", this.HandPointWorldIDs[i-1], this.HandPointWorldIDs[i], "#000000", 0, 0);
         }
     }
-    for (var i = 0; i < ChangeCoordinate3D.HAND_EXTRA_CONNECTIONS.length; i++)
-    {
+    for (var i = 0; i < ChangeCoordinate3D.HAND_EXTRA_CONNECTIONS.length; i++) {
         this.cmd("Connect", this.HandPointHandIDs[ChangeCoordinate3D.HAND_EXTRA_CONNECTIONS[i][0]], this.HandPointHandIDs[ChangeCoordinate3D.HAND_EXTRA_CONNECTIONS[i][1]], "#000000", 0, 0, "");
         this.cmd("Connect", this.HandPointRobotIDs[ChangeCoordinate3D.HAND_EXTRA_CONNECTIONS[i][0]], this.HandPointRobotIDs[ChangeCoordinate3D.HAND_EXTRA_CONNECTIONS[i][1]], "#000000", 0, 0, "");
         this.cmd("Connect", this.HandPointWorldIDs[ChangeCoordinate3D.HAND_EXTRA_CONNECTIONS[i][0]], this.HandPointWorldIDs[ChangeCoordinate3D.HAND_EXTRA_CONNECTIONS[i][1]], "#000000", 0, 0, "");
@@ -562,8 +546,7 @@ ChangeCoordinate3D.prototype.worldToScreenSpace = function(point, space)
 ChangeCoordinate3D.prototype.removeOldIDs = function()
 {
     var i;
-    for (i = 0; i < this.oldIDs.length; i++)
-    {
+    for (i = 0; i < this.oldIDs.length; i++) {
         this.cmd("Delete", this.oldIDs[i]);
     }
     this.oldIDs = [];
@@ -638,12 +621,10 @@ ChangeCoordinate3D.prototype.addControls = function()
 
 ChangeCoordinate3D.prototype.showAllAxesCallback = function()
 {
-    if (this.showAxisBox.checked)
-    {
+    if (this.showAxisBox.checked) {
         this.animationManager.setAllLayers([0,1]);
     }
-    else
-    {
+    else {
         this.animationManager.setAllLayers([0]);
     }
 
@@ -661,8 +642,7 @@ ChangeCoordinate3D.prototype.reset = function()
 
 ChangeCoordinate3D.prototype.transformTypeChangedCallback = function(globalToLocal)
 {
-    if (this.lastLocalToGlobal == globalToLocal)
-    {
+    if (this.lastLocalToGlobal == globalToLocal) {
         this.implementAction(this.changeTransformType.bind(this,globalToLocal));
     }
 }
@@ -672,23 +652,19 @@ ChangeCoordinate3D.prototype.transformTypeChangedCallback = function(globalToLoc
 
 ChangeCoordinate3D.prototype.changeRowColMajorCallback = function(rowMajor)
 {
-    if (this.rowMajor != rowMajor)
-    {
+    if (this.rowMajor != rowMajor) {
         this.implementAction(this.changeRowCol.bind(this),  rowMajor);
     }
 }
 
 ChangeCoordinate3D.prototype.transposeVisual = function(matrix)
 {
-    if (matrix.data.length == matrix.data[0].length)
-    {
+    if (matrix.data.length == matrix.data[0].length) {
         var matrixSize = matrix.data.length;
         var i, j, tmp, moveLabel1, moveLabel2;
         var moveLabels = [];
-        for (i = 1; i < matrixSize; i++)
-        {
-            for (j = 0; j <= i; j++)
-            {
+        for (i = 1; i < matrixSize; i++) {
+            for (j = 0; j <= i; j++) {
                 this.cmd("SetText", matrix.dataID[i][j], "");
                 this.cmd("SetText", matrix.dataID[j][i], "");
                 moveLabel1 = this.nextIndex++;
@@ -711,26 +687,21 @@ ChangeCoordinate3D.prototype.transposeVisual = function(matrix)
             }
         }
         this.cmd("Step");
-        for (i = 0; i < moveLabels.length; i++)
-        {
+        for (i = 0; i < moveLabels.length; i++) {
             this.cmd("Delete", moveLabels[i]);
         }
         this.resetMatrixLabels(matrix);
         return matrix;
     }
-    else
-    {
+    else {
         var savedData = matrix.data;
         var newData = new Array(savedData[0].length);
         var i,j;
-        for (i = 0; i < savedData[0].length; i++)
-        {
+        for (i = 0; i < savedData[0].length; i++) {
             newData[i] = [];
         }
-        for (i = 0; i < savedData.length; i++)
-        {
-            for (j = 0; j < savedData[0].length; j++)
-            {
+        for (i = 0; i < savedData.length; i++) {
+            for (j = 0; j < savedData[0].length; j++) {
                 newData[j][i] = savedData[i][j];
             }
 
@@ -745,12 +716,10 @@ ChangeCoordinate3D.prototype.changeRowCol = function(rowMajor)
 {
     this.commands = new Array();
     this.rowMajor= rowMajor;
-    if (this.rowMajorButton.checked != this.rowMajor)
-    {
+    if (this.rowMajorButton.checked != this.rowMajor) {
         this.rowMajorButton.checked = this.rowMajor;
     }
-    if (this.colMajorButton.checked == this.rowMajor)
-    {
+    if (this.colMajorButton.checked == this.rowMajor) {
         this.colMajorButton.checked = !this.rowMajor;
     }
     this.removeOldIDs();
@@ -766,12 +735,10 @@ ChangeCoordinate3D.prototype.changeRowCol = function(rowMajor)
 
 ChangeCoordinate3D.prototype.fixNumber = function(value, defaultVal)
 {
-        if (value == "" || value == "-" || value == "." || value == "-." || isNaN(parseFloat(value)))
-        {
+        if (value == "" || value == "-" || value == "." || value == "-." || isNaN(parseFloat(value))) {
             value = defaultVal;
         }
-        else
-        {
+        else {
             value = String(parseFloat(value));
         }
         return value
@@ -791,12 +758,10 @@ ChangeCoordinate3D.prototype.transformPointCallback = function()
 
 ChangeCoordinate3D.prototype.doPointTransform = function(params)
 {
-    if (this.lastLocalToGlobal)
-    {
+    if (this.lastLocalToGlobal) {
         return this.localToGlobal(params);
     }
-    else
-    {
+    else {
         return this.globalToLocal(params);
     }
 }
@@ -810,13 +775,11 @@ ChangeCoordinate3D.prototype.rotatePoint = function(point, matrix, xPos, yPos, f
     var logicalPoint;
     var descriptLabel = this.nextIndex++;
     // this.oldIDs.push(descriptLabel);
-    if (this.rowMajor)
-    {
+    if (this.rowMajor) {
     this.cmd("CreateLabel", descriptLabel, "", xPos + 3 * ChangeCoordinate3D.MATRIX_ELEM_WIDTH + ChangeCoordinate3D.EQUALS_SPACING,
              yPos + 2*ChangeCoordinate3D.MATRIX_ELEM_HEIGHT + 3, 0);
     }
-    else
-    {
+    else {
         this.cmd("CreateLabel", descriptLabel, "", xPos + 3 * ChangeCoordinate3D.MATRIX_ELEM_WIDTH + ChangeCoordinate3D.EQUALS_SPACING,
                  yPos + 3*ChangeCoordinate3D.MATRIX_ELEM_HEIGHT + 3, 0);
 
@@ -824,13 +787,11 @@ ChangeCoordinate3D.prototype.rotatePoint = function(point, matrix, xPos, yPos, f
 
     var inertialPositionMatrix;
 
-    if (this.rowMajor)
-    {
+    if (this.rowMajor) {
         inertialPositionMatrix = this.createMatrix([["", "", ""]], xPos + 3 * ChangeCoordinate3D.MATRIX_ELEM_WIDTH + ChangeCoordinate3D.EQUALS_SPACING,
                                                     yPos);
     }
-    else
-    {
+    else {
         inertialPositionMatrix = this.createMatrix([[""], [""], [""]],
                                                     xPos + 4 * ChangeCoordinate3D.MATRIX_ELEM_WIDTH + ChangeCoordinate3D.EQUALS_SPACING + ChangeCoordinate3D.MATRIX_MULTIPLY_SPACING,
                                                     yPos);
@@ -838,13 +799,11 @@ ChangeCoordinate3D.prototype.rotatePoint = function(point, matrix, xPos, yPos, f
     }
     var equalLabel1 = this.nextIndex++;
     this.oldIDs.push(equalLabel1);
-    if (this.rowMajor)
-    {
+    if (this.rowMajor) {
         opX = xPos + 3 * ChangeCoordinate3D.MATRIX_ELEM_WIDTH + ChangeCoordinate3D.EQUALS_SPACING / 2;
         opY = yPos + ChangeCoordinate3D.MATRIX_ELEM_HEIGHT / 2;
     }
-    else
-    {
+    else {
         opX = xPos + 4 * ChangeCoordinate3D.MATRIX_ELEM_WIDTH + ChangeCoordinate3D.EQUALS_SPACING / 2 + ChangeCoordinate3D.MATRIX_MULTIPLY_SPACING;
         opY = yPos + ChangeCoordinate3D.MATRIX_ELEM_HEIGHT;
 
@@ -852,26 +811,22 @@ ChangeCoordinate3D.prototype.rotatePoint = function(point, matrix, xPos, yPos, f
     }
 
     this.cmd("CreateLabel", equalLabel1, "=", opX , opY);
-    if (this.rowMajor)
-    {
+    if (this.rowMajor) {
         this.multiplyMatrix(point, matrix, inertialPositionMatrix, descriptLabel, 2);
 
     }
-    else
-    {
+    else {
         this.multiplyMatrix(matrix, point, inertialPositionMatrix, descriptLabel, 2);
 
     }
     this.addMatrixIDsToList(inertialPositionMatrix, this.oldIDs);
     this.cmd("Delete", descriptLabel);
     var inertialPositionID = this.nextIndex++;
-    if (this.rowMajor)
-    {
+    if (this.rowMajor) {
         logicalPoint = inertialPositionMatrix.data[0].slice(0);
 
     }
-    else
-    {
+    else {
         logicalPoint =  [inertialPositionMatrix.data[0][0], inertialPositionMatrix.data[1][0], inertialPositionMatrix.data[2][0]];
     }
     screenPoint = this.worldToScreenSpace(logicalPoint, fromSpace);
@@ -897,16 +852,14 @@ ChangeCoordinate3D.prototype.translatePoint = function(point, transVector, xPos,
 {
     var logicalPoint = new Array(2);
     var robotPositionMatrix;
-    if (this.rowMajor)
-    {
+    if (this.rowMajor) {
         logicalPoint[0] = point.data[0][0] + transVector.data[0][0];
         logicalPoint[1] = point.data[0][1] +  transVector.data[0][1];
         logicalPoint[2] = point.data[0][2] +  transVector.data[0][2];
         robotPositionMatrix = this.createMatrix([["", "", ""]], xPos + 3*ChangeCoordinate3D.MATRIX_ELEM_WIDTH + ChangeCoordinate3D.EQUALS_SPACING,
                                                 yPos);
     }
-    else
-    {
+    else {
         logicalPoint[0] = point.data[0][0] + transVector.data[0][0];
         logicalPoint[1] = point.data[1][0] +  transVector.data[1][0];
         logicalPoint[2] = point.data[2][0] +  transVector.data[2][0];
@@ -920,16 +873,14 @@ ChangeCoordinate3D.prototype.translatePoint = function(point, transVector, xPos,
     this.oldIDs.push(addLabel1);
     this.oldIDs.push(equalLabel3);
     var op2X, op2Y;
-    if (this.rowMajor)
-    {
+    if (this.rowMajor) {
         opX = xPos + 3*ChangeCoordinate3D.MATRIX_ELEM_WIDTH + ChangeCoordinate3D.EQUALS_SPACING / 2;
         opY = yPos + ChangeCoordinate3D.MATRIX_ELEM_HEIGHT / 2;
         op2X = xPos - ChangeCoordinate3D.EQUALS_SPACING / 2;
         op2Y = yPos + ChangeCoordinate3D.MATRIX_ELEM_HEIGHT / 2;
 
     }
-    else
-    {
+    else {
         opX = xPos + ChangeCoordinate3D.MATRIX_ELEM_WIDTH + ChangeCoordinate3D.EQUALS_SPACING / 2;
         opY = yPos + ChangeCoordinate3D.MATRIX_ELEM_HEIGHT;
         op2X = xPos - ChangeCoordinate3D.EQUALS_SPACING / 2;
@@ -987,12 +938,10 @@ ChangeCoordinate3D.prototype.addMultiply = function(position, transVector, rotMa
 
     this.cmd("Disconnect", initialPointID, pointID);
 
-    if (this.rowMajor)
-    {
+    if (this.rowMajor) {
         this.moveMatrix(newPosition, rotX - 3 * ChangeCoordinate3D.MATRIX_ELEM_WIDTH - ChangeCoordinate3D.MATRIX_MULTIPLY_SPACING,transY)
     }
-    else
-    {
+    else {
         this.moveMatrix(newPosition, rotX + 3 * ChangeCoordinate3D.MATRIX_ELEM_WIDTH + ChangeCoordinate3D.MATRIX_MULTIPLY_SPACING, transY)
     }
 
@@ -1010,13 +959,11 @@ ChangeCoordinate3D.prototype.addMultiply = function(position, transVector, rotMa
 
 
     var logicalPoint;
-    if (this.rowMajor)
-    {
+    if (this.rowMajor) {
         logicalPoint = robotPositionMatrix.data[0].slice(0);
 
     }
-    else
-    {
+    else {
         logicalPoint =  [robotPositionMatrix.data[0][0], robotPositionMatrix.data[1][0], robotPositionMatrix.data[2][0]];
     }
 
@@ -1045,12 +992,10 @@ ChangeCoordinate3D.prototype.multiplyAdd = function(position, rotMatrix, transVe
 
     this.cmd("Step");
 
-    if (this.rowMajor)
-    {
+    if (this.rowMajor) {
         this.moveMatrix(inertialPositionMatrix, transX - 3 * ChangeCoordinate3D.MATRIX_ELEM_WIDTH - ChangeCoordinate3D.EQUALS_SPACING,transY)
     }
-    else
-    {
+    else {
         this.moveMatrix(inertialPositionMatrix, transX - ChangeCoordinate3D.MATRIX_ELEM_WIDTH - ChangeCoordinate3D.EQUALS_SPACING, transY)
     }
 
@@ -1063,13 +1008,11 @@ ChangeCoordinate3D.prototype.multiplyAdd = function(position, rotMatrix, transVe
     this.oldIDs.push(robotPositionID);
 
     var logicalPoint;
-    if (this.rowMajor)
-    {
+    if (this.rowMajor) {
         logicalPoint = robotPositionMatrix.data[0].slice(0);
 
     }
-    else
-    {
+    else {
         logicalPoint =  [robotPositionMatrix.data[0][0], robotPositionMatrix.data[1][0], robotPositionMatrix.data[2][0]];
     }
 
@@ -1113,13 +1056,11 @@ ChangeCoordinate3D.prototype.localToGlobal = function (params)
     this.cmd("Connect", this.axisHand[0], pointInHandSpaceID, ChangeCoordinate3D.TRANSFORMED_POINT_COLORS[0], 0, 1, "");
 
     var initialPointMatrix;
-    if (this.rowMajor)
-    {
+    if (this.rowMajor) {
         initialPointMatrix = this.createMatrix([[x, y, z]], ChangeCoordinate3D.HAND_MATRIX_START_X - 3 * ChangeCoordinate3D.MATRIX_ELEM_WIDTH - ChangeCoordinate3D.MATRIX_MULTIPLY_SPACING,
                                       ChangeCoordinate3D.HAND_MATRIX_START_Y);
     }
-    else
-    {
+    else {
         initialPointMatrix = this.createMatrix([[x], [y], [z]], ChangeCoordinate3D.HAND_MATRIX_START_X + 3 * ChangeCoordinate3D.MATRIX_ELEM_WIDTH + ChangeCoordinate3D.MATRIX_MULTIPLY_SPACING,
                                                ChangeCoordinate3D.HAND_MATRIX_START_Y);
 
@@ -1135,13 +1076,11 @@ ChangeCoordinate3D.prototype.localToGlobal = function (params)
 
 
 
-    if (this.rowMajor)
-    {
+    if (this.rowMajor) {
         this.moveMatrix(robotPositionMatrix,  ChangeCoordinate3D.ROBOT_MATRIX_START_X - 3 * ChangeCoordinate3D.MATRIX_ELEM_WIDTH - ChangeCoordinate3D.MATRIX_MULTIPLY_SPACING,
                         ChangeCoordinate3D.ROBOT_MATRIX_START_Y);
     }
-    else
-    {
+    else {
         this.moveMatrix(robotPositionMatrix,  ChangeCoordinate3D.ROBOT_MATRIX_START_X + 3* ChangeCoordinate3D.MATRIX_ELEM_WIDTH + ChangeCoordinate3D.MATRIX_MULTIPLY_SPACING,
                         ChangeCoordinate3D.ROBOT_MATRIX_START_Y);
 
@@ -1165,59 +1104,50 @@ ChangeCoordinate3D.prototype.changeTransformType = function(globalToLocal)
     this.commands = [];
     this.lastLocalToGlobal = !globalToLocal;
     this.removeOldIDs();
-    if (globalToLocal)
-    {
+    if (globalToLocal) {
         this.cmd("SetText", this.robotLabel1ID, "World Space to Robot Space\n(Orientation)");
 
     }
-    else
-    {
+    else {
         this.cmd("SetText", this.robotLabel1ID, "Robot Space to World Space\n(Orientation)");
     }
     this.cmd("Step");
     this.RobotMatrix = this.transposeVisual(this.RobotMatrix)
 
-    if (globalToLocal)
-    {
+    if (globalToLocal) {
         this.cmd("SetText", this.robotLabel2ID, "World Space to Robot Space\n(Position)");
 
     }
-    else
-    {
+    else {
         this.cmd("SetText", this.robotLabel2ID, "Robot Space to World Space\n(Position)");
     }
     this.cmd("Step");
     this.negateMatrixVisual(this.RobotPosition);
     this.cmd("Step");
 
-    if (globalToLocal)
-    {
+    if (globalToLocal) {
         this.cmd("SetText", this.handLabel1ID, "Robot Space to Hand Space\n(Orientation)");
 
     }
-    else
-    {
+    else {
         this.cmd("SetText", this.handLabel1ID, "Hand Space to Robot Space\n(Orientation)");
     }
 
     this.cmd("Step");
     this.HandMatrix = this.transposeVisual(this.HandMatrix)
 
-    if (globalToLocal)
-    {
+    if (globalToLocal) {
         this.cmd("SetText", this.handLabel2ID, "Robot Space to Hand Space\n(Position)");
 
     }
-    else
-    {
+    else {
         this.cmd("SetText", this.handLabel2ID, "Hand Space to Robot Space\n(Position)");
     }
     this.cmd("Step");
     this.negateMatrixVisual(this.HandPosition);
     this.cmd("Step");
 
-    if (globalToLocal)
-    {
+    if (globalToLocal) {
         this.cmd("Move", this.robotLabel1ID, ChangeCoordinate3D.ROBOT_POSITION_START_X, ChangeCoordinate3D.ROBOT_POSITION_START_Y - 25);
         this.moveMatrix(this.RobotMatrix, ChangeCoordinate3D.ROBOT_POSITION_START_X, ChangeCoordinate3D.ROBOT_POSITION_START_Y)
 
@@ -1231,8 +1161,7 @@ ChangeCoordinate3D.prototype.changeTransformType = function(globalToLocal)
         this.cmd("Move", this.handLabel2ID, ChangeCoordinate3D.HAND_MATRIX_START_X+ ChangeCoordinate3D.EQUALS_SPACING, ChangeCoordinate3D.HAND_MATRIX_START_Y - 25);
         this.moveMatrix(this.HandPosition,  ChangeCoordinate3D.HAND_MATRIX_START_X+ ChangeCoordinate3D.EQUALS_SPACING, ChangeCoordinate3D.HAND_MATRIX_START_Y);
     }
-    else
-    {
+    else {
         this.cmd("Move", this.robotLabel1ID, ChangeCoordinate3D.ROBOT_MATRIX_START_X, ChangeCoordinate3D.ROBOT_MATRIX_START_Y - 25);
         this.moveMatrix(this.RobotMatrix, ChangeCoordinate3D.ROBOT_MATRIX_START_X, ChangeCoordinate3D.ROBOT_MATRIX_START_Y)
 
@@ -1253,10 +1182,8 @@ ChangeCoordinate3D.prototype.changeTransformType = function(globalToLocal)
 ChangeCoordinate3D.prototype.negateMatrixVisual = function(matrix)
 {
     var i,j
-    for (i = 0; i < matrix.data.length; i++)
-    {
-        for (j = 0; j < matrix.data[i].length; j++)
-        {
+    for (i = 0; i < matrix.data.length; i++) {
+        for (j = 0; j < matrix.data[i].length; j++) {
             matrix.data[i][j] = -matrix.data[i][j]
         }
     }
@@ -1288,13 +1215,11 @@ ChangeCoordinate3D.prototype.globalToLocal = function(params)
     this.cmd("Connect", this.axisWorld[0], pointInWorldSpaceID, ChangeCoordinate3D.TRANSFORMED_POINT_COLORS[2], 0, 1, "");
 
     var initialPointMatrix;
-    if (this.rowMajor)
-    {
+    if (this.rowMajor) {
         initialPointMatrix = this.createMatrix([[x, y, z]], ChangeCoordinate3D.ROBOT_MATRIX_START_X - 3 * ChangeCoordinate3D.MATRIX_ELEM_WIDTH,
                                                ChangeCoordinate3D.ROBOT_MATRIX_START_Y);
     }
-    else
-    {
+    else {
         initialPointMatrix = this.createMatrix([[x], [y], [z]], ChangeCoordinate3D.ROBOT_MATRIX_START_X - ChangeCoordinate3D.MATRIX_ELEM_WIDTH,
                                                ChangeCoordinate3D.ROBOT_MATRIX_START_Y);
 
@@ -1311,13 +1236,11 @@ ChangeCoordinate3D.prototype.globalToLocal = function(params)
     var robotPositionMatrix = positionAndID[0];
     var newPositionID = positionAndID[1];
 
-    if (this.rowMajor)
-    {
+    if (this.rowMajor) {
         this.moveMatrix(robotPositionMatrix,  ChangeCoordinate3D.HAND_MATRIX_START_X - 3 * ChangeCoordinate3D.MATRIX_ELEM_WIDTH,
                         ChangeCoordinate3D.HAND_MATRIX_START_Y);
     }
-    else
-    {
+    else {
         this.moveMatrix(robotPositionMatrix,  ChangeCoordinate3D.HAND_MATRIX_START_X - ChangeCoordinate3D.MATRIX_ELEM_WIDTH,
                         ChangeCoordinate3D.HAND_MATRIX_START_Y);
 
@@ -1346,33 +1269,28 @@ ChangeCoordinate3D.prototype.moveObjects = function()
     this.removeOldIDs();
     var i, j;
 
-    for (i = 0; i < this.otherAxes.length; i++)
-    {
-        for (j = 0; j < this.otherAxes[i].length; j++)
-        {
+    for (i = 0; i < this.otherAxes.length; i++) {
+        for (j = 0; j < this.otherAxes[i].length; j++) {
             this.cmd("Delete", this.otherAxes[i][j]);
         }
     }
 
 
     var i;
-    for (i = 0; i < ChangeCoordinate3D.ROBOT_POINTS.length; i++)
-    {
+    for (i = 0; i < ChangeCoordinate3D.ROBOT_POINTS.length; i++) {
 
         this.cmd("Delete", this.RobotPointRobotIDs[i]);
         this.cmd("Delete", this.RobotPointWorldIDs[i]);
     }
-    for (i = 0; i < ChangeCoordinate3D.HAND_POINTS.length; i++)
-    {
+    for (i = 0; i < ChangeCoordinate3D.HAND_POINTS.length; i++) {
         this.cmd("Delete", this.HandPointHandIDs[i]);
         this.cmd("Delete", this.HandPointRobotIDs[i]);
         this.cmd("Delete", this.HandPointWorldIDs[i]);
     }
     this.cmd("Delete", this.RobotHandAttachRobotID);
     this.cmd("Delete", this.RobotHandAttachWorldID);
-    this.PositionIndex+= 1;
-    if (this.PositionIndex >= ChangeCoordinate3D.ROBOT_POSITION_VALUES.length)
-    {
+    this.PositionIndex++;
+    if (this.PositionIndex >= ChangeCoordinate3D.ROBOT_POSITION_VALUES.length) {
         this.PositionIndex = 0;
     }
 
@@ -1389,8 +1307,7 @@ ChangeCoordinate3D.prototype.moveObjects = function()
     this.RobotMatrix.data = this.RobotMatrixValues;
     this.HandPosition.data = [this.HandPositionValues];
     this.HandMatrix.data =this.HandMatrixValues;
-    if (!this.rowMajor)
-    {
+    if (!this.rowMajor) {
         this.RobotPosition.transpose();
         this.RobotMatrix.transpose();
         this.HandPosition.transpose();
@@ -1416,10 +1333,8 @@ ChangeCoordinate3D.prototype.addMatrix = function(mat1, mat2, mat3, numDigits)
 {
     var i;
     var j;
-    for (i = 0; i < mat1.data.length; i++)
-    {
-        for (j = 0; j < mat1.data[i].length; j++)
-        {
+    for (i = 0; i < mat1.data.length; i++) {
+        for (j = 0; j < mat1.data[i].length; j++) {
             explainText = "";
             var value = 0;
             this.cmd("SetHighlight", mat1.dataID[i][j], 1);
@@ -1442,18 +1357,14 @@ ChangeCoordinate3D.prototype.multiplyMatrix = function(mat1, mat2, mat3, explain
     var i;
     var j;
     var explainText = "";
-    for (i = 0; i < mat1.data.length; i++)
-    {
-        for (j = 0; j < mat2.data[0].length; j++)
-        {
+    for (i = 0; i < mat1.data.length; i++) {
+        for (j = 0; j < mat2.data[0].length; j++) {
             var explainText = "";
             var value = 0;
-            for (k = 0; k < mat2.data.length; k++)
-            {
+            for (k = 0; k < mat2.data.length; k++) {
                 this.cmd("SetHighlight", mat1.dataID[i][k], 1);
                 this.cmd("SetHighlight", mat2.dataID[k][j], 1);
-                if (explainText != "")
-                {
+                if (explainText != "") {
                         explainText = explainText + " + ";
                 }
                 value = value + mat1.data[i][k] * mat2.data[k][j];
@@ -1480,12 +1391,10 @@ ChangeCoordinate3D.prototype.standardize = function(lab, digits)
     digits = (digits == undefined) ? 3 : digits;
     var shift = Math.pow(10, digits);
     var newLab = Math.round(lab * shift) / shift;
-    if (isNaN(newLab))
-    {
+    if (isNaN(newLab)) {
         return lab;
     }
-    else
-    {
+    else {
         return newLab;
     }
 }
@@ -1494,10 +1403,8 @@ ChangeCoordinate3D.prototype.standardize = function(lab, digits)
 ChangeCoordinate3D.prototype.resetMatrixLabels = function(mat, numDigits)
 {
     var i,j, newLab;
-    for (i = 0; i < mat.data.length; i++)
-    {
-        for (j = 0; j < mat.data[i].length; j++)
-        {
+    for (i = 0; i < mat.data.length; i++) {
+        for (j = 0; j < mat.data[i].length; j++) {
             newLab = this.standardize(mat.data[i][j], numDigits);
             this.cmd("SetText", mat.dataID[i][j], newLab);
         }
@@ -1512,8 +1419,7 @@ ChangeCoordinate3D.prototype.moveMatrix = function(mat, x, y)
     var width = 0;
 
     var i, j;
-    for (i = 0; i < mat.data.length; i++)
-    {
+    for (i = 0; i < mat.data.length; i++) {
         width = Math.max(width, mat.data[i].length);
     }
 
@@ -1526,10 +1432,8 @@ ChangeCoordinate3D.prototype.moveMatrix = function(mat, x, y)
     this.cmd("Move", mat.rightBrack2,   x + width * ChangeCoordinate3D.MATRIX_ELEM_WIDTH, y);
     this.cmd("Move", mat.rightBrack3,  x+ width * ChangeCoordinate3D.MATRIX_ELEM_WIDTH, y + height * ChangeCoordinate3D.MATRIX_ELEM_HEIGHT);
 
-    for (i = 0; i < mat.data.length; i++)
-    {
-        for (j = 0; j < mat.data[i].length; j++)
-        {
+    for (i = 0; i < mat.data.length; i++) {
+        for (j = 0; j < mat.data[i].length; j++) {
             this.cmd("Move", mat.dataID[i][j],
                      x + j*ChangeCoordinate3D.MATRIX_ELEM_WIDTH + ChangeCoordinate3D.MATRIX_ELEM_WIDTH / 2,
                      y + i*ChangeCoordinate3D.MATRIX_ELEM_HEIGHT + ChangeCoordinate3D.MATRIX_ELEM_HEIGHT / 2);
@@ -1551,10 +1455,8 @@ ChangeCoordinate3D.prototype.addMatrixIDsToList = function(mat, list)
     list.push(mat.rightBrack2);
     list.push(mat.rightBrack3);
     var i,j;
-    for (i = 0; i < mat.data.length; i++)
-    {
-        for (j = 0; j < mat.data[i].length; j++)
-        {
+    for (i = 0; i < mat.data.length; i++) {
+        for (j = 0; j < mat.data[i].length; j++) {
             list.push(mat.dataID[i][j]);
         }
 
@@ -1566,8 +1468,7 @@ ChangeCoordinate3D.prototype.deleteMatrix = function(mat)
     var IDList = [];
     this.addMatrixIDsToList(mat, IDList);
     var i;
-    for (i = 0; i < IDList.length; i++)
-    {
+    for (i = 0; i < IDList.length; i++) {
         this.cmd("Delete", IDList[i]);
     }
 }
@@ -1584,10 +1485,8 @@ ChangeCoordinate3D.prototype.aplyFunctionToMatrixElems = function(mat, command, 
     this.cmd(command, mat.rightBrack2, value);
     this.cmd(command, mat.rightBrack3, value);
     var i,j;
-    for (i = 0; i < mat.data.length; i++)
-    {
-        for (j = 0; j < mat.data[i].length; j++)
-        {
+    for (i = 0; i < mat.data.length; i++) {
+        for (j = 0; j < mat.data[i].length; j++) {
             this.cmd(command, mat.dataID[i][j], value);
         }
     }
@@ -1602,17 +1501,13 @@ function multiply(lhs, rhs)
     var resultMat = new Array(lhs.length);
     var i, j, k;
 
-    for (i = 0; i < lhs.length; i++)
-    {
+    for (i = 0; i < lhs.length; i++) {
         resultMat[i] = new Array(rhs[0].length);
     }
-    for (i = 0; i < lhs.length; i++)
-    {
-        for (j = 0; j < rhs[0].length; j++)
-        {
+    for (i = 0; i < lhs.length; i++) {
+        for (j = 0; j < rhs[0].length; j++) {
             var value = 0;
-            for (k = 0; k < rhs.length; k++)
-            {
+            for (k = 0; k < rhs.length; k++) {
                 value = value + lhs[i][k] * rhs[k][j];
             }
             resultMat[i][j] = value;
@@ -1628,11 +1523,9 @@ ChangeCoordinate3D.prototype.add = function(lhs, rhs)
     var resultMat = new Array(lhs.length);
     var i,j;
 
-    for (i = 0; i < lhs.length; i++)
-    {
+    for (i = 0; i < lhs.length; i++) {
         resultMat[i] = new Array(lhs[i].length);
-        for (j = 0; j < lhs[i].length; j++)
-        {
+        for (j = 0; j < lhs[i].length; j++) {
             resultMat[i][j] = lhs[i][j] + rhs[i][j];
 
         }
@@ -1656,12 +1549,10 @@ ChangeCoordinate3D.prototype.createMatrix = function(contents, x, y)
 
     var i, j;
     mat.dataID = new Array(mat.data.length);
-    for (i = 0; i < mat.data.length; i++)
-    {
+    for (i = 0; i < mat.data.length; i++) {
         width = Math.max(width, mat.data[i].length);
         mat.dataID[i] = new Array(mat.data[i].length);
-        for (j = 0; j < mat.data[i].length; j++)
-        {
+        for (j = 0; j < mat.data[i].length; j++) {
             mat.dataID[i][j] = this.nextIndex++;
         }
     }
@@ -1674,10 +1565,8 @@ ChangeCoordinate3D.prototype.createMatrix = function(contents, x, y)
     this.cmd("CreateRectangle", mat.rightBrack2, "", 1, height * ChangeCoordinate3D.MATRIX_ELEM_HEIGHT,  x + width * ChangeCoordinate3D.MATRIX_ELEM_WIDTH, y, "center","top");
     this.cmd("CreateRectangle", mat.rightBrack3, "", 5, 1,  x+ width * ChangeCoordinate3D.MATRIX_ELEM_WIDTH, y + height * ChangeCoordinate3D.MATRIX_ELEM_HEIGHT , "right","center");
 
-    for (i = 0; i < mat.data.length; i++)
-    {
-        for (j = 0; j < mat.data[i].length; j++)
-        {
+    for (i = 0; i < mat.data.length; i++) {
+        for (j = 0; j < mat.data[i].length; j++) {
             this.cmd("CreateLabel", mat.dataID[i][j], mat.data[i][j],
                      x + j*ChangeCoordinate3D.MATRIX_ELEM_WIDTH + ChangeCoordinate3D.MATRIX_ELEM_WIDTH / 2,
                      y + i*ChangeCoordinate3D.MATRIX_ELEM_HEIGHT + ChangeCoordinate3D.MATRIX_ELEM_HEIGHT / 2);
@@ -1705,14 +1594,11 @@ Matrix.prototype.transpose = function()
 {
     var newData = new Array(this.data[0].length);
     var i,j;
-    for (i = 0; i < this.data[0].length; i++)
-    {
+    for (i = 0; i < this.data[0].length; i++) {
         newData[i] = new Array(this.data.length);
     }
-    for (i = 0; i < this.data.length; i++)
-    {
-        for (j = 0; j < this.data[i].length; j++)
-        {
+    for (i = 0; i < this.data.length; i++) {
+        for (j = 0; j < this.data[i].length; j++) {
             newData[j][i] = this.data[i][j];
         }
     }

@@ -24,6 +24,7 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+
 function AnimatedLabel(id, val, center, initialWidth, ctx)
 {
     AnimatedLabel.superclass.constructor.call(this);

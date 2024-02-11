@@ -83,16 +83,13 @@ DPMatrixMultiply.prototype.init = function(am)
 
     this.codeID = Array(this.code.length);
     var i, j;
-    for (i = 0; i < this.code.length; i++)
-    {
+    for (i = 0; i < this.code.length; i++) {
         this.codeID[i] = new Array(this.code[i].length);
-        for (j = 0; j < this.code[i].length; j++)
-        {
+        for (j = 0; j < this.code[i].length; j++) {
             this.codeID[i][j] = this.nextIndex++;
             this.cmd("CreateLabel", this.codeID[i][j], this.code[i][j], DPMatrixMultiply.CODE_START_X, DPMatrixMultiply.CODE_START_Y + i * DPMatrixMultiply.CODE_LINE_HEIGHT, 0);
             this.cmd("SetForegroundColor", this.codeID[i][j], DPMatrixMultiply.CODE_STANDARD_COLOR);
-            if (j > 0)
-            {
+            if (j > 0) {
                 this.cmd("AlignRight", this.codeID[i][j], this.codeID[i][j-1]);
             }
         }
@@ -145,10 +142,8 @@ DPMatrixMultiply.prototype.buildTable = function(S1, S2)
     var sequence2ID = new Array(y);
 
     this.S1TableID = new Array(x);
-    for (i = 0; i <=x; i++)
-    {
-        if (i > 0)
-        {
+    for (i = 0; i <=x; i++) {
+        if (i > 0) {
             this.S1TableID[i-1] = this.nextIndex++;
             this.cmd("CreateLabel", this.S1TableID[i-1], S1.charAt(i-1),DPMatrixMultiply.TABLE_START_X + i*DPMatrixMultiply.TABLE_ELEM_WIDTH, DPMatrixMultiply.TABLE_START_Y - 2 * DPMatrixMultiply.TABLE_ELEM_HEIGHT);
             this.oldIDs.push(this.S1TableID[i-1]);
@@ -162,10 +157,8 @@ DPMatrixMultiply.prototype.buildTable = function(S1, S2)
 
 
     this.S2TableID = new Array(y);
-    for (i = 0; i <=y; i++)
-    {
-        if (i > 0)
-        {
+    for (i = 0; i <=y; i++) {
+        if (i > 0) {
             this.S2TableID[i-1] = this.nextIndex++;
             this.cmd("CreateLabel", this.S2TableID[i-1], S2.charAt(i-1),DPMatrixMultiply.TABLE_START_X - 2 * DPMatrixMultiply.TABLE_ELEM_WIDTH, DPMatrixMultiply.TABLE_START_Y + i * DPMatrixMultiply.TABLE_ELEM_HEIGHT);
             this.oldIDs.push(this.S2TableID[i-1]);
@@ -177,15 +170,13 @@ DPMatrixMultiply.prototype.buildTable = function(S1, S2)
     }
 
 
-    for (i = 0; i <= x; i++)
-    {
+    for (i = 0; i <= x; i++) {
         this.tableID[i] = new Array(y+1);
         this.tableVals[i] =new Array(y+1);
         this.tableXPos[i] = new Array(y+1);
         this.tableYPos[i] = new Array(y+1);
 
-        for (j = 0; j <= y; j++)
-        {
+        for (j = 0; j <= y; j++) {
             this.tableID[i][j] = this.nextIndex++;
             this.tableVals[i][j] = -1;
             this.oldIDs.push(this.tableID[i][j]);
@@ -207,8 +198,7 @@ DPMatrixMultiply.prototype.buildTable = function(S1, S2)
 
 DPMatrixMultiply.prototype.clearOldIDs = function()
 {
-    for (var i = 0; i < this.oldIDs.length; i++)
-    {
+    for (var i = 0; i < this.oldIDs.length; i++) {
         this.cmd("Delete", this.oldIDs[i]);
     }
     this.oldIDs =[];
@@ -236,12 +226,10 @@ DPMatrixMultiply.prototype.recursiveCallback = function(event)
 {
     var fibValue;
 
-    if (this.S1Field.value != "" && this.S2Field.value != "" )
-    {
+    if (this.S1Field.value != "" && this.S2Field.value != "" ) {
         this.implementAction(this.recursiveLCS.bind(this),this.S1Field.value + ";" + this.S2Field.value);
     }
-    else
-    {
+    else {
         this.implementAction(this.helpMessage.bind(this), "");
     }
 }
@@ -252,12 +240,10 @@ DPMatrixMultiply.prototype.tableCallback = function(event)
     var fibValue;
 
 
-    if (this.S1Field.value != "" && this.S2Field.value != "" )
-    {
+    if (this.S1Field.value != "" && this.S2Field.value != "" ) {
         this.implementAction(this.tableLCS.bind(this),this.S1Field.value + ";" + this.S2Field.value);
     }
-    else
-    {
+    else {
         this.implementAction(this.helpMessage.bind(this), "");
     }
 
@@ -269,12 +255,10 @@ DPMatrixMultiply.prototype.memoizedCallback = function(event)
     var fibValue;
 
 
-    if (this.S1Field.value != "" && this.S2Field.value != "" )
-    {
+    if (this.S1Field.value != "" && this.S2Field.value != "" ) {
         this.implementAction(this.memoizedLCS.bind(this), this.S1Field.value + ";" + this.S2Field.value);
     }
-    else
-    {
+    else {
         this.implementAction(this.helpMessage.bind(this), "");
     }
 
@@ -329,26 +313,21 @@ DPMatrixMultiply.prototype.LCS = function(S1, S2, x, y, xPos, ID)
     this.cmd("Step");
     this.cmd("SetForegroundColor", this.codeID[0][1], DPMatrixMultiply.CODE_STANDARD_COLOR);
 
-    if (x == -1 || y == -1)
-    {
-        if (x == -1)
-        {
+    if (x == -1 || y == -1) {
+        if (x == -1) {
             this.cmd("SetForegroundColor", this.codeID[1][1], DPMatrixMultiply.CODE_HIGHLIGHT_COLOR);
 
         }
-        if (y == -1)
-        {
+        if (y == -1) {
             this.cmd("SetForegroundColor", this.codeID[1][3], DPMatrixMultiply.CODE_HIGHLIGHT_COLOR);
 
         }
         this.cmd("Step");
-        if (x == -1)
-        {
+        if (x == -1) {
             this.cmd("SetForegroundColor", this.codeID[1][1], DPMatrixMultiply.CODE_STANDARD_COLOR);
 
         }
-        if (y == -1)
-        {
+        if (y == -1) {
             this.cmd("SetForegroundColor", this.codeID[1][3], DPMatrixMultiply.CODE_STANDARD_COLOR);
         }
         this.cmd("SetForegroundColor", this.codeID[2][0], DPMatrixMultiply.CODE_HIGHLIGHT_COLOR);
@@ -362,8 +341,7 @@ DPMatrixMultiply.prototype.LCS = function(S1, S2, x, y, xPos, ID)
     this.cmd("Step");
     this.cmd("SetForegroundColor", this.codeID[3][1], DPMatrixMultiply.CODE_STANDARD_COLOR);
 
-    if (S1.charAt(x) == S2.charAt(y))
-    {
+    if (S1.charAt(x) == S2.charAt(y)) {
 
         this.cmd("SetForegroundColor", this.codeID[4][1], DPMatrixMultiply.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");
@@ -386,8 +364,7 @@ DPMatrixMultiply.prototype.LCS = function(S1, S2, x, y, xPos, ID)
         this.currentY -= DPMatrixMultiply.RECURSIVE_DELTA_Y;
         return subProb + 1
     }
-    else
-    {
+    else {
         var firstID = this.nextIndex++;
         var secondID = this.nextIndex++;
         this.currentY += DPMatrixMultiply.RECURSIVE_DELTA_Y;
@@ -438,21 +415,17 @@ DPMatrixMultiply.prototype.tableLCS = function(value)
     var y = sequences[1].length;
     var i, j;
 
-    for (i = 0; i <= x; i++)
-    {
+    for (i = 0; i <= x; i++) {
         this.cmd("SetText", this.tableID[i][0], "0");
         this.tableVals[i][0] = 0;
     }
-    for (i = 0; i <= y; i++)
-    {
+    for (i = 0; i <= y; i++) {
         this.cmd("SetText", this.tableID[0][i], "0");
         this.tableVals[0][i] = 0;
     }
     this.cmd("Step");
-    for (j = 0; j < y; j++)
-    {
-        for (i = 0; i < x; i++)
-        {
+    for (j = 0; j < y; j++) {
+        for (i = 0; i < x; i++) {
             this.cmd("SetHighlight", this.tableID[i+1][j+1], 1);
             this.cmd("SetHighlight", this.S1TableID[i], 1);
             this.cmd("SetHighlight", this.S2TableID[j], 1);
@@ -461,8 +434,7 @@ DPMatrixMultiply.prototype.tableLCS = function(value)
             this.cmd("SetHighlight", this.S1TableID[i], 0);
             this.cmd("SetHighlight", this.S2TableID[j], 0);
             this.cmd("SetForegroundColor", this.codeID[3][1], DPMatrixMultiply.CODE_STANDARD_COLOR);
-            if (sequences[0].charAt(i) == sequences[1].charAt(j))
-            {
+            if (sequences[0].charAt(i) == sequences[1].charAt(j)) {
                 this.cmd("SetForegroundColor", this.codeID[4][0], DPMatrixMultiply.CODE_HIGHLIGHT_COLOR);
                 this.cmd("SetForegroundColor", this.codeID[4][1], DPMatrixMultiply.CODE_HIGHLIGHT_COLOR);
                 this.cmd("SetHighlight", this.tableID[i+1-1][j+1-1], 1);
@@ -477,8 +449,7 @@ DPMatrixMultiply.prototype.tableLCS = function(value)
                 this.tableVals[i+1][j+1] = this.tableVals[i][j] + 1;
                 this.cmd("SetText", this.tableID[i+1][j+1], this.tableVals[i+1][j+1]);
             }
-            else
-            {
+            else {
                 this.cmd("SetForegroundColor", this.codeID[6][0], DPMatrixMultiply.CODE_HIGHLIGHT_COLOR);
                 this.cmd("SetForegroundColor", this.codeID[6][1], DPMatrixMultiply.CODE_HIGHLIGHT_COLOR);
                 this.cmd("SetForegroundColor", this.codeID[6][2], DPMatrixMultiply.CODE_HIGHLIGHT_COLOR);
@@ -492,8 +463,7 @@ DPMatrixMultiply.prototype.tableLCS = function(value)
                 this.cmd("SetForegroundColor", this.codeID[6][2], DPMatrixMultiply.CODE_STANDARD_COLOR);
                 this.cmd("SetForegroundColor", this.codeID[6][4], DPMatrixMultiply.CODE_STANDARD_COLOR);
 
-                if (this.tableVals[i][j+1] > this.tableVals[i+1][j])
-                {
+                if (this.tableVals[i][j+1] > this.tableVals[i+1][j]) {
                     this.cmd("SetHighlight", this.tableID[i+1][j], 0);
                     this.cmd("SetForegroundColor", this.codeID[6][3], DPMatrixMultiply.CODE_STANDARD_COLOR);
 
@@ -501,8 +471,7 @@ DPMatrixMultiply.prototype.tableLCS = function(value)
                     this.cmd("CreateLabel", moveID, this.tableVals[i][j+1], this.tableXPos[i][j+1], this.tableYPos[i][j+1]);
 
                 }
-                else
-                {
+                else {
                     this.cmd("SetForegroundColor", this.codeID[6][1], DPMatrixMultiply.CODE_STANDARD_COLOR);
                     this.cmd("SetHighlight", this.tableID[i][j+1], 0);
                     this.tableVals[i+1][j+1] = this.tableVals[i+1][j];
@@ -512,13 +481,11 @@ DPMatrixMultiply.prototype.tableLCS = function(value)
                 this.cmd("Step");
                 this.cmd("SetText", this.tableID[i+1][j+1], this.tableVals[i+1][j+1]);
                 this.cmd("Delete", moveID);
-                if (this.tableVals[i][j+1] > this.tableVals[i+1][j])
-                {
+                if (this.tableVals[i][j+1] > this.tableVals[i+1][j]) {
                     this.cmd("SetForegroundColor", this.codeID[6][1], DPMatrixMultiply.CODE_STANDARD_COLOR);
                     this.cmd("SetHighlight", this.tableID[i][j+1], 0);
                 }
-                else
-                {
+                else {
                     this.cmd("SetForegroundColor", this.codeID[6][3], DPMatrixMultiply.CODE_STANDARD_COLOR);
                     this.cmd("SetHighlight", this.tableID[i+1][j], 0);
                 }
@@ -545,8 +512,7 @@ DPMatrixMultiply.prototype.LCSMem = function(S1, S2, x, y, xPos, ID)
     this.cmd("Step");
     this.cmd("SetForegroundColor", this.codeID[0][1], DPMatrixMultiply.CODE_STANDARD_COLOR);
 
-    if (this.tableVals[x+1][y+1] != -1)
-    {
+    if (this.tableVals[x+1][y+1] != -1) {
         var movingLabel = this.nextIndex++;
         this.cmd("CreateLabel", movingLabel, this.tableVals[x+1][y+1], this.tableXPos[x+1][y+1], this.tableYPos[x+1][y+1]);
         this.cmd("Move", movingLabel, xPos, this.currentY);
@@ -562,26 +528,21 @@ DPMatrixMultiply.prototype.LCSMem = function(S1, S2, x, y, xPos, ID)
     }
 
 
-    if (x == -1 || y == -1)
-    {
-        if (x == -1)
-        {
+    if (x == -1 || y == -1) {
+        if (x == -1) {
             this.cmd("SetForegroundColor", this.codeID[1][1], DPMatrixMultiply.CODE_HIGHLIGHT_COLOR);
 
         }
-        if (y == -1)
-        {
+        if (y == -1) {
             this.cmd("SetForegroundColor", this.codeID[1][3], DPMatrixMultiply.CODE_HIGHLIGHT_COLOR);
 
         }
         this.cmd("Step");
-        if (x == -1)
-        {
+        if (x == -1) {
             this.cmd("SetForegroundColor", this.codeID[1][1], DPMatrixMultiply.CODE_STANDARD_COLOR);
 
         }
-        if (y == -1)
-        {
+        if (y == -1) {
             this.cmd("SetForegroundColor", this.codeID[1][3], DPMatrixMultiply.CODE_STANDARD_COLOR);
         }
         this.cmd("SetForegroundColor", this.codeID[2][0], DPMatrixMultiply.CODE_HIGHLIGHT_COLOR);
@@ -607,8 +568,7 @@ DPMatrixMultiply.prototype.LCSMem = function(S1, S2, x, y, xPos, ID)
     this.cmd("Step");
     this.cmd("SetForegroundColor", this.codeID[3][1], DPMatrixMultiply.CODE_STANDARD_COLOR);
 
-    if (S1.charAt(x) == S2.charAt(y))
-    {
+    if (S1.charAt(x) == S2.charAt(y)) {
 
         this.cmd("SetForegroundColor", this.codeID[4][1], DPMatrixMultiply.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");
@@ -646,8 +606,7 @@ DPMatrixMultiply.prototype.LCSMem = function(S1, S2, x, y, xPos, ID)
 
         return subProb + 1
     }
-    else
-    {
+    else {
         var firstID = this.nextIndex++;
         var secondID = this.nextIndex++;
         this.currentY += DPMatrixMultiply.RECURSIVE_DELTA_Y;

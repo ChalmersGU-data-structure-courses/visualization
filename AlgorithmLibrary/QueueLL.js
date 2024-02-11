@@ -103,8 +103,7 @@ QueueLL.prototype.setup = function()
     this.tail_label_y = this.tail_pos_y;
 
     this.linkedListElemID = new Array(QueueLL.SIZE);
-    for (var i = 0; i < QueueLL.SIZE; i++)
-    {
+    for (var i = 0; i < QueueLL.SIZE; i++) {
 
         this.linkedListElemID[i]= this.nextIndex++;
     }
@@ -142,8 +141,7 @@ QueueLL.prototype.resetLinkedListPositions = function()
 {
     var nextX = QueueLL.LINKED_LIST_START_X;
     var nextY = QueueLL.LINKED_LIST_START_Y;
-    for (var i = this.top - 1; i >= 0; i--)
-    {
+    for (var i = this.top - 1; i >= 0; i--) {
         this.cmd("Move", this.linkedListElemID[i], nextX, nextY);
         nextX += QueueLL.LINKED_LIST_ELEM_SPACING;
         if (nextX > this.getCanvasWidth() - QueueLL.LINKED_LIST_ELEM_SPACING) {
@@ -166,8 +164,7 @@ QueueLL.prototype.reset = function()
 
 QueueLL.prototype.enqueueCallback = function(event)
 {
-    if (this.top < QueueLL.SIZE && this.enqueueField.value != "")
-    {
+    if (this.top < QueueLL.SIZE && this.enqueueField.value != "") {
         var pushVal = this.enqueueField.value;
         this.enqueueField.value = ""
         this.implementAction(this.enqueue.bind(this), pushVal);
@@ -177,8 +174,7 @@ QueueLL.prototype.enqueueCallback = function(event)
 
 QueueLL.prototype.dequeueCallback = function(event)
 {
-    if (this.top > 0)
-    {
+    if (this.top > 0) {
         this.implementAction(this.dequeue.bind(this), "");
     }
 }
@@ -199,8 +195,7 @@ QueueLL.prototype.enqueue = function(elemToPush)
 
     this.cmd("SetText", this.leftoverLabelID, "");
 
-    for (var i = this.top; i > 0; i--)
-    {
+    for (var i = this.top; i > 0; i--) {
         this.arrayData[i] = this.arrayData[i-1];
         this.linkedListElemID[i] =this.linkedListElemID[i-1];
     }
@@ -226,15 +221,13 @@ QueueLL.prototype.enqueue = function(elemToPush)
     this.cmd("SetText", this.linkedListElemID[0], elemToPush);
     this.cmd("Delete", labPushValID);
 
-    if (this.top == 0)
-    {
+    if (this.top == 0) {
         this.cmd("SetNull", this.headID, 0);
         this.cmd("SetNull", this.tailID, 0);
         this.cmd("connect", this.headID, this.linkedListElemID[this.top]);
         this.cmd("connect", this.tailID, this.linkedListElemID[this.top]);
     }
-    else
-    {
+    else {
         this.cmd("SetNull", this.linkedListElemID[1], 0);
         this.cmd("Connect",  this.linkedListElemID[1], this.linkedListElemID[0]);
         this.cmd("Step");
@@ -268,14 +261,12 @@ QueueLL.prototype.dequeue = function(ignored)
     this.cmd("Step");
     this.cmd("Disconnect", this.headID, this.linkedListElemID[this.top - 1]);
 
-    if (this.top == 1)
-    {
+    if (this.top == 1) {
         this.cmd("SetNull", this.headID, 1);
         this.cmd("SetNull", this.tailID, 1);
         this.cmd("Disconnect", this.tailID, this.linkedListElemID[this.top-1]);
     }
-    else
-    {
+    else {
         this.cmd("Connect", this.headID, this.linkedListElemID[this.top-2]);
     }
     this.cmd("Step");

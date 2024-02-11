@@ -135,12 +135,10 @@ RotateScale2D.prototype.setupAxis = function()
     this.cmd("SetAlpha", this.yAxisBottom, 0);
     this.cmd("Connect", this.yAxisTop, this.yAxisBottom, RotateScale2D.AXIS_COLOR, 0, 1, "");
     this.cmd("Connect", this.yAxisBottom, this.yAxisTop, RotateScale2D.AXIS_COLOR, 0, 1, "");
-    if (this.posYUp)
-    {
+    if (this.posYUp) {
         this.cmd("CreateLabel", this.yAxisLabel, "+y", RotateScale2D.YAxisXPos + 10, RotateScale2D.YAxisStart + 10);
     }
-    else
-    {
+    else {
         this.cmd("CreateLabel", this.yAxisLabel, "+y", RotateScale2D.YAxisXPos + 10, RotateScale2D.YAxisEnd - 10);
     }
     this.cmd("CreateLabel", this.xAxisLabel, "+x", RotateScale2D.XAxisEnd - 10, RotateScale2D.XAxisYPos - 10);
@@ -159,12 +157,10 @@ RotateScale2D.prototype.worldToScreenSpace = function(point)
 {
     var transformedPoint = new Array(2);
     transformedPoint[0] = point[0] + RotateScale2D.YAxisXPos;
-    if (this.posYUp)
-    {
+    if (this.posYUp) {
         transformedPoint[1] = RotateScale2D.XAxisYPos - point[1];
     }
-    else
-    {
+    else {
         transformedPoint[1] = RotateScale2D.XAxisYPos + point[1];
 
     }
@@ -176,8 +172,7 @@ RotateScale2D.prototype.worldToScreenSpace = function(point)
 RotateScale2D.prototype.moveObjectToNewPosition = function()
 {
     var i;
-    for (i = 0; i < this.objectVertexID.length; i++)
-    {
+    for (i = 0; i < this.objectVertexID.length; i++) {
         var point = this.worldToScreenSpace(this.objectVertexPosition[i]);
         this.cmd("Move", this.objectVertexID[i], point[0], point[1]);
     }
@@ -189,8 +184,7 @@ RotateScale2D.prototype.setupObjectGraphic = function()
 {
     this.objectVertexID = new Array(this.objectVertexPosition.length);
     var i;
-    for (i = 0; i < this.objectVertexPosition.length; i++)
-    {
+    for (i = 0; i < this.objectVertexPosition.length; i++) {
         this.objectVertexID[i] = this.nextIndex++;
         var point = this.worldToScreenSpace(this.objectVertexPosition[i]);
 
@@ -198,8 +192,7 @@ RotateScale2D.prototype.setupObjectGraphic = function()
         this.cmd("SetForegroundColor", this.objectVertexID[i], RotateScale2D.VERTEX_FOREGORUND_COLOR);
         this.cmd("SetBackgroundColor", this.objectVertexID[i], RotateScale2D.VERTEX_BACKGROUND_COLOR);
     }
-    for (i = 1; i < this.objectVertexID.length; i++)
-    {
+    for (i = 1; i < this.objectVertexID.length; i++) {
         this.cmd("Connect", this.objectVertexID[i-1], this.objectVertexID[i], RotateScale2D.EDGE_COLOR, 0, 0, "");
     }
     this.cmd("Connect", this.objectVertexID[this.objectVertexID.length - 1], this.objectVertexID[0], RotateScale2D.EDGE_COLOR, 0, 0, "");
@@ -290,8 +283,7 @@ RotateScale2D.prototype.reset = function()
 
 RotateScale2D.prototype.changePosYCallback = function(posYUp)
 {
-    if (this.posYUp != posYUp)
-    {
+    if (this.posYUp != posYUp) {
         this.implementAction(this.changePosY.bind(this),  posYUp);
     }
 }
@@ -300,20 +292,16 @@ RotateScale2D.prototype.changePosY = function(posYUp)
 {
     this.commands = new Array();
     this.posYUp= posYUp;
-    if (this.posYUpButton.checked != this.posYUp)
-    {
+    if (this.posYUpButton.checked != this.posYUp) {
         this.posYUpButton.checked = this.posYUp;
     }
-    if (this.posYDownButton.checked == this.posYUp)
-    {
+    if (this.posYDownButton.checked == this.posYUp) {
         this.posYDownButton.checked = !this.posYUp;
     }
-    if (this.posYUp)
-    {
+    if (this.posYUp) {
         this.cmd("Move", this.yAxisLabel,  RotateScale2D.YAxisXPos + 10, RotateScale2D.YAxisStart + 10);
     }
-    else
-    {
+    else {
         this.cmd("Move", this.yAxisLabel,  RotateScale2D.YAxisXPos + 10, RotateScale2D.YAxisEnd - 10);
 
     }
@@ -331,8 +319,7 @@ RotateScale2D.prototype.changePosY = function(posYUp)
 
 RotateScale2D.prototype.changeRowColMajorCallback = function(rowMajor)
 {
-    if (this.rowMajor != rowMajor)
-    {
+    if (this.rowMajor != rowMajor) {
         this.implementAction(this.changeRowCol.bind(this),  rowMajor);
     }
 }
@@ -341,12 +328,10 @@ RotateScale2D.prototype.changeRowCol = function(rowMajor)
 {
     this.commands = new Array();
     this.rowMajor= rowMajor;
-    if (this.rowMajorButton.checked != this.rowMajor)
-    {
+    if (this.rowMajorButton.checked != this.rowMajor) {
         this.rowMajorButton.checked = this.rowMajor;
     }
-    if (this.colMajorButton.checked == this.rowMajor)
-    {
+    if (this.colMajorButton.checked == this.rowMajor) {
         this.colMajorButton.checked = !this.rowMajor;
     }
     return this.commands;
@@ -355,12 +340,10 @@ RotateScale2D.prototype.changeRowCol = function(rowMajor)
 
 RotateScale2D.prototype.fixNumber = function(value, defaultVal)
 {
-        if (value == "" || value == "-" || value == "." || value == "-." || isNaN(parseFloat(value)))
-        {
+        if (value == "" || value == "-" || value == "." || value == "-." || isNaN(parseFloat(value))) {
             value = defaultVal;
         }
-        else
-        {
+        else {
             value = String(parseFloat(value));
         }
         return value
@@ -387,13 +370,11 @@ RotateScale2D.prototype.changeShape = function()
 {
     this.commands = [];
     var i;
-    for (i = 0; i < this.objectVertexID.length; i++)
-    {
+    for (i = 0; i < this.objectVertexID.length; i++) {
         this.cmd("Delete", this.objectVertexID[i]);
     }
     this.currentShape++;
-    if (this.currentShape >= RotateScale2D.OBJECTS.length)
-    {
+    if (this.currentShape >= RotateScale2D.OBJECTS.length) {
         this.currentShape = 0;
     }
     this.setupObject();
@@ -403,8 +384,7 @@ RotateScale2D.prototype.changeShape = function()
 
 RotateScale2D.prototype.rotateScaleOrderCallback = function(rotateFirst)
 {
-    if (this.rotateFirst != rotateFirst)
-    {
+    if (this.rotateFirst != rotateFirst) {
             this.implementAction(this.rotateScaleOrder.bind(this),  rotateFirst);
     }
 }
@@ -414,12 +394,10 @@ RotateScale2D.prototype.rotateScaleOrder = function(rotateFirst)
 {
     this.commands = new Array();
     this.rotateFirst= rotateFirst;
-    if (this.rotateScaleButton.checked != this.rotateFirst)
-    {
+    if (this.rotateScaleButton.checked != this.rotateFirst) {
         this.rotateScaleButton.checked = this.rotateFirst;
     }
-    if (this.scaleRotateButton.checked == this.rotateFirst)
-    {
+    if (this.scaleRotateButton.checked == this.rotateFirst) {
         this.scaleRotateButton.checked = !this.rotateFirst;
     }
     return this.commands;
@@ -442,40 +420,32 @@ RotateScale2D.prototype.transform = function(input)
 
     var xpos = RotateScale2D.MATRIX_START_X;
     var ypos = RotateScale2D.MATRIX_START_Y;
-    if (!this.rowMajor)
-    {
+    if (!this.rowMajor) {
         xpos += 2 * RotateScale2D.MATRIX_ELEM_WIDTH + RotateScale2D.EQUALS_SPACING;
     }
 
     var xy;
-    if (this.rowMajor)
-    {
+    if (this.rowMajor) {
         xy = this.createMatrix([["x", "y"]], xpos, ypos);
         xpos += xy.data[0].length * RotateScale2D.MATRIX_ELEM_WIDTH + RotateScale2D.MATRIX_MULTIPLY_SPACING;
 
     }
 
     var matrixData;
-    if (this.rotateFirst)
-    {
-        if (this.rowMajor)
-        {
+    if (this.rotateFirst) {
+        if (this.rowMajor) {
             matrixData = [["cos \u0398", "sin \u0398"], ["-sin \u0398", "cos \u0398"]]
         }
-        else
-        {
+        else {
             matrixData = [["ScaleX", "0"], ["0", "ScaleY"]];
         }
 
     }
-    else
-    {
-        if (this.rowMajor)
-        {
+    else {
+        if (this.rowMajor) {
             matrixData = [["ScaleX", "0"], ["0", "ScaleY"]];
         }
-        else
-        {
+        else {
             matrixData = [["cos \u0398", "-sin \u0398"], ["sin \u0398", "cos \u0398"]]
 
         }
@@ -487,26 +457,20 @@ RotateScale2D.prototype.transform = function(input)
     xpos += firstMat.data[0].length * RotateScale2D.MATRIX_ELEM_WIDTH + RotateScale2D.MATRIX_MULTIPLY_SPACING;
 
 
-    if (this.rotateFirst)
-    {
-        if (this.rowMajor)
-        {
+    if (this.rotateFirst) {
+        if (this.rowMajor) {
             matrixData = [["ScaleX", "0"], ["0", "ScaleY"]];
         }
-        else
-        {
+        else {
             matrixData = [["cos \u0398", "-sin \u0398"], ["sin \u0398", "cos \u0398"]]
 
         }
     }
-    else
-    {
-        if (this.rowMajor)
-        {
+    else {
+        if (this.rowMajor) {
             matrixData = [["cos \u0398", "sin \u0398"], ["-sin \u0398", "cos \u0398"]]
         }
-        else
-        {
+        else {
             matrixData = [["ScaleX", "0"], ["0", "ScaleY"]];
         }
     }
@@ -514,8 +478,7 @@ RotateScale2D.prototype.transform = function(input)
     var secondMat = this.createMatrix(matrixData,xpos, ypos);
     xpos += secondMat.data[0].length * RotateScale2D.MATRIX_ELEM_WIDTH;
 
-    if (!this.rowMajor)
-    {
+    if (!this.rowMajor) {
         xpos += RotateScale2D.MATRIX_MULTIPLY_SPACING;
         xy = this.createMatrix([["x"], ["y"]], xpos, ypos);
         xpos += xy.data[0].length * RotateScale2D.MATRIX_ELEM_WIDTH;
@@ -524,24 +487,20 @@ RotateScale2D.prototype.transform = function(input)
     this.cmd("Step");
 
     var rotMat, scaleMat
-    if ((this.rotateFirst  && this.rowMajor) || (!this.rotateFirst && !this.rowMajor))
-    {
+    if ((this.rotateFirst  && this.rowMajor) || (!this.rotateFirst && !this.rowMajor)) {
         rotMat = firstMat;
         scaleMat = secondMat;
     }
-    else
-    {
+    else {
         rotMat = secondMat;
         scaleMat = firstMat;
 
     }
 
-    if (this.rowMajor)
-    {
+    if (this.rowMajor) {
         rotMat.data = [["cos " + inputs[0], "sin " + inputs[0]],["-sin " +inputs[0], "cos " + inputs[0]]];
     }
-    else
-    {
+    else {
         rotMat.data = [["cos " + inputs[0], "-sin " + inputs[0]],["sin " +inputs[0], "cos " + inputs[0]]];
     }
     this.resetMatrixLabels(rotMat);
@@ -551,12 +510,10 @@ RotateScale2D.prototype.transform = function(input)
 
     this.cmd("Step");
 
-    if (this.rowMajor)
-    {
+    if (this.rowMajor) {
         rotMat.data = [[Math.cos(rotateDegree), Math.sin(rotateDegree)],[-Math.sin(rotateDegree), Math.cos(rotateDegree)]];
     }
-    else
-    {
+    else {
         rotMat.data = [[Math.cos(rotateDegree), -Math.sin(rotateDegree)],[Math.sin(rotateDegree), Math.cos(rotateDegree)]];
     }
     this.resetMatrixLabels(rotMat);
@@ -566,12 +523,10 @@ RotateScale2D.prototype.transform = function(input)
 
     var equalID = this.nextIndex++;
     var equaXlPos;
-    if (this.rowMajor)
-    {
+    if (this.rowMajor) {
         equalXPos = xpos + RotateScale2D.EQUALS_SPACING / 2;
     }
-    else
-    {
+    else {
         equalXPos = RotateScale2D.MATRIX_START_X + 2 * RotateScale2D.MATRIX_ELEM_WIDTH + RotateScale2D.EQUALS_SPACING / 2;
     }
 
@@ -587,8 +542,7 @@ RotateScale2D.prototype.transform = function(input)
 
     var parenX;
     parenX = 2 * RotateScale2D.MATRIX_ELEM_WIDTH + RotateScale2D.MATRIX_START_X + RotateScale2D.MATRIX_MULTIPLY_SPACING - 2;
-    if (!this.rowMajor)
-    {
+    if (!this.rowMajor) {
         parenX += RotateScale2D.EQUALS_SPACING - RotateScale2D.MATRIX_MULTIPLY_SPACING;
     }
 
@@ -597,8 +551,7 @@ RotateScale2D.prototype.transform = function(input)
     this.cmd("Connect", paren1, paren2, "#000000", 0.2, 0, "");
 
     parenX = 6*RotateScale2D.MATRIX_ELEM_WIDTH + RotateScale2D.MATRIX_START_X + 2*RotateScale2D.MATRIX_MULTIPLY_SPACING + 2;
-    if (!this.rowMajor)
-    {
+    if (!this.rowMajor) {
         parenX += RotateScale2D.EQUALS_SPACING - RotateScale2D.MATRIX_MULTIPLY_SPACING;
     }
 
@@ -609,22 +562,18 @@ RotateScale2D.prototype.transform = function(input)
 
     this.cmd("Step");
     var tmpMat;
-    if (this.rowMajor)
-    {
+    if (this.rowMajor) {
         tmpMat = this.createMatrix([["",""],["",""]],xpos, ypos);
     }
-    else
-    {
+    else {
         tmpMat = this.createMatrix([["",""],["",""]],RotateScale2D.MATRIX_START_X, RotateScale2D.MATRIX_START_Y);
     }
     var explainID = this.nextIndex++;
-    if (this.rowMajor)
-    {
+    if (this.rowMajor) {
         this.cmd("CreateLabel", explainID, "",  6*RotateScale2D.MATRIX_ELEM_WIDTH + 2*RotateScale2D.MATRIX_MULTIPLY_SPACING +
                  RotateScale2D.EQUALS_SPACING + RotateScale2D.MATRIX_START_X, 20 + 2*RotateScale2D.MATRIX_ELEM_HEIGHT, 0);
     }
-    else
-    {
+    else {
         this.cmd("CreateLabel", explainID, "",  RotateScale2D.MATRIX_START_X, 20 + 2*RotateScale2D.MATRIX_ELEM_HEIGHT, 0);
     }
     this.cmd("Step");
@@ -639,8 +588,7 @@ RotateScale2D.prototype.transform = function(input)
     this.cmd("Delete", paren4);
     this.cmd("Delete", equalID);
 
-    if (this.rowMajor)
-    {
+    if (this.rowMajor) {
         this.moveMatrix(tmpMat,  xy.data[0].length * RotateScale2D.MATRIX_ELEM_WIDTH + RotateScale2D.MATRIX_MULTIPLY_SPACING + RotateScale2D.MATRIX_START_X,
                                     RotateScale2D.MATRIX_START_Y);
         xpos = (RotateScale2D.MATRIX_START_X + xy.data[0].length*RotateScale2D.MATRIX_ELEM_WIDTH +
@@ -649,8 +597,7 @@ RotateScale2D.prototype.transform = function(input)
                      RotateScale2D.EQUALS_SPACING + RotateScale2D.MATRIX_START_X, 20 + 2*RotateScale2D.MATRIX_ELEM_HEIGHT, 0);
 
     }
-    else
-    {
+    else {
         this.moveMatrix(tmpMat, RotateScale2D.MATRIX_START_X + 4*RotateScale2D.MATRIX_ELEM_WIDTH + RotateScale2D.EQUALS_SPACING + RotateScale2D.MATRIX_MULTIPLY_SPACING,
                         RotateScale2D.MATRIX_START_Y);
         xpos = (RotateScale2D.MATRIX_START_X + 7*RotateScale2D.MATRIX_ELEM_WIDTH +
@@ -669,28 +616,23 @@ RotateScale2D.prototype.transform = function(input)
 
     var transformedObjectID = new Array(this.objectVertexID.length);
 
-    for (i = 0; i < this.objectVertexID.length; i++)
-    {
+    for (i = 0; i < this.objectVertexID.length; i++) {
         this.cmd("Connect", this.originID, this.objectVertexID[i], RotateScale2D.VECTOR_COLOR, 0, 1, "");
-        if (this.rowMajor)
-        {
+        if (this.rowMajor) {
             xy.data = [this.objectVertexPosition[i].slice(0)];
         }
-        else
-        {
+        else {
             xy.data[0][0] = this.objectVertexPosition[i][0];
             xy.data[1][0] = this.objectVertexPosition[i][1];
         }
         this.resetMatrixLabels(xy);
         this.cmd("Step");
         this.cmd("CreateLabel", equalID, "=", xpos + RotateScale2D.EQUALS_SPACING / 2, ypos + tmpMat.data.length / 2 * RotateScale2D.MATRIX_ELEM_HEIGHT);
-        if (this.rowMajor)
-        {
+        if (this.rowMajor) {
             output = this.createMatrix([["",""]],  xpos + RotateScale2D.EQUALS_SPACING, ypos)
             this.multiplyMatrix(xy, tmpMat, output, explainID);
         }
-        else
-        {
+        else {
             output = this.createMatrix([[""],[""]],  xpos + RotateScale2D.EQUALS_SPACING, ypos)
             this.multiplyMatrix(tmpMat, xy, output, explainID);
         }
@@ -698,12 +640,10 @@ RotateScale2D.prototype.transform = function(input)
 
         transformedObjectID[i] = this.nextIndex++;
         var point;
-        if (this.rowMajor)
-        {
+        if (this.rowMajor) {
             point = this.worldToScreenSpace(output.data[0]);
         }
-        else
-        {
+        else {
             point = this.worldToScreenSpace([output.data[0][0], output.data[1][0]]);
         }
 
@@ -714,19 +654,16 @@ RotateScale2D.prototype.transform = function(input)
         this.cmd("Step");
         this.cmd("Disconnect", this.originID, transformedObjectID[i]);
 
-        if (i > 0)
-        {
+        if (i > 0) {
             this.cmd("Connect", transformedObjectID[i-1], transformedObjectID[i], RotateScale2D.TRANSFORMED_EDGE_COLOR, 0, 0, "");
 
         }
 
         this.cmd("Disconnect", this.originID, this.objectVertexID[i]);
-        if (this.rowMajor)
-        {
+        if (this.rowMajor) {
             this.objectVertexPosition[i] = output.data[0];
         }
-        else
-        {
+        else {
             this.objectVertexPosition[i][0] = output.data[0][0];
             this.objectVertexPosition[i][1] = output.data[1][0];
         }
@@ -742,8 +679,7 @@ RotateScale2D.prototype.transform = function(input)
     this.moveObjectToNewPosition();
     this.cmd("Step","C");
 
-    for (i = 0; i < transformedObjectID.length; i++)
-    {
+    for (i = 0; i < transformedObjectID.length; i++) {
         this.cmd("Delete", transformedObjectID[i]);
     }
 
@@ -763,18 +699,14 @@ RotateScale2D.prototype.multiplyMatrix = function(mat1, mat2, mat3, explainID)
     var i;
     var j;
     var explainText = "";
-    for (i = 0; i < mat1.data.length; i++)
-    {
-        for (j = 0; j < mat2.data[0].length; j++)
-        {
+    for (i = 0; i < mat1.data.length; i++) {
+        for (j = 0; j < mat2.data[0].length; j++) {
             var explainText = "";
             var value = 0;
-            for (k = 0; k < mat2.data.length; k++)
-            {
+            for (k = 0; k < mat2.data.length; k++) {
                 this.cmd("SetHighlight", mat1.dataID[i][k], 1);
                 this.cmd("SetHighlight", mat2.dataID[k][j], 1);
-                if (explainText != "")
-                {
+                if (explainText != "") {
                         explainText = explainText + " + ";
                 }
                 value = value + mat1.data[i][k] * mat2.data[k][j];
@@ -800,12 +732,10 @@ RotateScale2D.prototype.multiplyMatrix = function(mat1, mat2, mat3, explainID)
 RotateScale2D.prototype.standardize = function(lab)
 {
     var newLab = Math.round(lab * 1000) / 1000;
-    if (isNaN(newLab))
-    {
+    if (isNaN(newLab)) {
         return lab;
     }
-    else
-    {
+    else {
         return newLab;
     }
 }
@@ -814,10 +744,8 @@ RotateScale2D.prototype.standardize = function(lab)
 RotateScale2D.prototype.resetMatrixLabels = function(mat)
 {
     var i,j;
-    for (i = 0; i < mat.data.length; i++)
-    {
-        for (j = 0; j < mat.data[i].length; j++)
-        {
+    for (i = 0; i < mat.data.length; i++) {
+        for (j = 0; j < mat.data[i].length; j++) {
             mat.data[i][j] = this.standardize(mat.data[i][j]);
             this.cmd("SetText", mat.dataID[i][j], mat.data[i][j]);
         }
@@ -832,8 +760,7 @@ RotateScale2D.prototype.moveMatrix = function(mat, x, y)
     var width = 0;
 
     var i, j;
-    for (i = 0; i < mat.data.length; i++)
-    {
+    for (i = 0; i < mat.data.length; i++) {
         width = Math.max(width, mat.data[i].length);
     }
 
@@ -846,10 +773,8 @@ RotateScale2D.prototype.moveMatrix = function(mat, x, y)
     this.cmd("Move", mat.rightBrack2,   x + width * RotateScale2D.MATRIX_ELEM_WIDTH, y);
     this.cmd("Move", mat.rightBrack3,  x+ width * RotateScale2D.MATRIX_ELEM_WIDTH, y + height * RotateScale2D.MATRIX_ELEM_HEIGHT);
 
-    for (i = 0; i < mat.data.length; i++)
-    {
-        for (j = 0; j < mat.data[i].length; j++)
-        {
+    for (i = 0; i < mat.data.length; i++) {
+        for (j = 0; j < mat.data[i].length; j++) {
             this.cmd("Move", mat.dataID[i][j],
                      x + j*RotateScale2D.MATRIX_ELEM_WIDTH + RotateScale2D.MATRIX_ELEM_WIDTH / 2,
                      y + i*RotateScale2D.MATRIX_ELEM_HEIGHT + RotateScale2D.MATRIX_ELEM_HEIGHT / 2);
@@ -866,10 +791,8 @@ RotateScale2D.prototype.deleteMatrix = function(mat)
     this.cmd("Delete",mat.rightBrack2);
     this.cmd("Delete",mat.rightBrack3);
     var i,j;
-    for (i = 0; i < mat.data.length; i++)
-    {
-        for (j = 0; j < mat.data[i].length; j++)
-        {
+    for (i = 0; i < mat.data.length; i++) {
+        for (j = 0; j < mat.data[i].length; j++) {
             this.cmd("Delete", mat.dataID[i][j]);
         }
     }
@@ -884,10 +807,8 @@ RotateScale2D.prototype.setMatrixAlpha = function(mat, alpha)
     this.cmd("SetAlpha",mat.rightBrack2, alpha);
     this.cmd("SetAlpha",mat.rightBrack3, alpha);
     var i,j;
-    for (i = 0; i < mat.data.length; i++)
-    {
-        for (j = 0; j < mat.data[i].length; j++)
-        {
+    for (i = 0; i < mat.data.length; i++) {
+        for (j = 0; j < mat.data[i].length; j++) {
             this.cmd("SetAlpha", mat.dataID[i][j], alpha);
         }
     }
@@ -909,12 +830,10 @@ RotateScale2D.prototype.createMatrix = function(contents, x, y)
 
     var i, j;
     mat.dataID = new Array(mat.data.length);
-    for (i = 0; i < mat.data.length; i++)
-    {
+    for (i = 0; i < mat.data.length; i++) {
         width = Math.max(width, mat.data[i].length);
         mat.dataID[i] = new Array(mat.data[i].length);
-        for (j = 0; j < mat.data[i].length; j++)
-        {
+        for (j = 0; j < mat.data[i].length; j++) {
             mat.dataID[i][j] = this.nextIndex++;
         }
     }
@@ -927,10 +846,8 @@ RotateScale2D.prototype.createMatrix = function(contents, x, y)
     this.cmd("CreateRectangle", mat.rightBrack2, "", 1, height * RotateScale2D.MATRIX_ELEM_HEIGHT,  x + width * RotateScale2D.MATRIX_ELEM_WIDTH, y, "center","top");
     this.cmd("CreateRectangle", mat.rightBrack3, "", 5, 1,  x+ width * RotateScale2D.MATRIX_ELEM_WIDTH, y + height * RotateScale2D.MATRIX_ELEM_HEIGHT , "right","center");
 
-    for (i = 0; i < mat.data.length; i++)
-    {
-        for (j = 0; j < mat.data[i].length; j++)
-        {
+    for (i = 0; i < mat.data.length; i++) {
+        for (j = 0; j < mat.data[i].length; j++) {
             this.cmd("CreateLabel", mat.dataID[i][j], mat.data[i][j],
                      x + j*RotateScale2D.MATRIX_ELEM_WIDTH + RotateScale2D.MATRIX_ELEM_WIDTH / 2,
                      y + i*RotateScale2D.MATRIX_ELEM_HEIGHT + RotateScale2D.MATRIX_ELEM_HEIGHT / 2);

@@ -67,16 +67,13 @@ Recursive.prototype.addCodeToCanvas = function(code)
      this.codeID = this.addCodeToCanvasBase(code, Recursive.CODE_START_X, Recursive.CODE_START_Y, Recursive.CODE_LINE_HEIGHT, Recursive.CODE_STANDARD_COLOR);
 /*    this.codeID = Array(this.code.length);
     var i, j;
-    for (i = 0; i < code.length; i++)
-    {
+    for (i = 0; i < code.length; i++) {
         this.codeID[i] = new Array(code[i].length);
-        for (j = 0; j < code[i].length; j++)
-        {
+        for (j = 0; j < code[i].length; j++) {
             this.codeID[i][j] = this.nextIndex++;
             this.cmd("CreateLabel", this.codeID[i][j], code[i][j], Recursive.CODE_START_X, Recursive.CODE_START_Y + i * Recursive.CODE_LINE_HEIGHT, 0);
             this.cmd("SetForegroundColor", this.codeID[i][j], Recursive.CODE_STANDARD_COLOR);
-            if (j > 0)
-            {
+            if (j > 0) {
                 this.cmd("AlignRight", this.codeID[i][j], this.codeID[i][j-1]);
             }
         }
@@ -95,8 +92,7 @@ Recursive.prototype.init = function(am)
 
 Recursive.prototype.clearOldIDs = function()
 {
-    for (var i = 0; i < this.oldIDs.length; i++)
-    {
+    for (var i = 0; i < this.oldIDs.length; i++) {
         this.cmd("Delete", this.oldIDs[i]);
     }
     this.oldIDs =[];
@@ -116,8 +112,7 @@ Recursive.prototype.reset = function()
 Recursive.prototype.deleteActivation = function(activationRec)
 {
     var i;
-    for (i = 0; i < activationRec.labelIDs.length; i++)
-    {
+    for (i = 0; i < activationRec.labelIDs.length; i++) {
         this.cmd("Delete", activationRec.labelIDs[i]);
         this.cmd("Delete", activationRec.fieldIDs[i]);
     }
@@ -132,8 +127,7 @@ Recursive.prototype.createActivation = function(functionName, argList, x, y, lab
     var i;
     activationRec.nameID = this.nextIndex++;
     labelsOnLeft = (labelsOnLeft == undefined) ? true : labelsOnLeft;
-    for (i = 0; i < argList.length; i++)
-    {
+    for (i = 0; i < argList.length; i++) {
         var valueID = this.nextIndex++;
         activationRec.fieldIDs[i] = valueID;
 
@@ -156,8 +150,7 @@ Recursive.prototype.createActivation = function(functionName, argList, x, y, lab
     this.cmd("CreateLabel", activationRec.nameID, "   " + functionName + "   ");
     this.cmd("SetForegroundColor", activationRec.nameID, Recursive.SEPARATING_LINE_COLOR);
 
-    if (labelsOnLeft)
-    {
+    if (labelsOnLeft) {
         this.cmd("CreateRectangle", activationRec.separatingLineID,
                  "",
                  Recursive.ACTIVATION_RECORD_WIDTH * 2,
@@ -166,8 +159,7 @@ Recursive.prototype.createActivation = function(functionName, argList, x, y, lab
                  y - Recursive.ACTIVATION_RECORD_HEIGHT / 2);
                 this.cmd("AlignLeft", activationRec.nameID, activationRec.labelIDs[0]);
     }
-    else
-    {
+    else {
         this.cmd("CreateRectangle", activationRec.separatingLineID,
                  "",
                  Recursive.ACTIVATION_RECORD_WIDTH * 2,
@@ -189,8 +181,7 @@ function ActivationRecord(fields)
     this.fields = fields;
     this.values = new Array(this.fields.length);
     var i;
-    for (i = 0; i < this.fields.length; i++)
-    {
+    for (i = 0; i < this.fields.length; i++) {
         this.values[i] = "";
     }
     this.fieldIDs = new Array(this.fields.length);

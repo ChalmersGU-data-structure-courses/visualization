@@ -143,12 +143,10 @@ function UndoSetNumElements(obj, oldNumElems, newNumElems)
     this.objectID = obj.objectID;
     this.sizeBeforeChange = oldNumElems;
     this.sizeAfterChange = newNumElems;
-    if (this.sizeBeforeChange > this.sizeAfterChange)
-    {
+    if (this.sizeBeforeChange > this.sizeAfterChange) {
         this.labels = new Array(this.sizeBeforeChange - this.sizeAfterChange);
         this.colors = new Array(this.sizeBeforeChange - this.sizeAfterChange);
-        for (var i = 0; i < this.sizeBeforeChange - this.sizeAfterChange; i++)
-        {
+        for (var i = 0; i < this.sizeBeforeChange - this.sizeAfterChange; i++) {
             this.labels[i] = obj.getText(i+this.sizeAfterChange);
             this.colors[i] = obj.getTextColor(i+this.sizeAfterChange);
         }
@@ -162,10 +160,8 @@ UndoSetNumElements.inheritFrom(UndoBlock);
 UndoSetNumElements.prototype.undoInitialStep = function(world)
 {
     world.setNumElements(this.objectID, this.sizeBeforeChange);
-    if (this.sizeBeforeChange > this.sizeAfterChange)
-    {
-        for (var i = 0; i < this.sizeBeforeChange - this.sizeAfterChange; i++)
-        {
+    if (this.sizeBeforeChange > this.sizeAfterChange) {
+        for (var i = 0; i < this.sizeBeforeChange - this.sizeAfterChange; i++) {
             world.setText(this.objectID, this.labels[i], i+this.sizeAfterChange);
             world.setTextColor(this.objectID, this.colors[i], i+this.sizeAfterChange);
         }

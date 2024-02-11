@@ -348,7 +348,7 @@ function ObjectManager(canvas)
                     var deleted = this.Edges[objectIDfrom][i];
                     undo = deleted.createUndoDisconnect();
                     this.Edges[objectIDfrom][i] = this.Edges[objectIDfrom][len - 1];
-                    len -= 1;
+                    len--;
                     this.Edges[objectIDfrom].pop();
                 }
             }
@@ -360,7 +360,7 @@ function ObjectManager(canvas)
                     deleted = this.BackEdges[objectIDto][i];
                     // Note:  Don't need to remove this child, did it above on the regular edge
                     this.BackEdges[objectIDto][i] = this.BackEdges[objectIDto][len - 1];
-                    len -= 1;
+                    len--;
                     this.BackEdges[objectIDto].pop();
                 }
             }
@@ -384,7 +384,7 @@ function ObjectManager(canvas)
                 for (var j = len2 - 1; j >=0; j--) {
                     if (this.BackEdges[node2ID][j] == deleted) {
                         this.BackEdges[node2ID][j] = this.BackEdges[node2ID][len2 - 1];
-                        len2 -= 1;
+                        len2--;
                         this.BackEdges[node2ID].pop();
                     }
                 }
@@ -403,7 +403,7 @@ function ObjectManager(canvas)
                 for (j = len2 - 1; j >=0; j--) {
                     if (this.Edges[node1ID][j] == deleted) {
                         this.Edges[node1ID][j] = this.Edges[node1ID][len2 - 1];
-                        len2 -= 1;
+                        len2--;
                         this.Edges[node1ID].pop();
                     }
                 }

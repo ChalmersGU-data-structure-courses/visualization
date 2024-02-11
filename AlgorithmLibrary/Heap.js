@@ -95,8 +95,7 @@ Heap.prototype.createArray = function()
     this.ArrayXPositions = new Array(Heap.ARRAY_SIZE);
     this.currentHeapSize = 0;
 
-    for (var i = 0; i < Heap.ARRAY_SIZE; i++)
-    {
+    for (var i = 0; i < Heap.ARRAY_SIZE; i++) {
         this.ArrayXPositions[i] = Heap.ARRAY_INITIAL_X + i *Heap.ARRAY_ELEM_WIDTH;
         this.arrayLabels[i] = this.nextIndex++;
         this.arrayRects[i] = this.nextIndex++;
@@ -123,8 +122,7 @@ Heap.prototype.createArray = function()
 Heap.prototype.insertCallback = function(event)
 {
     var insertedValue = this.normalizeNumber(this.insertField.value.toUpperCase());
-    if (insertedValue != "")
-    {
+    if (insertedValue != "") {
         this.insertField.value = "";
         this.implementAction(this.insertElement.bind(this), insertedValue);
     }
@@ -141,8 +139,7 @@ Heap.prototype.clearCallback = function(event)
 Heap.prototype.clear = function()
 {
 
-    while (this.currentHeapSize > 0)
-    {
+    while (this.currentHeapSize > 0) {
         this.cmd("Delete", this.circleObjs[this.currentHeapSize]);
         this.cmd("SetText", this.arrayRects[this.currentHeapSize], "");
         this.currentHeapSize--;
@@ -203,24 +200,20 @@ Heap.prototype.pushDown = function(index)
 {
     var smallestIndex;
 
-    while(true)
-    {
-        if (index*2 > this.currentHeapSize)
-        {
+    while(true) {
+        if (index*2 > this.currentHeapSize) {
             return;
         }
 
         smallestIndex = 2*index;
 
-        if (index*2 + 1 <= this.currentHeapSize)
-        {
+        if (index*2 + 1 <= this.currentHeapSize) {
             this.setIndexHighlight(2*index, 1);
             this.setIndexHighlight(2*index + 1, 1);
             this.cmd("Step");
             this.setIndexHighlight(2*index, 0);
             this.setIndexHighlight(2*index + 1, 0);
-            if (this.compare(this.arrayData[2*index + 1], this.arrayData[2*index]) < 0)
-            {
+            if (this.compare(this.arrayData[2*index + 1], this.arrayData[2*index]) < 0) {
                 smallestIndex = 2*index + 1;
             }
         }
@@ -230,13 +223,11 @@ Heap.prototype.pushDown = function(index)
         this.setIndexHighlight(index, 0);
         this.setIndexHighlight(smallestIndex, 0);
 
-        if (this.compare(this.arrayData[smallestIndex], this.arrayData[index]) < 0)
-        {
+        if (this.compare(this.arrayData[smallestIndex], this.arrayData[index]) < 0) {
             this.swap(smallestIndex, index);
             index = smallestIndex;
         }
-        else
-        {
+        else {
             return;
         }
 
@@ -250,8 +241,7 @@ Heap.prototype.removeSmallest = function(dummy)
     this.commands = new Array();
     this.cmd("SetText", this.descriptLabel1, "");
 
-    if (this.currentHeapSize == 0)
-    {
+    if (this.currentHeapSize == 0) {
         this.cmd("SetText", this.descriptLabel1, "Heap is empty, cannot remove smallest element");
         return this.commands;
     }
@@ -264,8 +254,7 @@ Heap.prototype.removeSmallest = function(dummy)
     this.cmd("Delete", this.descriptLabel2);
     this.cmd("SetText", this.descriptLabel1, "Removing element: " + this.arrayData[1]);
     this.arrayData[1] = "";
-    if (this.currentHeapSize > 1)
-    {
+    if (this.currentHeapSize > 1) {
         this.cmd("SetText", this.arrayRects[1], "");
         this.cmd("SetText", this.arrayRects[this.currentHeapSize], "");
         this.swap(1,this.currentHeapSize);
@@ -292,33 +281,28 @@ Heap.prototype.buildHeap = function(data)
     this.commands = [];
     this.clear();
 
-    if(data)
-    {
+    if(data) {
         for (var i = 0; i < data.length; i++)
             this.arrayData[i+1] = data[i];
         this.currentHeapSize = data.length;
     }
-    else
-    {
+    else {
         for (var i = 1; i <Heap.ARRAY_SIZE; i++)
             this.arrayData[i] = this.normalizeNumber(String(Heap.ARRAY_SIZE - i), 4);
         this.currentHeapSize = Heap.ARRAY_SIZE - 1;
      }
 
-    for (var i = 1; i <= this.currentHeapSize; i++)
-    {
+    for (var i = 1; i <= this.currentHeapSize; i++) {
         this.cmd("CreateCircle", this.circleObjs[i], this.arrayData[i], this.HeapXPositions[i], this.HeapYPositions[i]);
         this.cmd("SetText", this.arrayRects[i], this.arrayData[i]);
-        if (i > 1)
-        {
+        if (i > 1) {
             this.cmd("Connect", this.circleObjs[Math.floor(i/2)], this.circleObjs[i]);
         }
 
     }
     this.cmd("Step");
     var nextElem = this.currentHeapSize;
-    while(nextElem > 0)
-    {
+    while(nextElem > 0) {
         this.pushDown(nextElem);
         nextElem = nextElem - 1;
     }
@@ -329,8 +313,7 @@ Heap.prototype.insertElement = function(insertedValue)
 {
     this.commands = new Array();
 
-    if (this.currentHeapSize >= Heap.ARRAY_SIZE - 1)
-    {
+    if (this.currentHeapSize >= Heap.ARRAY_SIZE - 1) {
         this.cmd("SetText", this.descriptLabel1, "Heap Full!");
         return this.commands;
     }
@@ -342,8 +325,7 @@ Heap.prototype.insertElement = function(insertedValue)
     this.arrayData[this.currentHeapSize] = insertedValue;
     this.cmd("CreateCircle",this.circleObjs[this.currentHeapSize], "", this.HeapXPositions[this.currentHeapSize], this.HeapYPositions[this.currentHeapSize]);
     this.cmd("CreateLabel", this.descriptLabel2, insertedValue, 120, 45,  1);
-    if (this.currentHeapSize > 1)
-    {
+    if (this.currentHeapSize > 1) {
         this.cmd("Connect", this.circleObjs[Math.floor(this.currentHeapSize / 2)], this.circleObjs[this.currentHeapSize]);
     }
 
@@ -356,8 +338,7 @@ Heap.prototype.insertElement = function(insertedValue)
     var currentIndex = this.currentHeapSize;
     var parentIndex = Math.floor(currentIndex / 2);
 
-    if (currentIndex > 1)
-    {
+    if (currentIndex > 1) {
         this.setIndexHighlight(currentIndex, 1);
         this.setIndexHighlight(parentIndex, 1);
         this.cmd("Step");
@@ -365,13 +346,11 @@ Heap.prototype.insertElement = function(insertedValue)
         this.setIndexHighlight(parentIndex, 0);
     }
 
-    while (currentIndex > 1 && this.compare(this.arrayData[currentIndex], this.arrayData[parentIndex]) < 0)
-    {
+    while (currentIndex > 1 && this.compare(this.arrayData[currentIndex], this.arrayData[parentIndex]) < 0) {
         this.swap(currentIndex, parentIndex);
         currentIndex = parentIndex;
         parentIndex = Math.floor(parentIndex / 2);
-        if (currentIndex > 1)
-        {
+        if (currentIndex > 1) {
             this.setIndexHighlight(currentIndex, 1);
             this.setIndexHighlight(parentIndex, 1);
             this.cmd("Step");

@@ -31,10 +31,13 @@ var AnimatedCircle = function(objectID, objectLabel)
 
     this.objectID = objectID;
     this.label = objectLabel;
-    this.radius = 20;
+    this.radius = AnimatedCircle.RADIUS;
     this.thickness = 3;
 }
 AnimatedCircle.inheritFrom(AnimatedObject);
+
+
+AnimatedCircle.RADIUS = 20;
 
 
 AnimatedCircle.prototype.getTailPointerAttachPos = function(fromX, fromY, anchorPoint)

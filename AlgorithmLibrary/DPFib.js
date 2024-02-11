@@ -75,16 +75,13 @@ DPFib.prototype.init = function(am)
 
     this.codeID = Array(this.code.length);
     var i, j;
-    for (i = 0; i < this.code.length; i++)
-    {
+    for (i = 0; i < this.code.length; i++) {
         this.codeID[i] = new Array(this.code[i].length);
-        for (j = 0; j < this.code[i].length; j++)
-        {
+        for (j = 0; j < this.code[i].length; j++) {
             this.codeID[i][j] = this.nextIndex++;
             this.cmd("CreateLabel", this.codeID[i][j], this.code[i][j], DPFib.CODE_START_X, DPFib.CODE_START_Y + i * DPFib.CODE_LINE_HEIGHT, 0);
             this.cmd("SetForegroundColor", this.codeID[i][j], DPFib.CODE_STANDARD_COLOR);
-            if (j > 0)
-            {
+            if (j > 0) {
                 this.cmd("AlignRight", this.codeID[i][j], this.codeID[i][j-1]);
             }
         }
@@ -130,8 +127,7 @@ DPFib.prototype.buildTable = function(maxVal)
     var yPos;
     var table_rows = Math.floor((this.getCanvasHeight() - DPFib.TABLE_ELEM_HEIGHT - DPFib.TABLE_START_Y) / DPFib.TABLE_ELEM_HEIGHT);
 
-    for (i = 0; i <= maxVal; i++)
-    {
+    for (i = 0; i <= maxVal; i++) {
         this.tableID[i] = this.nextIndex++;
         this.tableVals[i] = -1;
         this.oldIDs.push(this.tableID[i]);
@@ -157,8 +153,7 @@ DPFib.prototype.buildTable = function(maxVal)
 
 DPFib.prototype.clearOldIDs = function()
 {
-    for (var i = 0; i < this.oldIDs.length; i++)
-    {
+    for (var i = 0; i < this.oldIDs.length; i++) {
         this.cmd("Delete", this.oldIDs[i]);
     }
     this.oldIDs =[];
@@ -186,14 +181,12 @@ DPFib.prototype.recursiveCallback = function(event)
 {
     var fibValue;
 
-    if (this.fibField.value != "")
-    {
+    if (this.fibField.value != "") {
         var fibValue = Math.min(parseInt(this.fibField.value), DPFib.MAX_VALUE);
         this.fibField.value = String(fibValue);
         this.implementAction(this.recursiveFib.bind(this),fibValue);
     }
-    else
-    {
+    else {
         this.implementAction(this.helpMessage.bind(this), "");
     }
 }
@@ -203,14 +196,12 @@ DPFib.prototype.tableCallback = function(event)
 {
     var fibValue;
 
-    if (this.fibField.value != "")
-    {
+    if (this.fibField.value != "") {
         var fibValue = Math.min(parseInt(this.fibField.value), DPFib.MAX_VALUE);
         this.fibField.value = String(fibValue);
         this.implementAction(this.tableFib.bind(this),fibValue);
     }
-    else
-    {
+    else {
         this.implementAction(this.helpMessage.bind(this), "");
     }
 
@@ -221,14 +212,12 @@ DPFib.prototype.memoizedCallback = function(event)
 {
     var fibValue;
 
-    if (this.fibField.value != "")
-    {
+    if (this.fibField.value != "") {
         var fibValue = Math.min(parseInt(this.fibField.value), DPFib.MAX_VALUE);
         this.fibField.value = String(fibValue);
         this.implementAction(this.memoizedFib.bind(this),fibValue);
     }
-    else
-    {
+    else {
         this.implementAction(this.helpMessage.bind(this), "");
     }
 }
@@ -277,8 +266,7 @@ DPFib.prototype.fib = function(value, xPos, ID)
     this.cmd("SetForegroundColor", this.codeID[1][1], DPFib.CODE_HIGHLIGHT_COLOR);
     this.cmd("Step");
     this.cmd("SetForegroundColor", this.codeID[1][1], DPFib.CODE_STANDARD_COLOR);
-    if (value > 1)
-    {
+    if (value > 1) {
         var firstID = this.nextIndex++;
         var secondID = this.nextIndex++;
         this.cmd("SetForegroundColor", this.codeID[4][1], DPFib.CODE_HIGHLIGHT_COLOR);
@@ -311,8 +299,7 @@ DPFib.prototype.fib = function(value, xPos, ID)
         this.currentY = this.currentY - 2 * DPFib.RECURSIVE_DELTA_Y;
         return firstValue + secondValue;
     }
-    else
-    {
+    else {
         this.cmd("SetText", ID, "1");
         this.cmd("SetForegroundColor", this.codeID[2][0], DPFib.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");
@@ -335,8 +322,7 @@ DPFib.prototype.tableFib = function(value)
     this.clearOldIDs();
     this.buildTable(value);
     var i;
-    for (i = 0; i <= value && i <= 1; i++)
-    {
+    for (i = 0; i <= value && i <= 1; i++) {
         this.cmd("SetForegroundColor", this.codeID[1][1], DPFib.CODE_HIGHLIGHT_COLOR);
         this.cmd("SetForegroundColor", this.codeID[2][0], DPFib.CODE_HIGHLIGHT_COLOR);
         this.cmd("SetHighlight", this.tableID[i], 1);
@@ -347,8 +333,7 @@ DPFib.prototype.tableFib = function(value)
         this.cmd("SetForegroundColor", this.codeID[2][0], DPFib.CODE_STANDARD_COLOR);
         this.cmd("SetHighlight", this.tableID[i], 0);
     }
-    for (i = 2; i <= value; i++)
-    {
+    for (i = 2; i <= value; i++) {
         this.cmd("SetHighlight", this.tableID[i-1], 1)
         this.cmd("SetHighlight", this.tableID[i-2], 1)
         this.cmd("SetForegroundColor", this.codeID[4][1], DPFib.CODE_HIGHLIGHT_COLOR);
@@ -389,8 +374,7 @@ DPFib.prototype.fibMem = function(value, xPos, ID)
     this.cmd("SetHighlight", this.tableID[value], 1);
     // TODO: Add an extra pause here?
     this.cmd("Step");
-    if (this.tableVals[value] >= 0)
-    {
+    if (this.tableVals[value] >= 0) {
         this.cmd("Delete", ID, "fib(" + String(value)+")", xPos, this.currentY, 0);
         this.cmd("CreateLabel", ID, this.tableVals[value], this.tableXPos[value] - 5, this.tableYPos[value] - 5, 0);
         this.cmd("Move", ID, xPos, this.currentY);
@@ -406,8 +390,7 @@ DPFib.prototype.fibMem = function(value, xPos, ID)
     this.cmd("SetForegroundColor", this.codeID[1][1], DPFib.CODE_HIGHLIGHT_COLOR);
     this.cmd("Step");
     this.cmd("SetForegroundColor", this.codeID[1][1], DPFib.CODE_STANDARD_COLOR);
-    if (value > 1)
-    {
+    if (value > 1) {
         var firstID = this.nextIndex++;
         var secondID = this.nextIndex++;
         this.cmd("SetForegroundColor", this.codeID[4][1], DPFib.CODE_HIGHLIGHT_COLOR);
@@ -446,8 +429,7 @@ DPFib.prototype.fibMem = function(value, xPos, ID)
         this.cmd("SetText", this.tableID[value], this.tableVals[value]);
         return firstValue + secondValue;
     }
-    else
-    {
+    else {
         this.cmd("SetText", ID, "1");
         this.cmd("SetForegroundColor", this.codeID[2][0], DPFib.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");

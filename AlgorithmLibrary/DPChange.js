@@ -94,16 +94,13 @@ DPChange.prototype.setCode = function(codeArray)
     this.code = codeArray;
     this.codeID = Array(this.code.length);
     var i, j;
-    for (i = 0; i < this.code.length; i++)
-    {
+    for (i = 0; i < this.code.length; i++) {
         this.codeID[i] = new Array(this.code[i].length);
-        for (j = 0; j < this.code[i].length; j++)
-        {
+        for (j = 0; j < this.code[i].length; j++) {
             this.codeID[i][j] = this.nextIndex++;
             this.cmd("CreateLabel", this.codeID[i][j], this.code[i][j], DPChange.CODE_START_X, DPChange.CODE_START_Y + i * DPChange.CODE_LINE_HEIGHT, 0);
             this.cmd("SetForegroundColor", this.codeID[i][j], DPChange.CODE_STANDARD_COLOR);
-            if (j > 0)
-            {
+            if (j > 0) {
                 this.cmd("AlignRight", this.codeID[i][j], this.codeID[i][j-1]);
             }
         }
@@ -114,10 +111,8 @@ DPChange.prototype.setCode = function(codeArray)
 DPChange.prototype.deleteCode = function()
 {
     var i,j
-    for (i = 0; i < this.codeID.length; i++)
-    {
-        for (j = 0; j < this.codeID[i].length; j++)
-        {
+    for (i = 0; i < this.codeID.length; i++) {
+        for (j = 0; j < this.codeID[i].length; j++) {
             this.cmd("Delete", this.codeID[i][j]);
         }
     }
@@ -127,12 +122,10 @@ DPChange.prototype.deleteCode = function()
 DPChange.prototype.setCodeAlpha = function(codeArray, alpha)
 {
     var i, j
-    for (i = 0; i < codeArray.length; i++)
-    {
+    for (i = 0; i < codeArray.length; i++) {
         var foo = 3;
         foo = codeArray[i];
-        for (j = 0; j < codeArray[i].length; j++)
-        {
+        for (j = 0; j < codeArray[i].length; j++) {
             this.cmd("SetAlpha", codeArray[i][j], alpha);
         }
     }
@@ -222,12 +215,10 @@ DPChange.prototype.coinTypeChanged = function(coinIndex)
 DPChange.prototype.greedyCallback = function(value)
 {
 
-    if (this.fibField.value != "")
-    {
+    if (this.fibField.value != "") {
         this.implementAction(this.implementGreedy.bind(this),parseInt(this.fibField.value));
     }
-    else
-    {
+    else {
         this.implementAction(this.helpMessage.bind(this), "");
     }
 }
@@ -238,8 +229,7 @@ DPChange.prototype.implementGreedy = function(value)
     this.commands = [];
     this.clearOldIDs();
     var initialValue = value;
-    if (this.usingDPCode)
-    {
+    if (this.usingDPCode) {
         this.setCodeAlpha(this.greedyCodeID, 1);
         this.setCodeAlpha(this.codeID, 0);
         this.usingDPCode = false;
@@ -278,10 +268,8 @@ DPChange.prototype.implementGreedy = function(value)
 
     var requiredCoins = 0;
     var i;
-    for (i = DPChange.COINS[this.coinIndex].length - 1; i >=0; i--)
-    {
-        while (value >= DPChange.COINS[this.coinIndex][i])
-        {
+    for (i = DPChange.COINS[this.coinIndex].length - 1; i >=0; i--) {
+        while (value >= DPChange.COINS[this.coinIndex][i]) {
             requiredCoins = requiredCoins + 1;
             value = value - DPChange.COINS[this.coinIndex][i];
             this.cmd("SetText", valueRemainingID, value);
@@ -314,8 +302,7 @@ DPChange.prototype.buildTable = function(maxVal)
     this.tableXPos = new Array(2);
     this.tableYPos = new Array(2);
     var i;
-    for (i = 0; i < 2; i++)
-    {
+    for (i = 0; i < 2; i++) {
         this.tableID[i] = new Array(maxVal + 1);
         this.tableVals[i] = new Array(maxVal + 1);
         this.tableXPos[i] = new Array(maxVal + 1);
@@ -342,13 +329,11 @@ DPChange.prototype.buildTable = function(maxVal)
 
 
 
-    for (i = 0; i <= maxVal; i++)
-    {
+    for (i = 0; i <= maxVal; i++) {
         yPos = i % table_rows * DPChange.TABLE_ELEM_HEIGHT + DPChange.TABLE_START_Y;
         xPos = Math.floor(i / table_rows) * DPChange.TABLE_DIFF_X + DPChange.TABLE_START_X;
 
-        for (j = 0; j < 2; j++)
-        {
+        for (j = 0; j < 2; j++) {
 
             this.tableID[j][i] = this.nextIndex++;
             this.tableVals[j][i] = -1;
@@ -379,8 +364,7 @@ DPChange.prototype.buildTable = function(maxVal)
 
 DPChange.prototype.clearOldIDs = function()
 {
-    for (var i = 0; i < this.oldIDs.length; i++)
-    {
+    for (var i = 0; i < this.oldIDs.length; i++) {
         this.cmd("Delete", this.oldIDs[i]);
     }
     this.oldIDs =[];
@@ -416,8 +400,7 @@ DPChange.prototype.displayCoinsUsed = function()
     var moveID;
     moveID = this.nextIndex++;
 
-    while (currValue > 0)
-    {
+    while (currValue > 0) {
         moveID = this.nextIndex++;
         this.oldIDs.push(moveID);
         this.cmd("CreateLabel", moveID, this.tableVals[1][currValue], this.tableXPos[1][currValue], this.tableYPos[1][currValue]);
@@ -432,14 +415,12 @@ DPChange.prototype.recursiveCallback = function(event)
 {
     var fibValue;
 
-    if (this.fibField.value != "")
-    {
+    if (this.fibField.value != "") {
         var fibValue = Math.min(parseInt(this.fibField.value), DPChange.MAX_VALUE - 5);
         this.fibField.value = String(fibValue);
         this.implementAction(this.recursiveChange.bind(this),fibValue);
     }
-    else
-    {
+    else {
         this.implementAction(this.helpMessage.bind(this), "");
     }
 }
@@ -449,14 +430,12 @@ DPChange.prototype.tableCallback = function(event)
 {
     var fibValue;
 
-    if (this.fibField.value != "")
-    {
+    if (this.fibField.value != "") {
         var fibValue = Math.min(parseInt(this.fibField.value), DPChange.MAX_VALUE);
         this.fibField.value = String(fibValue);
         this.implementAction(this.tableChange.bind(this),fibValue);
     }
-    else
-    {
+    else {
         this.implementAction(this.helpMessage.bind(this), "");
     }
 
@@ -467,14 +446,12 @@ DPChange.prototype.memoizedCallback = function(event)
 {
     var fibValue;
 
-    if (this.fibField.value != "")
-    {
+    if (this.fibField.value != "") {
         var changeVal = Math.min(parseInt(this.fibField.value), DPChange.MAX_VALUE);
         this.fibField.value = String(changeVal);
         this.implementAction(this.memoizedChange.bind(this),changeVal);
     }
-    else
-    {
+    else {
         this.implementAction(this.helpMessage.bind(this), "");
     }
 }
@@ -502,8 +479,7 @@ DPChange.prototype.recursiveChange = function(value)
     this.commands = [];
 
     this.clearOldIDs();
-    if (!this.usingDPCode)
-    {
+    if (!this.usingDPCode) {
         this.setCodeAlpha(this.greedyCodeID, 0);
         this.setCodeAlpha(this.codeID, 1);
         this.usingDPCode = true;
@@ -531,8 +507,7 @@ DPChange.prototype.change = function(value, xPos, ID)
     this.cmd("Step");
     this.cmd("SetForegroundColor", this.codeID[1][1], DPChange.CODE_STANDARD_COLOR);
     // return 1;
-    if (value > 0)
-    {
+    if (value > 0) {
         this.cmd("SetForegroundColor", this.codeID[3][0], DPChange.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");
         this.cmd("SetForegroundColor", this.codeID[3][0], DPChange.CODE_STANDARD_COLOR);
@@ -546,20 +521,17 @@ DPChange.prototype.change = function(value, xPos, ID)
         var nextID2 = this.nextIndex++;
         var recID = nextID;
         var bestList;
-        for (i = 0; i < coins.length; i++)
-        {
+        for (i = 0; i < coins.length; i++) {
             this.cmd("SetForegroundColor", this.codeID[5][1], DPChange.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
             this.cmd("SetForegroundColor", this.codeID[5][1], DPChange.CODE_STANDARD_COLOR);
-            if (value >= coins[i])
-            {
+            if (value >= coins[i]) {
                 this.cmd("SetForegroundColor", this.codeID[6][1], DPChange.CODE_HIGHLIGHT_COLOR);
                 this.cmd("Step");
                 this.cmd("SetForegroundColor", this.codeID[6][1], DPChange.CODE_STANDARD_COLOR);
                 var nextTry = this.change(value - coins[i], xPos + DPChange.RECURSIVE_DELTA_X, recID);
                 // TODO:  SOMEHTING ELSE HERE
-                if (best == -1)
-                {
+                if (best == -1) {
                     this.cmd("SetForegroundColor", this.codeID[7][1], DPChange.CODE_HIGHLIGHT_COLOR);
                     this.cmd("Step");
                     this.cmd("SetForegroundColor", this.codeID[7][1], DPChange.CODE_STANDARD_COLOR);
@@ -569,8 +541,7 @@ DPChange.prototype.change = function(value, xPos, ID)
                     this.currentY += DPChange.RECURSIVE_DELTA_Y;
                     recID = nextID2;
                 }
-                else if (best > nextTry[0] + 1)
-                {
+                else if (best > nextTry[0] + 1) {
                     this.cmd("SetForegroundColor", this.codeID[7][2], DPChange.CODE_HIGHLIGHT_COLOR);
                     this.cmd("Step");
                     this.cmd("SetForegroundColor", this.codeID[7][2], DPChange.CODE_STANDARD_COLOR);
@@ -583,13 +554,11 @@ DPChange.prototype.change = function(value, xPos, ID)
                     this.cmd("Move", nextID, xPos + DPChange.RECURSIVE_DELTA_X, this.currentY - DPChange.RECURSIVE_DELTA_Y);
                     this.cmd("Step");
                 }
-                else
-                {
+                else {
                     this.cmd("Delete", recID);
                 }
             }
-            else
-            {
+            else {
                 break;
             }
         }
@@ -607,8 +576,7 @@ DPChange.prototype.change = function(value, xPos, ID)
         this.cmd("Step");
         return [best, bestList];
     }
-    else
-    {
+    else {
         this.cmd("SetText", ID, "0");
         this.cmd("SetForegroundColor", this.codeID[2][0], DPChange.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");
@@ -629,8 +597,7 @@ DPChange.prototype.tableChange = function(value)
 {
     this.commands = [];
     this.clearOldIDs();
-    if (!this.usingDPCode)
-    {
+    if (!this.usingDPCode) {
         this.setCodeAlpha(this.greedyCodeID, 0);
         this.setCodeAlpha(this.codeID, 1);
         this.usingDPCode = true;
@@ -639,8 +606,7 @@ DPChange.prototype.tableChange = function(value)
     this.buildTable(value);
     coins = DPChange.COINS[this.coinIndex];
     var i;
-    for (i = 0; i <= value && i <= 0; i++)
-    {
+    for (i = 0; i <= value && i <= 0; i++) {
         this.cmd("SetForegroundColor", this.codeID[1][1], DPChange.CODE_HIGHLIGHT_COLOR);
         this.cmd("SetForegroundColor", this.codeID[2][0], DPChange.CODE_HIGHLIGHT_COLOR);
         this.cmd("SetHighlight", this.tableID[0][i], 1);
@@ -651,19 +617,15 @@ DPChange.prototype.tableChange = function(value)
         this.cmd("SetForegroundColor", this.codeID[2][0], DPChange.CODE_STANDARD_COLOR);
         this.cmd("SetHighlight", this.tableID[0][i], 0);
     }
-    for (i = 1; i <= value; i++)
-    {
+    for (i = 1; i <= value; i++) {
         this.tableVals[0][i] = -1;
         var j;
-        for (j = 0; j < coins.length; j++)
-        {
-            if (coins[j] <= i)
-            {
+        for (j = 0; j < coins.length; j++) {
+            if (coins[j] <= i) {
                 this.cmd("SetHighlight", this.tableID[0][i-coins[j]], 1);
                 this.cmd("SetHighlight", this.tableID[0][i], 1);
                 this.cmd("Step");
-                if (this.tableVals[0][i] == -1 || this.tableVals[0][i] > this.tableVals[0][i - coins[j]] + 1)
-                {
+                if (this.tableVals[0][i] == -1 || this.tableVals[0][i] > this.tableVals[0][i - coins[j]] + 1) {
                     this.tableVals[0][i] = this.tableVals[0][i- coins[j]] + 1;
                     this.cmd("SetText", this.tableID[0][i], this.tableVals[0][i]);
                     this.cmd("SetHighlight", this.tableID[1][i], 1);
@@ -700,8 +662,7 @@ DPChange.prototype.fibMem = function(value, xPos, ID)
     this.cmd("SetHighlight", this.tableID[value], 1);
     // TODO: Add an extra pause here?
     this.cmd("Step");
-    if (this.tableVals[value] >= 0)
-    {
+    if (this.tableVals[value] >= 0) {
         this.cmd("Delete", ID, "fib(" + String(value)+")", xPos, this.currentY, 0);
         this.cmd("CreateLabel", ID, this.tableVals[value], this.tableXPos[value] - 5, this.tableYPos[value] - 5, 0);
         this.cmd("Move", ID, xPos, this.currentY);
@@ -717,8 +678,7 @@ DPChange.prototype.fibMem = function(value, xPos, ID)
     this.cmd("SetForegroundColor", this.codeID[1][1], DPChange.CODE_HIGHLIGHT_COLOR);
     this.cmd("Step");
     this.cmd("SetForegroundColor", this.codeID[1][1], DPChange.CODE_STANDARD_COLOR);
-    if (value > 1)
-    {
+    if (value > 1) {
         var firstID = this.nextIndex++;
         var secondID = this.nextIndex++;
         this.cmd("SetForegroundColor", this.codeID[4][1], DPChange.CODE_HIGHLIGHT_COLOR);
@@ -757,8 +717,7 @@ DPChange.prototype.fibMem = function(value, xPos, ID)
         this.cmd("SetText", this.tableID[value], this.tableVals[value]);
         return firstValue + secondValue;
     }
-    else
-    {
+    else {
         this.cmd("SetText", ID, "1");
         this.cmd("SetForegroundColor", this.codeID[2][0], DPChange.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");
@@ -780,8 +739,7 @@ DPChange.prototype.memoizedChange = function(value)
 {
     this.commands = [];
 
-    if (!this.usingDPCode)
-    {
+    if (!this.usingDPCode) {
         this.setCodeAlpha(this.greedyCodeID, 0);
         this.setCodeAlpha(this.codeID, 1);
         this.usingDPCode = true;
@@ -813,8 +771,7 @@ DPChange.prototype.changeMem = function(value, xPos, ID)
     this.cmd("SetForegroundColor", this.codeID[0][1], DPChange.CODE_HIGHLIGHT_COLOR);
     this.cmd("SetHighlight", this.tableID[0][value], 1);
     this.cmd("Step");
-    if (this.tableVals[0][value] >= 0)
-    {
+    if (this.tableVals[0][value] >= 0) {
         this.cmd("Delete", ID);
         this.cmd("CreateLabel", ID, this.tableVals[0][value], this.tableXPos[0][value] - 5, this.tableYPos[0][value] - 5, 0);
         this.cmd("Move", ID, xPos, this.currentY);
@@ -833,8 +790,7 @@ DPChange.prototype.changeMem = function(value, xPos, ID)
     this.cmd("Step");
     this.cmd("SetForegroundColor", this.codeID[1][1], DPChange.CODE_STANDARD_COLOR);
     // return 1;
-    if (value > 0)
-    {
+    if (value > 0) {
         this.cmd("SetForegroundColor", this.codeID[3][0], DPChange.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");
         this.cmd("SetForegroundColor", this.codeID[3][0], DPChange.CODE_STANDARD_COLOR);
@@ -848,20 +804,17 @@ DPChange.prototype.changeMem = function(value, xPos, ID)
         var nextID2 = this.nextIndex++;
         var recID = nextID;
         var bestList;
-        for (i = 0; i < coins.length; i++)
-        {
+        for (i = 0; i < coins.length; i++) {
             this.cmd("SetForegroundColor", this.codeID[5][1], DPChange.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
             this.cmd("SetForegroundColor", this.codeID[5][1], DPChange.CODE_STANDARD_COLOR);
-            if (value >= coins[i])
-            {
+            if (value >= coins[i]) {
                 this.cmd("SetForegroundColor", this.codeID[6][1], DPChange.CODE_HIGHLIGHT_COLOR);
                 this.cmd("Step");
                 this.cmd("SetForegroundColor", this.codeID[6][1], DPChange.CODE_STANDARD_COLOR);
                 var nextTry = this.changeMem(value - coins[i], xPos + DPChange.RECURSIVE_DELTA_X, recID);
                 // TODO:  SOMEHTING ELSE HERE
-                if (best == -1)
-                {
+                if (best == -1) {
                     this.cmd("SetForegroundColor", this.codeID[7][1], DPChange.CODE_HIGHLIGHT_COLOR);
                     this.cmd("Step");
                     this.cmd("SetForegroundColor", this.codeID[7][1], DPChange.CODE_STANDARD_COLOR);
@@ -871,8 +824,7 @@ DPChange.prototype.changeMem = function(value, xPos, ID)
                     this.currentY += DPChange.RECURSIVE_DELTA_Y;
                     recID = nextID2;
                 }
-                else if (best > nextTry[0] + 1)
-                {
+                else if (best > nextTry[0] + 1) {
                     this.cmd("SetForegroundColor", this.codeID[7][2], DPChange.CODE_HIGHLIGHT_COLOR);
                     this.cmd("Step");
                     this.cmd("SetForegroundColor", this.codeID[7][2], DPChange.CODE_STANDARD_COLOR);
@@ -885,14 +837,12 @@ DPChange.prototype.changeMem = function(value, xPos, ID)
                     this.cmd("Move", nextID, xPos + DPChange.RECURSIVE_DELTA_X, this.currentY - DPChange.RECURSIVE_DELTA_Y);
                     this.cmd("Step");
                 }
-                else
-                {
+                else {
                     this.cmd("Step");
                     this.cmd("Delete", recID);
                 }
             }
-            else
-            {
+            else {
                 break;
             }
         }
@@ -915,8 +865,7 @@ DPChange.prototype.changeMem = function(value, xPos, ID)
         this.cmd("Step");
         return [best, bestList];
     }
-    else
-    {
+    else {
         this.cmd("SetText", ID, "0");
         this.cmd("SetForegroundColor", this.codeID[2][0], DPChange.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");

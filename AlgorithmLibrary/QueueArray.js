@@ -95,8 +95,7 @@ QueueArray.prototype.setup = function()
 
     this.arrayID = new Array(QueueArray.SIZE);
     this.arrayLabelID = new Array(QueueArray.SIZE);
-    for (var i = 0; i < QueueArray.SIZE; i++)
-    {
+    for (var i = 0; i < QueueArray.SIZE; i++) {
 
         this.arrayID[i]= this.nextIndex++;
         this.arrayLabelID[i]= this.nextIndex++;
@@ -115,8 +114,7 @@ QueueArray.prototype.setup = function()
 
     var xpos = QueueArray.ARRAY_START_X;
     var ypos = QueueArray.ARRAY_START_Y;
-    for (var i = 0; i < QueueArray.SIZE; i++)
-    {
+    for (var i = 0; i < QueueArray.SIZE; i++) {
         this.cmd("CreateRectangle", this.arrayID[i],"", QueueArray.ARRAY_ELEM_WIDTH, QueueArray.ARRAY_ELEM_HEIGHT,xpos, ypos);
         this.cmd("CreateLabel",this.arrayLabelID[i],  i,  xpos, ypos + QueueArray.ARRAY_ELEM_HEIGHT);
         this.cmd("SetForegroundColor", this.arrayLabelID[i], QueueArray.INDEX_COLOR);
@@ -159,8 +157,7 @@ QueueArray.prototype.reset = function()
 
 QueueArray.prototype.enqueueCallback = function(event)
 {
-    if ((this.tail + 1) % QueueArray.SIZE  != this.head && this.enqueueField.value != "")
-    {
+    if ((this.tail + 1) % QueueArray.SIZE  != this.head && this.enqueueField.value != "") {
         var pushVal = this.enqueueField.value;
         this.enqueueField.value = ""
         this.implementAction(this.enqueue.bind(this), pushVal);
@@ -170,8 +167,7 @@ QueueArray.prototype.enqueueCallback = function(event)
 
 QueueArray.prototype.dequeueCallback = function(event)
 {
-    if (this.tail != this.head)
-    {
+    if (this.tail != this.head) {
         this.implementAction(this.dequeue.bind(this), "");
     }
 }
@@ -186,8 +182,7 @@ QueueArray.prototype.clearCallback = function(event)
 QueueArray.prototype.getXYPos = function(index) {
     var xpos = QueueArray.ARRAY_START_X;
     var ypos = QueueArray.ARRAY_START_Y;
-    for (var i = 0; i < index; i++)
-    {
+    for (var i = 0; i < index; i++) {
         xpos += QueueArray.ARRAY_ELEM_WIDTH;
         if (xpos > this.getCanvasWidth() - QueueArray.ARRAY_LINE_SPACING) {
             xpos = QueueArray.ARRAY_START_X;

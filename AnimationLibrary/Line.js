@@ -51,8 +51,8 @@ function Line(n1, n2, color, cv, d, weight, anchorIndex)
     this.anchorPoint = anchorIndex;
     this.highlightDiff = 0;
     this.curve = cv;
-
     this.alpha = 1.0;
+
     this.color = function color()
     {
         return this.edgeColor;

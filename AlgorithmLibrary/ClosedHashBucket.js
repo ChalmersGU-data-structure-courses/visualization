@@ -76,35 +76,29 @@ ClosedHashBucket.prototype.insertElement = function(elem)
     var index = this.doHash(elem);
 
     var foundIndex = -1;
-    for (var candidateIndex = index * ClosedHashBucket.BUCKET_SIZE; candidateIndex < index * ClosedHashBucket.BUCKET_SIZE + ClosedHashBucket.BUCKET_SIZE; candidateIndex++)
-    {
+    for (var candidateIndex = index * ClosedHashBucket.BUCKET_SIZE; candidateIndex < index * ClosedHashBucket.BUCKET_SIZE + ClosedHashBucket.BUCKET_SIZE; candidateIndex++) {
         this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 1);
         this.cmd("Step");
         this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 0);
-        if (this.empty[candidateIndex])
-        {
+        if (this.empty[candidateIndex]) {
             foundIndex = candidateIndex;
             break;
         }
     }
-    if (foundIndex == -1)
-    {
-        for (candidateIndex = ClosedHashBucket.BUCKET_SIZE * ClosedHashBucket.NUM_BUCKETS; candidateIndex < ClosedHashBucket.CLOSED_HASH_TABLE_SIZE; candidateIndex++)
-        {
+    if (foundIndex == -1) {
+        for (candidateIndex = ClosedHashBucket.BUCKET_SIZE * ClosedHashBucket.NUM_BUCKETS; candidateIndex < ClosedHashBucket.CLOSED_HASH_TABLE_SIZE; candidateIndex++) {
             this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 1);
             this.cmd("Step");
             this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 0);
 
-            if (this.empty[candidateIndex])
-            {
+            if (this.empty[candidateIndex]) {
                 foundIndex = candidateIndex;
                 break;
             }
         }
     }
 
-    if (foundIndex != -1)
-    {
+    if (foundIndex != -1) {
         var labID = this.nextIndex++;
         this.cmd("CreateLabel", labID, elem, 20, 25);
         this.cmd("Move", labID, this.indexXPos2[foundIndex], this.indexYPos2[foundIndex] - ClosedHashBucket.ARRAY_ELEM_HEIGHT);
@@ -127,34 +121,28 @@ ClosedHashBucket.prototype.getElemIndex = function(elem)
     var foundIndex = -1;
     var initialIndex = this.doHash(elem);
 
-    for (var candidateIndex = initialIndex * ClosedHashBucket.BUCKET_SIZE; candidateIndex < initialIndex* ClosedHashBucket.BUCKET_SIZE + ClosedHashBucket.BUCKET_SIZE; candidateIndex++)
-    {
+    for (var candidateIndex = initialIndex * ClosedHashBucket.BUCKET_SIZE; candidateIndex < initialIndex* ClosedHashBucket.BUCKET_SIZE + ClosedHashBucket.BUCKET_SIZE; candidateIndex++) {
         this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 1);
         this.cmd("Step");
         this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 0);
-        if (!this.empty[candidateIndex] && this.hashTableValues[candidateIndex] == elem)
-        {
+        if (!this.empty[candidateIndex] && this.hashTableValues[candidateIndex] == elem) {
             return candidateIndex;
         }
-        else if (this.empty[candidateIndex] && !this.deleted[candidateIndex])
-        {
+        else if (this.empty[candidateIndex] && !this.deleted[candidateIndex]) {
             return -1;
         }
     }
     // Can only get this far if we didn't find the element we are looking for,
     //  *and* the bucekt was full -- look at overflow bucket.
-    for (candidateIndex = ClosedHashBucket.BUCKET_SIZE * ClosedHashBucket.NUM_BUCKETS; candidateIndex < ClosedHashBucket.CLOSED_HASH_TABLE_SIZE; candidateIndex++)
-    {
+    for (candidateIndex = ClosedHashBucket.BUCKET_SIZE * ClosedHashBucket.NUM_BUCKETS; candidateIndex < ClosedHashBucket.CLOSED_HASH_TABLE_SIZE; candidateIndex++) {
         this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 1);
         this.cmd("Step");
         this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 0);
 
-        if (!this.empty[candidateIndex] && this.hashTableValues[candidateIndex] == elem)
-        {
+        if (!this.empty[candidateIndex] && this.hashTableValues[candidateIndex] == elem) {
             return candidateIndex;
         }
-        else if (this.empty[candidateIndex] && !this.deleted[candidateIndex])
-        {
+        else if (this.empty[candidateIndex] && !this.deleted[candidateIndex]) {
             return -1;
         }
     }
@@ -168,12 +156,10 @@ ClosedHashBucket.prototype.deleteElement = function(elem)
     this.cmd("SetText", this.ExplainLabel, "Deleting element: " + elem);
     var index = this.getElemIndex(elem);
 
-    if (index == -1)
-    {
+    if (index == -1) {
         this.cmd("SetText", this.ExplainLabel, "Deleting element: " + elem + "  Element not in table");
     }
-    else
-    {
+    else {
         this.cmd("SetText", this.ExplainLabel, "Deleting element: " + elem + "  Element this.deleted");
         this.empty[index] = true;
         this.deleted[index] = true;
@@ -189,12 +175,10 @@ ClosedHashBucket.prototype.findElement = function(elem)
     this.commands = new Array();
     this.cmd("SetText", this.ExplainLabel, "Finding Element: " + elem);
     var index = this.getElemIndex(elem);
-    if (index == -1)
-    {
+    if (index == -1) {
         this.cmd("SetText", this.ExplainLabel, "Element " + elem + " not found");
     }
-    else
-    {
+    else {
         this.cmd("SetText", this.ExplainLabel, "Element " + elem + " found");
     }
     return this.commands;
@@ -228,8 +212,7 @@ ClosedHashBucket.prototype.setup = function()
 
     this.commands = [];
 
-    for (var i = 0; i < ClosedHashBucket.CLOSED_HASH_TABLE_SIZE; i++)
-    {
+    for (var i = 0; i < ClosedHashBucket.CLOSED_HASH_TABLE_SIZE; i++) {
         var nextID = this.nextIndex++;
         this.empty[i] = true;
         this.deleted[i] = false;
@@ -247,19 +230,16 @@ ClosedHashBucket.prototype.setup = function()
         this.cmd("SetForegroundColor", nextID, ClosedHashBucket.INDEX_COLOR);
     }
 
-    for (i = 0; i <= ClosedHashBucket.NUM_BUCKETS; i++)
-    {
+    for (i = 0; i <= ClosedHashBucket.NUM_BUCKETS; i++) {
         nextID = this.nextIndex++;
         nextXPos = ClosedHashBucket.ARRAY_ELEM_START_X + (i * 3 % this.elements_per_row) * ClosedHashBucket.ARRAY_ELEM_WIDTH - ClosedHashBucket.ARRAY_ELEM_WIDTH / 2;
         nextYPos = ClosedHashBucket.ARRAY_ELEM_START_Y + Math.floor((i * 3) / this.elements_per_row) * ClosedHashBucket.ARRAY_VERTICAL_SEPARATION + ClosedHashBucket.ARRAY_ELEM_HEIGHT;
         this.cmd("CreateRectangle", nextID, "", 0, ClosedHashBucket.ARRAY_ELEM_HEIGHT * 2,nextXPos, nextYPos)
         nextID = this.nextIndex++;
-        if (i == ClosedHashBucket.NUM_BUCKETS)
-        {
+        if (i == ClosedHashBucket.NUM_BUCKETS) {
             this.cmd("CreateLabel", nextID, "Overflow", nextXPos + 3, nextYPos + ClosedHashBucket.ARRAY_ELEM_HEIGHT / 2 , 0);
         }
-        else
-        {
+        else {
             this.indexXPos[i] =  nextXPos + 5;
             this.indexYPos[i] = nextYPos + ClosedHashBucket.ARRAY_ELEM_HEIGHT / 2;
             this.cmd("CreateLabel", nextID, i, this.indexXPos[i],this.indexYPos[i], 0);
@@ -278,8 +258,7 @@ ClosedHashBucket.prototype.resetAll = function()
 {
     this.commands = ClosedHashBucket.superclass.resetAll.call(this);
 
-    for (var i = 0; i < ClosedHashBucket.CLOSED_HASH_TABLE_SIZE; i++)
-    {
+    for (var i = 0; i < ClosedHashBucket.CLOSED_HASH_TABLE_SIZE; i++) {
         this.empty[i] = true;
         this.deleted[i] = false;
         this.cmd("SetText", this.hashTableVisual[i], "");
@@ -292,8 +271,7 @@ ClosedHashBucket.prototype.resetAll = function()
 // NEED TO OVERRIDE IN PARENT
 ClosedHashBucket.prototype.reset = function()
 {
-    for (var i = 0; i < ClosedHashBucket.CLOSED_HASH_TABLE_SIZE; i++)
-    {
+    for (var i = 0; i < ClosedHashBucket.CLOSED_HASH_TABLE_SIZE; i++) {
         this.empty[i]= true;
         this.deleted[i] = false;
     }

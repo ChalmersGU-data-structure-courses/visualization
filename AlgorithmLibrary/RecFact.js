@@ -92,8 +92,7 @@ RecFact.prototype.factorialCallback = function(event)
 {
     var factValue;
 
-    if (this.factorialField.value != "")
-    {
+    if (this.factorialField.value != "") {
         var factValue = Math.min(parseInt(this.factorialField.value), RecFact.MAX_VALUE);
         this.factorialField.value = String(factValue);
         this.implementAction(this.doFactorial.bind(this),factValue);
@@ -130,8 +129,7 @@ RecFact.prototype.factorial = function(value)
     var oldX = this.currentX;
     var oldY = this.currentY;
     this.currentY += RecFact.RECURSIVE_DELTA_Y;
-    if (this.currentY + Recursive.RECURSIVE_DELTA_Y > this.getCanvasHeight())
-    {
+    if (this.currentY + Recursive.RECURSIVE_DELTA_Y > this.getCanvasHeight()) {
         this.currentY = RecFact.ACTIVATION_RECORT_START_Y;
         this.currentX += Recursive.ACTIVATION_RECORD_SPACING;
     }
@@ -141,8 +139,7 @@ RecFact.prototype.factorial = function(value)
     this.cmd("SetForegroundColor", this.codeID[1][1], Recursive.CODE_HIGHLIGHT_COLOR);
     this.cmd("Step");
     this.cmd("SetForegroundColor", this.codeID[1][1], Recursive.CODE_STANDARD_COLOR);
-    if (value > 1)
-    {
+    if (value > 1) {
         this.cmd("SetForegroundColor", this.codeID[4][1], Recursive.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");
         this.cmd("SetForegroundColor", this.codeID[4][1], Recursive.CODE_STANDARD_COLOR);
@@ -184,8 +181,7 @@ RecFact.prototype.factorial = function(value)
 
         return firstValue *value;
     }
-    else
-    {
+    else {
         this.cmd("SetForegroundColor", this.codeID[2][0], Recursive.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");
         this.cmd("SetForegroundColor", this.codeID[2][0], Recursive.CODE_STANDARD_COLOR);

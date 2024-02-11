@@ -250,8 +250,7 @@ RotateScale3D.prototype.worldToScreenSpace = function(point)
 RotateScale3D.prototype.moveObjectToNewPosition = function()
 {
     var i;
-    for (i = 0; i < this.objectVertexID.length; i++)
-    {
+    for (i = 0; i < this.objectVertexID.length; i++) {
         var point = this.worldToScreenSpace(this.objectVertexPosition[i]);
         this.cmd("Move", this.objectVertexID[i], point[0], point[1]);
     }
@@ -263,8 +262,7 @@ RotateScale3D.prototype.setupObjectGraphic = function()
 {
     this.objectVertexID = new Array(this.objectVertexPosition.length);
     var i;
-    for (i = 0; i < this.objectVertexPosition.length; i++)
-    {
+    for (i = 0; i < this.objectVertexPosition.length; i++) {
         this.objectVertexID[i] = this.nextIndex++;
         var point = this.worldToScreenSpace(this.objectVertexPosition[i]);
 
@@ -272,13 +270,11 @@ RotateScale3D.prototype.setupObjectGraphic = function()
         this.cmd("SetForegroundColor", this.objectVertexID[i], RotateScale3D.VERTEX_FOREGORUND_COLOR);
         this.cmd("SetBackgroundColor", this.objectVertexID[i], RotateScale3D.VERTEX_BACKGROUND_COLOR);
     }
-    for (i = 1; i < this.objectVertexID.length; i++)
-    {
+    for (i = 1; i < this.objectVertexID.length; i++) {
         this.cmd("Connect", this.objectVertexID[i-1], this.objectVertexID[i], RotateScale3D.EDGE_COLOR, 0, 0, "");
     }
 
-    for (var i = 0; i < this.extraConnections.length; i++)
-    {
+    for (var i = 0; i < this.extraConnections.length; i++) {
         this.cmd("Connect", this.objectVertexID[this.extraConnections[i][0]], this.objectVertexID[this.extraConnections[i][1]], RotateScale3D.EDGE_COLOR, 0, 0, "");
     }
 
@@ -358,8 +354,7 @@ RotateScale3D.prototype.reset = function()
 
 RotateScale3D.prototype.changePosYCallback = function(posYUp)
 {
-    if (this.posYUp != posYUp)
-    {
+    if (this.posYUp != posYUp) {
         this.implementAction(this.changePosY.bind(this),  posYUp);
     }
 }
@@ -368,20 +363,16 @@ RotateScale3D.prototype.changePosY = function(posYUp)
 {
     this.commands = new Array();
     this.posYUp= posYUp;
-    if (this.posYUpButton.checked != this.posYUp)
-    {
+    if (this.posYUpButton.checked != this.posYUp) {
         this.posYUpButton.checked = this.posYUp;
     }
-    if (this.posYDownButton.checked == this.posYUp)
-    {
+    if (this.posYDownButton.checked == this.posYUp) {
         this.posYDownButton.checked = !this.posYUp;
     }
-    if (this.posYUp)
-    {
+    if (this.posYUp) {
         this.cmd("Move", this.yAxisLabel,  RotateScale3D.YAxisXPos + 10, RotateScale3D.YAxisStart + 10);
     }
-    else
-    {
+    else {
         this.cmd("Move", this.yAxisLabel,  RotateScale3D.YAxisXPos + 10, RotateScale3D.YAxisEnd - 10);
 
     }
@@ -399,8 +390,7 @@ RotateScale3D.prototype.changePosY = function(posYUp)
 
 RotateScale3D.prototype.changeRowColMajorCallback = function(rowMajor)
 {
-    if (this.rowMajor != rowMajor)
-    {
+    if (this.rowMajor != rowMajor) {
         this.implementAction(this.changeRowCol.bind(this),  rowMajor);
     }
 }
@@ -409,12 +399,10 @@ RotateScale3D.prototype.changeRowCol = function(rowMajor)
 {
     this.commands = new Array();
     this.rowMajor= rowMajor;
-    if (this.rowMajorButton.checked != this.rowMajor)
-    {
+    if (this.rowMajorButton.checked != this.rowMajor) {
         this.rowMajorButton.checked = this.rowMajor;
     }
-    if (this.colMajorButton.checked == this.rowMajor)
-    {
+    if (this.colMajorButton.checked == this.rowMajor) {
         this.colMajorButton.checked = !this.rowMajor;
     }
     return this.commands;
@@ -423,12 +411,10 @@ RotateScale3D.prototype.changeRowCol = function(rowMajor)
 
 RotateScale3D.prototype.fixNumber = function(value, defaultVal)
 {
-        if (value == "" || value == "-" || value == "." || value == "-." || isNaN(parseFloat(value)))
-        {
+        if (value == "" || value == "-" || value == "." || value == "-." || isNaN(parseFloat(value))) {
             value = defaultVal;
         }
-        else
-        {
+        else {
             value = String(parseFloat(value));
         }
         return value
@@ -465,13 +451,11 @@ RotateScale3D.prototype.changeShape = function()
 {
     this.commands = [];
     var i;
-    for (i = 0; i < this.objectVertexID.length; i++)
-    {
+    for (i = 0; i < this.objectVertexID.length; i++) {
         this.cmd("Delete", this.objectVertexID[i]);
     }
     this.currentShape++;
-    if (this.currentShape >= RotateScale3D.OBJECTS.length)
-    {
+    if (this.currentShape >= RotateScale3D.OBJECTS.length) {
         this.currentShape = 0;
     }
     this.setupObject();
@@ -481,8 +465,7 @@ RotateScale3D.prototype.changeShape = function()
 
 RotateScale3D.prototype.rotateScaleOrderCallback = function(rotateFirst)
 {
-    if (this.rotateFirst != rotateFirst)
-    {
+    if (this.rotateFirst != rotateFirst) {
             this.implementAction(this.rotateScaleOrder.bind(this),  rotateFirst);
     }
 }
@@ -492,12 +475,10 @@ RotateScale3D.prototype.rotateScaleOrder = function(rotateFirst)
 {
     this.commands = new Array();
     this.rotateFirst= rotateFirst;
-    if (this.rotateScaleButton.checked != this.rotateFirst)
-    {
+    if (this.rotateScaleButton.checked != this.rotateFirst) {
         this.rotateScaleButton.checked = this.rotateFirst;
     }
-    if (this.scaleRotateButton.checked == this.rotateFirst)
-    {
+    if (this.scaleRotateButton.checked == this.rotateFirst) {
         this.scaleRotateButton.checked = !this.rotateFirst;
     }
     return this.commands;
@@ -540,8 +521,7 @@ RotateScale3D.prototype.transformPoints = function(transformMatrix)
     var equalID = this.nextIndex++;
     var xyz;
 
-    if (this.rowMajor)
-    {
+    if (this.rowMajor) {
         xyz = this.createMatrix([["x", "y", "z"]], RotateScale3D.MATRIX_START_X, RotateScale3D.MATRIX_START_Y);
         this.cmd("CreateLabel", explainID, "", RotateScale3D.MATRIX_START_X + 6*RotateScale3D.MATRIX_ELEM_WIDTH + RotateScale3D.MATRIX_MULTIPLY_SPACING + RotateScale3D.EQUALS_SPACING,
                  RotateScale3D.MATRIX_START_Y + 1.5*RotateScale3D.MATRIX_ELEM_HEIGHT, 0);
@@ -549,8 +529,7 @@ RotateScale3D.prototype.transformPoints = function(transformMatrix)
                  RotateScale3D.MATRIX_START_Y + 0.5*RotateScale3D.MATRIX_ELEM_HEIGHT);
 
     }
-    else
-    {
+    else {
         xyz = this.createMatrix([["x"], ["y"], ["z"]], RotateScale3D.MATRIX_START_X + 6*RotateScale3D.MATRIX_ELEM_WIDTH + 2*RotateScale3D.MATRIX_MULTIPLY_SPACING,
                                 RotateScale3D.MATRIX_START_Y);
         this.cmd("CreateLabel", explainID, "", RotateScale3D.MATRIX_START_X + 7*RotateScale3D.MATRIX_ELEM_WIDTH + 2*RotateScale3D.MATRIX_MULTIPLY_SPACING + RotateScale3D.EQUALS_SPACING,
@@ -566,15 +545,12 @@ RotateScale3D.prototype.transformPoints = function(transformMatrix)
     var transformedObjectID = new Array(this.objectVertexID.length);
     var output;
 
-    for (i = 0; i < this.objectVertexID.length; i++)
-    {
+    for (i = 0; i < this.objectVertexID.length; i++) {
         this.cmd("Connect", this.originID, this.objectVertexID[i], RotateScale3D.VECTOR_COLOR, 0, 1, "");
-        if (this.rowMajor)
-        {
+        if (this.rowMajor) {
             xyz.data = [this.objectVertexPosition[i].slice(0)];
         }
-        else
-        {
+        else {
             xyz.data[0][0] = this.objectVertexPosition[i][0];
             xyz.data[1][0] = this.objectVertexPosition[i][1];
             xyz.data[2][0] = this.objectVertexPosition[i][2];
@@ -583,15 +559,13 @@ RotateScale3D.prototype.transformPoints = function(transformMatrix)
         this.cmd("Step");
 
 
-        if (this.rowMajor)
-        {
+        if (this.rowMajor) {
             output = this.createMatrix([["", "", ""]],
                                        RotateScale3D.MATRIX_START_X + 6*RotateScale3D.MATRIX_ELEM_WIDTH + RotateScale3D.MATRIX_MULTIPLY_SPACING + RotateScale3D.EQUALS_SPACING,
                                        RotateScale3D.MATRIX_START_Y);
             this.multiplyMatrix(xyz, transformMatrix, output, explainID);
         }
-        else
-        {
+        else {
             output = this.createMatrix([[""], [""], [""]],
                                        RotateScale3D.MATRIX_START_X + 7*RotateScale3D.MATRIX_ELEM_WIDTH + 2 * RotateScale3D.MATRIX_MULTIPLY_SPACING + RotateScale3D.EQUALS_SPACING,
                                        RotateScale3D.MATRIX_START_Y);
@@ -602,12 +576,10 @@ RotateScale3D.prototype.transformPoints = function(transformMatrix)
 
         transformedObjectID[i] = this.nextIndex++;
         var point;
-        if (this.rowMajor)
-        {
+        if (this.rowMajor) {
             point = this.worldToScreenSpace(output.data[0]);
         }
-        else
-        {
+        else {
             point = this.worldToScreenSpace([output.data[0][0], output.data[1][0], output.data[2][0]]);
         }
 
@@ -618,28 +590,23 @@ RotateScale3D.prototype.transformPoints = function(transformMatrix)
         this.cmd("Step");
         this.cmd("Disconnect", this.originID, transformedObjectID[i]);
 
-        if (i > 0)
-        {
+        if (i > 0) {
             this.cmd("Connect", transformedObjectID[i-1], transformedObjectID[i], RotateScale3D.TRANSFORMED_EDGE_COLOR, 0, 0, "");
 
         }
-        for (var j = 0; j < this.extraConnections.length; j++)
-        {
+        for (var j = 0; j < this.extraConnections.length; j++) {
             if ((this.extraConnections[j][0] == i && this.extraConnections[j][1] < i) ||
-                (this.extraConnections[j][1] == i && this.extraConnections[j][0] < i))
-            {
+                (this.extraConnections[j][1] == i && this.extraConnections[j][0] < i)) {
                 this.cmd("Connect", transformedObjectID[this.extraConnections[j][0]], transformedObjectID[this.extraConnections[j][1]], RotateScale3D.TRANSFORMED_EDGE_COLOR, 0, 0, "");
             }
 
         }
 
         this.cmd("Disconnect", this.originID, this.objectVertexID[i]);
-        if (this.rowMajor)
-        {
+        if (this.rowMajor) {
             this.objectVertexPosition[i] = output.data[0];
         }
-        else
-        {
+        else {
             this.objectVertexPosition[i][0] = output.data[0][0];
             this.objectVertexPosition[i][1] = output.data[1][0];
         }
@@ -654,8 +621,7 @@ RotateScale3D.prototype.transformPoints = function(transformMatrix)
     this.moveObjectToNewPosition();
     this.cmd("Step","C");
 
-    for (i = 0; i < transformedObjectID.length; i++)
-    {
+    for (i = 0; i < transformedObjectID.length; i++) {
         this.cmd("Delete", transformedObjectID[i]);
     }
 
@@ -696,8 +662,7 @@ RotateScale3D.prototype.rotate = function(input)
     matrix3Data = [[1,   0 ,  0],
                    [0, "cos \u0398x", "sin \u0398x"],
                    [0,  "-sin \u0398x", "cos \u0398x"]];
-    if (!this.rowMajor)
-    {
+    if (!this.rowMajor) {
         var tmp = matrix1Data;
         matrix1Data = matrix3Data;
         matrix3Data = tmp;
@@ -712,8 +677,7 @@ RotateScale3D.prototype.rotate = function(input)
     var thirdMat = this.createMatrix(matrix3Data, xpos, ypos);
     xpos += secondMat.data[0].length * RotateScale3D.MATRIX_ELEM_WIDTH;
 
-    if (!this.rowMajor)
-    {
+    if (!this.rowMajor) {
         firstMat.transpose();
         secondMat.transpose();
         thirdMat.transpose();
@@ -736,8 +700,7 @@ RotateScale3D.prototype.rotate = function(input)
                      [0, "cos " +inputs[2], "sin " +inputs[2]],
                      [0, "-sin " +inputs[2], "cos " +inputs[2]]];
 
-    if (!this.rowMajor)
-    {
+    if (!this.rowMajor) {
         var tmp = firstMat.data;
         firstMat.data = thirdMat.data;
         thirdMat.data = tmp;
@@ -762,8 +725,7 @@ RotateScale3D.prototype.rotate = function(input)
                      [0, Math.cos(rotateAngle3), Math.sin(rotateAngle3)],
                       [0, -Math.sin(rotateAngle3), Math.cos(rotateAngle3)]];
 
-    if (!this.rowMajor)
-    {
+    if (!this.rowMajor) {
         var tmp = firstMat.data;
         firstMat.data = thirdMat.data;
         thirdMat.data = tmp;
@@ -866,18 +828,14 @@ RotateScale3D.prototype.multiplyMatrix = function(mat1, mat2, mat3, explainID)
     var i;
     var j;
     var explainText = "";
-    for (i = 0; i < mat1.data.length; i++)
-    {
-        for (j = 0; j < mat2.data[0].length; j++)
-        {
+    for (i = 0; i < mat1.data.length; i++) {
+        for (j = 0; j < mat2.data[0].length; j++) {
             var explainText = "";
             var value = 0;
-            for (k = 0; k < mat2.data.length; k++)
-            {
+            for (k = 0; k < mat2.data.length; k++) {
                 this.cmd("SetHighlight", mat1.dataID[i][k], 1);
                 this.cmd("SetHighlight", mat2.dataID[k][j], 1);
-                if (explainText != "")
-                {
+                if (explainText != "") {
                         explainText = explainText + " + ";
                 }
                 value = value + mat1.data[i][k] * mat2.data[k][j];
@@ -903,12 +861,10 @@ RotateScale3D.prototype.multiplyMatrix = function(mat1, mat2, mat3, explainID)
 RotateScale3D.prototype.standardize = function(lab)
 {
     var newLab = Math.round(lab * 1000) / 1000;
-    if (isNaN(newLab))
-    {
+    if (isNaN(newLab)) {
         return lab;
     }
-    else
-    {
+    else {
         return newLab;
     }
 }
@@ -917,10 +873,8 @@ RotateScale3D.prototype.standardize = function(lab)
 RotateScale3D.prototype.resetMatrixLabels = function(mat)
 {
     var i,j;
-    for (i = 0; i < mat.data.length; i++)
-    {
-        for (j = 0; j < mat.data[i].length; j++)
-        {
+    for (i = 0; i < mat.data.length; i++) {
+        for (j = 0; j < mat.data[i].length; j++) {
             mat.data[i][j] = this.standardize(mat.data[i][j]);
             this.cmd("SetText", mat.dataID[i][j], mat.data[i][j]);
         }
@@ -935,8 +889,7 @@ RotateScale3D.prototype.moveMatrix = function(mat, x, y)
     var width = 0;
 
     var i, j;
-    for (i = 0; i < mat.data.length; i++)
-    {
+    for (i = 0; i < mat.data.length; i++) {
         width = Math.max(width, mat.data[i].length);
     }
 
@@ -949,10 +902,8 @@ RotateScale3D.prototype.moveMatrix = function(mat, x, y)
     this.cmd("Move", mat.rightBrack2,   x + width * RotateScale3D.MATRIX_ELEM_WIDTH, y);
     this.cmd("Move", mat.rightBrack3,  x+ width * RotateScale3D.MATRIX_ELEM_WIDTH, y + height * RotateScale3D.MATRIX_ELEM_HEIGHT);
 
-    for (i = 0; i < mat.data.length; i++)
-    {
-        for (j = 0; j < mat.data[i].length; j++)
-        {
+    for (i = 0; i < mat.data.length; i++) {
+        for (j = 0; j < mat.data[i].length; j++) {
             this.cmd("Move", mat.dataID[i][j],
                      x + j*RotateScale3D.MATRIX_ELEM_WIDTH + RotateScale3D.MATRIX_ELEM_WIDTH / 2,
                      y + i*RotateScale3D.MATRIX_ELEM_HEIGHT + RotateScale3D.MATRIX_ELEM_HEIGHT / 2);
@@ -969,10 +920,8 @@ RotateScale3D.prototype.deleteMatrix = function(mat)
     this.cmd("Delete",mat.rightBrack2);
     this.cmd("Delete",mat.rightBrack3);
     var i,j;
-    for (i = 0; i < mat.data.length; i++)
-    {
-        for (j = 0; j < mat.data[i].length; j++)
-        {
+    for (i = 0; i < mat.data.length; i++) {
+        for (j = 0; j < mat.data[i].length; j++) {
             this.cmd("Delete", mat.dataID[i][j]);
         }
     }
@@ -987,10 +936,8 @@ RotateScale3D.prototype.setMatrixAlpha = function(mat, alpha)
     this.cmd("SetAlpha",mat.rightBrack2, alpha);
     this.cmd("SetAlpha",mat.rightBrack3, alpha);
     var i,j;
-    for (i = 0; i < mat.data.length; i++)
-    {
-        for (j = 0; j < mat.data[i].length; j++)
-        {
+    for (i = 0; i < mat.data.length; i++) {
+        for (j = 0; j < mat.data[i].length; j++) {
             this.cmd("SetAlpha", mat.dataID[i][j], alpha);
         }
     }
@@ -1005,17 +952,13 @@ RotateScale3D.prototype.multiply = function(lhs, rhs)
     var resultMat = new Array(lhs.length);
     var i, j, k;
 
-    for (i = 0; i < lhs.length; i++)
-    {
+    for (i = 0; i < lhs.length; i++) {
         resultMat[i] = new Array(rhs[0].length);
     }
-    for (i = 0; i < lhs.length; i++)
-    {
-        for (j = 0; j < rhs[0].length; j++)
-        {
+    for (i = 0; i < lhs.length; i++) {
+        for (j = 0; j < rhs[0].length; j++) {
             var value = 0;
-            for (k = 0; k < rhs.length; k++)
-            {
+            for (k = 0; k < rhs.length; k++) {
                 value = value + lhs[i][k] * rhs[k][j];
             }
             resultMat[i][j] = value;
@@ -1040,12 +983,10 @@ RotateScale3D.prototype.createMatrix = function(contents, x, y)
 
     var i, j;
     mat.dataID = new Array(mat.data.length);
-    for (i = 0; i < mat.data.length; i++)
-    {
+    for (i = 0; i < mat.data.length; i++) {
         width = Math.max(width, mat.data[i].length);
         mat.dataID[i] = new Array(mat.data[i].length);
-        for (j = 0; j < mat.data[i].length; j++)
-        {
+        for (j = 0; j < mat.data[i].length; j++) {
             mat.dataID[i][j] = this.nextIndex++;
         }
     }
@@ -1058,10 +999,8 @@ RotateScale3D.prototype.createMatrix = function(contents, x, y)
     this.cmd("CreateRectangle", mat.rightBrack2, "", 1, height * RotateScale3D.MATRIX_ELEM_HEIGHT,  x + width * RotateScale3D.MATRIX_ELEM_WIDTH, y, "center","top");
     this.cmd("CreateRectangle", mat.rightBrack3, "", 5, 1,  x+ width * RotateScale3D.MATRIX_ELEM_WIDTH, y + height * RotateScale3D.MATRIX_ELEM_HEIGHT , "right","center");
 
-    for (i = 0; i < mat.data.length; i++)
-    {
-        for (j = 0; j < mat.data[i].length; j++)
-        {
+    for (i = 0; i < mat.data.length; i++) {
+        for (j = 0; j < mat.data[i].length; j++) {
             this.cmd("CreateLabel", mat.dataID[i][j], mat.data[i][j],
                      x + j*RotateScale3D.MATRIX_ELEM_WIDTH + RotateScale3D.MATRIX_ELEM_WIDTH / 2,
                      y + i*RotateScale3D.MATRIX_ELEM_HEIGHT + RotateScale3D.MATRIX_ELEM_HEIGHT / 2);
@@ -1089,14 +1028,11 @@ Matrix.prototype.transpose = function()
 {
     var newData = new Array(this.data[0].length);
     var i,j;
-    for (i = 0; i < this.data[0].length; i++)
-    {
+    for (i = 0; i < this.data[0].length; i++) {
         newData[i] = new Array(this.data.length);
     }
-    for (i = 0; i < this.data.length; i++)
-    {
-        for (j = 0; j < this.data[i].length; j++)
-        {
+    for (i = 0; i < this.data.length; i++) {
+        for (j = 0; j < this.data[i].length; j++) {
             newData[j][i] = this.data[i][j];
         }
     }

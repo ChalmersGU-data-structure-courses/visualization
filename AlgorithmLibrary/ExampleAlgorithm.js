@@ -44,14 +44,15 @@ SimpleStack.inheritFrom(Algorithm);
 // Next are some constants that are specific to the data structure.
 // We placed them in the function's namespace to avoid symbol clashes:
 
+SimpleStack.FOREGROUND_COLOR = "#007700";
+SimpleStack.BACKGROUND_COLOR = "#EEFFEE";
+
 SimpleStack.ELEMENT_WIDTH = 30;
 SimpleStack.ELEMENT_HEIGHT = 30;
 SimpleStack.INSERT_X = 30;
 SimpleStack.INSERT_Y = 30;
 SimpleStack.STARTING_X = 30;
 SimpleStack.STARTING_Y = 100;
-SimpleStack.FOREGROUND_COLOR = "#000000"
-SimpleStack.BACKGROUND_COLOR = "#DDDDFF"
 
 
 // The constructor above did not do any actual work, this is instead done in the init function.

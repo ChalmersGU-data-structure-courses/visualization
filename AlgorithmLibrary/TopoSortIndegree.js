@@ -91,8 +91,7 @@ TopoSortIndegree.prototype.setup = function()
 
 
 
-    for (var i = 0; i < this.size; i++)
-    {
+    for (var i = 0; i < this.size; i++) {
         this.indegreeID[i] = this.nextIndex++;
         this.setIndexID[i] = this.nextIndex++;
         this.orderID[i] = this.nextIndex++;
@@ -143,8 +142,7 @@ TopoSortIndegree.prototype.doTopoSort = function(ignored)
     var stackTop = 0;
 
     var vertex;
-    for (var vertex = 0; vertex < this.size; vertex++)
-    {
+    for (var vertex = 0; vertex < this.size; vertex++) {
         this.cmd("SetText", this.indegreeID[vertex], "0");
         this.indegree[vertex] = 0;
         stackID[vertex] = this.nextIndex++;
@@ -154,13 +152,11 @@ TopoSortIndegree.prototype.doTopoSort = function(ignored)
     this.cmd("SetText", this.message1ID, "Calculate this.indegree of all verticies by going through every edge of the graph");
     this.cmd("SetText", this.topoLabelID, "");
     this.cmd("SetText", this.stackLabelID, "");
-    for (vertex = 0; vertex < this.size; vertex++)
-    {
+    for (vertex = 0; vertex < this.size; vertex++) {
         var adjListIndex = 0;
         var neighbor;
         for (neighbor = 0; neighbor < this.size; neighbor++)
-            if (this.adj_matrix[vertex][neighbor] >= 0)
-            {
+            if (this.adj_matrix[vertex][neighbor] >= 0) {
                 adjListIndex++;
                 this.highlightEdge(vertex, neighbor, 1);
                 this.cmd("Step");
@@ -193,12 +189,10 @@ TopoSortIndegree.prototype.doTopoSort = function(ignored)
     this.cmd("SetText", this.message1ID, "Collect all vertices with 0 this.indegree onto a stack");
     this.cmd("SetText", this.stackLabelID, "Zero Indegree Vertices");
 
-    for (vertex = 0; vertex < this.size; vertex++)
-    {
+    for (vertex = 0; vertex < this.size; vertex++) {
         this.cmd("SetHighlight", this.indegreeID[vertex], 1);
         this.cmd("Step");
-        if (this.indegree[vertex] == 0)
-        {
+        if (this.indegree[vertex] == 0) {
             stack[stackTop] =vertex;
             this.cmd("CreateLabel", stackID[stackTop], vertex, TopoSortIndegree.INDEGREE_ARRAY_START_X - TopoSortIndegree.INDEGREE_ARRAY_ELEM_WIDTH, TopoSortIndegree.INDEGREE_ARRAY_START_Y + vertex*TopoSortIndegree.INDEGREE_ARRAY_ELEM_HEIGHT);
             this.cmd("Move", stackID[stackTop], TopoSortIndegree.STACK_START_X, TopoSortIndegree.STACK_START_Y + stackTop * TopoSortIndegree.STACK_HEIGHT);
@@ -213,8 +207,7 @@ TopoSortIndegree.prototype.doTopoSort = function(ignored)
 
 
     var nextInOrder = 0;
-    while (stackTop >  0)
-    {
+    while (stackTop >  0) {
         stackTop--;
         var nextElem = stack[stackTop];
         this.cmd("SetText", this.message1ID, "Pop off top vertex with this.indegree 0, add to topological sort");
@@ -229,10 +222,8 @@ TopoSortIndegree.prototype.doTopoSort = function(ignored)
 
         adjListIndex = 0;
 
-        for (vertex = 0; vertex < this.size; vertex++)
-        {
-            if (this.adj_matrix[nextElem][vertex] >= 0)
-            {
+        for (vertex = 0; vertex < this.size; vertex++) {
+            if (this.adj_matrix[nextElem][vertex] >= 0) {
                 adjListIndex++;
                 this.highlightEdge(nextElem, vertex, 1);
                 this.cmd("Step");
@@ -254,8 +245,7 @@ TopoSortIndegree.prototype.doTopoSort = function(ignored)
                 this.cmd("SetText", this.indegreeID[vertex], this.indegree[vertex]);
                 this.cmd("SetTextColor", this.indegreeID[vertex], "#FF0000");
                 this.cmd("Step");
-                if (this.indegree[vertex] == 0)
-                {
+                if (this.indegree[vertex] == 0) {
                     stack[stackTop] =vertex;
                     this.cmd("CreateLabel", stackID[stackTop], vertex, TopoSortIndegree.INDEGREE_ARRAY_START_X - TopoSortIndegree.INDEGREE_ARRAY_ELEM_WIDTH, TopoSortIndegree.INDEGREE_ARRAY_START_Y + vertex*TopoSortIndegree.INDEGREE_ARRAY_ELEM_HEIGHT);
                     this.cmd("Move", stackID[stackTop], TopoSortIndegree.STACK_START_X, TopoSortIndegree.STACK_START_Y + stackTop * TopoSortIndegree.STACK_HEIGHT);
@@ -314,8 +304,7 @@ TopoSortIndegree.prototype.dfsVisit = function(startVertex, messageX, printCCNum
     this.cmd("CreateLabel",nextMessage, "DFS(" +  String(startVertex) +  ")", messageX, this.messageY, 0);
 
     this.messageY = this.messageY + 20;
-    if (!this.visited[startVertex])
-    {
+    if (!this.visited[startVertex]) {
         this.d_times[startVertex] = this.currentTime++;
         this.cmd("CreateLabel", this.d_timesID_L[startVertex], "d = " + String(this.d_times[startVertex]), this.d_x_pos[startVertex], this.d_y_pos[startVertex]);
         this.cmd("CreateLabel", this.d_timesID_AL[startVertex], "d = " + String(this.d_times[startVertex]), this.adj_list_x_start - 2*this.adj_list_width, this.adj_list_y_start + startVertex*this.adj_list_height - 1/4*this.adj_list_height);
@@ -324,25 +313,20 @@ TopoSortIndegree.prototype.dfsVisit = function(startVertex, messageX, printCCNum
 
         this.visited[startVertex] = true;
         this.cmd("Step");
-        for (var neighbor = 0; neighbor < this.size; neighbor++)
-        {
-            if (this.adj_matrix[startVertex][neighbor] > 0)
-            {
+        for (var neighbor = 0; neighbor < this.size; neighbor++) {
+            if (this.adj_matrix[startVertex][neighbor] > 0) {
                 this.highlightEdge(startVertex, neighbor, 1);
-                if (this.visited[neighbor])
-                {
+                if (this.visited[neighbor]) {
                     nextMessage = this.nextIndex;
                     this.cmd("CreateLabel", nextMessage, "Vertex " + String(neighbor) + " already this.visited.", messageX, this.messageY, 0);
                 }
                 this.cmd("Step");
                 this.highlightEdge(startVertex, neighbor, 0);
-                if (this.visited[neighbor])
-                {
+                if (this.visited[neighbor]) {
                     this.cmd("Delete", nextMessage, "DNM");
                 }
 
-                if (!this.visited[neighbor])
-                {
+                if (!this.visited[neighbor]) {
                     this.cmd("Disconnect", this.circleID[startVertex], this.circleID[neighbor]);
                     this.cmd("Connect", this.circleID[startVertex], this.circleID[neighbor], TopoSortIndegree.DFS_TREE_COLOR, this.curve[startVertex][neighbor], 1, "");
                     this.cmd("Move", this.highlightCircleL, this.x_pos_logical[neighbor], this.y_pos_logical[neighbor]);
@@ -379,8 +363,7 @@ TopoSortIndegree.prototype.dfsVisit = function(startVertex, messageX, printCCNum
         this.cmd("Step");
 
         var i;
-        for (i = this.topoOrderArrayL.length; i > 0; i--)
-        {
+        for (i = this.topoOrderArrayL.length; i > 0; i--) {
             this.topoOrderArrayL[i] = this.topoOrderArrayL[i-1];
             this.topoOrderArrayAL[i] = this.topoOrderArrayAL[i-1];
             this.topoOrderArrayAM[i] = this.topoOrderArrayAM[i-1];
@@ -404,8 +387,7 @@ TopoSortIndegree.prototype.dfsVisit = function(startVertex, messageX, printCCNum
         this.cmd("SetLayer", nextVertexLabel, 3);
         this.topoOrderArrayAM[0] = nextVertexLabel;
 
-        for (i = 0; i < this.topoOrderArrayL.length; i++)
-        {
+        for (i = 0; i < this.topoOrderArrayL.length; i++) {
             this.cmd("Move", this.topoOrderArrayL[i], TopoSortIndegree.ORDERING_INITIAL_X,
                      TopoSortIndegree.ORDERING_INITIAL_Y + i * TopoSortIndegree.ORDERING_DELTA_Y);
             this.cmd("Move", this.topoOrderArrayAL[i], TopoSortIndegree.ORDERING_INITIAL_X,

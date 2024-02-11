@@ -95,12 +95,10 @@ LeftistHeap.prototype.addControls = function()
 
 LeftistHeap.prototype.NPLChangedHandler = function(logicalRep, event)
 {
-    if (this.showNPLBox.checked)
-    {
+    if (this.showNPLBox.checked) {
         this.animationManager.setAllLayers([0,1]);
     }
-    else
-    {
+    else {
         this.animationManager.setAllLayers([0]);
     }
 }
@@ -111,8 +109,7 @@ LeftistHeap.prototype.NPLChangedHandler = function(logicalRep, event)
 LeftistHeap.prototype.insertCallback = function(event)
 {
     var insertedValue = this.normalizeNumber(this.insertField.value.toUpperCase());
-    if (insertedValue != "")
-    {
+    if (insertedValue != "") {
         this.insertField.value = "";
         this.implementAction(this.insertElement.bind(this), insertedValue);
     }
@@ -134,8 +131,7 @@ LeftistHeap.prototype.clear = function(ignored)
 
 LeftistHeap.prototype.clearTree = function(tree)
 {
-        if (tree != null)
-        {
+        if (tree != null) {
             this.cmd("Delete", tree.graphicID);
             this.cmd("Delete", tree.nplID);
             this.clearTree(tree.left);
@@ -163,18 +159,15 @@ LeftistHeap.prototype.removeSmallest = function(dummy)
 
     this.commands = new Array();
 
-    if (this.treeRoot != null)
-    {
+    if (this.treeRoot != null) {
         this.highlightLeft = this.nextIndex++;
         this.highlightRight = this.nextIndex++;
 
         this.cmd("SetText", LeftistHeap.MESSAGE_ID, "Remove root element, leaving two subtrees");
-        if (this.treeRoot.left != null)
-        {
+        if (this.treeRoot.left != null) {
             this.cmd("Disconnect", this.treeRoot.graphicID, this.treeRoot.left.graphicID);
         }
-        if (this.treeRoot.right != null)
-        {
+        if (this.treeRoot.right != null) {
             this.cmd("Disconnect", this.treeRoot.graphicID, this.treeRoot.right.graphicID);
         }
         var oldElem = this.treeRoot.graphicID;
@@ -183,17 +176,14 @@ LeftistHeap.prototype.removeSmallest = function(dummy)
         this.cmd("Step");
         this.cmd("SetText", LeftistHeap.MESSAGE_ID, "Merge the two subtrees");
 
-        if (this.treeRoot.left == null)
-        {
+        if (this.treeRoot.left == null) {
             this.treeRoot = null;
         }
-        else if (this.treeRoot.right == null)
-        {
+        else if (this.treeRoot.right == null) {
             this.treeRoot = this.treeRoot.left;
             this.resizeTrees();
         }
-        else
-        {
+        else {
             var secondTree = this.treeRoot.right;
             this.secondaryRoot = secondTree;
             this.treeRoot = this.treeRoot.left;
@@ -232,8 +222,7 @@ LeftistHeap.prototype.insertElement = function(insertedValue)
     this.cmd("SetBackgroundColor", this.secondaryRoot.graphicID, LeftistHeap.BACKGROUND_COLOR);
 
 
-    if (this.treeRoot != null)
-    {
+    if (this.treeRoot != null) {
         this.resizeTrees();
         this.highlightLeft = this.nextIndex++;
         this.highlightRight = this.nextIndex++;
@@ -249,8 +238,7 @@ LeftistHeap.prototype.insertElement = function(insertedValue)
 
         this.resizeTrees();
     }
-    else
-    {
+    else {
         this.treeRoot = this.secondaryRoot;
         this.secondaryRoot = null;
         this.resizeTrees();
@@ -264,8 +252,7 @@ LeftistHeap.prototype.insertElement = function(insertedValue)
 
 LeftistHeap.prototype.merge = function(tree1, tree2)
 {
-    if (tree1 == null)
-    {
+    if (tree1 == null) {
         this.cmd("SetText", LeftistHeap.MESSAGE_ID, "Merging right heap with empty heap, return right heap");
         this.cmd("Step");
         this.cmd("Delete", this.highlightRight);
@@ -273,8 +260,7 @@ LeftistHeap.prototype.merge = function(tree1, tree2)
 
         return tree2;
     }
-    if (tree2 == null)
-    {
+    if (tree2 == null) {
         this.cmd("SetText", LeftistHeap.MESSAGE_ID, "Merging left heap with empty heap, return left heap");
         this.cmd("Step");
         this.cmd("Delete", this.highlightRight);
@@ -285,8 +271,7 @@ LeftistHeap.prototype.merge = function(tree1, tree2)
     var tmp;
     this.cmd("SetHighlight", tree1.graphicID, 1);
     this.cmd("SetHighlight", tree2.graphicID, 1);
-    if (this.compare(tree2.data, tree1.data) < 0)
-    {
+    if (this.compare(tree2.data, tree1.data) < 0) {
         this.cmd("SetText", LeftistHeap.MESSAGE_ID, "Min element is in right heap.  Recursively merge right subtree of right heap with left heap");
         tmp = tree1;
         tree1 = tree2;
@@ -295,48 +280,40 @@ LeftistHeap.prototype.merge = function(tree1, tree2)
         this.highlightRight = this.highlightLeft;
         this.highlightLeft = tmp;
     }
-    else
-    {
+    else {
         this.cmd("SetText", LeftistHeap.MESSAGE_ID, "Min element is in left heap.  Recursively merge right subtree of left heap with right heap");
     }
     this.cmd("Step");
     this.cmd("SetHighlight", tree1.graphicID, 0);
     this.cmd("SetHighlight", tree2.graphicID, 0);
-    if (tree1.right == null)
-    {
+    if (tree1.right == null) {
         this.cmd("Move", this.highlightLeft, tree1.x + LeftistHeap.WIDTH_DELTA / 2, tree1.y + LeftistHeap.HEIGHT_DELTA);
     }
-    else
-    {
+    else {
         this.cmd("Move", this.highlightLeft, tree1.right.x, tree1.right.y);
 
     }
     this.cmd("Step");
-    if (tree1.right != null)
-    {
+    if (tree1.right != null) {
         this.cmd("Disconnect", tree1.graphicID, tree1.right.graphicID,  LeftistHeap.LINK_COLOR);
     }
     var next = tree1.right;
     this.cmd("SetAlpha", tree1.graphicID, LeftistHeap.BACKGROUND_ALPHA);
     this.cmd("SetAlpha", tree1.nplID, LeftistHeap.BACKGROUND_ALPHA);
-    if (tree1.left != null)
-    {
+    if (tree1.left != null) {
         this.cmd("SetEdgeAlpha", tree1.graphicID, tree1.left.graphicID, LeftistHeap.BACKGROUND_ALPHA);
         this.setTreeAlpha(tree1.left, LeftistHeap.BACKGROUND_ALPHA);
 
     }
     this.cmd("Step");
     tree1.right = this.merge(next, tree2);
-    if (this.secondaryRoot == tree1.right)
-    {
+    if (this.secondaryRoot == tree1.right) {
         this.secondaryRoot = null;
     }
-    if (this.treeRoot == tree1.right)
-    {
+    if (this.treeRoot == tree1.right) {
         this.treeRoot = null;
     }
-    if (tree1.right.parent != tree1)
-    {
+    if (tree1.right.parent != tree1) {
         tree1.right.disconnectFromParent();
     }
     tree1.right.parent = tree1;
@@ -347,15 +324,13 @@ LeftistHeap.prototype.merge = function(tree1, tree2)
     this.cmd("SetAlpha", tree1.nplID, 1);
 
     this.resizeTrees();
-    if (tree1.left != null)
-    {
+    if (tree1.left != null) {
         this.cmd("SetEdgeAlpha", tree1.graphicID, tree1.left.graphicID, 1);
         this.setTreeAlpha(tree1.left, 1);
         this.cmd("Step");
     }
 
-    if (tree1.left == null || (tree1.left.npl < tree1.right.npl))
-    {
+    if (tree1.left == null || (tree1.left.npl < tree1.right.npl)) {
         this.cmd("SetHighlight", tree1.graphicID, 1);
         this.cmd("SetText", LeftistHeap.MESSAGE_ID, "Right subtree has larger Null Path Length than left subtree.  Swapping ...");
         this.cmd("Step")
@@ -365,20 +340,17 @@ LeftistHeap.prototype.merge = function(tree1, tree2)
         tree1.right = tmp;
         this.resizeTrees();
     }
-    else
-    {
+    else {
         this.cmd("SetHighlight", tree1.graphicID, 1);
         this.cmd("SetText", LeftistHeap.MESSAGE_ID, "Left subtree has Null Path Length at least as large as right subtree.  No swap required ...");
         this.cmd("Step")
         this.cmd("SetHighlight", tree1.graphicID, 0);
 
     }
-    if (tree1.right == null)
-    {
+    if (tree1.right == null) {
         tree1.npl = 0;
     }
-    else
-    {
+    else {
         tree1.npl = Math.min(tree1.left.npl, tree1.right.npl) + 1;
     }
     this.cmd("SetText", tree1.nplID, tree1.npl);
@@ -390,17 +362,14 @@ LeftistHeap.prototype.merge = function(tree1, tree2)
 
 LeftistHeap.prototype.setTreeAlpha = function(tree, newAlpha)
 {
-    if (tree != null)
-    {
+    if (tree != null) {
         this.cmd("SetAlpha", tree.graphicID, newAlpha);
         this.cmd("SetAlpha", tree.nplID, newAlpha);
-        if (tree.left != null)
-        {
+        if (tree.left != null) {
             this.cmd("SetEdgeAlpha", tree.graphicID, tree.left.graphicID, newAlpha);
             this.setTreeAlpha(tree.left, newAlpha);
         }
-        if (tree.right != null)
-        {
+        if (tree.right != null) {
             this.cmd("SetEdgeAlpha", tree.graphicID, tree.right.graphicID, newAlpha);
             this.setTreeAlpha(tree.right, newAlpha);
         }
@@ -409,8 +378,7 @@ LeftistHeap.prototype.setTreeAlpha = function(tree, newAlpha)
 
 LeftistHeap.prototype.resizeWidths = function(tree)
 {
-    if (tree == null)
-    {
+    if (tree == null) {
         return 0;
     }
     tree.leftWidth = Math.max(this.resizeWidths(tree.left), LeftistHeap.WIDTH_DELTA / 2);
@@ -428,13 +396,11 @@ LeftistHeap.prototype.resizeTrees = function()
     this.resizeWidths(this.treeRoot);
     this.resizeWidths(this.secondaryRoot);
 
-    if (this.treeRoot != null)
-    {
+    if (this.treeRoot != null) {
         startingPoint = this.treeRoot.leftWidth;
         this.setNewPositions(this.treeRoot, startingPoint, LeftistHeap.STARTING_Y, 0);
         this.animateNewPositions(this.treeRoot);
-        if (this.secondaryRoot != null)
-        {
+        if (this.secondaryRoot != null) {
             secondTreeStart = this.treeRoot.leftWidth + this.treeRoot.rightWidth + this.secondaryRoot.leftWidth + 50;
             this.setNewPositions(this.secondaryRoot, secondTreeStart, LeftistHeap.STARTING_Y, 0);
             this.animateNewPositions(this.secondaryRoot);
@@ -442,8 +408,7 @@ LeftistHeap.prototype.resizeTrees = function()
 
         this.cmd("Step");
     }
-    else if (this.secondaryRoot != null)
-    {
+    else if (this.secondaryRoot != null) {
         startingPoint = this.secondaryRoot.leftWidth;
         this.setNewPositions(this.secondaryRoot, startingPoint, LeftistHeap.STARTING_Y, 0);
         this.animateNewPositions(this.secondaryRoot);
@@ -453,21 +418,17 @@ LeftistHeap.prototype.resizeTrees = function()
 
 LeftistHeap.prototype.setNewPositions = function(tree, xPosition, yPosition, side)
 {
-    if (tree != null)
-    {
+    if (tree != null) {
         tree.y = yPosition;
-        if (side == -1)
-        {
+        if (side == -1) {
             xPosition = xPosition - tree.rightWidth;
             tree.npX = xPosition - LeftistHeap.NPL_OFFSET_X;
         }
-        else if (side == 1)
-        {
+        else if (side == 1) {
             xPosition = xPosition + tree.leftWidth;
             tree.npX = xPosition + LeftistHeap.NPL_OFFSET_X;
         }
-        else
-        {
+        else {
             tree.heightLabelX = xPosition - LeftistHeap.NPL_OFFSET_Y;;
             tree.npX = xPosition + LeftistHeap.NPL_OFFSET_X;
         }
@@ -482,8 +443,7 @@ LeftistHeap.prototype.setNewPositions = function(tree, xPosition, yPosition, sid
 
 LeftistHeap.prototype.animateNewPositions = function(tree)
 {
-    if (tree != null)
-    {
+    if (tree != null) {
         this.cmd("Move", tree.graphicID, tree.x, tree.y);
         this.cmd("Move", tree.nplID, tree.npX, tree.npY);
         this.animateNewPositions(tree.left);
@@ -524,14 +484,11 @@ function LeftistHeapNode(val, id, nplID, initialX, initialY)
 
 LeftistHeapNode.prototype.disconnectFromParent = function()
 {
-    if (this.parent != null)
-    {
-        if (this.parent.right == this)
-        {
+    if (this.parent != null) {
+        if (this.parent.right == this) {
             this.parent.right = null;
         }
-        else if (this.parent.left === this)
-        {
+        else if (this.parent.left === this) {
             this.parent.left == null;
         }
     }

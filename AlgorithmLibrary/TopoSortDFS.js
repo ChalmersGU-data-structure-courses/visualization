@@ -108,17 +108,14 @@ TopoSortDFS.prototype.setup = function()
     this.old_adj_list_list = new Array(this.size);
     this.old_adj_list_index = new Array(this.size);
     this.old_adj_list_edges = new Array(this.size);
-    for (var i = 0; i < this.size; i++)
-    {
+    for (var i = 0; i < this.size; i++) {
         this.old_adj_matrix[i] = new Array(this.size);
         this.old_adj_list_index[i] = this.adj_list_index[i];
         this.old_adj_list_list[i] = this.adj_list_list[i];
         this.old_adj_list_edges[i] = new Array(this.size);
-        for (var j = 0; j < this.size; j++)
-        {
+        for (var j = 0; j < this.size; j++) {
             this.old_adj_matrix[i][j] = this.adj_matrix[i][j];
-            if (this.adj_matrix[i][j] > 0)
-            {
+            if (this.adj_matrix[i][j] > 0) {
                 this.old_adj_list_edges[i][j] = this.adj_list_edges[i][j];
             }
 
@@ -142,10 +139,8 @@ TopoSortDFS.prototype.doTopoSort = function(ignored)
     this.topoOrderArrayAL = new Array();
     this.topoOrderArrayAM = new Array();
     var i;
-    if (this.messageID != null)
-    {
-        for (i = 0; i < this.messageID.length; i++)
-        {
+    if (this.messageID != null) {
+        for (i = 0; i < this.messageID.length; i++) {
             this.cmd("Delete", this.messageID[i], 1);
         }
     }
@@ -170,8 +165,7 @@ TopoSortDFS.prototype.doTopoSort = function(ignored)
     this.d_times = new Array(this.size);
     this.f_times = new Array(this.size);
     this.currentTime = 1
-    for (i = 0; i < this.size; i++)
-    {
+    for (i = 0; i < this.size; i++) {
         this.d_timesID_L[i] = this.nextIndex++;
         this.f_timesID_L[i] = this.nextIndex++;
         this.d_timesID_AL[i] = this.nextIndex++;
@@ -180,10 +174,8 @@ TopoSortDFS.prototype.doTopoSort = function(ignored)
 
     this.messageY = 30;
     var vertex;
-    for (vertex = 0; vertex < this.size; vertex++)
-    {
-        if (!this.visited[vertex])
-        {
+    for (vertex = 0; vertex < this.size; vertex++) {
+        if (!this.visited[vertex]) {
             this.cmd("CreateHighlightCircle", this.highlightCircleL, TopoSortDFS.HIGHLIGHT_CIRCLE_COLOR, this.x_pos_logical[vertex], this.y_pos_logical[vertex]);
             this.cmd("SetLayer", this.highlightCircleL, 1);
             this.cmd("CreateHighlightCircle", this.highlightCircleAL, TopoSortDFS.HIGHLIGHT_CIRCLE_COLOR,this.adj_list_x_start - this.adj_list_width, this.adj_list_y_start + vertex*this.adj_list_height);
@@ -192,8 +184,7 @@ TopoSortDFS.prototype.doTopoSort = function(ignored)
             this.cmd("CreateHighlightCircle", this.highlightCircleAM, TopoSortDFS.HIGHLIGHT_CIRCLE_COLOR,this.adj_matrix_x_start - this.adj_matrix_width, this.adj_matrix_y_start + vertex*this.adj_matrix_height);
             this.cmd("SetLayer", this.highlightCircleAM, 3);
 
-            if (vertex > 0)
-            {
+            if (vertex > 0) {
                 var breakID = this.nextIndex++;
                 this.messageID.push(breakID);
                 this.cmd("CreateRectangle", breakID, "", 200, 0, 10, this.messageY,"left","bottom");
@@ -238,8 +229,7 @@ TopoSortDFS.prototype.dfsVisit = function(startVertex, messageX, printCCNum)
     this.cmd("CreateLabel",nextMessage, "DFS(" +  String(startVertex) +  ")", messageX, this.messageY, 0);
 
     this.messageY = this.messageY + 20;
-    if (!this.visited[startVertex])
-    {
+    if (!this.visited[startVertex]) {
         this.d_times[startVertex] = this.currentTime++;
         this.cmd("CreateLabel", this.d_timesID_L[startVertex], "d = " + String(this.d_times[startVertex]), this.d_x_pos[startVertex], this.d_y_pos[startVertex]);
         this.cmd("CreateLabel", this.d_timesID_AL[startVertex], "d = " + String(this.d_times[startVertex]), this.adj_list_x_start - 2*this.adj_list_width, this.adj_list_y_start + startVertex*this.adj_list_height - 1/4*this.adj_list_height);
@@ -248,25 +238,20 @@ TopoSortDFS.prototype.dfsVisit = function(startVertex, messageX, printCCNum)
 
         this.visited[startVertex] = true;
         this.cmd("Step");
-        for (var neighbor = 0; neighbor < this.size; neighbor++)
-        {
-            if (this.adj_matrix[startVertex][neighbor] > 0)
-            {
+        for (var neighbor = 0; neighbor < this.size; neighbor++) {
+            if (this.adj_matrix[startVertex][neighbor] > 0) {
                 this.highlightEdge(startVertex, neighbor, 1);
-                if (this.visited[neighbor])
-                {
+                if (this.visited[neighbor]) {
                     nextMessage = this.nextIndex;
                     this.cmd("CreateLabel", nextMessage, "Vertex " + String(neighbor) + " already this.visited.", messageX, this.messageY, 0);
                 }
                 this.cmd("Step");
                 this.highlightEdge(startVertex, neighbor, 0);
-                if (this.visited[neighbor])
-                {
+                if (this.visited[neighbor]) {
                     this.cmd("Delete", nextMessage, "DNM");
                 }
 
-                if (!this.visited[neighbor])
-                {
+                if (!this.visited[neighbor]) {
                     this.cmd("Disconnect", this.circleID[startVertex], this.circleID[neighbor]);
                     this.cmd("Connect", this.circleID[startVertex], this.circleID[neighbor], TopoSortDFS.DFS_TREE_COLOR, this.curve[startVertex][neighbor], 1, "");
                     this.cmd("Move", this.highlightCircleL, this.x_pos_logical[neighbor], this.y_pos_logical[neighbor]);
@@ -303,8 +288,7 @@ TopoSortDFS.prototype.dfsVisit = function(startVertex, messageX, printCCNum)
         this.cmd("Step");
 
         var i;
-        for (i = this.topoOrderArrayL.length; i > 0; i--)
-        {
+        for (i = this.topoOrderArrayL.length; i > 0; i--) {
             this.topoOrderArrayL[i] = this.topoOrderArrayL[i-1];
             this.topoOrderArrayAL[i] = this.topoOrderArrayAL[i-1];
             this.topoOrderArrayAM[i] = this.topoOrderArrayAM[i-1];
@@ -328,8 +312,7 @@ TopoSortDFS.prototype.dfsVisit = function(startVertex, messageX, printCCNum)
         this.cmd("SetLayer", nextVertexLabel, 3);
         this.topoOrderArrayAM[0] = nextVertexLabel;
 
-        for (i = 0; i < this.topoOrderArrayL.length; i++)
-        {
+        for (i = 0; i < this.topoOrderArrayL.length; i++) {
             this.cmd("Move", this.topoOrderArrayL[i], TopoSortDFS.ORDERING_INITIAL_X,
                      TopoSortDFS.ORDERING_INITIAL_Y + i * TopoSortDFS.ORDERING_DELTA_Y);
             this.cmd("Move", this.topoOrderArrayAL[i], TopoSortDFS.ORDERING_INITIAL_X,
@@ -352,16 +335,13 @@ TopoSortDFS.prototype.reset = function()
     // TODO:  Fix undo messing with setup vars.
     this.messageID = new Array();
     this.nextIndex = this.initialIndex;
-    for (var i = 0; i < this.size; i++)
-    {
+    for (var i = 0; i < this.size; i++) {
         this.adj_list_list[i] = this.old_adj_list_list[i];
         this.adj_list_index[i] = this.old_adj_list_index[i];
 
-        for (var j = 0; j < this.size; j++)
-        {
+        for (var j = 0; j < this.size; j++) {
             this.adj_matrix[i][j] = this.old_adj_matrix[i][j];
-            if (this.adj_matrix[i][j] > 0)
-            {
+            if (this.adj_matrix[i][j] > 0) {
                 this.adj_list_edges[i][j] = this.old_adj_list_edges[i][j];
             }
         }

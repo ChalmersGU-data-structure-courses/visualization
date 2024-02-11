@@ -100,8 +100,7 @@ BucketSort.prototype.setup = function()
     this.commands = new Array();
     this.oldData = new Array(BucketSort.ARRAY_SIZE_SMALL);
 
-    for (var i = 0; i < BucketSort.ARRAY_SIZE_SMALL; i++)
-    {
+    for (var i = 0; i < BucketSort.ARRAY_SIZE_SMALL; i++) {
         var nextID = this.nextIndex++;
         this.arrayData[i] = Math.floor(Math.random()*BucketSort.MAX_DATA_VALUE);
         this.oldData[i] = this.arrayData[i];
@@ -134,8 +133,7 @@ BucketSort.prototype.bucketSortCallback = function(event)
     this.commands = new Array();
     linkedListData = new Array(BucketSort.ARRAY_SIZE_SMALL);
     var i;
-    for (i= 0; i < BucketSort.ARRAY_SIZE_SMALL; i++)
-    {
+    for (i= 0; i < BucketSort.ARRAY_SIZE_SMALL; i++) {
         var labelID = this.nextIndex++;
         var label2ID = this.nextIndex++;
         var label3ID = this.nextIndex++;
@@ -172,8 +170,7 @@ BucketSort.prototype.bucketSortCallback = function(event)
         this.cmd("Delete", label4ID);
         this.cmd("Delete", highlightCircle);
 
-        if (linkedListData[index] == null)
-        {
+        if (linkedListData[index] == null) {
             linkedListData[index] = node;
             this.cmd("Connect", this.linkedListRects[index], node.graphicID);
             this.cmd("SetNull",this.linkedListRects[index], 0);
@@ -182,8 +179,7 @@ BucketSort.prototype.bucketSortCallback = function(event)
             node.y = this.pointer_array_elem_y_small - BucketSort.LINKED_ITEM_Y_DELTA_SMALL;
             this.cmd("Move", node.graphicID, node.x, node.y);
         }
-        else
-        {
+        else {
             var tmp = linkedListData[index];
             this.cmd("SetHighlight", tmp.graphicID, 1);
             this.cmd("SetHighlight", node.graphicID, 1);
@@ -191,8 +187,7 @@ BucketSort.prototype.bucketSortCallback = function(event)
             this.cmd("SetHighlight", tmp.graphicID, 0);
             this.cmd("SetHighlight", node.graphicID, 0);
 
-            if (this.compare(tmp.data, node.data) >= 0)
-            {
+            if (this.compare(tmp.data, node.data) >= 0) {
                 this.cmd("Disconnect", this.linkedListRects[index], linkedListData[index].graphicID);
                 node.next = tmp;
                 this.cmd("Connect", this.linkedListRects[index], node.graphicID);
@@ -202,10 +197,8 @@ BucketSort.prototype.bucketSortCallback = function(event)
                 this.cmd("Connect", this.linkedListRects[index], node.graphicID);
 
             }
-            else
-            {
-                if (tmp.next != null)
-                {
+            else {
+                if (tmp.next != null) {
                     this.cmd("SetHighlight", tmp.next.graphicID, 1);
                     this.cmd("SetHighlight", node.graphicID, 1);
                     this.cmd("Step");
@@ -213,11 +206,9 @@ BucketSort.prototype.bucketSortCallback = function(event)
                     this.cmd("SetHighlight", node.graphicID, 0);
                 }
 
-                while (tmp.next != null && this.compare(tmp.next.data, node.data) < 0)
-                {
+                while (tmp.next != null && this.compare(tmp.next.data, node.data) < 0) {
                     tmp = tmp.next;
-                    if (tmp.next != null)
-                    {
+                    if (tmp.next != null) {
                         this.cmd("SetHighlight", tmp.next.graphicID, 1);
                         this.cmd("SetHighlight", node.graphicID, 1);
                         this.cmd("Step");
@@ -225,14 +216,12 @@ BucketSort.prototype.bucketSortCallback = function(event)
                         this.cmd("SetHighlight", node.graphicID, 0);
                     }
                 }
-                if (tmp.next != null)
-                {
+                if (tmp.next != null) {
                     this.cmd("Disconnect", tmp.graphicID, tmp.next.graphicID);
                     this.cmd("Connect", node.graphicID, tmp.next.graphicID);
                     this.cmd("SetNull",node.graphicID, 0);
                 }
-                else
-                {
+                else {
                     this.cmd("SetNull",tmp.graphicID, 0);
                 }
                 node.next = tmp.next;
@@ -242,8 +231,7 @@ BucketSort.prototype.bucketSortCallback = function(event)
             tmp = linkedListData[index];
             var startX = BucketSort.POINTER_ARRAY_ELEM_START_X_SMALL + index *BucketSort.POINTER_ARRAY_ELEM_WIDTH_SMALL;
             var startY = this.pointer_array_elem_y_small - BucketSort.LINKED_ITEM_Y_DELTA_SMALL;
-            while (tmp != null)
-            {
+            while (tmp != null) {
                 tmp.x = startX;
                 tmp.y = startY;
                 this.cmd("Move", tmp.graphicID, tmp.x, tmp.y);
@@ -254,10 +242,8 @@ BucketSort.prototype.bucketSortCallback = function(event)
         this.cmd("Step");
     }
     var insertIndex = 0;
-    for (i = 0; i < BucketSort.ARRAY_SIZE_SMALL; i++)
-    {
-        for (tmp = linkedListData[i]; tmp != null; tmp = tmp.next)
-        {
+    for (i = 0; i < BucketSort.ARRAY_SIZE_SMALL; i++) {
+        for (tmp = linkedListData[i]; tmp != null; tmp = tmp.next) {
             var moveLabelID = this.nextIndex++;
             this.cmd("SetText", tmp.graphicID, "");
             this.cmd("SetText", this.arrayRects[insertIndex], "");
@@ -267,12 +253,10 @@ BucketSort.prototype.bucketSortCallback = function(event)
             this.cmd("Delete", moveLabelID);
             this.cmd("SetText", this.arrayRects[insertIndex], tmp.data);
             this.cmd("Delete", tmp.graphicID);
-            if (tmp.next != null)
-            {
+            if (tmp.next != null) {
                 this.cmd("Connect", this.linkedListRects[i], tmp.next.graphicID);
             }
-            else
-            {
+            else {
                 this.cmd("SetNull", this.linkedListRects[i], 1);
             }
             this.arrayData[insertIndex] = tmp.data;
@@ -287,8 +271,7 @@ BucketSort.prototype.bucketSortCallback = function(event)
 BucketSort.prototype.randomizeArray = function()
 {
     this.commands = new Array();
-    for (var i = 0; i < BucketSort.ARRAY_SIZE_SMALL; i++)
-    {
+    for (var i = 0; i < BucketSort.ARRAY_SIZE_SMALL; i++) {
         this.arrayData[i] =  Math.floor(1 + Math.random()*BucketSort.MAX_DATA_VALUE);
         this.oldData[i] = this.arrayData[i];
         this.cmd("SetText", this.arrayRects[i], this.arrayData[i]);
@@ -304,8 +287,7 @@ BucketSort.prototype.randomizeArray = function()
 BucketSort.prototype.reset = function()
 {
     this.commands = new Array();
-    for (var i = 0; i < BucketSort.ARRAY_SIZE_SMALL; i++)
-    {
+    for (var i = 0; i < BucketSort.ARRAY_SIZE_SMALL; i++) {
         this.arrayData[i] = this.oldData[i];
     }
 }
