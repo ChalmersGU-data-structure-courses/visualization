@@ -29,6 +29,17 @@ function ComparisonSort(am)
 {
     this.init(am);
 }
+ComparisonSort.inheritFrom(Algorithm);
+
+
+// Various constants
+
+ComparisonSort.INDEX_COLOR = "#0000FF";
+ComparisonSort.BAR_FOREGROUND_COLOR = ComparisonSort.INDEX_COLOR;
+ComparisonSort.BAR_BACKGROUND_COLOR ="#AAAAFF";
+ComparisonSort.HIGHLIGHT_BAR_COLOR = "#FF0000";
+ComparisonSort.HIGHLIGHT_BAR_BACKGROUND_COLOR = "#FFAAAA";
+ComparisonSort.QUICKSORT_LINE_COLOR = ComparisonSort.HIGHLIGHT_BAR_COLOR;
 
 ComparisonSort.DEFAULT_ARRAY_SIZE = 25;
 ComparisonSort.ARRAY_SIZES = [25, 50, 100, 200];
@@ -44,20 +55,18 @@ ComparisonSort.LABEL_Y_ADD = 10;
 ComparisonSort.MAX_VALUE = 99;
 ComparisonSort.MAX_SCALE_FACTOR = 2.0;
 
-ComparisonSort.BAR_FOREGROUND_COLOR = "#0000FF";
-ComparisonSort.BAR_BACKGROUND_COLOR ="#AAAAFF";
-ComparisonSort.INDEX_COLOR = "#0000FF";
-ComparisonSort.HIGHLIGHT_BAR_COLOR = "#FF0000";
-ComparisonSort.HIGHLIGHT_BAR_BACKGROUND_COLOR = "#FFAAAA";
-ComparisonSort.QUICKSORT_LINE_COLOR = "#FF0000";
 
-
-ComparisonSort.inheritFrom(Algorithm);
 
 ComparisonSort.prototype.init = function(am)
 {
     ComparisonSort.superclass.init.call(this, am);
     this.addControls();
+    this.resetAll();
+}
+
+
+ComparisonSort.prototype.sizeChanged = function()
+{
     this.resetAll();
 }
 
@@ -79,12 +88,6 @@ ComparisonSort.prototype.addControls = function()
     this.algorithmSelect.value = ComparisonSort.DEFAULT_ALGORITHM;
     this.sortButton = this.addControlToAlgorithmBar("Button", "Run");
     this.sortButton.onclick = this.runSortCallback.bind(this);
-}
-
-
-ComparisonSort.prototype.sizeChanged = function()
-{
-    this.resetAll();
 }
 
 
@@ -110,21 +113,6 @@ ComparisonSort.prototype.resetAll = function()
     );
 
     this.createVisualObjects();
-}
-
-
-ComparisonSort.prototype.randomizeArray = function()
-{
-    this.commands = [];
-    for (var i = 0; i < this.info.size; i++) {
-        this.oldArrayData[i] = this.arrayData[i] = Math.floor(1 + Math.random() * ComparisonSort.MAX_VALUE);
-        var label = this.info.labels ? this.arrayData[i] : "";
-        this.cmd("SetText", this.barLabels[i], label);
-        this.cmd("SetHeight", this.barObjects[i], this.arrayData[i] * this.info.scale_factor);
-    }
-    this.animationManager.StartNewAnimation(this.commands);
-    this.animationManager.skipForward();
-    this.animationManager.clearHistory();
 }
 
 
@@ -571,7 +559,6 @@ ComparisonSort.prototype.highlightRange = function(lowIndex, highIndex)
 
 ///////////////////////////////////////////////////////////////////////////////
 // Initialization
-
 
 var currentAlg;
 
