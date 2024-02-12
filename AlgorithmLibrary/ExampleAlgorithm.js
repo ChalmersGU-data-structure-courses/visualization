@@ -105,12 +105,14 @@ SimpleStack.prototype.addControls = function()
     // There are libraries that help with text entry, buttons, check boxes, dropdown menus.
 
     // The text input field:
-    this.pushField = this.addControlToAlgorithmBar("Text", "");
-    this.pushField.onkeydown = this.returnSubmit(
-        this.pushField,
-        this.pushCallback.bind(this),  // callback to make when return is pressed
-        4,     // integer: max number of characters allowed
-        false  // boolean: true if only digits can be entered
+    this.pushField = this.addControlToAlgorithmBar("Text", "", {
+        maxlength: 4, // max number of characters allowed
+        size: 4,      // size (width) of the text field
+    });
+    this.addReturnSubmit(
+        this.pushField, 
+        "ALPHANUM",   // only allow alphanumeric characters, and convert to uppercase
+        this.pushCallback.bind(this)  // callback to make when return is pressed
     );
 
     // The button for pushing onto the stack:
@@ -172,11 +174,11 @@ SimpleStack.prototype.reset = function()
 SimpleStack.prototype.pushCallback = function()
 {
     // Get value to insert from textfield (created in addControls above).
-    // Also normalize it by parsing numbers, removing blanks, and converting to upper case.
-    var pushedValue = this.normalizeNumber(this.pushField.value.toUpperCase());
+    // Also normalize it by parsing numbers and removing blanks.
+    var pushedValue = this.normalizeNumber(this.pushField.value);
 
     // Only push the value if the text field is not empty.
-    if (pushedValue) {
+    if (pushedValue !== "") {
        // Clear text field after operation.
        this.pushField.value = "";
        // Do the actual work. The function implementAction is defined in the Algorithm superclass.

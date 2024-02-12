@@ -75,8 +75,8 @@ StackLL.prototype.sizeChanged = function()
 
 StackLL.prototype.addControls = function()
 {
-    this.pushField = this.addControlToAlgorithmBar("Text", "");
-    this.pushField.onkeydown = this.returnSubmit(this.pushField,  this.pushCallback.bind(this), 6);
+    this.pushField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
+    this.addReturnSubmit(this.pushField, "ALPHANUM", this.pushCallback.bind(this));
     this.pushButton = this.addControlToAlgorithmBar("Button", "Push");
     this.pushButton.onclick = this.pushCallback.bind(this);
 
@@ -142,9 +142,9 @@ StackLL.prototype.reset = function()
 
 StackLL.prototype.pushCallback = function(event)
 {
-    if (this.top < StackLL.SIZE && this.pushField.value != "") {
-        var pushVal = this.pushField.value;
-        this.pushField.value = ""
+    var pushVal = this.pushField.value;
+    if (this.top < StackLL.SIZE && pushVal !== "") {
+        this.pushField.value = "";
         this.implementAction(this.push.bind(this), pushVal);
     }
 }

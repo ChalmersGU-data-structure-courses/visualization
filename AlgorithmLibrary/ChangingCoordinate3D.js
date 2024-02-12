@@ -567,18 +567,18 @@ ChangeCoordinate3D.prototype.addControls = function()
 {
     this.addLabelToAlgorithmBar("x");
 
-    this.xField = this.addControlToAlgorithmBar("Text", "");
-    this.xField.onkeydown = this.returnSubmitFloat(this.xField,  this.transformPointCallback.bind(this), 4, true);
+    this.xField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
+    this.addReturnSubmit(this.xField, "float", this.transformPointCallback.bind(this));
 
     this.addLabelToAlgorithmBar("y");
 
-    this.yField = this.addControlToAlgorithmBar("Text", "");
-    this.yField.onkeydown = this.returnSubmitFloat(this.yField,  this.transformPointCallback.bind(this), 4, true);
+    this.yField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
+    this.addReturnSubmit(this.yField, "float", this.transformPointCallback.bind(this));
 
     this.addLabelToAlgorithmBar("z");
 
-    this.zField = this.addControlToAlgorithmBar("Text", "");
-    this.zField.onkeydown = this.returnSubmitFloat(this.zField,  this.transformPointCallback.bind(this), 4, true);
+    this.zField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
+    this.addReturnSubmit(this.zField, "float", this.transformPointCallback.bind(this));
 
     var transformButton = this.addControlToAlgorithmBar("Button", "Transform Point");
     transformButton.onclick = this.transformPointCallback.bind(this);
@@ -735,24 +735,18 @@ ChangeCoordinate3D.prototype.changeRowCol = function(rowMajor)
 
 ChangeCoordinate3D.prototype.fixNumber = function(value, defaultVal)
 {
-        if (value == "" || value == "-" || value == "." || value == "-." || isNaN(parseFloat(value))) {
-            value = defaultVal;
-        }
-        else {
-            value = String(parseFloat(value));
-        }
-        return value
+    value = parseFloat(value);
+    if (isNaN(value)) value = defaultVal;
+    return value;
 }
+
 
 ChangeCoordinate3D.prototype.transformPointCallback = function()
 {
-
-
-    this.xField.value = this.fixNumber(this.xField.value, "0");
-    this.yField.value = this.fixNumber(this.yField.value, "0");
-    this.zField.value = this.fixNumber(this.zField.value, "0");
+    this.xField.value = this.fixNumber(this.xField.value, 0);
+    this.yField.value = this.fixNumber(this.yField.value, 0);
+    this.zField.value = this.fixNumber(this.zField.value, 0);
     this.implementAction(this.doPointTransform.bind(this), this.xField.value + ";" + this.yField.value + ";" + this.zField.value);
-
 }
 
 

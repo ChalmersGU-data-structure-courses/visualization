@@ -158,8 +158,8 @@ DPChange.prototype.init = function(am)
 
 DPChange.prototype.addControls = function()
 {
-    this.fibField = this.addControlToAlgorithmBar("Text", "");
-    this.fibField.onkeydown = this.returnSubmit(this.fibField,  this.emptyCallback.bind(this), 2, true);
+    this.changeField = this.addControlToAlgorithmBar("Text", "", {maxlength: 2, size: 2});
+    this.addReturnSubmit(this.changeField, "int", this.emptyCallback.bind(this));
 
     this.recursiveButton = this.addControlToAlgorithmBar("Button", "Change Recursive");
     this.recursiveButton.onclick = this.recursiveCallback.bind(this);
@@ -214,12 +214,11 @@ DPChange.prototype.coinTypeChanged = function(coinIndex)
 
 DPChange.prototype.greedyCallback = function(value)
 {
-
-    if (this.fibField.value != "") {
-        this.implementAction(this.implementGreedy.bind(this),parseInt(this.fibField.value));
-    }
-    else {
-        this.implementAction(this.helpMessage.bind(this), "");
+    var changeValue = this.normalizeNumber(this.changeField.value);
+    if (changeValue !== "") {
+        changeValue = Math.min(changeValue, DPChange.MAX_VALUE);
+        this.changeField.value = changeValue;
+        this.implementAction(this.implementGreedy.bind(this), changeValue);
     }
 }
 
@@ -413,55 +412,41 @@ DPChange.prototype.displayCoinsUsed = function()
 
 DPChange.prototype.recursiveCallback = function(event)
 {
-    var fibValue;
-
-    if (this.fibField.value != "") {
-        var fibValue = Math.min(parseInt(this.fibField.value), DPChange.MAX_VALUE - 5);
-        this.fibField.value = String(fibValue);
-        this.implementAction(this.recursiveChange.bind(this),fibValue);
-    }
-    else {
-        this.implementAction(this.helpMessage.bind(this), "");
+    var changeValue = this.normalizeNumber(this.changeField.value);
+    if (changeValue !== "") {
+        changeValue = Math.min(changeValue, DPChange.MAX_VALUE - 5);
+        this.changeField.value = changeValue;
+        this.implementAction(this.recursiveChange.bind(this), changeValue);
     }
 }
 
 
 DPChange.prototype.tableCallback = function(event)
 {
-    var fibValue;
-
-    if (this.fibField.value != "") {
-        var fibValue = Math.min(parseInt(this.fibField.value), DPChange.MAX_VALUE);
-        this.fibField.value = String(fibValue);
-        this.implementAction(this.tableChange.bind(this),fibValue);
+    var changeValue = this.normalizeNumber(this.changeField.value);
+    if (changeValue !== "") {
+        changeValue = Math.min(changeValue, DPChange.MAX_VALUE);
+        this.changeField.value = changeValue;
+        this.implementAction(this.tableChange.bind(this), changeValue);
     }
-    else {
-        this.implementAction(this.helpMessage.bind(this), "");
-    }
-
 }
 
 
 DPChange.prototype.memoizedCallback = function(event)
 {
-    var fibValue;
-
-    if (this.fibField.value != "") {
-        var changeVal = Math.min(parseInt(this.fibField.value), DPChange.MAX_VALUE);
-        this.fibField.value = String(changeVal);
-        this.implementAction(this.memoizedChange.bind(this),changeVal);
-    }
-    else {
-        this.implementAction(this.helpMessage.bind(this), "");
+    var changeValue = this.normalizeNumber(this.changeField.value);
+    if (changeValue !== "") {
+        changeValue = Math.min(changeValue, DPChange.MAX_VALUE - 5);
+        this.changeField.value = changeValue;
+        this.implementAction(this.memoizedChange.bind(this), changeValue);
     }
 }
+
 
 DPChange.prototype.helpMessage = function(value)
 {
     this.commands = [];
-
     this.clearOldIDs();
-
     var messageID = this.nextIndex++;
     this.oldIDs.push(messageID);
     this.cmd("CreateLabel", messageID,
@@ -469,8 +454,6 @@ DPChange.prototype.helpMessage = function(value)
              "Then press the Change Recursive, Change Table, Change Memoized, or Change Greedy button",
              DPChange.RECURSIVE_START_X, DPChange.RECURSIVE_START_Y, 0);
     return this.commands;
-
-
 }
 
 

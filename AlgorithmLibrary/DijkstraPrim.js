@@ -53,17 +53,12 @@ DijkstraPrim.inheritFrom(Graph);
 DijkstraPrim.prototype.addControls = function()
 {
     this.addLabelToAlgorithmBar("Start Vertex: ");
-    this.startField = this.addControlToAlgorithmBar("Text", "");
-    this.startField.onkeydown = this.returnSubmit(this.startField,  this.startCallback.bind(this), 2, true);
-    this.startField.size = 2
-    if (this.runningDijkstra) {
-        this.startButton = this.addControlToAlgorithmBar("Button", "Run Dijkstra");
-
-    }
-    else {
-        this.startButton = this.addControlToAlgorithmBar("Button", "Run Prim");
-
-    }
+    this.startField = this.addControlToAlgorithmBar("Text", "", {maxlength: 2, size: 2});
+    this.addReturnSubmit(this.startField, "int", this.startCallback.bind(this));
+    this.startButton = this.addControlToAlgorithmBar(
+        "Button", 
+        this.runningDijkstra ? "Run Dijkstra" : "Run Prim"
+    );
     this.startButton.onclick = this.startCallback.bind(this);
     DijkstraPrim.superclass.addControls.call(this, this.runningDijkstra);
 }
@@ -352,25 +347,22 @@ DijkstraPrim.prototype.reset = function()
 
 DijkstraPrim.prototype.startCallback = function(event)
 {
-    var startValue;
-
-    if (this.startField.value != "") {
-        startValue = this.startField.value;
+    var startValue = this.normalizeNumber(this.startField.value);
+    if (startValue !== "" && startValue < this.size) {
         this.startField.value = "";
-        if (parseInt(startValue) < this.size)
-            this.implementAction(this.doDijkstraPrim.bind(this), startValue);
+        this.implementAction(this.doDijkstraPrim.bind(this), startValue);
     }
 }
 
 
-function Dijkstra(am, dir) {
-    Dijkstra.superclass.constructor.call(this, am, true, dir);
+function Dijkstra(am) {
+    Dijkstra.superclass.constructor.call(this, am, true, true);
 }
 Dijkstra.inheritFrom(DijkstraPrim);
 
 
-function Prim(am, dir) {
-    Prim.superclass.constructor.call(this, am, false, dir);
+function Prim(am) {
+    Prim.superclass.constructor.call(this, am, false, false);
 }
 Prim.inheritFrom(DijkstraPrim);
 

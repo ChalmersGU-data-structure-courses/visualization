@@ -109,8 +109,8 @@ Queens.prototype.addControls = function()
     this.controls = [];
     this.addLabelToAlgorithmBar("Board size:  (1-8)");
 
-    this.sizeField = this.addControlToAlgorithmBar("Text", "");
-    this.sizeField.onkeydown = this.returnSubmit(this.sizeField,  this.queensCallback.bind(this), 2, true);
+    this.sizeField = this.addControlToAlgorithmBar("Text", "", {maxlength: 1, size: 2});
+    this.addReturnSubmit(this.sizeField, "int", this.queensCallback.bind(this));
     this.controls.push(this.sizeField);
 
     this.queensButton = this.addControlToAlgorithmBar("Button", "Queens");
@@ -124,13 +124,11 @@ Queens.prototype.addControls = function()
 
 Queens.prototype.queensCallback = function(event)
 {
-    var queensValue;
-
-    if (this.sizeField.value != "") {
-        var queenSize = parseInt(this.sizeField.value);
+    var queenSize = this.normalizeNumber(this.sizeField.value);
+    if (queenSize) {
         queenSize = Math.min(queenSize, 8);
-        this.sizeField.value = String(queenSize);
-        this.implementAction(this.doQueens.bind(this),queenSize);
+        this.sizeField.value = queenSize;
+        this.implementAction(this.doQueens.bind(this), queenSize);
     }
 }
 

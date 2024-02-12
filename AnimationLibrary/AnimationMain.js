@@ -91,37 +91,6 @@ var CANVAS_SIZES = {
 }
 
 
-function returnSubmit(field, funct, maxsize, intOnly)
-{
-    if (maxsize != undefined) {
-        field.size = maxsize;
-    }
-
-    return function(event)
-    {
-        var keyASCII = 0;
-        if (window.event) { // IE
-            keyASCII = event.keyCode;
-        } else if (event.which) { // Netscape/Firefox/Opera
-            keyASCII = event.which;
-        }
-
-        if (keyASCII == 13) {
-            funct();
-            return false;
-        } 
-        else if (keyASCII == 59  || keyASCII == 45 || keyASCII == 46 || keyASCII == 190 || keyASCII == 173) {
-            return false;
-        } 
-        else if (maxsize != undefined && field.value.length >= maxsize || intOnly && (keyASCII < 48 || keyASCII > 57)) {
-            if (!controlKey(keyASCII))
-                return false;
-        }
-        return true;
-    }
-}
-
-
 function animWaiting()
 {
     this.stepForwardButton.disabled = false;

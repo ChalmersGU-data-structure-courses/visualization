@@ -98,20 +98,20 @@ SplayTree.prototype.sizeChanged = function()
 
 SplayTree.prototype.addControls = function()
 {
-    this.insertField = this.addControlToAlgorithmBar("Text", "");
-    this.insertField.onkeydown = this.returnSubmit(this.insertField, this.insertCallback.bind(this), 4);
+    this.insertField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
+    this.addReturnSubmit(this.insertField, "ALPHANUM", this.insertCallback.bind(this));
     this.insertButton = this.addControlToAlgorithmBar("Button", "Insert");
     this.insertButton.onclick = this.insertCallback.bind(this);
     this.addBreakToAlgorithmBar();
 
-    this.deleteField = this.addControlToAlgorithmBar("Text", "");
-    this.deleteField.onkeydown = this.returnSubmit(this.deleteField, this.deleteCallback.bind(this), 4);
+    this.deleteField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
+    this.addReturnSubmit(this.deleteField, "ALPHANUM", this.deleteCallback.bind(this));
     this.deleteButton = this.addControlToAlgorithmBar("Button", "Delete");
     this.deleteButton.onclick = this.deleteCallback.bind(this);
     this.addBreakToAlgorithmBar();
 
-    this.findField = this.addControlToAlgorithmBar("Text", "");
-    this.findField.onkeydown = this.returnSubmit(this.findField, this.findCallback.bind(this), 4);
+    this.findField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
+    this.addReturnSubmit(this.findField, "ALPHANUM", this.findCallback.bind(this));
     this.findButton = this.addControlToAlgorithmBar("Button", "Find");
     this.findButton.onclick = this.findCallback.bind(this);
     this.addBreakToAlgorithmBar();
@@ -137,8 +137,8 @@ SplayTree.prototype.reset = function()
 
 SplayTree.prototype.insertCallback = function(event)
 {
-    var insertedValue = this.normalizeNumber(this.insertField.value.toUpperCase());
-    if (insertedValue != "") {
+    var insertedValue = this.normalizeNumber(this.insertField.value);
+    if (insertedValue !== "") {
         this.insertField.value = "";
         this.implementAction(this.insertElement.bind(this), insertedValue);
     }
@@ -146,17 +146,17 @@ SplayTree.prototype.insertCallback = function(event)
 
 SplayTree.prototype.deleteCallback = function(event)
 {
-    var deletedValue = this.normalizeNumber(this.deleteField.value.toUpperCase());
-    if (deletedValue != "") {
+    var deletedValue = this.normalizeNumber(this.deleteField.value);
+    if (deletedValue !== "") {
         this.deleteField.value = "";
-        this.implementAction(this.deleteElement.bind(this),deletedValue);
+        this.implementAction(this.deleteElement.bind(this), deletedValue);
     }
 }
 
 SplayTree.prototype.findCallback = function(event)
 {
-    var findValue = this.normalizeNumber(this.findField.value.toUpperCase());
-    if (findValue != "") {
+    var findValue = this.normalizeNumber(this.findField.value);
+    if (findValue !== "") {
         this.findField.value = "";
         this.implementAction(this.findElement.bind(this), findValue);
     }

@@ -68,8 +68,8 @@ StackArray.prototype.sizeChanged = function()
 
 StackArray.prototype.addControls = function()
 {
-    this.pushField = this.addControlToAlgorithmBar("Text", "");
-    this.pushField.onkeydown = this.returnSubmit(this.pushField,  this.pushCallback.bind(this), 6);
+    this.pushField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
+    this.addReturnSubmit(this.pushField, "ALPHANUM", this.pushCallback.bind(this));
     this.pushButton = this.addControlToAlgorithmBar("Button", "Push");
     this.pushButton.onclick = this.pushCallback.bind(this);
 
@@ -141,9 +141,9 @@ StackArray.prototype.reset = function()
 
 StackArray.prototype.pushCallback = function(event)
 {
-    if (this.top < StackArray.SIZE && this.pushField.value != "") {
-        var pushVal = this.pushField.value;
-        this.pushField.value = ""
+    var pushVal = this.pushField.value;
+    if (this.top < StackArray.SIZE && pushVal !== "") {
+        this.pushField.value = "";
         this.implementAction(this.push.bind(this), pushVal);
     }
 }

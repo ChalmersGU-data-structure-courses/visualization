@@ -75,8 +75,8 @@ QueueArray.prototype.sizeChanged = function()
 
 QueueArray.prototype.addControls = function()
 {
-    this.enqueueField = this.addControlToAlgorithmBar("Text", "");
-    this.enqueueField.onkeydown = this.returnSubmit(this.enqueueField,  this.enqueueCallback.bind(this), 6);
+    this.enqueueField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
+    this.addReturnSubmit(this.enqueueField, "ALPHANUM", this.enqueueCallback.bind(this));
     this.enqueueButton = this.addControlToAlgorithmBar("Button", "Enqueue");
     this.enqueueButton.onclick = this.enqueueCallback.bind(this);
 
@@ -157,10 +157,10 @@ QueueArray.prototype.reset = function()
 
 QueueArray.prototype.enqueueCallback = function(event)
 {
-    if ((this.tail + 1) % QueueArray.SIZE  != this.head && this.enqueueField.value != "") {
-        var pushVal = this.enqueueField.value;
-        this.enqueueField.value = ""
-        this.implementAction(this.enqueue.bind(this), pushVal);
+    var enqueuedValue = this.enqueueField.value;
+    if ((this.tail + 1) % QueueArray.SIZE != this.head && enqueuedValue !== "") {
+        this.enqueueField.value = "";
+        this.implementAction(this.enqueue.bind(this), enqueuedValue);
     }
 }
 

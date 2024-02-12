@@ -98,18 +98,21 @@ Ternary.prototype.sizeChanged = function()
 
 Ternary.prototype.addControls = function()
 {
-    this.insertField = this.addControlToAlgorithmBar("Text", "");
-    this.insertField.onkeypress = this.returnSubmit(this.insertField,  this.insertCallback.bind(this), 12,false);
+    this.insertField = this.addControlToAlgorithmBar("Text", "", {maxlength: 12, size: 12});
+    this.addReturnSubmit(this.insertField, "ALPHA", this.insertCallback.bind(this));
     this.insertButton = this.addControlToAlgorithmBar("Button", "Insert");
     this.insertButton.onclick = this.insertCallback.bind(this);
-    this.deleteField = this.addControlToAlgorithmBar("Text", "");
-    this.deleteField.onkeydown = this.returnSubmit(this.deleteField,  this.deleteCallback.bind(this), 12);
+
+    this.deleteField = this.addControlToAlgorithmBar("Text", "", {maxlength: 12, size: 12});
+    this.addReturnSubmit(this.deleteField, "ALPHA", this.deleteCallback.bind(this));
     this.deleteButton = this.addControlToAlgorithmBar("Button", "Delete");
     this.deleteButton.onclick = this.deleteCallback.bind(this);
-    this.findField = this.addControlToAlgorithmBar("Text", "");
-    this.findField.onkeydown = this.returnSubmit(this.findField,  this.findCallback.bind(this), 12);
+
+    this.findField = this.addControlToAlgorithmBar("Text", "", {maxlength: 12, size: 12});
+    this.addReturnSubmit(this.findField, "ALPHA", this.findCallback.bind(this));
     this.findButton = this.addControlToAlgorithmBar("Button", "Find");
     this.findButton.onclick = this.findCallback.bind(this);
+
     this.printButton = this.addControlToAlgorithmBar("Button", "Print");
     this.printButton.onclick = this.printCallback.bind(this);
 }
@@ -122,11 +125,8 @@ Ternary.prototype.reset = function()
 
 Ternary.prototype.insertCallback = function(event)
 {
-    var insertedValue = this.insertField.value.toUpperCase()
-    insertedValue = insertedValue.replace(/[^a-z]/gi,'');
-
-    if (insertedValue != "") {
-        // set text value
+    var insertedValue = this.insertField.value;
+    if (insertedValue !== "") {
         this.insertField.value = "";
         this.implementAction(this.add.bind(this), insertedValue);
     }
@@ -135,11 +135,10 @@ Ternary.prototype.insertCallback = function(event)
 
 Ternary.prototype.deleteCallback = function(event)
 {
-    var deletedValue = this.deleteField.value.toUpperCase();
-    deletedValue = deletedValue.replace(/[^a-z]/gi,'');
-    if (deletedValue != "") {
+    var deletedValue = this.deleteField.value;
+    if (deletedValue !== "") {
         this.deleteField.value = "";
-        this.implementAction(this.deleteElement.bind(this),deletedValue);
+        this.implementAction(this.deleteElement.bind(this), deletedValue);
     }
 
 }
@@ -422,10 +421,11 @@ Ternary.prototype.printTreeRec = function(tree, stringSoFar)
 
 Ternary.prototype.findCallback = function(event)
 {
-    var findValue = this.findField.value.toUpperCase()
-    finndValue = findValue.replace(/[^a-z]/gi,'');
-    this.findField.value = "";
-    this.implementAction(this.findElement.bind(this),findValue);
+    var findValue = this.findField.value;
+    if (findValue !== "") {
+        this.findField.value = "";
+        this.implementAction(this.findElement.bind(this), findValue);
+    }
 }
 
 Ternary.prototype.findElement = function(word)

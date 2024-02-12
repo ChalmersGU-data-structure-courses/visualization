@@ -108,12 +108,12 @@ DPLCS.prototype.init = function(am)
 DPLCS.prototype.addControls = function()
 {
     this.addLabelToAlgorithmBar("S1:");
-    this.S1Field = this.addControlToAlgorithmBar("Text", "");
-    this.S1Field.onkeydown = this.returnSubmit(this.S1Field,  this.emptyCallback.bind(this), DPLCS.MAX_SEQUENCE_LENGTH, false);
+    this.S1Field = this.addControlToAlgorithmBar("Text", "", {maxlength: DPLCS.MAX_SEQUENCE_LENGTH, size: DPLCS.MAX_SEQUENCE_LENGTH});
+    this.addReturnSubmit(this.S1Field, "ALPHA", this.emptyCallback.bind(this));
 
     this.addLabelToAlgorithmBar("S2:");
-    this.S2Field = this.addControlToAlgorithmBar("Text", "");
-    this.S2Field.onkeydown = this.returnSubmit(this.S2Field,  this.emptyCallback.bind(this), DPLCS.MAX_SEQUENCE_LENGTH, false);
+    this.S2Field = this.addControlToAlgorithmBar("Text", "", {maxlength: DPLCS.MAX_SEQUENCE_LENGTH, size: DPLCS.MAX_SEQUENCE_LENGTH});
+    this.addReturnSubmit(this.S2Field, "ALPHA", this.emptyCallback.bind(this));
 
     this.recursiveButton = this.addControlToAlgorithmBar("Button", "LCS Recursive");
     this.recursiveButton.onclick = this.recursiveCallback.bind(this);
@@ -223,76 +223,48 @@ DPLCS.prototype.emptyCallback = function(event)
 
 DPLCS.prototype.recursiveCallback = function(event)
 {
-    var fibValue;
-
-    if (this.S1Field.value != "" && this.S2Field.value != "" ) {
+    if (this.S1Field.value !== "" && this.S2Field.value !== "" ) {
         this.implementAction(this.recursiveLCS.bind(this),this.S1Field.value + ";" + this.S2Field.value);
-    }
-    else {
-        this.implementAction(this.helpMessage.bind(this), "");
     }
 }
 
 
 DPLCS.prototype.tableCallback = function(event)
 {
-    var fibValue;
-
-
-    if (this.S1Field.value != "" && this.S2Field.value != "" ) {
+    if (this.S1Field.value !== "" && this.S2Field.value !== "" ) {
         this.implementAction(this.tableLCS.bind(this),this.S1Field.value + ";" + this.S2Field.value);
     }
-    else {
-        this.implementAction(this.helpMessage.bind(this), "");
-    }
-
 }
 
 
 DPLCS.prototype.memoizedCallback = function(event)
 {
-    var fibValue;
-
-
-    if (this.S1Field.value != "" && this.S2Field.value != "" ) {
+    if (this.S1Field.value !== "" && this.S2Field.value !== "" ) {
         this.implementAction(this.memoizedLCS.bind(this), this.S1Field.value + ";" + this.S2Field.value);
     }
-    else {
-        this.implementAction(this.helpMessage.bind(this), "");
-    }
-
 }
+
 
 DPLCS.prototype.helpMessage = function(value)
 {
     this.commands = [];
-
     this.clearOldIDs();
-
     var messageID = this.nextIndex++;
     this.oldIDs.push(messageID);
     this.cmd("CreateLabel", messageID,
              "Enter two sequences in the text fields.\n" +
              "Then press the LCS Recursive, LCS Table, or LCS Memoized button",
              DPLCS.RECURSIVE_START_X, DPLCS.RECURSIVE_START_Y, 0);
-    return this.commands;
-
-
+    return this.commands
 }
 
 
 DPLCS.prototype.recursiveLCS = function(value)
 {
     this.commands = [];
-
     var sequences=value.split(";");
-
-
-
     this.clearOldIDs();
-
     this.currentY = DPLCS.RECURSIVE_START_Y;
-
     var functionCallID = this.nextIndex++;
     this.oldIDs.push(functionCallID);
     var final = this.LCS(sequences[0], sequences[1], sequences[0].length - 1, sequences[1].length - 1, DPLCS.RECURSIVE_START_X, functionCallID);

@@ -75,8 +75,8 @@ Reverse.prototype.init = function(am)
 Reverse.prototype.addControls = function()
 {
     this.controls = [];
-    this.reverseField = this.addControlToAlgorithmBar("Text", "");
-    this.reverseField.onkeydown = this.returnSubmit(this.reverseField,  this.reverseCallback.bind(this), 10, false);
+    this.reverseField = this.addControlToAlgorithmBar("Text", "", {maxlength: 10, size: 10});
+    this.addReturnSubmit(this.reverseField, "ALPHA", this.reverseCallback.bind(this));
     this.controls.push(this.reverseField);
 
     this.reverseButton = this.addControlToAlgorithmBar("Button", "Reverse");
@@ -90,11 +90,9 @@ Reverse.prototype.addControls = function()
 
 Reverse.prototype.reverseCallback = function(event)
 {
-    var factValue;
-
-    if (this.reverseField.value != "") {
-        var revValue =this.reverseField.value;
-        this.implementAction(this.doReverse.bind(this),revValue);
+    var revValue = this.reverseField.value;
+    if (revValue !== "") {
+        this.implementAction(this.doReverse.bind(this), revValue);
     }
 }
 

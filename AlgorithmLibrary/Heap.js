@@ -72,8 +72,8 @@ Heap.prototype.init = function(am)
 
 Heap.prototype.addControls = function()
 {
-    this.insertField = this.addControlToAlgorithmBar("Text", "");
-    this.insertField.onkeydown = this.returnSubmit(this.insertField,  this.insertCallback.bind(this), 4, true);
+    this.insertField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
+    this.addReturnSubmit(this.insertField, "int", this.insertCallback.bind(this));
     this.insertButton = this.addControlToAlgorithmBar("Button", "Insert");
     this.insertButton.onclick = this.insertCallback.bind(this);
     this.removeSmallestButton = this.addControlToAlgorithmBar("Button", "Remove Smallest");
@@ -121,8 +121,8 @@ Heap.prototype.createArray = function()
 
 Heap.prototype.insertCallback = function(event)
 {
-    var insertedValue = this.normalizeNumber(this.insertField.value.toUpperCase());
-    if (insertedValue != "") {
+    var insertedValue = this.normalizeNumber(this.insertField.value);
+    if (insertedValue !== "") {
         this.insertField.value = "";
         this.implementAction(this.insertElement.bind(this), insertedValue);
     }

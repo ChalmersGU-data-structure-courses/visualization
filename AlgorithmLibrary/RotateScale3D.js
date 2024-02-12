@@ -284,36 +284,36 @@ RotateScale3D.prototype.addControls = function()
 {
     this.addLabelToAlgorithmBar("X Angle");
 
-    this.rotationFieldX = this.addControlToAlgorithmBar("Text", "");
-    this.rotationFieldX.onkeydown = this.returnSubmitFloat(this.rotationFieldX,  this.rotateCallback.bind(this), 4, true);
+    this.rotationFieldX = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
+    this.addReturnSubmit(this.rotationFieldX, "float", this.rotateCallback.bind(this));
 
     this.addLabelToAlgorithmBar("Y Angle");
 
-    this.rotationFieldY = this.addControlToAlgorithmBar("Text", "");
-    this.rotationFieldY.onkeydown = this.returnSubmitFloat(this.rotationFieldY,  this.rotateCallback.bind(this), 4, true);
+    this.rotationFieldY = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
+    this.addReturnSubmit(this.rotationFieldY, "float", this.rotateCallback.bind(this));
 
     this.addLabelToAlgorithmBar("Z Angle");
 
-    this.rotationFieldZ = this.addControlToAlgorithmBar("Text", "");
-    this.rotationFieldZ.onkeydown = this.returnSubmitFloat(this.rotationFieldZ,  this.rotateCallback.bind(this), 4, true);
+    this.rotationFieldZ = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
+    this.addReturnSubmit(this.rotationFieldZ, "float", this.rotateCallback.bind(this));
 
     var rotateButton = this.addControlToAlgorithmBar("Button", "Rotate");
     rotateButton.onclick = this.rotateCallback.bind(this);
 
     this.addLabelToAlgorithmBar("Scale X");
 
-    this.scaleXField = this.addControlToAlgorithmBar("Text", "");
-    this.scaleXField.onkeydown = this.returnSubmitFloat(this.scaleXField,  this.scaleCallback.bind(this), 4, true);
+    this.scaleXField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
+    this.addReturnSubmit(this.scaleXField, "float", this.scaleCallback.bind(this));
 
     this.addLabelToAlgorithmBar("Scale Y");
 
-    this.scaleYField = this.addControlToAlgorithmBar("Text", "");
-    this.scaleYField.onkeydown = this.returnSubmitFloat(this.scaleYField,  this.scaleCallback.bind(this), 4, true);
+    this.scaleYField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
+    this.addReturnSubmit(this.scaleYField, "float", this.scaleCallback.bind(this));
 
     this.addLabelToAlgorithmBar("Scale Z");
 
-    this.scaleZField = this.addControlToAlgorithmBar("Text", "");
-    this.scaleZField.onkeydown = this.returnSubmitFloat(this.scaleZField,  this.scaleCallback.bind(this), 4, true);
+    this.scaleZField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
+    this.addReturnSubmit(this.scaleZField, "float", this.scaleCallback.bind(this));
 
     var scaleButton = this.addControlToAlgorithmBar("Button", "Scale");
     scaleButton.onclick = this.scaleCallback.bind(this);
@@ -411,34 +411,26 @@ RotateScale3D.prototype.changeRowCol = function(rowMajor)
 
 RotateScale3D.prototype.fixNumber = function(value, defaultVal)
 {
-        if (value == "" || value == "-" || value == "." || value == "-." || isNaN(parseFloat(value))) {
-            value = defaultVal;
-        }
-        else {
-            value = String(parseFloat(value));
-        }
-        return value
+    value = parseFloat(value);
+    if (isNaN(value)) value = defaultVal;
+    return value;
 }
+
 
 RotateScale3D.prototype.rotateCallback = function()
 {
-
-
-    this.rotationFieldX.value = this.fixNumber(this.rotationFieldX.value, "0");
-    this.rotationFieldY.value = this.fixNumber(this.rotationFieldY.value, "0");
-    this.rotationFieldZ.value = this.fixNumber(this.rotationFieldZ.value, "0");
-    this.implementAction(this.rotate.bind(this), this.rotationFieldZ.value + ";" +this.rotationFieldY.value + ";" +this.rotationFieldX.value);
-
+    this.rotationFieldX.value = this.fixNumber(this.rotationFieldX.value, 0);
+    this.rotationFieldY.value = this.fixNumber(this.rotationFieldY.value, 0);
+    this.rotationFieldZ.value = this.fixNumber(this.rotationFieldZ.value, 0);
+    this.implementAction(this.rotate.bind(this), this.rotationFieldZ.value + ";" + this.rotationFieldY.value + ";" + this.rotationFieldX.value);
 }
+
 RotateScale3D.prototype.scaleCallback = function()
 {
-
-
-    this.scaleXField.value = this.fixNumber(this.scaleXField.value, "1");
-    this.scaleYField.value = this.fixNumber(this.scaleYField.value, "1");
-    this.scaleZField.value = this.fixNumber(this.scaleZField.value, "1");
-    this.implementAction(this.scale.bind(this), this.scaleXField.value + ";" +this.scaleYField.value + ";" +this.scaleZField.value);
-
+    this.scaleXField.value = this.fixNumber(this.scaleXField.value, 1);
+    this.scaleYField.value = this.fixNumber(this.scaleYField.value, 1);
+    this.scaleZField.value = this.fixNumber(this.scaleZField.value, 1);
+    this.implementAction(this.scale.bind(this), this.scaleXField.value + ";" + this.scaleYField.value + ";" + this.scaleZField.value);
 }
 
 

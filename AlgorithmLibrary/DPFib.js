@@ -100,8 +100,8 @@ DPFib.prototype.init = function(am)
 
 DPFib.prototype.addControls = function()
 {
-    this.fibField = this.addControlToAlgorithmBar("Text", "");
-    this.fibField.onkeydown = this.returnSubmit(this.fibField,  this.emptyCallback.bind(this), 2, true);
+    this.fibField = this.addControlToAlgorithmBar("Text", "", {maxlength: 2, size: 2});
+    this.addReturnSubmit(this.fibField, "int", this.emptyCallback.bind(this));
 
     this.recursiveButton = this.addControlToAlgorithmBar("Button", "Fibonacci Recursive");
     this.recursiveButton.onclick = this.recursiveCallback.bind(this);
@@ -179,55 +179,41 @@ DPFib.prototype.emptyCallback = function(event)
 
 DPFib.prototype.recursiveCallback = function(event)
 {
-    var fibValue;
-
-    if (this.fibField.value != "") {
-        var fibValue = Math.min(parseInt(this.fibField.value), DPFib.MAX_VALUE);
-        this.fibField.value = String(fibValue);
-        this.implementAction(this.recursiveFib.bind(this),fibValue);
-    }
-    else {
-        this.implementAction(this.helpMessage.bind(this), "");
+    var fibValue = this.normalizeNumber(this.fibField.value);
+    if (fibValue !== "") {
+        fibValue = Math.min(fibValue, DPFib.MAX_VALUE);
+        this.fibField.value = fibValue;
+        this.implementAction(this.recursiveFib.bind(this), fibValue);
     }
 }
 
 
 DPFib.prototype.tableCallback = function(event)
 {
-    var fibValue;
-
-    if (this.fibField.value != "") {
-        var fibValue = Math.min(parseInt(this.fibField.value), DPFib.MAX_VALUE);
-        this.fibField.value = String(fibValue);
-        this.implementAction(this.tableFib.bind(this),fibValue);
+    var fibValue = this.normalizeNumber(this.fibField.value);
+    if (fibValue !== "") {
+        fibValue = Math.min(fibValue, DPFib.MAX_VALUE);
+        this.fibField.value = fibValue;
+        this.implementAction(this.tableFib.bind(this), fibValue);
     }
-    else {
-        this.implementAction(this.helpMessage.bind(this), "");
-    }
-
 }
 
 
 DPFib.prototype.memoizedCallback = function(event)
 {
-    var fibValue;
-
-    if (this.fibField.value != "") {
-        var fibValue = Math.min(parseInt(this.fibField.value), DPFib.MAX_VALUE);
-        this.fibField.value = String(fibValue);
-        this.implementAction(this.memoizedFib.bind(this),fibValue);
-    }
-    else {
-        this.implementAction(this.helpMessage.bind(this), "");
+    var fibValue = this.normalizeNumber(this.fibField.value);
+    if (fibValue !== "") {
+        fibValue = Math.min(fibValue, DPFib.MAX_VALUE);
+        this.fibField.value = fibValue;
+        this.implementAction(this.memoizedFib.bind(this), fibValue);
     }
 }
+
 
 DPFib.prototype.helpMessage = function(value)
 {
     this.commands = [];
-
     this.clearOldIDs();
-
     var messageID = this.nextIndex++;
     this.oldIDs.push(messageID);
     this.cmd("CreateLabel", messageID,
@@ -235,8 +221,6 @@ DPFib.prototype.helpMessage = function(value)
              "Then press the Fibonacci Recursive, Fibonacci Table, or Fibonacci Memoized button",
              DPFib.RECURSIVE_START_X, DPFib.RECURSIVE_START_Y, 0);
     return this.commands;
-
-
 }
 
 

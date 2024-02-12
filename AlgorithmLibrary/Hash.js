@@ -68,22 +68,18 @@ Hash.prototype.init = function(am)
 
 Hash.prototype.addControls = function()
 {
-    this.insertField = this.addControlToAlgorithmBar("Text", "");
-    this.insertField.size = Hash.MAX_HASH_LENGTH;
-    this.insertField.onkeydown = this.returnSubmit(this.insertField,  this.insertCallback.bind(this), Hash.MAX_HASH_LENGTH, true);
+    this.insertField = this.addControlToAlgorithmBar("Text", "", {maxlength: Hash.MAX_HASH_LENGTH, size: Hash.MAX_HASH_LENGTH});
+    this.addReturnSubmit(this.insertField, "int", this.insertCallback.bind(this));
     this.insertButton = this.addControlToAlgorithmBar("Button", "Insert");
     this.insertButton.onclick = this.insertCallback.bind(this);
 
-    this.deleteField = this.addControlToAlgorithmBar("Text", "");
-    this.deleteField.size = Hash.MAX_HASH_LENGTH;
-    this.deleteField.onkeydown = this.returnSubmit(this.insertField,  this.deleteCallback.bind(this), Hash.MAX_HASH_LENGTH, true);
+    this.deleteField = this.addControlToAlgorithmBar("Text", "", {maxlength: Hash.MAX_HASH_LENGTH, size: Hash.MAX_HASH_LENGTH});
+    this.addReturnSubmit(this.deleteField, "int", this.deleteCallback.bind(this));
     this.deleteButton = this.addControlToAlgorithmBar("Button", "Delete");
     this.deleteButton.onclick = this.deleteCallback.bind(this);
 
-
-    this.findField = this.addControlToAlgorithmBar("Text", "");
-    this.findField.size = Hash.MAX_HASH_LENGTH;
-    this.findField.onkeydown = this.returnSubmit(this.insertField,  this.findCallback.bind(this), Hash.MAX_HASH_LENGTH, true);
+    this.findField = this.addControlToAlgorithmBar("Text", "", {maxlength: Hash.MAX_HASH_LENGTH, size: Hash.MAX_HASH_LENGTH});
+    this.addReturnSubmit(this.findField, "int", this.findCallback.bind(this));
     this.findButton = this.addControlToAlgorithmBar("Button", "Find");
     this.findButton.onclick = this.findCallback.bind(this);
 
@@ -91,11 +87,8 @@ Hash.prototype.addControls = function()
     var radioButtonList = this.addRadioButtonGroupToAlgorithmBar(["Hash Integer", "Hash Strings"], "HashType");
     this.hashIntegerButton = radioButtonList[0];
     this.hashIntegerButton.onclick = this.changeHashTypeCallback.bind(this, true);
-//  this.hashIntegerButton.onclick = this.hashIntegerCallback.bind(this);
     this.hashStringButton = radioButtonList[1];
     this.hashStringButton.onclick = this.changeHashTypeCallback.bind(this, false);
-
-//    this.hashStringButton.onclick = this.hashStringCallback.bind(this);
     this.hashIntegerButton.checked = true;
 }
 
@@ -116,15 +109,15 @@ Hash.prototype.changeHashType = function(newHashingIntegerValue)
     this.hashingIntegers = newHashingIntegerValue;
     if (this.hashingIntegers) {
         this.hashIntegerButton.checked = true;
-        this.insertField.onkeydown = this.returnSubmit(this.insertField,  this.insertCallback.bind(this), Hash.MAX_HASH_LENGTH, true);
-        this.deleteField.onkeydown = this.returnSubmit(this.insertField,  this.deleteCallback.bind(this), Hash.MAX_HASH_LENGTH, true);
-        this.findField.onkeydown = this.returnSubmit(this.insertField,  this.findCallback.bind(this), Hash.MAX_HASH_LENGTH, true);
+        this.addReturnSubmit(this.insertField, "int", this.insertCallback.bind(this));
+        this.addReturnSubmit(this.deleteField, "int", this.deleteCallback.bind(this));
+        this.addReturnSubmit(this.findField, "int", this.findCallback.bind(this));
     }
     else {
         this.hashStringButton.checked = true;
-        this.insertField.onkeydown = this.returnSubmit(this.insertField,  this.insertCallback.bind(this), Hash.MAX_HASH_LENGTH, false);
-        this.deleteField.onkeydown = this.returnSubmit(this.insertField,  this.deleteCallback.bind(this), Hash.MAX_HASH_LENGTH, false);
-        this.findField.onkeydown = this.returnSubmit(this.insertField,  this.findCallback.bind(this), Hash.MAX_HASH_LENGTH, false);
+        this.addReturnSubmit(this.insertField, "ALPHANUM", this.insertCallback.bind(this));
+        this.addReturnSubmit(this.deleteField, "ALPHANUM", this.deleteCallback.bind(this));
+        this.addReturnSubmit(this.findField, "ALPHANUM", this.findCallback.bind(this));
     }
     return this.resetAll();
 }
@@ -333,27 +326,27 @@ Hash.prototype.resetAll =function()
 Hash.prototype.insertCallback = function(event)
 {
     var insertedValue = this.insertField.value;
-    if (insertedValue != "") {
+    if (insertedValue !== "") {
         this.insertField.value = "";
-        this.implementAction(this.insertElement.bind(this),insertedValue);
+        this.implementAction(this.insertElement.bind(this), insertedValue);
     }
 }
 
 Hash.prototype.deleteCallback = function(event)
 {
-    var deletedValue = this.deleteField.value
-    if (deletedValue != "") {
+    var deletedValue = this.deleteField.value;
+    if (deletedValue !== "") {
         this.deleteField.value = "";
-        this.implementAction(this.deleteElement.bind(this),deletedValue);
+        this.implementAction(this.deleteElement.bind(this), deletedValue);
     }
 }
 
 Hash.prototype.findCallback = function(event)
 {
     var findValue = this.findField.value;
-    if (findValue != "") {
+    if (findValue !== "") {
         this.findField.value = "";
-        this.implementAction(this.findElement.bind(this),findValue);
+        this.implementAction(this.findElement.bind(this), findValue);
     }
 }
 

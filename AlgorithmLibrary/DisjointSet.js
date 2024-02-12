@@ -65,17 +65,17 @@ DisjointSet.prototype.sizeChanged = function()
 
 DisjointSet.prototype.addControls = function()
 {
-    this.findField = this.addControlToAlgorithmBar("Text", "");
-    this.findField.onkeydown = this.returnSubmit(this.findField,  this.findCallback.bind(this), 4, true);
+    this.findField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
+    this.addReturnSubmit(this.findField, "int", this.findCallback.bind(this));
 
     var findButton = this.addControlToAlgorithmBar("Button", "Find");
     findButton.onclick = this.findCallback.bind(this);
 
-    this.unionField1 = this.addControlToAlgorithmBar("Text", "");
-    this.unionField1.onkeydown = this.returnSubmit(this.unionField1,  this.unionCallback.bind(this), 4, true);
+    this.unionField1 = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
+    this.addReturnSubmit(this.unionField1, "int", this.unionCallback.bind(this));
 
-    this.unionField2 = this.addControlToAlgorithmBar("Text", "");
-    this.unionField2.onkeydown = this.returnSubmit(this.unionField2,  this.unionCallback.bind(this), 4, true);
+    this.unionField2 = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
+    this.addReturnSubmit(this.unionField2, "int", this.unionCallback.bind(this));
 
     this.unionButton = this.addControlToAlgorithmBar("Button", "Union");
     this.unionButton.onclick = this.unionCallback.bind(this);
@@ -245,8 +245,8 @@ DisjointSet.prototype.changePathCompression = function(newValue)
 
 DisjointSet.prototype.findCallback = function(event)
 {
-    var findValue = this.findField.value;
-    if (findValue != "" && parseInt(findValue) < SIZE) {
+    var findValue = this.normalizeNumber(this.findField.value);
+    if (findValue !== "" && findValue < SIZE) {
         this.findField.value.value = "";
         this.implementAction(this.findElement.bind(this), findValue);
     }
@@ -320,11 +320,9 @@ DisjointSet.prototype.rebuildRootValues = function()
 
 DisjointSet.prototype.unionCallback = function(event)
 {
-    var union1 = this.unionField1.value;
-    var union2 = this.unionField2.value;
-
-    if ( union1 != "" && parseInt(union1) < SIZE &&
-         union2 != "" && parseInt(union2) < SIZE) {
+    var union1 = this.normalizeNumber(this.unionField1.value);
+    var union2 = this.normalizeNumber(this.unionField2.value);
+    if (union1 !== "" && union1 < SIZE && union2 !== "" && union2 < SIZE) {
         this.unionField1.value = "";
         this.unionField2.value = "";
         this.implementAction(this.doUnion.bind(this), union1 + ";" + union2);

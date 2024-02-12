@@ -53,8 +53,8 @@ DFS.inheritFrom(Graph);
 DFS.prototype.addControls = function()
 {
     this.addLabelToAlgorithmBar("Start Vertex: ");
-    this.startField = this.addControlToAlgorithmBar("Text", "");
-    this.startField.onkeydown = this.returnSubmit(this.startField,  this.startCallback.bind(this), 2, true);
+    this.startField = this.addControlToAlgorithmBar("Text", "", {maxlength: 2, size: 2});
+    this.addReturnSubmit(this.startField, "int", this.startCallback.bind(this));
     this.startButton = this.addControlToAlgorithmBar("Button", "Run DFS");
     this.startButton.onclick = this.startCallback.bind(this);
     DFS.superclass.addControls.call(this);
@@ -104,13 +104,10 @@ DFS.prototype.setup = function()
 
 DFS.prototype.startCallback = function(event)
 {
-    var startValue;
-
-    if (this.startField.value != "") {
-        startvalue = this.startField.value;
+    var startValue = this.normalizeNumber(this.startField.value);
+    if (startValue !== "" && startValue < this.size) {
         this.startField.value = "";
-        if (parseInt(startvalue) < this.size)
-            this.implementAction(this.doDFS.bind(this),startvalue);
+        this.implementAction(this.doDFS.bind(this), startValue);
     }
 }
 

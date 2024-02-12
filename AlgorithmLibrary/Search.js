@@ -132,8 +132,8 @@ Search.prototype.sizeChanged = function()
 
 Search.prototype.addControls = function()
 {
-    this.searchField = this.addControlToAlgorithmBar("Text", "");
-    this.searchField.onkeydown = this.returnSubmit(this.searchField,  null,  6, true);
+    this.searchField = this.addControlToAlgorithmBar("Text", "", {maxlength: 3, size: 3});
+    this.addReturnSubmit(this.searchField, "int");
     this.linearSearchButton = this.addControlToAlgorithmBar("Button", "Linear Search");
     this.linearSearchButton.onclick = this.linearSearchCallback.bind(this);
 
@@ -349,17 +349,19 @@ Search.prototype.setup_large = function() {
 
 Search.prototype.linearSearchCallback = function(event)
 {
-    var searchVal = this.searchField.value;
-    this.implementAction(this.linearSearch.bind(this), searchVal);
+    var searchVal = this.normalizeNumber(this.searchField.value);
+    if (searchVal !== "") {
+        this.implementAction(this.linearSearch.bind(this), searchVal);
+    }
 }
 
 
 Search.prototype.binarySearchCallback = function(event)
 {
-
-    var searchVal = this.searchField.value;
-    this.implementAction(this.binarySearch.bind(this), searchVal);
-
+    var searchVal = this.normalizeNumber(this.searchField.value);
+    if (searchVal !== "") {
+        this.implementAction(this.binarySearch.bind(this), searchVal);
+    }
 }
 
 

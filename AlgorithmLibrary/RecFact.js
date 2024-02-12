@@ -75,8 +75,9 @@ RecFact.prototype.init = function(am)
 RecFact.prototype.addControls = function()
 {
     this.controls = [];
-    this.factorialField = this.addControlToAlgorithmBar("Text", "");
-    this.factorialField.onkeydown = this.returnSubmit(this.factorialField,  this.factorialCallback.bind(this), 2, true);
+
+    this.factorialField = this.addControlToAlgorithmBar("Text", "", {maxlength: 2, size: 2});
+    this.addReturnSubmit(this.factorialField, "int", this.factorialCallback.bind(this));
     this.controls.push(this.factorialField);
 
     this.factorialButton = this.addControlToAlgorithmBar("Button", "Factorial");
@@ -90,12 +91,11 @@ RecFact.prototype.addControls = function()
 
 RecFact.prototype.factorialCallback = function(event)
 {
-    var factValue;
-
-    if (this.factorialField.value != "") {
-        var factValue = Math.min(parseInt(this.factorialField.value), RecFact.MAX_VALUE);
-        this.factorialField.value = String(factValue);
-        this.implementAction(this.doFactorial.bind(this),factValue);
+    var factValue = this.normalizeNumber(this.factorialField.value);
+    if (factValue) {
+        factValue = Math.min(factValue, RecFact.MAX_VALUE);
+        this.factorialField.value = factValue;
+        this.implementAction(this.doFactorial.bind(this), factValue);
     }
 }
 

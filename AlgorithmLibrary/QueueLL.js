@@ -78,8 +78,8 @@ QueueLL.prototype.sizeChanged = function()
 
 QueueLL.prototype.addControls = function()
 {
-    this.enqueueField = this.addControlToAlgorithmBar("Text", "");
-    this.enqueueField.onkeydown = this.returnSubmit(this.enqueueField,  this.enqueueCallback.bind(this), 6);
+    this.enqueueField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
+    this.addReturnSubmit(this.enqueueField, "ALPHANUM", this.enqueueCallback.bind(this));
     this.enqueueButton = this.addControlToAlgorithmBar("Button", "Enqueue");
     this.enqueueButton.onclick = this.enqueueCallback.bind(this);
 
@@ -164,10 +164,10 @@ QueueLL.prototype.reset = function()
 
 QueueLL.prototype.enqueueCallback = function(event)
 {
-    if (this.top < QueueLL.SIZE && this.enqueueField.value != "") {
-        var pushVal = this.enqueueField.value;
-        this.enqueueField.value = ""
-        this.implementAction(this.enqueue.bind(this), pushVal);
+    var enqueuedValue = this.enqueueField.value;
+    if (this.top < QueueLL.SIZE && enqueuedValue !== "") {
+        this.enqueueField.value = "";
+        this.implementAction(this.enqueue.bind(this), enqueuedValue);
     }
 }
 

@@ -124,8 +124,7 @@ Algorithm.prototype.compare = function(a, b) {
 Algorithm.prototype.normalizeNumber = function(input)
 {
     input = input.trim();
-    var num = parseFloat(input);
-    return isNaN(num) ? input : num;
+    return input == "" || isNaN(input) ? input : Number(input);
 }
 
 
@@ -141,98 +140,44 @@ Algorithm.prototype.enableUI = function(event)
 }
 
 
-Algorithm.prototype.controlKey = function(keyASCII)
+Algorithm.prototype.addReturnSubmit = function(field, allowed, action)
 {
-    return (
-        keyASCII ==  8 || keyASCII ==  9 || keyASCII == 37 || keyASCII == 38 ||
-        keyASCII == 39 || keyASCII == 40 || keyASCII == 46
+    allowed = (
+        allowed == "int"      ? "0-9"       :
+        allowed == "float"    ? "0-9.-"     :
+        allowed == "alpha"    ? "a-zA-Z"    :
+        allowed == "ALPHA"    ? "A-Z"       :
+        allowed == "alphanum" ? "a-zA-Z0-9" :
+        allowed == "ALPHANUM" ? "A-Z0-9"    :  allowed
     );
-}
 
+    var regex = new RegExp("[^" + allowed + "]", "g");
 
-Algorithm.prototype.returnSubmitFloat = function(field, funct, maxsize)
-{
-    if (maxsize != undefined) {
-        field.size = maxsize;
+    var transform = (
+        allowed == allowed.toUpperCase() ? (s) => s.toUpperCase() :
+        allowed == allowed.toLowerCase() ? (s) => s.toLowerCase() : (s) => s
+    );
+
+    // Idea taken from here: https://stackoverflow.com/a/14719818
+    field.oninput = (event) => {
+        var pos = field.selectionStart;
+        var value = transform(field.value);
+        if (regex.test(value)) {
+            value = value.replace(regex, "");
+            pos--;
+        }
+        field.value = value;
+        field.setSelectionRange(pos, pos);
     }
-    return function(event)
-    {
-        var keyASCII = 0;
-        if(window.event) { // IE
-            keyASCII = event.keyCode
-        }
-        else if (event.which) { // Netscape/Firefox/Opera
-            keyASCII = event.which
-        }
 
-        // Submit on return
-        if (keyASCII == 13) {
-            funct();
-        }
-        // Control keys (arrows, del, etc) are always OK
-        else if (this.controlKey(keyASCII)) {
-            return;
-        }
-        // - (minus sign) only OK at beginning of number
-        //  (For now we will allow anywhere -- hard to see where the beginning of the number is ...)
-        //else if (keyASCII == 109 && field.value.length  == 0)
-        else if (keyASCII == 109) {
-            return;
-        }
-        // Digis are OK if we have enough space
-        else if ((maxsize != undefined || field.value.length < maxsize) &&
-                 (keyASCII >= 48 && keyASCII <= 57)
-                ) {
-            return;
-        }
-        // . (Decimal point) is OK if we haven't had one yet, and there is space
-        else if ((maxsize != undefined || field.value.length < maxsize) &&
-                 (keyASCII == 190) && field.value.indexOf(".") == -1
-                ) {
-            return;
-        }
-        // Nothing else is OK
-        else {
-            return false;
+    if (action) {
+        field.onkeydown = (event) => {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                action();
+            }        
         }
     }
-}
-
-
-Algorithm.prototype.returnSubmit = function(field, funct, maxsize, intOnly)
-{
-    if (maxsize != undefined) {
-        field.size = maxsize;
-    }
-    return function(event)
-    {
-        var keyASCII = 0;
-        if(window.event) { // IE
-            keyASCII = event.keyCode
-        }
-        else if (event.which) { // Netscape/Firefox/Opera
-            keyASCII = event.which
-        }
-
-        if (keyASCII == 13 && funct !== null) {
-            funct();
-        }
-        else if (keyASCII == 190 || keyASCII == 59 || keyASCII == 173 || keyASCII == 189) {
-            return false;
-        }
-        else if ((maxsize != undefined && field.value.length >= maxsize) ||
-                 intOnly && (keyASCII < 48 || keyASCII > 57)
-                ) {
-            if (!this.controlKey(keyASCII))
-                return false;
-        }
-    }
-}
-
-
-Algorithm.prototype.addReturnSubmit = function(field, action)
-{
-    field.onkeydown = this.returnSubmit(field, action, 4, false);
 }
 
 
@@ -287,29 +232,29 @@ Algorithm.prototype.cmd = function(...args)
 
 // Algorithm bar methods //////////////////
 
-Algorithm.prototype.addLabelToAlgorithmBar = function(labelName)
+Algorithm.prototype.addLabelToAlgorithmBar = function(...content)
 {
-    return this.animationManager.algorithmControlBar.addLabel(labelName);
+    return this.animationManager.algorithmControlBar.addLabel(...content);
 }
 
-Algorithm.prototype.addCheckboxToAlgorithmBar = function(boxLabel)
+Algorithm.prototype.addCheckboxToAlgorithmBar = function(label, attrs)
 {
-    return this.animationManager.algorithmControlBar.addCheckbox(boxLabel);
+    return this.animationManager.algorithmControlBar.addCheckbox(label, attrs);
 }
 
-Algorithm.prototype.addRadioButtonGroupToAlgorithmBar = function(buttonNames, groupName)
+Algorithm.prototype.addRadioButtonGroupToAlgorithmBar = function(buttonNames, groupName, attrs)
 {
-    return this.animationManager.algorithmControlBar.addRadioButtons(buttonNames, groupName);
+    return this.animationManager.algorithmControlBar.addRadioButtons(buttonNames, groupName, attrs);
 }
 
-Algorithm.prototype.addSelectToAlgorithmBar = function(values, labels)
+Algorithm.prototype.addSelectToAlgorithmBar = function(values, labels, attrs)
 {
-    return this.animationManager.algorithmControlBar.addSelect(values, labels);
+    return this.animationManager.algorithmControlBar.addSelect(values, labels, attrs);
 }
 
-Algorithm.prototype.addControlToAlgorithmBar = function(type, name)
+Algorithm.prototype.addControlToAlgorithmBar = function(type, name, attrs)
 {
-    return this.animationManager.algorithmControlBar.addInput(type, name);
+    return this.animationManager.algorithmControlBar.addInput(type, name, attrs);
 }
 
 Algorithm.prototype.addBreakToAlgorithmBar = function() 

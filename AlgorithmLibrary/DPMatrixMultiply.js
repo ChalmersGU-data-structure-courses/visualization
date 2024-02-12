@@ -26,6 +26,8 @@
 
 
 
+// TODO: This is not finished
+
 function DPMatrixMultiply(am)
 {
     this.init(am);
@@ -46,10 +48,10 @@ DPMatrixMultiply.CODE_START_X = 10;
 DPMatrixMultiply.CODE_START_Y = 10;
 DPMatrixMultiply.CODE_LINE_HEIGHT = 14;
 
-DPMatrixMultiply.RECURSIVE_START_X = 20;
-DPMatrixMultiply.RECURSIVE_START_Y = 120;
-DPMatrixMultiply.RECURSIVE_DELTA_Y = 14;
-DPMatrixMultiply.RECURSIVE_DELTA_X = 15;
+DPMatrixMultiply.RECURSIVE_START_X = 10;
+DPMatrixMultiply.RECURSIVE_START_Y = 180;
+DPMatrixMultiply.RECURSIVE_DELTA_Y = 15;
+DPMatrixMultiply.RECURSIVE_DELTA_X = 20;
 DPMatrixMultiply.CODE_HIGHLIGHT_COLOR = "#FF0000";
 DPMatrixMultiply.CODE_STANDARD_COLOR = "#000000";
 DPMatrixMultiply.MAX_SEQUENCE_LENGTH = 15;
@@ -109,12 +111,12 @@ DPMatrixMultiply.prototype.init = function(am)
 DPMatrixMultiply.prototype.addControls = function()
 {
     this.addLabelToAlgorithmBar("S1:");
-    this.S1Field = this.addControlToAlgorithmBar("Text", "");
-    this.S1Field.onkeydown = this.returnSubmit(this.S1Field,  this.emptyCallback.bind(this), DPMatrixMultiply.MAX_SEQUENCE_LENGTH, false);
+    this.S1Field = this.addControlToAlgorithmBar("Text", "", {maxlength: DPMatrixMultiply.MAX_SEQUENCE_LENGTH, size: DPMatrixMultiply.MAX_SEQUENCE_LENGTH});
+    this.addReturnSubmit(this.S1Field, "ALPHANUM", this.emptyCallback.bind(this));
 
     this.addLabelToAlgorithmBar("S2:");
-    this.S2Field = this.addControlToAlgorithmBar("Text", "");
-    this.S2Field.onkeydown = this.returnSubmit(this.S2Field,  this.emptyCallback.bind(this), DPMatrixMultiply.MAX_SEQUENCE_LENGTH, false);
+    this.S2Field = this.addControlToAlgorithmBar("Text", "", {maxlength: DPMatrixMultiply.MAX_SEQUENCE_LENGTH, size: DPMatrixMultiply.MAX_SEQUENCE_LENGTH});
+    this.addReturnSubmit(this.S2Field, "ALPHANUM", this.emptyCallback.bind(this));
 
     this.recursiveButton = this.addControlToAlgorithmBar("Button", "LCS Recursive");
     this.recursiveButton.onclick = this.recursiveCallback.bind(this);
@@ -224,52 +226,32 @@ DPMatrixMultiply.prototype.emptyCallback = function(event)
 
 DPMatrixMultiply.prototype.recursiveCallback = function(event)
 {
-    var fibValue;
-
-    if (this.S1Field.value != "" && this.S2Field.value != "" ) {
-        this.implementAction(this.recursiveLCS.bind(this),this.S1Field.value + ";" + this.S2Field.value);
-    }
-    else {
-        this.implementAction(this.helpMessage.bind(this), "");
+    if (this.S1Field.value !== "" && this.S2Field.value !== "" ) {
+        this.implementAction(this.recursiveLCS.bind(this), this.S1Field.value + ";" + this.S2Field.value);
     }
 }
 
 
 DPMatrixMultiply.prototype.tableCallback = function(event)
 {
-    var fibValue;
-
-
-    if (this.S1Field.value != "" && this.S2Field.value != "" ) {
-        this.implementAction(this.tableLCS.bind(this),this.S1Field.value + ";" + this.S2Field.value);
+    if (this.S1Field.value !== "" && this.S2Field.value !== "" ) {
+        this.implementAction(this.tableLCS.bind(this), this.S1Field.value + ";" + this.S2Field.value);
     }
-    else {
-        this.implementAction(this.helpMessage.bind(this), "");
-    }
-
 }
 
 
 DPMatrixMultiply.prototype.memoizedCallback = function(event)
 {
-    var fibValue;
-
-
-    if (this.S1Field.value != "" && this.S2Field.value != "" ) {
+    if (this.S1Field.value !== "" && this.S2Field.value !== "" ) {
         this.implementAction(this.memoizedLCS.bind(this), this.S1Field.value + ";" + this.S2Field.value);
     }
-    else {
-        this.implementAction(this.helpMessage.bind(this), "");
-    }
-
 }
+
 
 DPMatrixMultiply.prototype.helpMessage = function(value)
 {
     this.commands = [];
-
     this.clearOldIDs();
-
     var messageID = this.nextIndex++;
     this.oldIDs.push(messageID);
     this.cmd("CreateLabel", messageID,

@@ -259,18 +259,18 @@ RotateTranslate2D.prototype.addControls = function()
 {
     this.addLabelToAlgorithmBar("Rotation Angle");
 
-    this.rotationField = this.addControlToAlgorithmBar("Text", "");
-    this.rotationField.onkeydown = this.returnSubmitFloat(this.rotationField,  this.transformCallback.bind(this), 4, true);
+    this.rotationField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
+    this.addReturnSubmit(this.rotationField, "float", this.transformCallback.bind(this));
 
     this.addLabelToAlgorithmBar("Translate X");
 
-    this.scaleXField = this.addControlToAlgorithmBar("Text", "");
-    this.scaleXField.onkeydown = this.returnSubmitFloat(this.scaleXField,  this.transformCallback.bind(this), 4, true);
+    this.scaleXField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
+    this.addReturnSubmit(this.scaleXField, "float", this.transformCallback.bind(this));
 
     this.addLabelToAlgorithmBar("Translate Y");
 
-    this.scaleYField = this.addControlToAlgorithmBar("Text", "");
-    this.scaleYField.onkeydown = this.returnSubmitFloat(this.scaleYField,  this.transformCallback.bind(this), 4, true);
+    this.scaleYField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
+    this.addReturnSubmit(this.scaleYField, "float", this.transformCallback.bind(this));
 
     var transformButton = this.addControlToAlgorithmBar("Button", "Transform");
     transformButton.onclick = this.transformCallback.bind(this);
@@ -413,24 +413,18 @@ RotateTranslate2D.prototype.changeRowCol = function(rowMajor)
 
 RotateTranslate2D.prototype.fixNumber = function(value, defaultVal)
 {
-        if (value == "" || value == "-" || value == "." || value == "-." || isNaN(parseFloat(value))) {
-            value = defaultVal;
-        }
-        else {
-            value = String(parseFloat(value));
-        }
-        return value
+    value = parseFloat(value);
+    if (isNaN(value)) value = defaultVal;
+    return value;
 }
+
 
 RotateTranslate2D.prototype.transformCallback = function()
 {
-
-
-    this.rotationField.value = this.fixNumber(this.rotationField.value, "0");
-    this.scaleXField.value = this.fixNumber(this.scaleXField.value, "0");
-    this.scaleYField.value = this.fixNumber(this.scaleYField.value, "0");
+    this.rotationField.value = this.fixNumber(this.rotationField.value, 0);
+    this.scaleXField.value = this.fixNumber(this.scaleXField.value, 0);
+    this.scaleYField.value = this.fixNumber(this.scaleYField.value, 0);
     this.implementAction(this.transform.bind(this), this.rotationField.value + ";" + this.scaleXField.value + ";" + this.scaleYField.value);
-
 }
 
 
