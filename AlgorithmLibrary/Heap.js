@@ -51,7 +51,6 @@ Heap.HEAP_Y_POSITIONS = [
 Heap.ARRAY_SIZE = Heap.HEAP_X_POSITIONS.length;
 
 Heap.LABEL_COLOR = "#0000FF";
-Heap.ZEROCELL_COLOR = "#BBBBBB";
 
 Heap.ARRAY_INITIAL_X = 30;
 Heap.DESCRIPT_LABEL_X = 20;
@@ -118,7 +117,7 @@ Heap.prototype.resetAll = function()
         this.cmd("CreateLabel", this.arrayLabels[i], i, this.getArrayX(i), this.getArrayY(i) + this.getArrayElemHeight() * 0.9);
         this.cmd("SetForegroundColor", this.arrayLabels[i], Heap.LABEL_COLOR);
     }
-    this.cmd("SetBackgroundColor", this.arrayRects[0], Heap.ZEROCELL_COLOR);
+    this.cmd("SetNull", this.arrayRects[0], 1);
 
     this.swapLabel1 = this.nextIndex++;
     this.swapLabel2 = this.nextIndex++;
@@ -128,6 +127,8 @@ Heap.prototype.resetAll = function()
     this.descriptLabel2 = this.nextIndex++;
     this.descriptLabel3 = this.nextIndex++;
     this.cmd("CreateLabel", this.descriptLabel1, "", Heap.DESCRIPT_LABEL_X, this.getDescriptionY(), 0);
+
+    this.initialIndex = this.nextIndex;
     this.animationManager.StartNewAnimation(this.commands);
     this.animationManager.skipForward();
     this.animationManager.clearHistory();
@@ -137,6 +138,7 @@ Heap.prototype.resetAll = function()
 Heap.prototype.reset = function()
 {
     this.currentHeapSize = 0;
+    this.nextIndex = this.initialIndex;
 }
 
 
@@ -265,7 +267,7 @@ Heap.prototype.insertElement = function(insertedValue)
     this.currentHeapSize++;
     this.arrayData[this.currentHeapSize] = insertedValue;
     this.cmd("CreateCircle", this.circleObjs[this.currentHeapSize], "", this.getHeapX(this.currentHeapSize), this.getHeapY(this.currentHeapSize));
-    this.cmd("SetWidth", this.circleObjs[this.currentHeapSize], 20);
+    this.cmd("SetWidth", this.circleObjs[this.currentHeapSize], this.getCircleWidth());
     if (this.currentHeapSize > 1) {
         this.cmd("Connect", this.circleObjs[Math.floor(this.currentHeapSize / 2)], this.circleObjs[this.currentHeapSize]);
     }
