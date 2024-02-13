@@ -557,6 +557,13 @@ function AnimationManager(objectManager)
                 this.animatedObjects.setNodePosition(id, x, y);
                 undoBlock.push(new UndoSetPosition(id, oldX, oldY));
             }
+            else if (cmd == "ALIGNMIDDLE") {
+                var otherID = parseInt(args.shift());
+                var oldX = this.animatedObjects.getNodeX(id);
+                var oldY = this.animatedObjects.getNodeY(id);
+                this.animatedObjects.alignMiddle(id, otherID);
+                undoBlock.push(new UndoSetPosition(id, oldX, oldY));
+            }
             else if (cmd == "ALIGNRIGHT") {
                 var otherID = parseInt(args.shift());
                 var oldX = this.animatedObjects.getNodeX(id);

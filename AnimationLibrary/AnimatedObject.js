@@ -150,6 +150,14 @@ AnimatedObject.prototype.getAlignBottomPos = function(otherObject)
 }
 
 
+AnimatedObject.prototype.alignMiddle = function(otherObject)
+{
+    // Assuming centering. Overridden method could modify if not centered
+    // (See AnimatedLabel, for instance)
+    this.y = otherObject.centerY();
+    this.x = otherObject.centerX();
+}
+
 AnimatedObject.prototype.alignLeft = function(otherObject)
 {
     // Assuming centering. Overridden method could modify if not centered

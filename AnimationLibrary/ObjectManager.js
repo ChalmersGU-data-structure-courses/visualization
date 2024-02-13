@@ -557,6 +557,15 @@ function ObjectManager(canvas)
     }
 
 
+    this.alignMiddle = function(id1, id2)
+    {
+        if (this.Nodes[id1] == null || this.Nodes[id2] == null) {
+            throw new Error(`alignMiddle: One of the objects ${id1} or ${id2} do not exist`);
+        }
+        this.Nodes[id1].alignMiddle(this.Nodes[id2]);
+    }
+
+
     this.alignTop = function(id1, id2)
     {
         if (this.Nodes[id1] == null || this.Nodes[id2] == null) {
