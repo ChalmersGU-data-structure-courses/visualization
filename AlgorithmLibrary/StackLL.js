@@ -24,6 +24,7 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+
 function StackLL(am)
 {
     this.init(am);
@@ -31,45 +32,23 @@ function StackLL(am)
 StackLL.inheritFrom(Algorithm);
 
 
-StackLL.LINKED_LIST_START_X = 100;
-StackLL.LINKED_LIST_START_Y = 200;
-StackLL.LINKED_LIST_ELEM_WIDTH = 70;
-StackLL.LINKED_LIST_ELEM_HEIGHT = 30;
-
-
-StackLL.LINKED_LIST_INSERT_X = 250;
-StackLL.LINKED_LIST_INSERT_Y = 50;
-
-StackLL.LINKED_LIST_ELEM_SPACING = 100;
-StackLL.LINKED_LIST_LINE_SPACING = 100;
-
-StackLL.TOP_POS_X = 180;
-StackLL.TOP_POS_Y = 100;
-StackLL.TOP_LABEL_X = 130;
-StackLL.TOP_LABEL_Y = 100;
-
-StackLL.TOP_ELEM_WIDTH = 30;
-StackLL.TOP_ELEM_HEIGHT = 30;
-
-StackLL.PUSH_LABEL_X = 50;
-StackLL.PUSH_LABEL_Y = 30;
-StackLL.PUSH_ELEMENT_X = 120;
-StackLL.PUSH_ELEMENT_Y = 30;
+// Various constants
 
 StackLL.SIZE = 32;
+StackLL.ELEM_SPACING = 1.5;
 
 
 StackLL.prototype.init = function(am)
 {
     StackLL.superclass.init.call(this, am);
     this.addControls();
-    this.setup();
+    this.resetAll();
 }
 
 
 StackLL.prototype.sizeChanged = function()
 {
-    this.setup();
+    this.resetAll();
 }
 
 
@@ -79,37 +58,36 @@ StackLL.prototype.addControls = function()
     this.addReturnSubmit(this.pushField, "ALPHANUM", this.pushCallback.bind(this));
     this.pushButton = this.addControlToAlgorithmBar("Button", "Push");
     this.pushButton.onclick = this.pushCallback.bind(this);
+    this.addBreakToAlgorithmBar();
 
     this.popButton = this.addControlToAlgorithmBar("Button", "Pop");
     this.popButton.onclick = this.popCallback.bind(this);
+    this.addBreakToAlgorithmBar();
 
-    this.clearButton = this.addControlToAlgorithmBar("Button", "Clear Stack");
+    this.clearButton = this.addControlToAlgorithmBar("Button", "Clear");
     this.clearButton.onclick = this.clearCallback.bind(this);
 }
 
 
-StackLL.prototype.setup = function()
+StackLL.prototype.resetAll = function()
 {
     this.animationManager.resetAll();
     this.nextIndex = 0;
-
-    this.linkedListElemID = new Array(StackLL.SIZE);
-    for (var i = 0; i < StackLL.SIZE; i++) {
-        this.linkedListElemID[i] = this.nextIndex++;
-    }
-    this.topID = this.nextIndex++;
-    this.topLabelID = this.nextIndex++;
-
-    this.arrayData = new Array(StackLL.SIZE);
-    this.top = 0;
-    this.leftoverLabelID = this.nextIndex++;
-
     this.commands = [];
 
-    this.cmd("CreateLabel", this.topLabelID, "Top", StackLL.TOP_LABEL_X, StackLL.TOP_LABEL_Y);
-    this.cmd("CreateRectangle", this.topID, "", StackLL.TOP_ELEM_WIDTH, StackLL.TOP_ELEM_HEIGHT, StackLL.TOP_POS_X, StackLL.TOP_POS_Y);
+    this.messageID = this.nextIndex++;
+    this.messageLabelID = this.nextIndex++;
+    this.messageLabelID2 = this.nextIndex++;
+    this.cmd("CreateLabel", this.messageID, "", this.getElemX(3), 2 * this.getElemHeight());
+
+    this.stack = [];
+
+    this.topID = this.nextIndex++;
+    this.topLabelID = this.nextIndex++;
+    this.cmd("CreateRectangle", this.topID, "", this.getRectWidth(), this.getElemHeight(), this.getElemX(0), 2 * this.getElemHeight());
+    this.cmd("CreateLabel", this.topLabelID, "top:  ", 0, 0);
+    this.cmd("AlignLeft", this.topLabelID, this.topID);
     this.cmd("SetNull", this.topID, 1);
-    this.cmd("CreateLabel", this.leftoverLabelID, "", StackLL.PUSH_LABEL_X, StackLL.PUSH_LABEL_Y);
 
     this.initialIndex = this.nextIndex;
     this.animationManager.StartNewAnimation(this.commands);
@@ -118,43 +96,76 @@ StackLL.prototype.setup = function()
 }
 
 
-StackLL.prototype.resetLinkedListPositions = function()
-{
-    var nextX = QueueLL.LINKED_LIST_START_X;
-    var nextY = QueueLL.LINKED_LIST_START_Y;
-    for (var i = this.top - 1; i >= 0; i--) {
-        this.cmd("Move", this.linkedListElemID[i], nextX, nextY);
-        nextX += QueueLL.LINKED_LIST_ELEM_SPACING;
-        if (nextX > this.getCanvasWidth() - QueueLL.LINKED_LIST_ELEM_SPACING) {
-            nextX = QueueLL.LINKED_LIST_START_X;
-            nextY += QueueLL.LINKED_LIST_LINE_SPACING;
-        }
-    }
-}
-
-
 StackLL.prototype.reset = function()
 {
-    this.top = 0;
+    this.stack = [];
     this.nextIndex = this.initialIndex;
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
+// Calculating canvas positions and sizes
+
+StackLL.prototype.getElemX = function(i)
+{
+    return this.getElemXY(i).x;
+}
+
+StackLL.prototype.getElemY = function(i)
+{
+    return this.getElemXY(i).y;
+}
+
+StackLL.prototype.getElemXY = function(i)
+{
+    var x = 1.5 * this.getElemWidth();
+    var y = 4.5 * this.getElemHeight();
+    for (var k = 0; k < i; k++) {
+        x += this.getElemWidth() * StackLL.ELEM_SPACING;
+        if (x + this.getElemWidth() > this.getCanvasWidth()) {
+            x = 1.5 * this.getElemWidth();
+            y += 2.5 * this.getElemHeight();
+        }
+    }
+    return {x: x, y: y};
+}
+
+StackLL.prototype.getElemWidth = function() 
+{
+    var nrows = 1;
+    while (true) {
+        var w = nrows * this.getCanvasWidth() / (StackLL.SIZE + 2 * nrows);
+        if (w >= 100) return w / StackLL.ELEM_SPACING;
+        nrows++;
+    }
+}
+
+StackLL.prototype.getRectWidth = function()
+{
+    return this.getElemWidth() - 30;
+}
+
+StackLL.prototype.getElemHeight = function() 
+{
+    return this.getRectWidth() * 0.8;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Callback functions for the algorithm control bar
+
 StackLL.prototype.pushCallback = function(event)
 {
     var pushVal = this.pushField.value;
-    if (this.top < StackLL.SIZE && pushVal !== "") {
+    if (pushVal !== "") {
         this.pushField.value = "";
         this.implementAction(this.push.bind(this), pushVal);
     }
 }
 
-
 StackLL.prototype.popCallback = function(event)
 {
-    if (this.top > 0) {
-        this.implementAction(this.pop.bind(this), "");
-    }
+    this.implementAction(this.pop.bind(this), "");
 }
 
 
@@ -164,57 +175,62 @@ StackLL.prototype.clearCallback = function(event)
 }
 
 
-StackLL.prototype.push = function(elemToPush)
+///////////////////////////////////////////////////////////////////////////////
+// Functions that do the actual work
+
+StackLL.prototype.clearAll = function()
 {
-    this.commands = new Array();
+	this.commands = [];
+    this.cmd("SetText", this.messageID, "");
+    while (this.stack.length > 0) {
+        this.cmd("Delete", this.stack.pop().id);
+        this.nextIndex--;
+    }
+	this.cmd("SetNull", this.topID, 1);
+	return this.commands;
+}
 
-    var labPushID = this.nextIndex++;
-    var labPushValID = this.nextIndex++;
-    this.arrayData[this.top] = elemToPush;
 
-    this.cmd("SetText", this.leftoverLabelID, "");
+StackLL.prototype.push = function(elem)
+{
+    this.commands = [];
+    var elemID = this.nextIndex++;
 
+    this.cmd("SetText", this.messageID, "Pushing value:  ");
+    this.cmd("CreateLabel", this.messageLabelID, elem, 0, 0);
+    this.cmd("CreateLabel", this.messageLabelID2, elem, 0, 0);
+    this.cmd("AlignRight", this.messageLabelID, this.messageID);
+    this.cmd("AlignRight", this.messageLabelID2, this.messageID);
+    this.cmd("Step");
+
+    var insertX = this.getElemX(1), insertY = 2 * this.getElemHeight();
     this.cmd(
-        "CreateLinkedList",
-        this.linkedListElemID[this.top], 
-        "",
-        StackLL.LINKED_LIST_ELEM_WIDTH, 
-        StackLL.LINKED_LIST_ELEM_HEIGHT,
-        StackLL.LINKED_LIST_INSERT_X, 
-        StackLL.LINKED_LIST_INSERT_Y, 
-        0.25, 
-        0, 
-        1, 
-        1
+        "CreateLinkedList", elemID, "",
+        this.getElemWidth(), this.getElemHeight(), insertX, insertY, 
+        0.25, 0, 1, 1
     );
-
-    this.cmd("CreateLabel", labPushID, "Pushing Value: ", StackLL.PUSH_LABEL_X, StackLL.PUSH_LABEL_Y);
-    this.cmd("CreateLabel", labPushValID,elemToPush, StackLL.PUSH_ELEMENT_X, StackLL.PUSH_ELEMENT_Y);
-
+    this.cmd("Move", this.messageLabelID, insertX, insertY);
     this.cmd("Step");
 
-    this.cmd("Move", labPushValID, StackLL.LINKED_LIST_INSERT_X, StackLL.LINKED_LIST_INSERT_Y);
-
-    this.cmd("Step");
-    this.cmd("SetText", this.linkedListElemID[this.top], elemToPush);
-    this.cmd("Delete", labPushValID);
-
-    if (this.top == 0) {
+    this.cmd("SetText", elemID, elem);
+    this.cmd("Delete", this.messageLabelID);
+    if (this.stack.length == 0) {
         this.cmd("SetNull", this.topID, 0);
-        this.cmd("SetNull", this.linkedListElemID[this.top], 1);
+        this.cmd("SetNull", elemID, 1);
     }
     else {
-        this.cmd("Connect",  this.linkedListElemID[this.top], this.linkedListElemID[this.top - 1]);
+        var prevID = this.stack[this.stack.length-1].id;
+        this.cmd("Connect", elemID, prevID);
         this.cmd("Step");
-        this.cmd("Disconnect", this.topID, this.linkedListElemID[this.top-1]);
+        this.cmd("Disconnect", this.topID, prevID);
     }
-    this.cmd("Connect", this.topID, this.linkedListElemID[this.top]);
+    this.cmd("Connect", this.topID, elemID);
+    this.cmd("Step");
 
-    this.cmd("Step");
-    this.top = this.top + 1;
+    this.stack.push({elem: elem, id: elemID});
     this.resetLinkedListPositions();
-    this.cmd("Delete", labPushID);
-    this.cmd("Step");
+    this.cmd("SetText", this.messageID, "");
+    this.cmd("Delete", this.messageLabelID2);
 
     return this.commands;
 }
@@ -222,52 +238,53 @@ StackLL.prototype.push = function(elemToPush)
 
 StackLL.prototype.pop = function(ignored)
 {
-    this.commands = new Array();
+    this.commands = [];
+    if (this.stack.length == 0) {
+        this.cmd("SetText", this.messageID, "Stack empty!");
+        return this.commands;
+    }
 
-    var labPopID = this.nextIndex++;
-    var labPopValID = this.nextIndex++;
+    var {elem: elem, id: elemID} = this.stack.pop();
 
-    this.cmd("SetText", this.leftoverLabelID, "");
-
-
-    this.cmd("CreateLabel", labPopID, "Popped Value: ", StackLL.PUSH_LABEL_X, StackLL.PUSH_LABEL_Y);
-    this.cmd("CreateLabel", labPopValID,this.arrayData[this.top - 1], StackLL.LINKED_LIST_START_X, StackLL.LINKED_LIST_START_Y);
-
-    this.cmd("Move", labPopValID,  StackLL.PUSH_ELEMENT_X, StackLL.PUSH_ELEMENT_Y);
+    this.cmd("SetText", this.messageID, "Popping value:  ");
     this.cmd("Step");
-    this.cmd("Disconnect", this.topID, this.linkedListElemID[this.top - 1]);
 
-    if (this.top == 1) {
+    this.cmd("CreateLabel", this.messageLabelID, elem, 0, 0);
+    this.cmd("AlignMiddle", this.messageLabelID, elemID);
+    this.cmd("MoveToAlignRight", this.messageLabelID, this.messageID);
+    this.cmd("Step");
+
+    this.cmd("Disconnect", this.topID, elemID);
+    if (this.stack.length == 0) {
         this.cmd("SetNull", this.topID, 1);
-    }
-    else {
-        this.cmd("Connect", this.topID, this.linkedListElemID[this.top-2]);
-
+    } else {
+        this.cmd("Connect", this.topID, this.stack[this.stack.length-1].id);
     }
     this.cmd("Step");
-    this.cmd("Delete", this.linkedListElemID[this.top - 1]);
-    this.top = this.top - 1;
+
+    this.cmd("Delete", elemID);
     this.resetLinkedListPositions();
+    this.cmd("Step");
 
-    this.cmd("Delete", labPopValID)
-    this.cmd("Delete", labPopID);
-    this.cmd("SetText", this.leftoverLabelID, "Popped Value: " + this.arrayData[this.top]);
+    this.cmd("Delete", this.messageLabelID);
+    this.cmd("SetText", this.messageID, "Popped value:  " + elem);
 
+    this.nextIndex--;
     return this.commands;
 }
 
 
-StackLL.prototype.clearAll = function()
+StackLL.prototype.resetLinkedListPositions = function()
 {
-	this.commands = [];
-	for (var i = 0; i < this.top; i++) {
-		this.cmd("Delete", this.linkedListElemID[i]);
-	}
-	this.top = 0;
-	this.cmd("SetNull", this.topID, 1);
-	return this.commands;
+    for (var i = 0; i < this.stack.length; i++) {
+        var j = this.stack.length - i - 1;
+        this.cmd("Move", this.stack[j].id, this.getElemX(i), this.getElemY(i));
+    }
 }
 
+
+///////////////////////////////////////////////////////////////////////////////
+// Initialization
 
 var currentAlg;
 
