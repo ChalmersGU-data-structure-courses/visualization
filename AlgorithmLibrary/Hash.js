@@ -27,302 +27,93 @@
 
 function Hash(am)
 {
-    // this shouldn't happen if subclassing is done properly
-    if (!am)
-        throw "this shouldn't happen";
-
+    // This shouldn't happen if subclassing is done properly
+    if (!am) throw "this shouldn't happen";
     this.init(am);
 }
 Hash.inheritFrom(Algorithm);
 
-Hash.MAX_HASH_LENGTH = 10;
 
+// Various constants
+
+Hash.MAX_HASH_LENGTH = 10;
+Hash.HIGHLIGHT_COLOR = "#0000FF";
+
+Hash.HASH_INTEGER = "int";
+Hash.HASH_STRING = "ALPHANUM";
+
+Hash.MESSAGE_X = 20;
+Hash.MESSAGE_Y = 20;
 
 Hash.HASH_NUMBER_START_X = 200;
 Hash.HASH_X_DIFF = 7;
-Hash.HASH_NUMBER_START_Y = 10;
-Hash.HASH_ADD_START_Y = 30;
+Hash.HASH_NUMBER_START_Y = Hash.MESSAGE_Y;
+Hash.HASH_ADD_START_Y = Hash.HASH_NUMBER_START_Y + 12;
 Hash.HASH_INPUT_START_X = 60;
 Hash.HASH_INPUT_X_DIFF = 7;
-Hash.HASH_INPUT_START_Y = 45;
-Hash.HASH_ADD_LINE_Y = 42;
-Hash.HASH_RESULT_Y = 50;
+Hash.HASH_INPUT_START_Y = Hash.MESSAGE_Y + 24;
+Hash.HASH_ADD_LINE_Y = Hash.HASH_ADD_START_Y + 18;
+Hash.HASH_RESULT_Y = Hash.HASH_ADD_LINE_Y + 2;
 Hash.ELF_HASH_SHIFT = 10;
-
-Hash.HASH_LABEL_X = 300;
-Hash.HASH_LABEL_Y = 30;
-Hash.HASH_LABEL_DELTA_X = 50;
-
-Hash.HIGHLIGHT_COLOR = "#0000FF";
-
+Hash.HASH_MOD_X = Hash.HASH_NUMBER_START_X + 32 * Hash.HASH_X_DIFF;
 
 
 Hash.prototype.init = function(am)
 {
     Hash.superclass.init.call(this, am);
     this.addControls();
-    this.nextIndex = 0;
-    this.hashingIntegers = true;
+    this.resetAll();
+}
+
+
+Hash.prototype.sizeChanged = function()
+{
+    this.resetAll();
 }
 
 
 Hash.prototype.addControls = function()
 {
     this.insertField = this.addControlToAlgorithmBar("Text", "", {maxlength: Hash.MAX_HASH_LENGTH, size: Hash.MAX_HASH_LENGTH});
-    this.addReturnSubmit(this.insertField, "int", this.insertCallback.bind(this));
     this.insertButton = this.addControlToAlgorithmBar("Button", "Insert");
     this.insertButton.onclick = this.insertCallback.bind(this);
+    this.addBreakToAlgorithmBar();
 
     this.deleteField = this.addControlToAlgorithmBar("Text", "", {maxlength: Hash.MAX_HASH_LENGTH, size: Hash.MAX_HASH_LENGTH});
-    this.addReturnSubmit(this.deleteField, "int", this.deleteCallback.bind(this));
     this.deleteButton = this.addControlToAlgorithmBar("Button", "Delete");
     this.deleteButton.onclick = this.deleteCallback.bind(this);
+    this.addBreakToAlgorithmBar();
 
     this.findField = this.addControlToAlgorithmBar("Text", "", {maxlength: Hash.MAX_HASH_LENGTH, size: Hash.MAX_HASH_LENGTH});
-    this.addReturnSubmit(this.findField, "int", this.findCallback.bind(this));
     this.findButton = this.addControlToAlgorithmBar("Button", "Find");
     this.findButton.onclick = this.findCallback.bind(this);
+    this.addBreakToAlgorithmBar();
 
-
-    var radioButtonList = this.addRadioButtonGroupToAlgorithmBar(["Hash Integer", "Hash Strings"], "HashType");
-    this.hashIntegerButton = radioButtonList[0];
-    this.hashIntegerButton.onclick = this.changeHashTypeCallback.bind(this, true);
-    this.hashStringButton = radioButtonList[1];
-    this.hashStringButton.onclick = this.changeHashTypeCallback.bind(this, false);
-    this.hashIntegerButton.checked = true;
+    this.hashSelect = this.addSelectToAlgorithmBar(
+        [Hash.HASH_INTEGER, Hash.HASH_STRING],
+        ["Hash integers", "Hash strings"],
+    );
+    this.hashSelect.value = Hash.HASH_INTEGER;
+    this.hashSelect.onchange = this.resetAll.bind(this);
 }
 
 
-// Do this extra level of wrapping to get undo to work properly.
-// (also, so that we only implement the action if we are changing the
-// radio button)
-Hash.prototype.changeHashTypeCallback = function(newHashingIntegers, event)
+Hash.prototype.resetAll = function()
 {
-    if (this.hashingIntegers != newHashingIntegers) {
-        this.implementAction(this.changeHashType.bind(this), newHashingIntegers);
-    }
+    this.animationManager.resetAll();
+    this.nextIndex = 0;
 
-}
-
-Hash.prototype.changeHashType = function(newHashingIntegerValue)
-{
-    this.hashingIntegers = newHashingIntegerValue;
-    if (this.hashingIntegers) {
-        this.hashIntegerButton.checked = true;
-        this.addReturnSubmit(this.insertField, "int", this.insertCallback.bind(this));
-        this.addReturnSubmit(this.deleteField, "int", this.deleteCallback.bind(this));
-        this.addReturnSubmit(this.findField, "int", this.findCallback.bind(this));
-    }
-    else {
-        this.hashStringButton.checked = true;
-        this.addReturnSubmit(this.insertField, "ALPHANUM", this.insertCallback.bind(this));
-        this.addReturnSubmit(this.deleteField, "ALPHANUM", this.deleteCallback.bind(this));
-        this.addReturnSubmit(this.findField, "ALPHANUM", this.findCallback.bind(this));
-    }
-    return this.resetAll();
+    var hashtype = this.hashSelect.value;
+    this.addReturnSubmit(this.insertField, hashtype, this.insertCallback.bind(this));
+    this.addReturnSubmit(this.deleteField, hashtype, this.deleteCallback.bind(this));
+    this.addReturnSubmit(this.findField, hashtype, this.findCallback.bind(this));
 }
 
 
-Hash.prototype.doHash = function(input)
-{
-    if (this.hashingIntegers) {
-        var labelID1 = this.nextIndex++;
-        var labelID2 = this.nextIndex++;
-        var highlightID = this.nextIndex++;
-        var index = parseInt(input) % this.table_size;
-        this.currHash = parseInt(input);
-
-        this.cmd("CreateLabel", labelID1, input + " % " + String(this.table_size) + " = " , Hash.HASH_LABEL_X, Hash.HASH_LABEL_Y);
-        this.cmd("CreateLabel", labelID2,index,  Hash.HASH_LABEL_X + Hash.HASH_LABEL_DELTA_X, Hash.HASH_LABEL_Y);
-        this.cmd("Step");
-        this.cmd("CreateHighlightCircle", highlightID, Hash.HIGHLIGHT_COLOR, Hash.HASH_LABEL_X + Hash.HASH_LABEL_DELTA_X, Hash.HASH_LABEL_Y);
-        this.cmd("Move", highlightID, this.indexXPos[index], this.indexYPos[index]);
-        this.cmd("Step");
-        this.cmd("Delete", labelID1);
-        this.cmd("Delete", labelID2);
-        this.cmd("Delete", highlightID);
-        this.nextIndex -= 3;
-
-        return index;
-
-    }
-    else {
-        var oldnextIndex = this.nextIndex;
-        var label1= this.nextIndex++;
-        this.cmd("CreateLabel", label1, "Hashing:" , 10, 45, 0);
-        var wordToHashID = new Array(input.length);
-        var wordToHash = new Array(input.length);
-        for (var i = 0; i < input.length; i++) {
-            wordToHashID[i] = this.nextIndex++;
-            wordToHash[i] = input.charAt(i);
-            this.cmd("CreateLabel", wordToHashID[i], wordToHash[i], Hash.HASH_INPUT_START_X + i * Hash.HASH_INPUT_X_DIFF, Hash.HASH_INPUT_START_Y, 0);
-        }
-        var digits = new Array(32);
-        var hashValue = new Array(32);
-        var nextByte = new Array(8);
-        var nextByteID = new Array(8);
-        var resultDigits = new Array(32);
-        var floatingDigits = new Array(4);
-        var floatingVals = new Array(4);
-
-        var operatorID = this.nextIndex++;
-        var barID = this.nextIndex++;
-        for (i = 0; i < 32; i++) {
-            hashValue[i] = 0;
-            digits[i] = this.nextIndex++;
-            resultDigits[i] = this.nextIndex++;
-        }
-        for (i=0; i<8; i++) {
-            nextByteID[i] = this.nextIndex++;
-        }
-        for (i = 0; i < 4; i++) {
-            floatingDigits[i] = this.nextIndex++;
-        }
-        this.cmd("Step");
-        for (i = wordToHash.length-1; i >= 0; i--) {
-            for (j = 0; j < 32; j++) {
-                this.cmd("CreateLabel", digits[j],hashValue[j], Hash.HASH_NUMBER_START_X + j * Hash.HASH_X_DIFF, Hash.HASH_NUMBER_START_Y, 0);
-            }
-            this.cmd("Delete", wordToHashID[i]);
-            var nextChar = wordToHash[i].charCodeAt(0);
-            for (var j = 7; j >= 0; j--) {
-                nextByte[j] = nextChar % 2;
-                nextChar = Math.floor((nextChar / 2));
-                this.cmd("CreateLabel", nextByteID[j], nextByte[j], Hash.HASH_INPUT_START_X + i*Hash.HASH_INPUT_X_DIFF, Hash.HASH_INPUT_START_Y, 0);
-                this.cmd("Move", nextByteID[j], Hash.HASH_NUMBER_START_X + (j + 24) * Hash.HASH_X_DIFF, Hash.HASH_ADD_START_Y);
-            }
-            this.cmd("Step");
-            this.cmd("CreateRectangle", barID, "", 32 * Hash.HASH_X_DIFF, 0, Hash.HASH_NUMBER_START_X, Hash.HASH_ADD_LINE_Y,"left","bottom");
-            this.cmd("CreateLabel", operatorID, "+", Hash.HASH_NUMBER_START_X, Hash.HASH_ADD_START_Y, 0);
-            this.cmd("Step");
-
-            var carry = 0;
-            for (j = 7; j>=0; j--) {
-                hashValue[j+24] = hashValue[j+24] + nextByte[j] + carry;
-                if (hashValue[j+24] > 1) {
-                    hashValue[j+24] = hashValue[j+24] - 2;
-                    carry = 1;
-                }
-                else {
-                    carry = 0;
-                }
-            }
-            for (j = 23; j>=0; j--) {
-                hashValue[j] = hashValue[j]  + carry;
-                if (hashValue[j] > 1) {
-                    hashValue[j] = hashValue[j] - 2;
-                    carry = 1;
-                }
-                else {
-                    carry = 0;
-                }
-            }
-            for (j = 0; j < 32; j++) {
-                this.cmd("CreateLabel", resultDigits[j], hashValue[j], Hash.HASH_NUMBER_START_X + j * Hash.HASH_X_DIFF, Hash.HASH_RESULT_Y, 0);
-            }
-
-            this.cmd("Step");
-            for (j=0; j<8; j++) {
-                this.cmd("Delete", nextByteID[j]);
-            }
-            this.cmd("Delete", barID);
-            this.cmd("Delete", operatorID);
-            for (j = 0; j<32; j++) {
-                this.cmd("Delete", digits[j]);
-                this.cmd("Move", resultDigits[j], Hash.HASH_NUMBER_START_X + j * Hash.HASH_X_DIFF, Hash.HASH_NUMBER_START_Y)
-            }
-            this.cmd("Step");
-            if (i > 0) {
-                for (j = 0; j < 32; j++) {
-                    this.cmd("Move", resultDigits[j], Hash.HASH_NUMBER_START_X + (j - 4) * Hash.HASH_X_DIFF, Hash.HASH_NUMBER_START_Y)
-                }
-                this.cmd("Step");
-                for (j = 0; j < 28; j++) {
-                    floatingVals[j] = hashValue[j];
-                    hashValue[j] = hashValue[j+4];
-                }
-
-                for (j = 0; j < 4; j++) {
-                    this.cmd("Move", resultDigits[j], Hash.HASH_NUMBER_START_X + (j + Hash.ELF_HASH_SHIFT) * Hash.HASH_X_DIFF, Hash.HASH_ADD_START_Y);
-                    hashValue[j+28] = 0;
-                    this.cmd("CreateLabel", floatingDigits[j],0, Hash.HASH_NUMBER_START_X + (j + 28) * Hash.HASH_X_DIFF, Hash.HASH_NUMBER_START_Y,0);
-                    if (floatingVals[j]) {
-                        hashValue[j + Hash.ELF_HASH_SHIFT] = 1 - hashValue[j + Hash.ELF_HASH_SHIFT];
-                    }
-                }
-                this.cmd("CreateRectangle", barID, "", 32 * Hash.HASH_X_DIFF, 0, Hash.HASH_NUMBER_START_X, Hash.HASH_ADD_LINE_Y,"left","bottom");
-                this.cmd("CreateLabel", operatorID, "XOR", Hash.HASH_NUMBER_START_X, Hash.HASH_ADD_START_Y, 0);
-                this.cmd("Step");
-                for (j = 0; j < 32; j++) {
-                    this.cmd("CreateLabel", digits[j], hashValue[j], Hash.HASH_NUMBER_START_X + j * Hash.HASH_X_DIFF, Hash.HASH_RESULT_Y, 0);
-                }
-                this.cmd("Step");
-
-                this.cmd("Delete", operatorID);
-                this.cmd("Delete", barID);
-                for (j = 0; j<32; j++) {
-                    this.cmd("Delete", resultDigits[j]);
-                    this.cmd("Move", digits[j], Hash.HASH_NUMBER_START_X + j * Hash.HASH_X_DIFF, Hash.HASH_NUMBER_START_Y)
-                }
-                for (j = 0; j < 4; j++) {
-                    this.cmd("Delete", floatingDigits[j]);
-                }
-                this.cmd("Step");
-                for (j = 0; j<32; j++) {
-                    this.cmd("Delete", digits[j]);
-                }
-            }
-            else {
-                for (j = 0; j<32; j++) {
-                    this.cmd("Delete", resultDigits[j]);
-                }
-            }
-
-        }
-        this.cmd("Delete", label1);
-        for (j = 0; j < 32; j++) {
-            this.cmd("CreateLabel", digits[j],hashValue[j], Hash.HASH_NUMBER_START_X + j * Hash.HASH_X_DIFF, Hash.HASH_NUMBER_START_Y, 0);
-        }
-        this.currHash = 0;
-        for (j=0; j < 32; j++) {
-            this.currHash = this.currHash * 2 + hashValue[j];
-        }
-        this.cmd("CreateLabel", label1, " = " + String(this.currHash), Hash.HASH_NUMBER_START_X + 32*Hash.HASH_X_DIFF, Hash.HASH_NUMBER_START_Y, 0);
-        this.cmd("Step");
-        for (j = 0; j < 32; j++) {
-            this.cmd("Delete", digits[j]);
-        }
-
-        var label2 = this.nextIndex++;
-        this.cmd("SetText", label1, String(this.currHash) + " % " +  String(this.table_size) + " = ");
-        index = this.currHash % this.table_size;
-        this.cmd("CreateLabel", label2, index,  Hash.HASH_NUMBER_START_X + 32*Hash.HASH_X_DIFF + 105, Hash.HASH_NUMBER_START_Y, 0);
-        this.cmd("Step");
-        highlightID = this.nextIndex++;
-        this.cmd("CreateHighlightCircle", highlightID, Hash.HIGHLIGHT_COLOR,  Hash.HASH_NUMBER_START_X + 30*Hash.HASH_X_DIFF + 120,  Hash.HASH_NUMBER_START_Y+ 15);
-        this.cmd("Move", highlightID, this.indexXPos[index], this.indexYPos[index]);
-        this.cmd("Step");
-        this.cmd("Delete", highlightID);
-        this.cmd("Delete", label1);
-        this.cmd("Delete", label2);
-
-        // Reset the nextIndex pointer to where we started
-        this.nextIndex = oldnextIndex;
-        return index;
-    }
-}
+///////////////////////////////////////////////////////////////////////////////
+// Callback functions for the algorithm control bar
 
 
-
-
-Hash.prototype.resetAll =function()
-{
-    this.insertField.value = "";
-    this.deleteField.value = "";
-    this.findField.value = "";
-    return [];
-
-}
 Hash.prototype.insertCallback = function(event)
 {
     var insertedValue = this.insertField.value;
@@ -332,6 +123,7 @@ Hash.prototype.insertCallback = function(event)
     }
 }
 
+
 Hash.prototype.deleteCallback = function(event)
 {
     var deletedValue = this.deleteField.value;
@@ -340,6 +132,7 @@ Hash.prototype.deleteCallback = function(event)
         this.implementAction(this.deleteElement.bind(this), deletedValue);
     }
 }
+
 
 Hash.prototype.findCallback = function(event)
 {
@@ -351,36 +144,221 @@ Hash.prototype.findCallback = function(event)
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
+// Functions that do the actual work
 
-
-
-
-Hash.prototype.insertElement = function(elem)
+Hash.prototype.doHash = function(input)
 {
+    var hashtype = this.hashSelect.value;
+    if (hashtype == Hash.HASH_INTEGER) {
+        this.currHash = parseInt(input);
+    }
+    else {
+        this.currHash = this.hashString(input);
+    }
 
+    var labelID = this.nextIndex++;
+    var labelID2 = this.nextIndex++;
+    var highlightID = this.nextIndex++;
+
+    var index = this.currHash % this.table_size;
+
+    var lblText = `   ${this.currHash} % ${this.table_size}  =  `;
+    this.cmd("CreateLabel", labelID, lblText, Hash.HASH_MOD_X, Hash.HASH_NUMBER_START_Y, 0);
+    this.cmd("CreateLabel", labelID2, "", 0, 0);
+    this.cmd("AlignRight", labelID2, labelID);
+    this.cmd("Settext", labelID, lblText + index);
+    this.cmd("Step");
+
+    this.cmd("CreateHighlightCircle", highlightID, Hash.HIGHLIGHT_COLOR, 0, 0);
+    this.cmd("AlignMiddle", highlightID, labelID2);
+    this.cmd("Move", highlightID, this.indexXPos[index], this.indexYPos[index]);
+    this.cmd("Step");
+
+    this.cmd("Delete", labelID);
+    this.cmd("Delete", labelID2);
+    this.cmd("Delete", highlightID);
+
+    // Reset the nextIndex pointer to where we started
+    this.nextIndex -= 3;
+    return index;
 }
 
-Hash.prototype.deleteElement = function(elem)
+
+Hash.prototype.hashString = function(input)
 {
+    var oldnextIndex = this.nextIndex;
 
+    var labelID = this.nextIndex++;
+    this.cmd("CreateLabel", labelID, "Hashing: " , Hash.MESSAGE_X, Hash.HASH_INPUT_START_Y, 0);
+    var wordToHashID = [];
+    var wordToHash = [];
+    var prevID = labelID;
+    for (var i = 0; i < input.length; i++) {
+        wordToHashID[i] = this.nextIndex++;
+        wordToHash[i] = input.charAt(i);
+        this.cmd("CreateLabel", wordToHashID[i], wordToHash[i], 0, 0);
+        this.cmd("AlignRight", wordToHashID[i], prevID);
+        prevID = wordToHashID[i];
+    }
 
+    var operatorID = this.nextIndex++;
+    var barID = this.nextIndex++;
+
+    var digits = [];
+    var hashValue = [];
+    var nextByte = [];
+    var nextByteID = [];
+    var resultDigits = [];
+    var floatingDigits = [];
+    for (var i = 0; i < 32; i++) {
+        hashValue[i] = 0;
+        digits[i] = this.nextIndex++;
+        resultDigits[i] = this.nextIndex++;
+    }
+    for (var i = 0; i < 8; i++) {
+        nextByteID[i] = this.nextIndex++;
+    }
+    for (var i = 0; i < 4; i++) {
+        floatingDigits[i] = this.nextIndex++;
+    }
+    this.cmd("Step");
+
+    this.cmd("CreateRectangle", barID, "", 32 * Hash.HASH_X_DIFF, 0, Hash.HASH_NUMBER_START_X, Hash.HASH_ADD_LINE_Y, "left", "bottom");
+    var floatingVals = [];
+    for (var i = wordToHash.length-1; i >= 0; i--) {
+        for (var j = 0; j < 32; j++) {
+            this.cmd("CreateLabel", digits[j], hashValue[j], 
+                Hash.HASH_NUMBER_START_X + j * Hash.HASH_X_DIFF, Hash.HASH_NUMBER_START_Y, 0);
+        }
+        this.cmd("Delete", wordToHashID[i]);
+        var nextChar = wordToHash[i].charCodeAt(0);
+        for (var j = 7; j >= 0; j--) {
+            nextByte[j] = nextChar % 2;
+            nextChar = Math.floor(nextChar / 2);
+            this.cmd("CreateLabel", nextByteID[j], nextByte[j], 
+                Hash.HASH_INPUT_START_X + i*Hash.HASH_INPUT_X_DIFF, Hash.HASH_INPUT_START_Y, 0);
+            this.cmd("Move", nextByteID[j], 
+                Hash.HASH_NUMBER_START_X + (j + 24) * Hash.HASH_X_DIFF, Hash.HASH_ADD_START_Y);
+        }
+        this.cmd("CreateLabel", operatorID, "+", Hash.HASH_NUMBER_START_X, Hash.HASH_ADD_START_Y, 0);
+        this.cmd("Step");
+
+        var carry = 0;
+        for (var j = 7; j>=0; j--) {
+            hashValue[j+24] = hashValue[j+24] + nextByte[j] + carry;
+            if (hashValue[j+24] > 1) {
+                hashValue[j+24] = hashValue[j+24] - 2;
+                carry = 1;
+            }
+            else {
+                carry = 0;
+            }
+        }
+        for (var j = 23; j>=0; j--) {
+            hashValue[j] = hashValue[j] + carry;
+            if (hashValue[j] > 1) {
+                hashValue[j] = hashValue[j] - 2;
+                carry = 1;
+            }
+            else {
+                carry = 0;
+            }
+        }
+        for (var j = 0; j < 32; j++) {
+            this.cmd("CreateLabel", resultDigits[j], hashValue[j], 
+                Hash.HASH_NUMBER_START_X + j * Hash.HASH_X_DIFF, Hash.HASH_RESULT_Y, 0);
+        }
+        this.cmd("Step");
+
+        this.cmd("Delete", operatorID);
+        for (var j = 0; j < 8; j++) {
+            this.cmd("Delete", nextByteID[j]);
+        }
+        for (var j = 0; j < 32; j++) {
+            this.cmd("Delete", digits[j]);
+            this.cmd("Move", resultDigits[j], 
+                Hash.HASH_NUMBER_START_X + j * Hash.HASH_X_DIFF, Hash.HASH_NUMBER_START_Y)
+        }
+        this.cmd("Step");
+
+        if (i > 0) {
+            for (var j = 0; j < 32; j++) {
+                this.cmd("Move", resultDigits[j], 
+                    Hash.HASH_NUMBER_START_X + (j - 4) * Hash.HASH_X_DIFF, Hash.HASH_NUMBER_START_Y)
+            }
+            this.cmd("Step");
+
+            for (var j = 0; j < 28; j++) {
+                floatingVals[j] = hashValue[j];
+                hashValue[j] = hashValue[j+4];
+            }
+            for (var j = 0; j < 4; j++) {
+                this.cmd("Move", resultDigits[j], 
+                    Hash.HASH_NUMBER_START_X + (j + Hash.ELF_HASH_SHIFT) * Hash.HASH_X_DIFF, Hash.HASH_ADD_START_Y);
+                hashValue[j+28] = 0;
+                this.cmd("CreateLabel", floatingDigits[j], 0, 
+                    Hash.HASH_NUMBER_START_X + (j + 28) * Hash.HASH_X_DIFF, Hash.HASH_NUMBER_START_Y, 0);
+                if (floatingVals[j]) {
+                    hashValue[j + Hash.ELF_HASH_SHIFT] = 1 - hashValue[j + Hash.ELF_HASH_SHIFT];
+                }
+            }
+            this.cmd("CreateLabel", operatorID, "XOR", 
+                Hash.HASH_NUMBER_START_X, Hash.HASH_ADD_START_Y, 0);
+            this.cmd("Step");
+
+            for (var j = 0; j < 32; j++) {
+                this.cmd("CreateLabel", digits[j], hashValue[j], 
+                    Hash.HASH_NUMBER_START_X + j * Hash.HASH_X_DIFF, Hash.HASH_RESULT_Y, 0);
+            }
+            this.cmd("Step");
+
+            this.cmd("Delete", operatorID);
+            for (var j = 0; j<32; j++) {
+                this.cmd("Delete", resultDigits[j]);
+                this.cmd("Move", digits[j], 
+                    Hash.HASH_NUMBER_START_X + j * Hash.HASH_X_DIFF, Hash.HASH_NUMBER_START_Y)
+            }
+            for (var j = 0; j < 4; j++) {
+                this.cmd("Delete", floatingDigits[j]);
+            }
+            this.cmd("Step");
+
+            for (var j = 0; j<32; j++) {
+                this.cmd("Delete", digits[j]);
+            }
+        }
+        else {
+            for (var j = 0; j<32; j++) {
+                this.cmd("Delete", resultDigits[j]);
+            }
+        }
+    }
+    this.cmd("Delete", barID);
+    this.cmd("Delete", labelID);
+    for (var j = 0; j < 32; j++) {
+        this.cmd("CreateLabel", digits[j], hashValue[j], 
+            Hash.HASH_NUMBER_START_X + j * Hash.HASH_X_DIFF, Hash.HASH_NUMBER_START_Y, 0);
+    }
+    var currHash = 0;
+    for (var j = 0; j < 32; j++) {
+        currHash = 2 * currHash + hashValue[j];
+    }
+    this.cmd("CreateLabel", labelID, ` = ${currHash}`, 
+        Hash.HASH_NUMBER_START_X + 32*Hash.HASH_X_DIFF, Hash.HASH_NUMBER_START_Y, 0);
+    this.cmd("Step");
+
+    this.cmd("Delete", labelID);
+    for (var j = 0; j < 32; j++) {
+        this.cmd("Delete", digits[j]);
+    }
+
+    return currHash;
 }
-Hash.prototype.findElement = function(elem)
-{
 
-}
-
-
-
-// NEED TO OVERRIDE IN PARENT
-Hash.prototype.reset = function()
-{
-    this.hashIntegerButton.checked = true;
-}
 
 
 /* no init, this is only a base class!
-var currentAlg;
 function init()
 {
     var animManag = initCanvas();
