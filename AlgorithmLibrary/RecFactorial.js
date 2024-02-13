@@ -10,9 +10,9 @@
 // of conditions and the following disclaimer in the documentation and/or other materials
 // provided with the distribution.
 //
-// THIS SOFTWARE IS PROVIDED BY <COPYRIGHT HOLDER> ``AS IS'' AND ANY EXPRESS OR IMPLIED
+// THIS SOFTWARE IS PROVIDED BY David Galles ``AS IS'' AND ANY EXPRESS OR IMPLIED
 // WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-// FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> OR
+// FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL David Galles OR
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
 // CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
 // SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
@@ -26,39 +26,39 @@
 
 
 
-function RecReverse(am)
+function RecFactorial(am)
 {
     // call superclass' constructor, which calls init
-    RecReverse.superclass.constructor.call(this, am);
+    RecFactorial.superclass.constructor.call(this, am);
 }
-RecReverse.inheritFrom(Recursive);
+RecFactorial.inheritFrom(Recursive);
 
-RecReverse.ACTIVATION_FIELDS = ["word ", "subProblem ", "subSolution ", "solution "];
 
-RecReverse.CODE = [["def ","reverse(word)",":"],
-                ["     if ","(word == \"\"): "],
-                ["          return word"],
+RecFactorial.MAX_VALUE = 20;
+
+RecFactorial.ACTIVATION_FIELDS = ["n ", "subValue ", "returnValue "];
+RecFactorial.CODE = [["def ","factorial(n)",":"],
+                ["     if ","(n <= 1): "],
+                ["          return 1"],
                 ["     else:"],
-                ["          subProblem = ", "word[1:]"],
-                ["          subSolution = ", "reverse(subProblem)"],
-                ["          solution = ", "subSolution + word[0]"],
-                ["          return = ", "solution"]];
+                ["          subSolution = ", "factorial(n - 1)"],
+                ["          solution = ", "subSolution * n"],
+                ["          return ", "solution"]];
 
 
-RecReverse.RECURSIVE_DELTA_Y = RecReverse.ACTIVATION_FIELDS.length * Recursive.ACTIVATION_RECORD_HEIGHT;
+RecFactorial.RECURSIVE_DELTA_Y = RecFactorial.ACTIVATION_FIELDS.length * Recursive.ACTIVATION_RECORD_HEIGHT;
 
-
-RecReverse.ACTIVATION_RECORT_START_X = 375;
-RecReverse.ACTIVATION_RECORT_START_Y = 20;
+RecFactorial.ACTIVATION_RECORT_START_X = 330;
+RecFactorial.ACTIVATION_RECORT_START_Y = 20;
 
 
 
-RecReverse.prototype.init = function(am)
+RecFactorial.prototype.init = function(am)
 {
-    RecReverse.superclass.init.call(this, am);
+    RecFactorial.superclass.init.call(this, am);
     this.nextIndex = 0;
     this.addControls();
-    this.code = RecReverse.CODE;
+    this.code = RecFactorial.CODE;
 
 
     this.addCodeToCanvas(this.code);
@@ -72,62 +72,65 @@ RecReverse.prototype.init = function(am)
 }
 
 
-RecReverse.prototype.addControls = function()
+RecFactorial.prototype.addControls = function()
 {
     this.controls = [];
-    this.reverseField = this.addControlToAlgorithmBar("Text", "", {maxlength: 10, size: 10});
-    this.addReturnSubmit(this.reverseField, "ALPHA", this.reverseCallback.bind(this));
-    this.controls.push(this.reverseField);
 
-    this.reverseButton = this.addControlToAlgorithmBar("Button", "Reverse");
-    this.reverseButton.onclick = this.reverseCallback.bind(this);
-    this.controls.push(this.reverseButton);
+    this.factorialField = this.addControlToAlgorithmBar("Text", "", {maxlength: 2, size: 2});
+    this.addReturnSubmit(this.factorialField, "int", this.factorialCallback.bind(this));
+    this.controls.push(this.factorialField);
+
+    this.factorialButton = this.addControlToAlgorithmBar("Button", "Factorial");
+    this.factorialButton.onclick = this.factorialCallback.bind(this);
+    this.controls.push(this.factorialButton);
 
 }
 
 
 
 
-RecReverse.prototype.reverseCallback = function(event)
+RecFactorial.prototype.factorialCallback = function(event)
 {
-    var revValue = this.reverseField.value;
-    if (revValue !== "") {
-        this.implementAction(this.doReverse.bind(this), revValue);
+    var factValue = this.normalizeNumber(this.factorialField.value);
+    if (factValue) {
+        factValue = Math.min(factValue, RecFactorial.MAX_VALUE);
+        this.factorialField.value = factValue;
+        this.implementAction(this.doFactorial.bind(this), factValue);
     }
 }
 
 
 
 
-RecReverse.prototype.doReverse = function(value)
+RecFactorial.prototype.doFactorial = function(value)
 {
     this.commands = [];
 
     this.clearOldIDs();
 
-    this.currentY = RecReverse.ACTIVATION_RECORT_START_Y;
-    this.currentX = RecReverse.ACTIVATION_RECORT_START_X;
+    this.currentY = RecFactorial.ACTIVATION_RECORT_START_Y;
+    this.currentX = RecFactorial.ACTIVATION_RECORT_START_X;
 
-    var final = this.reverse(value);
+    var final = this.factorial(value);
     var resultID = this.nextIndex++;
     this.oldIDs.push(resultID);
-    this.cmd("CreateLabel", resultID, "reverse(" + String(value) + ") = " + String(final),
+    this.cmd("CreateLabel", resultID, "factorial(" + String(value) + ") = " + String(final),
              Recursive.CODE_START_X, Recursive.CODE_START_Y + (this.code.length + 1) * Recursive.CODE_LINE_HEIGHT, 0);
+    //this.cmd("SetText", functionCallID, "factorial(" + String(value) + ") = " + String(final));
     return this.commands;
 }
 
 
-RecReverse.prototype.reverse = function(value)
+RecFactorial.prototype.factorial = function(value)
 {
-
-    var activationRec = this.createActivation("reverse     ", RecReverse.ACTIVATION_FIELDS, this.currentX, this.currentY);
+    var activationRec = this.createActivation("factorial     ", RecFactorial.ACTIVATION_FIELDS, this.currentX, this.currentY);
     this.cmd("SetText", activationRec.fieldIDs[0], value);
 //    this.cmd("CreateLabel", ID, "", 10, this.currentY, 0);
     var oldX = this.currentX;
     var oldY = this.currentY;
-    this.currentY += RecReverse.RECURSIVE_DELTA_Y;
+    this.currentY += RecFactorial.RECURSIVE_DELTA_Y;
     if (this.currentY + Recursive.RECURSIVE_DELTA_Y > this.getCanvasHeight()) {
-        this.currentY = RecReverse.ACTIVATION_RECORT_START_Y;
+        this.currentY = RecFactorial.ACTIVATION_RECORT_START_Y;
         this.currentX += Recursive.ACTIVATION_RECORD_SPACING;
     }
     this.cmd("SetForegroundColor", this.codeID[0][1], Recursive.CODE_HIGHLIGHT_COLOR);
@@ -136,49 +139,39 @@ RecReverse.prototype.reverse = function(value)
     this.cmd("SetForegroundColor", this.codeID[1][1], Recursive.CODE_HIGHLIGHT_COLOR);
     this.cmd("Step");
     this.cmd("SetForegroundColor", this.codeID[1][1], Recursive.CODE_STANDARD_COLOR);
-    if (value  != "") {
+    if (value > 1) {
+        this.cmd("SetForegroundColor", this.codeID[4][1], Recursive.CODE_HIGHLIGHT_COLOR);
+        this.cmd("Step");
+        this.cmd("SetForegroundColor", this.codeID[4][1], Recursive.CODE_STANDARD_COLOR);
+
+        var firstValue = this.factorial(value-1);
+
         this.cmd("SetForegroundColor", this.codeID[4][0], Recursive.CODE_HIGHLIGHT_COLOR);
         this.cmd("SetForegroundColor", this.codeID[4][1], Recursive.CODE_HIGHLIGHT_COLOR);
-        var subProblem = value.substr(1);
-        this.cmd("SetText", activationRec.fieldIDs[1], subProblem);
+        this.cmd("SetText", activationRec.fieldIDs[1], firstValue);
         this.cmd("Step");
         this.cmd("SetForegroundColor", this.codeID[4][0], Recursive.CODE_STANDARD_COLOR);
         this.cmd("SetForegroundColor", this.codeID[4][1], Recursive.CODE_STANDARD_COLOR);
-        this.cmd("SetForegroundColor", this.codeID[5][1], Recursive.CODE_HIGHLIGHT_COLOR);
-        this.cmd("Step");
-        this.cmd("SetForegroundColor", this.codeID[5][1], Recursive.CODE_STANDARD_COLOR);
-
-
-
-        var subSolution = this.reverse(subProblem);
 
         this.cmd("SetForegroundColor", this.codeID[5][0], Recursive.CODE_HIGHLIGHT_COLOR);
         this.cmd("SetForegroundColor", this.codeID[5][1], Recursive.CODE_HIGHLIGHT_COLOR);
-        this.cmd("SetText", activationRec.fieldIDs[2], subSolution);
+        this.cmd("SetText", activationRec.fieldIDs[2], firstValue * value);
         this.cmd("Step");
         this.cmd("SetForegroundColor", this.codeID[5][0], Recursive.CODE_STANDARD_COLOR);
         this.cmd("SetForegroundColor", this.codeID[5][1], Recursive.CODE_STANDARD_COLOR);
 
         this.cmd("SetForegroundColor", this.codeID[6][0], Recursive.CODE_HIGHLIGHT_COLOR);
         this.cmd("SetForegroundColor", this.codeID[6][1], Recursive.CODE_HIGHLIGHT_COLOR);
-        var solution = subSolution + value[0];
-        this.cmd("SetText", activationRec.fieldIDs[3], solution);
-        this.cmd("Step");
-        this.cmd("SetForegroundColor", this.codeID[6][0], Recursive.CODE_STANDARD_COLOR);
-        this.cmd("SetForegroundColor", this.codeID[6][1], Recursive.CODE_STANDARD_COLOR);
-
-        this.cmd("SetForegroundColor", this.codeID[7][0], Recursive.CODE_HIGHLIGHT_COLOR);
-        this.cmd("SetForegroundColor", this.codeID[7][1], Recursive.CODE_HIGHLIGHT_COLOR);
 
         this.cmd("Step");
         this.deleteActivation(activationRec);
         this.currentY = oldY;
         this.currentX = oldX;
-        this.cmd("CreateLabel", this.nextIndex, "Return Value = \"" + solution + "\"", oldX, oldY);
+        this.cmd("CreateLabel", this.nextIndex, "Return Value = " + String(firstValue * value), oldX, oldY);
         this.cmd("SetForegroundColor", this.nextIndex, Recursive.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");
-        this.cmd("SetForegroundColor", this.codeID[7][0], Recursive.CODE_STANDARD_COLOR);
-        this.cmd("SetForegroundColor", this.codeID[7][1], Recursive.CODE_STANDARD_COLOR);
+        this.cmd("SetForegroundColor", this.codeID[6][0], Recursive.CODE_STANDARD_COLOR);
+        this.cmd("SetForegroundColor", this.codeID[6][1], Recursive.CODE_STANDARD_COLOR);
         this.cmd("Delete",this.nextIndex);
 
 
@@ -186,7 +179,7 @@ RecReverse.prototype.reverse = function(value)
 //        this.cmd("SetForegroundColor", this.codeID[4][3], Recursive.CODE_HIGHLIGHT_COLOR);
 //        this.cmd("Step");
 
-        return solution;
+        return firstValue *value;
     }
     else {
         this.cmd("SetForegroundColor", this.codeID[2][0], Recursive.CODE_HIGHLIGHT_COLOR);
@@ -197,12 +190,12 @@ RecReverse.prototype.reverse = function(value)
         this.currentY = oldY;
         this.currentX = oldX;
         this.deleteActivation(activationRec);
-        this.cmd("CreateLabel", this.nextIndex, "Return Value = \"\"", oldX, oldY);
+        this.cmd("CreateLabel", this.nextIndex, "Return Value = 1", oldX, oldY);
         this.cmd("SetForegroundColor", this.nextIndex, Recursive.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");
         this.cmd("Delete",this.nextIndex);
 
-        return "";
+        return 1;
     }
 
 
@@ -213,7 +206,7 @@ var currentAlg;
 function init()
 {
     var animManag = initCanvas();
-    currentAlg = new RecReverse(animManag);
+    currentAlg = new RecFactorial(animManag);
 }
 
 
