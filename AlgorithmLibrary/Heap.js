@@ -54,9 +54,10 @@ Heap.LABEL_COLOR = "#0000FF";
 Heap.ZEROCELL_COLOR = "#BBBBBB";
 
 Heap.ARRAY_INITIAL_X = 30;
-
 Heap.DESCRIPT_LABEL_X = 20;
-Heap.DESCRIPT_LABEL_X2 = Heap.DESCRIPT_LABEL_X + 120;
+
+Heap.REVERSED_ARRAY = "reversed";
+Heap.RANDOM_ARRAY = "random";
 
 
 Heap.prototype.init = function(am)
@@ -83,8 +84,11 @@ Heap.prototype.addControls = function()
     this.clearHeapButton.onclick = this.clearCallback.bind(this);
     this.addBreakToAlgorithmBar();
 
-    this.buildHeapButton = this.addControlToAlgorithmBar("Button", "Build heap from reversed array");
-    this.buildHeapButton.onclick = this.buildHeapCallback.bind(this);
+    this.addLabelToAlgorithmBar("Build heap from: ");
+    this.buildHeapButton = this.addControlToAlgorithmBar("Button", "Reversed array");
+    this.buildHeapButton.onclick = this.buildHeapCallback.bind(this, Heap.REVERSED_ARRAY);
+    this.buildHeapButton = this.addControlToAlgorithmBar("Button", "Random array");
+    this.buildHeapButton.onclick = this.buildHeapCallback.bind(this, Heap.RANDOM_ARRAY);
 }
 
 
@@ -222,9 +226,9 @@ Heap.prototype.clearCallback = function(event)
     this.implementAction(this.clearHeap.bind(this), "");
 }
 
-Heap.prototype.buildHeapCallback = function(event)
+Heap.prototype.buildHeapCallback = function(arraytype, event)
 {
-    this.implementAction(this.buildHeap.bind(this), "");
+    this.implementAction(this.buildHeap.bind(this), arraytype);
 }
 
 
@@ -344,18 +348,28 @@ Heap.prototype.buildHeap = function(data)
 {
     this.commands = [];
     this.clearHeap();
-    if (data) {
+    if (data instanceof Array) {
         for (var i = 0; i < data.length; i++) {
             this.arrayData[i+1] = data[i];
         }
         this.currentHeapSize = data.length;
     }
-    else {
+    else if (data == Heap.RANDOM_ARRAY) {
+        // Using the "inside-out" variant of Fisher-Yates shuffle:
+        // https://en.wikipedia.org/wiki/Fisher–Yates_shuffle#The_%22inside-out%22_algorithm
+        for (var i = 0; i < Heap.ARRAY_SIZE; i++) {
+            var j = Math.floor(Math.random() * (i + 1));
+            if (j != i) this.arrayData[i] = this.arrayData[j];
+            this.arrayData[j] = i+1;
+        }
+        this.currentHeapSize = Heap.ARRAY_SIZE - 1;
+    }
+    else { // data == Heap.REVERSED_ARRAY
         for (var i = 1; i < Heap.ARRAY_SIZE; i++) {
             this.arrayData[i] = Heap.ARRAY_SIZE - i;
         }
         this.currentHeapSize = Heap.ARRAY_SIZE - 1;
-     }
+    }
 
     for (var i = 1; i <= this.currentHeapSize; i++) {
         this.cmd("CreateCircle", this.circleObjs[i], this.arrayData[i], this.getHeapX(i), this.getHeapY(i));
