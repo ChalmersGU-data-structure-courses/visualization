@@ -35,12 +35,18 @@ HashOpenAdressing.inheritFrom(Hash);
 
 // Various constants
 
-HashOpenAdressing.CLOSED_HASH_TABLE_SIZE = 29;
 HashOpenAdressing.INDEX_COLOR = Hash.HIGHLIGHT_COLOR;
+
+// This should not be a valid key:
+HashOpenAdressing.DELETED = "<deleted>";
 
 HashOpenAdressing.PROBING_LINEAR = "linear";
 HashOpenAdressing.PROBING_QUADRATIC = "quadratic";
 HashOpenAdressing.PROBING_DOUBLE = "double";
+
+HashOpenAdressing.DEFAULT_TABLE_SIZE = 29;
+HashOpenAdressing.TABLE_SIZES = [17, 29, 47];
+HashOpenAdressing.TABLE_SIZE_LABELS = ["Small (17)", "Medium (29)", "Large (47)"];
 
 HashOpenAdressing.ARRAY_ELEM_WIDTH = 90;
 HashOpenAdressing.ARRAY_ELEM_HEIGHT = 30;
@@ -55,61 +61,114 @@ HashOpenAdressing.prototype.addControls = function()
     HashOpenAdressing.superclass.addControls.call(this);
     this.addBreakToAlgorithmBar();
 
+    this.addLabelToAlgorithmBar("Table size:");
+    this.sizeSelect = this.addSelectToAlgorithmBar(HashOpenAdressing.TABLE_SIZES, HashOpenAdressing.TABLE_SIZE_LABELS);
+    this.sizeSelect.value = HashOpenAdressing.DEFAULT_TABLE_SIZE;
+    this.sizeSelect.onchange = this.resetAll.bind(this);
+    this.addBreakToAlgorithmBar();
+
+    this.addLabelToAlgorithmBar("Probing:");
     this.probingSelect = this.addSelectToAlgorithmBar(
         [HashOpenAdressing.PROBING_LINEAR, HashOpenAdressing.PROBING_QUADRATIC, HashOpenAdressing.PROBING_DOUBLE],
-        ["Linear probing: f(i) = i", "Quadratic probing: f(i) = i²", "Double hashing: f(i) = i · h'(x)"],
+        ["Linear: 1, 2, 3, ...", "Quadratic: 1, 4, 9, ...", "Double hashing: h', 2h', ..."],
     );
     this.probingSelect.value = HashOpenAdressing.PROBING_LINEAR;
     this.probingSelect.onchange = this.resetAll.bind(this);
 }
 
 
+
+///////////////////////////////////////////////////////////////////////////////
+// Calculating canvas positions and sizes
+
+HashOpenAdressing.prototype.getCellPosX = function(i) 
+{
+    return this.getCellPosXY(i).x;
+}
+
+HashOpenAdressing.prototype.getCellPosY = function(i) 
+{
+    return this.getCellPosXY(i).y;
+}
+
+HashOpenAdressing.prototype.getCellIndexPosY = function(i)
+{
+    return this.getCellPosY(i) + this.getCellHeight();
+}
+
+HashOpenAdressing.prototype.getCellPosXY = function(i) 
+{
+    var startX = this.getCellWidth();
+    var x = startX;
+    var y = HashOpenAdressing.ARRAY_ELEM_START_Y;
+    for (var k = 0; k < i; k++) {
+        x += this.getCellWidth();
+        if (x + this.getCellWidth() > this.getCanvasWidth()) {
+            x = startX;
+            y += Math.round(2.2 * this.getCellHeight());
+        }
+    }
+    return {x: x, y: y};
+}
+
+HashOpenAdressing.prototype.getCellWidth = function()
+{
+    var nrows = 1;
+    while (true) {
+        var w = nrows * this.getCanvasWidth() / (this.tableSize + 2 * nrows);
+        if (w >= 65 || nrows >= 4) return Math.round(w);
+        nrows++;
+    }
+}
+
+HashOpenAdressing.prototype.getCellHeight = function() 
+{
+    return Math.round(this.getCellWidth() * 0.4);
+}
+
+
+HashOpenAdressing.prototype.isEmpty = function(i)
+{
+    return !this.tableCells[i];
+}
+
+HashOpenAdressing.prototype.setEmpty = function(i)
+{
+    this.tableCells[i] = "";
+}
+
+HashOpenAdressing.prototype.isDeleted = function(i)
+{
+    return this.tableCells[i] == HashOpenAdressing.DELETED;
+}
+
+HashOpenAdressing.prototype.setDeleted = function(i)
+{
+    this.tableCells[i] = HashOpenAdressing.DELETED;
+}
+
+
+
 HashOpenAdressing.prototype.resetAll = function()
 {
     HashOpenAdressing.superclass.resetAll.call(this);
     this.commands = [];
+
     this.messageID = this.nextIndex++;
-
-    var w = this.getCanvasWidth();
-    this.elements_per_row = Math.floor(w / HashOpenAdressing.ARRAY_ELEM_WIDTH);
-    //this.POINTER_ARRAY_ELEM_Y = h - ClosedHash.POINTER_ARRAY_ELEM_WIDTH;
-
-    this.table_size = HashOpenAdressing.CLOSED_HASH_TABLE_SIZE;
-    this.skipDist = new Array(this.table_size);
-    this.hashTableVisual = new Array(this.table_size);
-    this.hashTableIndices = new Array(this.table_size);
-    this.hashTableValues = new Array(this.table_size);
-
-    this.indexXPos = new Array(this.table_size);
-    this.indexYPos = new Array(this.table_size);
-
-    this.empty = new Array(this.table_size);
-    this.deleted = new Array(this.table_size);
-
-    for (var i = 0; i < this.table_size; i++) {
-        this.skipDist[i] = i; // Start with linear probing
-        this.empty[i] = true;
-        this.deleted[i] = false;
-
-        this.indexXPos[i] = (
-            HashOpenAdressing.ARRAY_ELEM_START_X 
-            + (i % this.elements_per_row) * HashOpenAdressing.ARRAY_ELEM_WIDTH
-        );
-        this.indexYPos[i] = (
-            HashOpenAdressing.ARRAY_ELEM_START_Y 
-            + Math.floor(i / this.elements_per_row) * HashOpenAdressing.ARRAY_VERTICAL_SEPARATION
-            + HashOpenAdressing.ARRAY_ELEM_HEIGHT
-        );
-
-        this.hashTableVisual[i] = this.nextIndex++;
-        this.cmd("CreateRectangle", this.hashTableVisual[i], "", 
-            HashOpenAdressing.ARRAY_ELEM_WIDTH, HashOpenAdressing.ARRAY_ELEM_HEIGHT, this.indexXPos[i], this.indexYPos[i] - HashOpenAdressing.ARRAY_ELEM_HEIGHT);
-
-        this.hashTableIndices[i] = this.nextIndex++;
-        this.cmd("CreateLabel", this.hashTableIndices[i], i, this.indexXPos[i], this.indexYPos[i]);
-        this.cmd("SetForegroundColor", this.hashTableIndices[i], HashOpenAdressing.INDEX_COLOR);
-    }
     this.cmd("CreateLabel", this.messageID, "", Hash.MESSAGE_X, Hash.MESSAGE_Y, 0);
+
+    this.tableSize = parseInt(this.sizeSelect.value) || HashOpenAdressing.DEFAULT_TABLE_SIZE;
+    this.tableCellIDs = new Array(this.tableSize);
+    this.tableCells = new Array(this.tableSize);
+    for (var i = 0; i < this.tableSize; i++) {
+        this.tableCells[i] = "";
+        this.tableCellIDs[i] = this.nextIndex++;
+        this.cmd("CreateRectangle", this.tableCellIDs[i], "", 
+            this.getCellWidth(), this.getCellHeight(), this.getCellPosX(i), this.getCellPosY(i));
+        var indexID = this.nextIndex++;
+        this.cmd("CreateLabel", indexID, i, this.getCellPosX(i), this.getCellIndexPosY(i));
+        this.cmd("SetForegroundColor", indexID, HashOpenAdressing.INDEX_COLOR);
+    }
 
     this.initialIndex = this.nextIndex;
     this.animationManager.StartNewAnimation(this.commands);
@@ -120,59 +179,10 @@ HashOpenAdressing.prototype.resetAll = function()
 
 HashOpenAdressing.prototype.reset = function()
 {
-    for (var i = 0; i < this.table_size; i++) {
-        this.empty[i]= true;
-        this.deleted[i] = false;
+    for (var i = 0; i < this.tableSize; i++) {
+        this.tableCells[i] = "";
     }
     this.nextIndex = this.initialIndex;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-// Calculating canvas positions and sizes
-
-Hash.prototype.getArrayX = function(i)
-{
-    return this.getArrayXY(i).x;
-}
-
-Hash.prototype.getArrayY = function(i)
-{
-    return this.getArrayXY(i).y;
-}
-
-Hash.prototype.getArrayLabelY = function(i)
-{
-    return this.getArrayY(i) + this.getArrayElemHeight() * 0.9;
-}
-
-Hash.prototype.getArrayXY = function(i)
-{
-    var x = 1.5 * this.getArrayElemWidth();
-    var y = 4.5 * this.getArrayElemHeight();
-    for (var k = 0; k < i; k++) {
-        x += this.getArrayElemWidth();
-        if (x + this.getArrayElemWidth() > this.getCanvasWidth()) {
-            x = 1.5 * this.getArrayElemWidth();
-            y += 2.5 * this.getArrayElemHeight();
-        }
-    }
-    return {x: x, y: y};
-}
-
-Hash.prototype.getArrayElemWidth = function() 
-{
-    var nrows = 1;
-    while (true) {
-        var w = nrows * this.getCanvasWidth() / (Hash.SIZE + 2 * nrows);
-        if (w >= 25) return w;
-        nrows++;
-    }
-}
-
-Hash.prototype.getArrayElemHeight = function() 
-{
-    return this.getArrayElemWidth() * 0.8;
 }
 
 
@@ -196,17 +206,15 @@ HashOpenAdressing.prototype.insertElement = function(elem)
     }
     else {
         this.cmd("SetText", labID, elem);
-        this.cmd("Move", labID, this.indexXPos[index], this.indexYPos[index] - HashOpenAdressing.ARRAY_ELEM_HEIGHT);
-        this.cmd("SetText", this.hashTableVisual[index], "");
+        this.cmd("Move", labID, this.getCellPosX(index), this.getCellPosY(index));
+        this.cmd("SetText", this.tableCellIDs[index], "");
         this.cmd("Step");
 
-        this.hashTableValues[index] = elem;
-        this.empty[index] = false;
-        this.deleted[index] = false;
-        this.cmd("SetText", this.hashTableVisual[index], elem);
+        this.tableCells[index] = elem;
+        this.cmd("SetText", this.tableCellIDs[index], elem);
         this.cmd("SetText", this.messageID, `Inserting: ${elem}.  Element inserted!`);
         this.cmd("Step");
-        this.cmd("SetHighlight", this.hashTableVisual[index], 0);
+        this.cmd("SetHighlight", this.tableCellIDs[index], 0);
     }
     this.cmd("Delete", labID);
     return this.commands;
@@ -225,14 +233,43 @@ HashOpenAdressing.prototype.deleteElement = function(elem)
         this.cmd("SetText", this.messageID, `Deleting: ${elem}.  Element not found!`);
     }
     else {
-        this.empty[index] = true;
-        this.deleted[index] = true;
-        this.cmd("SetText", this.hashTableVisual[index], "<deleted>");
+        this.tableCells[index] = HashOpenAdressing.DELETED;
+        this.cmd("SetText", this.tableCellIDs[index], HashOpenAdressing.DELETED);
         this.cmd("SetText", this.messageID, `Deleting: ${elem}.  Element deleted!`);
         this.cmd("Step");
-        this.cmd("SetHighlight", this.hashTableVisual[index], 0);
+        this.cmd("SetHighlight", this.tableCellIDs[index], 0);
     }
     return this.commands;
+}
+
+
+HashOpenAdressing.prototype.doHash = function(input) 
+{
+    var hash = HashOpenAdressing.superclass.doHash.call(this, input);
+    var index = hash % this.tableSize;
+
+    var labelID = this.nextIndex++;
+    var labelID2 = this.nextIndex++;
+    var highlightID = this.nextIndex++;
+
+    var lblText = `    ${hash} % ${this.tableSize}  =  `;
+    this.cmd("CreateLabel", labelID, lblText, Hash.HASH_MOD_X, Hash.HASH_NUMBER_START_Y, 0);
+    this.cmd("CreateLabel", labelID2, "", 0, 0);
+    this.cmd("AlignRight", labelID2, labelID);
+    this.cmd("Settext", labelID, lblText + index);
+    this.cmd("Step");
+
+    this.cmd("CreateHighlightCircle", highlightID, Hash.HIGHLIGHT_COLOR, 0, 0);
+    this.cmd("SetWidth", highlightID, this.getCellHeight());
+    this.cmd("AlignMiddle", highlightID, labelID2);
+    this.cmd("Move", highlightID, this.getCellPosX(index), this.getCellIndexPosY(index));
+    this.cmd("Step");
+
+    this.cmd("Delete", labelID);
+    this.cmd("Delete", labelID2);
+    this.cmd("Delete", highlightID);
+    this.nextIndex -= 3;
+    return index;
 }
 
 
@@ -250,7 +287,7 @@ HashOpenAdressing.prototype.findElement = function(elem)
     else {
         this.cmd("SetText", this.messageID, `Finding: ${elem}.  Element found!`);
         this.cmd("Step");
-        this.cmd("SetHighlight", this.hashTableVisual[index], 0);
+        this.cmd("SetHighlight", this.tableCellIDs[index], 0);
     }
     return this.commands;
 }
@@ -264,16 +301,16 @@ HashOpenAdressing.prototype.getElemIndex = function(index, elem)
         skipDelta = this.getSkipDelta(elem, this.nextIndex++);
     }
     var foundIndex = -1;
-    for (var i = 0; i < this.table_size; i++) {
-        var candidateIndex = (index + this.getSkip(i, skipDelta)) % this.table_size;
-        this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 1);
+    for (var i = 0; i < this.tableSize; i++) {
+        var nextIndex = (index + this.getSkip(i, skipDelta)) % this.tableSize;
+        this.cmd("SetHighlight", this.tableCellIDs[nextIndex], 1);
         this.cmd("Step");
-        if (!this.empty[candidateIndex] && this.hashTableValues[candidateIndex] == elem) {
-            foundIndex = candidateIndex;
+        if (this.tableCells[nextIndex] == elem) {
+            foundIndex = nextIndex;
             break;
         }
-        this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 0);
-        if (this.empty[candidateIndex] && !this.deleted[candidateIndex]) {
+        this.cmd("SetHighlight", this.tableCellIDs[nextIndex], 0);
+        if (!this.tableCells[nextIndex]) {
             break;
         }
     }
@@ -292,15 +329,15 @@ HashOpenAdressing.prototype.getEmptyIndex = function(index, elem)
         skipDelta = this.getSkipDelta(elem, this.nextIndex++);
     }
     var foundIndex = -1;
-    for (var i = 0; i < this.table_size; i++) {
-        var candidateIndex = (index + this.getSkip(i, skipDelta)) % this.table_size;
-        this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 1);
+    for (var i = 0; i < this.tableSize; i++) {
+        var nextIndex = (index + this.getSkip(i, skipDelta)) % this.tableSize;
+        this.cmd("SetHighlight", this.tableCellIDs[nextIndex], 1);
         this.cmd("Step");
-        if (this.empty[candidateIndex]) {
-            foundIndex = candidateIndex;
+        if (!this.tableCells[nextIndex]) {
+            foundIndex = nextIndex;
             break;
         }
-        this.cmd("SetHighlight", this.hashTableVisual[candidateIndex], 0);
+        this.cmd("SetHighlight", this.tableCellIDs[nextIndex], 0);
     }
     if (probing == HashOpenAdressing.PROBING_DOUBLE) {
         this.cmd("Delete", --this.nextIndex);

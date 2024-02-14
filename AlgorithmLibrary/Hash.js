@@ -36,7 +36,7 @@ Hash.inheritFrom(Algorithm);
 
 // Various constants
 
-Hash.MAX_HASH_LENGTH = 8;
+Hash.MAX_HASH_LENGTH = 6;
 Hash.HIGHLIGHT_COLOR = "#0000FF";
 
 Hash.HASH_INTEGER = "int";
@@ -153,41 +153,12 @@ Hash.prototype.findCallback = function(event)
 
 Hash.prototype.doHash = function(input)
 {
-    var oldnextIndex = this.nextIndex;
-
     var hashtype = this.hashSelect.value;
     if (hashtype == Hash.HASH_INTEGER) {
-        this.currHash = parseInt(input);
+        return parseInt(input);
+    } else {
+        return this.hashString(input);
     }
-    else {
-        this.currHash = this.hashString(input);
-    }
-
-    var labelID = this.nextIndex++;
-    var labelID2 = this.nextIndex++;
-    var highlightID = this.nextIndex++;
-
-    var index = this.currHash % this.table_size;
-
-    var lblText = `    ${this.currHash} % ${this.table_size}  =  `;
-    this.cmd("CreateLabel", labelID, lblText, Hash.HASH_MOD_X, Hash.HASH_NUMBER_START_Y, 0);
-    this.cmd("CreateLabel", labelID2, "", 0, 0);
-    this.cmd("AlignRight", labelID2, labelID);
-    this.cmd("Settext", labelID, lblText + index);
-    this.cmd("Step");
-
-    this.cmd("CreateHighlightCircle", highlightID, Hash.HIGHLIGHT_COLOR, 0, 0);
-    this.cmd("AlignMiddle", highlightID, labelID2);
-    this.cmd("Move", highlightID, this.indexXPos[index], this.indexYPos[index]);
-    this.cmd("Step");
-
-    this.cmd("Delete", labelID);
-    this.cmd("Delete", labelID2);
-    this.cmd("Delete", highlightID);
-
-    // Reset the nextIndex pointer to where we started
-    this.nextIndex = oldnextIndex;
-    return index;
 }
 
 
