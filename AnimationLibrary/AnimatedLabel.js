@@ -25,16 +25,14 @@
 // or implied, of the University of San Francisco
 
 
-function AnimatedLabel(id, val, center, initialWidth, ctx)
+function AnimatedLabel(id, val, center, initialWidth, ctx, labelColor, highlightColor)
 {
-    AnimatedLabel.superclass.constructor.call(this);
+    AnimatedLabel.superclass.constructor.call(this, null, labelColor, highlightColor);
 
     this.centering = center;
     this.label = val;
     this.objectID = id;
-    this.labelColor = "#000000";
-    this.ctx = ctx;
- 
+    this.ctx = ctx; 
     this.textWidth = initialWidth || this.getTextWidth();
     this.leftWidth = -1;
     this.centerWidth = -1;
@@ -53,76 +51,55 @@ AnimatedLabel.prototype.centered = function()
 
 AnimatedLabel.prototype.draw = function(ctx)
 {
-    if (!this.addedToScene) {
-        return;
-    }
+    if (!this.addedToScene) return;
 
     ctx.globalAlpha = this.alpha;
     ctx.font = this.textHeight + 'px sans-serif';
 
-    var startingXForHighlight = this.x;
-
-    if (this.highlightIndex >= this.label.length) {
-        this.highlightIndex = -1;
-    }
-    if (this.highlightIndexDirty && this.highlightIndex != -1) {
-        this.leftWidth = ctx.measureText(this.label.substring(0,this.highlightIndex)).width;
-        this.centerWidth = ctx.measureText(this.label.substring(this.highlightIndex, this.highlightIndex+1)).width;
-        this.highlightIndexDirty = false;
-    }
-
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
     if (this.centering) {
-        if (this.highlightIndex != -1) {
-            startingXForHighlight = this.x - this.textWidth / 2;
-            ctx.textAlign = 'left';
-            ctx.textBaseline = 'middle';
-        }
-        else {
+        if (this.highlightIndex < 0) {
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
         }
+        else {
+            x0 = this.x - this.textWidth / 2;
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'middle';
+        }
     }
-    else {
-        ctx.textAlign = 'left';
-        ctx.textBaseline = 'top';
-    }
+
     if (this.highlighted) {
-        ctx.strokeStyle = "#ffaaaa";
-        ctx.fillStyle = "#ff0000";
+        ctx.strokeStyle = this.highlightColor;
         ctx.lineWidth = this.highlightDiff;
         ctx.strokeText(this.label, this.x, this.y);
-        // ctx.fillText(this.label, this.x, this.y);
     }
-    ctx.strokeStyle = this.labelColor;
+
     ctx.fillStyle = this.labelColor;
-    ctx.lineWidth = 1;
     strList = this.label.split("\n");
     if (strList.length == 1) {
-        if (this.highlightIndex == -1) {
+        if (this.highlightIndex < 0 || this.highlightIndex >= this.label.length) {
             ctx.fillText(this.label, this.x, this.y);
         }
         else {
             var leftStr = this.label.substring(0, this.highlightIndex);
             var highlightStr = this.label.substring(this.highlightIndex, this.highlightIndex + 1)
             var rightStr = this.label.substring(this.highlightIndex + 1)
-            ctx.fillText(leftStr, startingXForHighlight, this.y)
-            ctx.strokeStyle = "#FF0000";
-            ctx.fillStyle = "#FF0000";
-            ctx.fillText(highlightStr, startingXForHighlight + this.leftWidth, this.y)
-            ctx.strokeStyle = this.labelColor;
-            ctx.fillStyle = this.labelColor;
-            ctx.fillText(rightStr, startingXForHighlight + this.leftWidth + this.centerWidth, this.y)
+            var leftWidth = ctx.measureText(leftStr).width;
+            var centerWidth = ctx.measureText(highlightStr).width;
+            ctx.fillText(leftStr, x0, this.y)
+            ctx.fillText(rightStr, x0 + leftWidth + centerWidth, this.y)
+            ctx.fillStyle = this.highlightColor;
+            ctx.fillText(highlightStr, x0 + leftWidth, this.y)
         }
-        // this.textWidth = ctx.measureText(this.label).width;
     }
     else {
-        var offset = (this.centering) ? (1.0 - strList.length) / 2.0 : 0;
+        var offset = (this.centering) ? (1 - strList.length) / 2 : 0;
         for (var i = 0; i < strList.length; i++) {
-            ctx.fillText(strList[i], this.x, this.y + offset + i * 12);
-            // this.textWidth = Math.max(this.textWidth, ctx.measureText(strList[i]).width);
+            ctx.fillText(strList[i], this.x, this.y + (i + offset) * this.textHeight);
         }
     }
-    ctx.closePath();
 }
 
 
@@ -341,7 +318,6 @@ AnimatedLabel.prototype.setHighlightIndex = function(hlIndex)
     // Only allow highlight index for labels that don't have End-Of-Line
     if (this.label.indexOf("\n") == -1 && this.label.length > hlIndex) {
         this.highlightIndex = hlIndex;
-        this.highlightIndexDirty = true;
     }
     else {
         this.highlightIndex = -1;
@@ -379,7 +355,6 @@ function UndoDeleteLabel(id, lab, x, y, centered, color, l, hli)
     this.labelColor = color;
     this.layer = l;
     this.highlightIndex = hli;
-    this.dirty = true;
 }
 
 UndoDeleteLabel.inheritFrom(UndoBlock);

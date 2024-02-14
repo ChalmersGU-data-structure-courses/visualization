@@ -26,23 +26,28 @@
 
 AnimatedObject.DEFAULT_TEXT_HEIGHT = 14;
 
-function AnimatedObject()
+AnimatedObject.BACKGROUND_COLOR = "#FFFFFF";
+AnimatedObject.FOREGROUND_COLOR = "#000000";
+AnimatedObject.HIGHLIGHT_COLOR = "#FF0000";
+
+
+function AnimatedObject(backgroundColor, foregroundColor, highlightColor, labelColor)
 {
-    this.backgroundColor = "#FFFFFF";
-    this.foregroundColor = "#000000";
+    this.backgroundColor = backgroundColor || AnimatedObject.BACKGROUND_COLOR;
+    this.foregroundColor = foregroundColor || AnimatedObject.FOREGROUND_COLOR;
+    this.highlightColor = highlightColor || AnimatedObject.HIGHLIGHT_COLOR;
     this.highlighted = false;
     this.objectID = -1;
     this.layer = 0;
     this.addedToScene = true;
     this.label = "";
-    this.labelColor = "#000000";
+    this.labelColor = labelColor || this.foregroundColor;
     this.alpha = 1.0;
     this.x = 0;
     this.y = 0;
     this.minHeightDiff = 3;
     this.range = 5;
     this.highlightIndex = -1;
-    this.highlightIndexDirty = true;
     this.textHeight = AnimatedObject.DEFAULT_TEXT_HEIGHT;
 }
 
@@ -294,11 +299,8 @@ AnimatedObject.prototype.getHeadPointerAttachPos = function(fromX, fromY)
     return [this.x, this.y];
 }
 
-/*public function createUndoDelete() : UndoBlock
-{
-            // Must be overriden!
-            return null;
-}
+/* Must be overridden!
+public function createUndoDelete() : UndoBlock {}
 */
 
 AnimatedObject.prototype.identifier = function()
@@ -329,7 +331,6 @@ AnimatedObject.prototype.setText = function(newText, textIndex)
 AnimatedObject.prototype.setHighlightIndex = function(hlIndex)
 {
    this.highlightIndex = hlIndex;
-   this.highlightIndexDirty = true;
 }
 
 

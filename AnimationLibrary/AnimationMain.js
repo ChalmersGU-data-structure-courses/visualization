@@ -122,6 +122,7 @@ function animEnded()
     }
     this.objectManager.statusReport.setText("Animation Completed");
     this.objectManager.statusReport.setForegroundColor("#000000");
+    // console.log("---- Animation ended ----");
 }
 
 
@@ -316,7 +317,7 @@ function AnimationManager(objectManager)
         if (this.currentAnimation == this.AnimationSteps.length) {
             this.currentlyAnimating = false;
             this.awaitingStep = false;
-            this.fireEvent("AnimationEnded","NoData");
+            this.fireEvent("AnimationEnded", "NoData");
             clearTimeout(this.timer);
             this.animatedObjects.update();
             this.animatedObjects.draw();
@@ -329,36 +330,36 @@ function AnimationManager(objectManager)
 
         while (this.currentAnimation < this.AnimationSteps.length && !foundBreak) {
             var args = this.AnimationSteps[this.currentAnimation].split("<;>");
+            // console.log(...args);
             var cmd = args.shift().toUpperCase();
-            var id = parseInt(args.shift());
+            var id = Number(args.shift());
             if (cmd == "CREATECIRCLE") {
                 var label = args.shift();
-                var x = parseInt(args.shift());
-                var y = parseInt(args.shift());
+                var x = Number(args.shift());
+                var y = Number(args.shift());
                 this.animatedObjects.addCircleObject(id, label);
                 this.animatedObjects.setNodePosition(id, x, y);
                 undoBlock.push(new UndoCreate(id));
             }
             else if (cmd == "CONNECT") {
-                var toID = parseInt(args.shift());
+                var toID = Number(args.shift());
                 var color = parseColor(args.shift(), "#000000");
-                var curve = parseFloat(args.shift()) || 0.0;
+                var curve = Number(args.shift()) || 0.0;
                 var directed = parseBool(args.shift(), true);
                 var label = args.shift() || "";
-                var connectionPoint = parseInt(args.shift()) || 0;
+                var connectionPoint = Number(args.shift()) || 0;
                 this.animatedObjects.connectEdge(id, toID, color, curve, directed, label, connectionPoint);
                 undoBlock.push(new UndoConnect(id, toID, false));
             }
             else if (cmd == "CREATERECTANGLE") {
                 var label = args.shift();
-                var width = parseInt(args.shift());
-                var height = parseInt(args.shift());
-                var x = parseInt(args.shift());
-                var y = parseInt(args.shift());
+                var width = Number(args.shift());
+                var height = Number(args.shift());
+                var x = Number(args.shift());
+                var y = Number(args.shift());
                 var xJustify = args.shift() || "center";
                 var yJustify = args.shift() || "center";
-                var bgColor = "#ffffff", fgColor = "#000000";
-                this.animatedObjects.addRectangleObject(id, label, width, height, xJustify, yJustify, bgColor, fgColor);
+                this.animatedObjects.addRectangleObject(id, label, width, height, xJustify, yJustify);
                 if (!isNaN(x) && !isNaN(y)) {
                     this.animatedObjects.setNodePosition(id, x, y);
                 }
@@ -367,8 +368,8 @@ function AnimationManager(objectManager)
             else if (cmd == "MOVE") {
                 var fromX = this.animatedObjects.getNodeX(id);
                 var fromY = this.animatedObjects.getNodeY(id);
-                var toX = parseInt(args.shift());
-                var toY = parseInt(args.shift());
+                var toX = Number(args.shift());
+                var toY = Number(args.shift());
                 var nextAnim = new SingleAnimation(id, fromX, fromY, toX, toY);
                 this.currentBlock.push(nextAnim);
                 undoBlock.push(new UndoMove(id, toX, toY, fromX, fromY));
@@ -377,7 +378,7 @@ function AnimationManager(objectManager)
             else if (cmd == "MOVETOALIGNRIGHT") {
                 var fromX = this.animatedObjects.getNodeX(id);
                 var fromY = this.animatedObjects.getNodeY(id);
-                var otherId = parseInt(args.shift());
+                var otherId = Number(args.shift());
                 var [toX, toY] = this.animatedObjects.getAlignRightPos(id, otherId);
                 var nextAnim = new SingleAnimation(id, fromX, fromY, toX, toY);
                 this.currentBlock.push(nextAnim);
@@ -405,7 +406,7 @@ function AnimationManager(objectManager)
                 undoBlock.push(new UndoHighlight(id, !highlight));
             }
             else if (cmd == "DISCONNECT") {
-                var toID = parseInt(args.shift());
+                var toID = Number(args.shift());
                 var undoConnect = this.animatedObjects.disconnect(id, toID);
                 if (undoConnect != null) {
                     undoBlock.push(undoConnect);
@@ -413,13 +414,13 @@ function AnimationManager(objectManager)
             }
             else if (cmd == "SETALPHA") {
                 var oldAlpha = this.animatedObjects.getAlpha(id);
-                var alpha = parseFloat(args.shift());
+                var alpha = Number(args.shift());
                 this.animatedObjects.setAlpha(id, alpha);
                 undoBlock.push(new UndoSetAlpha(id, oldAlpha));
             }
             else if (cmd == "SETTEXT") {
                 var text = args.shift();
-                var index = parseInt(args.shift()) || 0;
+                var index = Number(args.shift()) || 0;
                 var oldText = this.animatedObjects.getText(id, index);
                 this.animatedObjects.setText(id, text, index);
                 if (oldText != undefined) {
@@ -439,9 +440,9 @@ function AnimationManager(objectManager)
             }
             else if (cmd == "CREATEHIGHLIGHTCIRCLE") {
                 var color = parseColor(args.shift());
-                var x = parseInt(args.shift());
-                var y = parseInt(args.shift());
-                var radius = parseFloat(args.shift()) || 20;
+                var x = Number(args.shift());
+                var y = Number(args.shift());
+                var radius = Number(args.shift()) || 20;
                 this.animatedObjects.addHighlightCircleObject(id, color, radius);
                 if (!isNaN(x) && !isNaN(y)) {
                     this.animatedObjects.setNodePosition(id, x, y);
@@ -450,8 +451,8 @@ function AnimationManager(objectManager)
             }
             else if (cmd == "CREATELABEL") {
                 var label = args.shift();
-                var x = parseInt(args.shift());
-                var y = parseInt(args.shift());
+                var x = Number(args.shift());
+                var y = Number(args.shift());
                 var centering = parseBool(args.shift(), true);
                 this.animatedObjects.addLabelObject(id, label, centering);
                 if (!isNaN(x) && !isNaN(y)) {
@@ -460,49 +461,47 @@ function AnimationManager(objectManager)
                 undoBlock.push(new UndoCreate(id));
             }
             else if (cmd == "SETEDGECOLOR") {
-                var toID = parseInt(args.shift());
+                var toID = Number(args.shift());
                 var color = parseColor(args.shift());
                 var oldColor = this.animatedObjects.setEdgeColor(id, toID, color);
                 undoBlock.push(new UndoSetEdgeColor(id, toID, oldColor));
             }
             else if (cmd == "SETEDGEALPHA") {
-                var toID = parseInt(args.shift());
-                var alpha = parseFloat(args.shift());
+                var toID = Number(args.shift());
+                var alpha = Number(args.shift());
                 var oldAlpha = this.animatedObjects.setEdgeAlpha(id, toID, alpha);
                 undoBlock.push(new UndoSetEdgeAlpha(id, toID, oldAlpha));
             }
             else if (cmd == "SETEDGEHIGHLIGHT") {
-                var toID = parseInt(args.shift());
+                var toID = Number(args.shift());
                 var highlight = parseBool(args.shift());
                 var oldHighlight = this.animatedObjects.setEdgeHighlight(id, toID, highlight);
                 undoBlock.push(new UndoHighlightEdge(id, toID, oldHighlight));
             }
             else if (cmd == "SETHEIGHT") {
-                var height = parseInt(args.shift());
+                var height = Number(args.shift());
                 var oldHeight = this.animatedObjects.getHeight(id);
                 this.animatedObjects.setHeight(id, height);
                 undoBlock.push(new UndoSetHeight(id, oldHeight));
             }
             else if (cmd == "SETLAYER") {
-                var layer = parseInt(args.shift());
+                var layer = Number(args.shift());
                 this.animatedObjects.setLayer(id, layer);
                 //TODO: Add undo information here
             }
             else if (cmd == "CREATELINKEDLIST") {
                 var label = args.shift();
-                var width = parseInt(args.shift());
-                var height = parseInt(args.shift());
-                var x = parseInt(args.shift());
-                var y = parseInt(args.shift());
-                var linkPercent = parseFloat(args.shift()) || 0.25;
+                var width = Number(args.shift());
+                var height = Number(args.shift());
+                var x = Number(args.shift());
+                var y = Number(args.shift());
+                var linkPercent = Number(args.shift()) || 0.25;
                 var verticalOrientation = parseBool(args.shift(), true);
                 var linkPosEnd = parseBool(args.shift(), false);
-                var numLabels = parseInt(args.shift()) || 1;
-                var bgColor = "#FFFFFF", fgColor = "#000000";
+                var numLabels = Number(args.shift()) || 1;
                 this.animatedObjects.addLinkedListObject(
                     id, label, width, height, 
-                    linkPercent, verticalOrientation, linkPosEnd, 
-                    numLabels, bgColor, fgColor
+                    linkPercent, verticalOrientation, linkPosEnd, numLabels
                 );
                 if (!isNaN(x) && !isNaN(y)) {
                     this.animatedObjects.setNodePosition(id, x, y);
@@ -517,17 +516,17 @@ function AnimationManager(objectManager)
             }
             else if (cmd == "SETTEXTCOLOR") {
                 var color = parseColor(args.shift());
-                var index = parseInt(args.shift()) || 0;
+                var index = Number(args.shift()) || 0;
                 var oldColor = this.animatedObjects.getTextColor(id, index);
                 this.animatedObjects.setTextColor(id, color, index);
                 undoBlock.push(new UndoSetTextColor(id, oldColor, index));
             }
             else if (cmd == "CREATEBTREENODE") {
-                var widthPerElem = parseFloat(args.shift());
-                var height = parseFloat(args.shift());
-                var numElems = parseInt(args.shift());
-                var x = parseInt(args.shift());
-                var y = parseInt(args.shift());
+                var widthPerElem = Number(args.shift());
+                var height = Number(args.shift());
+                var numElems = Number(args.shift());
+                var x = Number(args.shift());
+                var y = Number(args.shift());
                 var bgColor = parseColor(args.shift(), "#FFFFFF");
                 var fgColor = parseColor(args.shift(), "#000000");
                 this.animatedObjects.addBTreeNode(id, widthPerElem, height, numElems, bgColor, fgColor);
@@ -537,63 +536,63 @@ function AnimationManager(objectManager)
                 undoBlock.push(new UndoCreate(id));
             }
             else if (cmd == "SETWIDTH") {
-                var width = parseInt(args.shift());
+                var width = Number(args.shift());
                 var oldWidth = this.animatedObjects.getWidth(id);
                 this.animatedObjects.setWidth(id, width);
                 undoBlock.push(new UndoSetWidth(id, oldWidth));
             }
             else if (cmd == "SETNUMELEMENTS") {
-                var numElems = parseInt(args.shift());
+                var numElems = Number(args.shift());
                 var oldID = this.animatedObjects.getObject(id);
                 var oldNumElems = oldID.getNumElements();
                 this.animatedObjects.setNumElements(id, numElems);
                 undoBlock.push(new UndoSetNumElements(oldID, oldNumElems, numElems));
             }
             else if (cmd == "SETPOSITION") {
-                var x = parseInt(args.shift());
-                var y = parseInt(args.shift());
+                var x = Number(args.shift());
+                var y = Number(args.shift());
                 var oldX = this.animatedObjects.getNodeX(id);
                 var oldY = this.animatedObjects.getNodeY(id);
                 this.animatedObjects.setNodePosition(id, x, y);
                 undoBlock.push(new UndoSetPosition(id, oldX, oldY));
             }
             else if (cmd == "ALIGNMIDDLE") {
-                var otherID = parseInt(args.shift());
+                var otherID = Number(args.shift());
                 var oldX = this.animatedObjects.getNodeX(id);
                 var oldY = this.animatedObjects.getNodeY(id);
                 this.animatedObjects.alignMiddle(id, otherID);
                 undoBlock.push(new UndoSetPosition(id, oldX, oldY));
             }
             else if (cmd == "ALIGNRIGHT") {
-                var otherID = parseInt(args.shift());
+                var otherID = Number(args.shift());
                 var oldX = this.animatedObjects.getNodeX(id);
                 var oldY = this.animatedObjects.getNodeY(id);
                 this.animatedObjects.alignRight(id, otherID);
                 undoBlock.push(new UndoSetPosition(id, oldX, oldY));
             }
             else if (cmd == "ALIGNLEFT") {
-                var otherID = parseInt(args.shift());
+                var otherID = Number(args.shift());
                 var oldX = this.animatedObjects.getNodeX(id);
                 var oldY = this.animatedObjects.getNodeY(id);
                 this.animatedObjects.alignLeft(id, otherID);
                 undoBlock.push(new UndoSetPosition(id, oldX, oldY));
             }
             else if (cmd == "ALIGNTOP") {
-                var otherID = parseInt(args.shift());
+                var otherID = Number(args.shift());
                 var oldX = this.animatedObjects.getNodeX(id);
                 var oldY = this.animatedObjects.getNodeY(id);
                 this.animatedObjects.alignTop(id, otherID);
                 undoBlock.push(new UndoSetPosition(id, oldX, oldY));
             }
             else if (cmd == "ALIGNBOTTOM") {
-                var otherID = parseInt(args.shift());
+                var otherID = Number(args.shift());
                 var oldX = this.animatedObjects.getNodeX(id);
                 var oldY = this.animatedObjects.getNodeY(id);
                 this.animatedObjects.alignBottom(id, otherID);
                 undoBlock.push(new UndoSetPosition(id, oldX, oldY));
             }
             else if (cmd == "SETHIGHLIGHTINDEX") {
-                var index = parseInt(args.shift());
+                var index = Number(args.shift());
                 var oldIndex = this.animatedObjects.getHighlightIndex(id)
                 this.animatedObjects.setHighlightIndex(id, index);
                 undoBlock.push(new UndoSetHighlightIndex(id, oldIndex));

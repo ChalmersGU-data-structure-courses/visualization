@@ -25,9 +25,9 @@
 // or implied, of the University of San Francisco
 
 
-var AnimatedCircle = function(objectID, objectLabel)
+var AnimatedCircle = function(objectID, objectLabel, backgroundColor, foregroundColor, highlightColor, labelColor)
 {
-    AnimatedCircle.superclass.constructor.call(this);
+    AnimatedCircle.superclass.constructor.call(this, backgroundColor, foregroundColor, highlightColor, labelColor);
 
     this.objectID = objectID;
     this.label = objectLabel;
@@ -66,85 +66,69 @@ AnimatedCircle.prototype.getHeadPointerAttachPos = function(fromX, fromY)
     if (len == 0) {
         return [this.x, this.y];
     }
-    return [this.x+(xVec/len)*(this.radius), this.y +(yVec/len)*(this.radius)];
+    return [this.x + (xVec/len)*(this.radius), this.y + (yVec/len)*(this.radius)];
 }
 
 
 AnimatedCircle.prototype.setHighlightIndex = function(hlIndex)
 {
     this.highlightIndex = hlIndex;
-    this.highlightIndexDirty = true;
 }
 
 
 AnimatedCircle.prototype.draw = function(ctx)
 {
+    if (!this.addedToScene) return;
+
     ctx.globalAlpha = this.alpha;
 
-    if (this.highlighted) {
-        ctx.fillStyle = "#ff0000";
-        ctx.beginPath();
-        ctx.arc(this.x,this.y,this.radius + this.highlightDiff,0,Math.PI*2, true);
-        ctx.closePath();
-        ctx.fill();
-    }
-
     ctx.fillStyle = this.backgroundColor;
-    ctx.strokeStyle = this.foregroundColor;
-    ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.arc(this.x,this.y,this.radius,0,Math.PI*2, true);
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
     ctx.closePath();
     ctx.fill();
-    ctx.stroke();
+
     ctx.textAlign = 'center';
-    ctx.font = this.textHeight + 'px sans-serif';
     ctx.textBaseline = 'middle';
-    ctx.lineWidth = 1;
-    ctx.fillStyle = this.foregroundColor;
+    ctx.font = this.textHeight + 'px sans-serif';
+    ctx.lineWidth = 2;
+    ctx.fillStyle = this.labelColor;
 
     var strList = this.label.split("\n");
     if (strList.length == 1) {
-        if (this.highlightIndexDirty && this.highlightIndex != -1) {
-            this.leftWidth = ctx.measureText(this.label.substring(0,this.highlightIndex)).width;
-            this.centerWidth = ctx.measureText(this.label.substring(this.highlightIndex, this.highlightIndex+1)).width;
-            this.textWidth = ctx.measureText(this.label).width;
-            this.highlightIndexDirty = false;
-        }
-        if (this.highlightIndex != -1 && this.highlightIndex < this.label.length) {
-            var  startingXForHighlight = this.x - this.textWidth / 2;
-            ctx.textAlign = 'left';
-            var leftStr = this.label.substring(0, this.highlightIndex);
-            var highlightStr = this.label.substring(this.highlightIndex, this.highlightIndex + 1)
-            var rightStr = this.label.substring(this.highlightIndex + 1)
-            ctx.fillText(leftStr, startingXForHighlight, this.y)
-            ctx.strokeStyle = "#FF0000";
-            ctx.fillStyle = "#FF0000";
-            ctx.fillText(highlightStr, startingXForHighlight + this.leftWidth, this.y)
-            ctx.strokeStyle = this.labelColor;
-            ctx.fillStyle = this.labelColor;
-            ctx.fillText(rightStr, startingXForHighlight + this.leftWidth + this.centerWidth, this.y)
-        }
-        else {
+        if (this.highlightIndex < 0 || this.highlightIndex >= this.label.length) {
             ctx.fillText(this.label, this.x, this.y);
-        }
-    }
-    else if (strList.length % 2 == 0) {
-        var mid = strList.length / 2;
-        for (var i = 0; i < strList.length / 2; i++) {
-            ctx.fillText(strList[mid - i - 1], this.x, this.y - (i + 0.5) * 12);
-            ctx.fillText(strList[mid + i], this.x, this.y + (i + 0.5) * 12);
-
+        } else {
+            var leftStr = this.label.substring(0, this.highlightIndex);
+            var highlightStr = this.label.substring(this.highlightIndex, this.highlightIndex + 1);
+            var rightStr = this.label.substring(this.highlightIndex + 1);
+            var leftWidth = ctx.measureText(leftStr).width;
+            var centerWidth = ctx.measureText(highlightStr).width;
+            var x0 = this.x - this.textWidth / 2;
+            ctx.textAlign = 'left';
+            ctx.fillText(leftStr, x0, this.y);
+            ctx.fillText(rightStr, x0 + leftWidth + centerWidth, this.y);
+            ctx.fillStyle = this.highlightColor;
+            ctx.fillText(highlightStr, x0 + leftWidth, this.y)
         }
     }
     else {
-        var mid = (strList.length - 1) / 2;
-        ctx.fillText(strList[mid], this.x, this.y);
-        for (var i = 0; i < mid; i++) {
-            ctx.fillText(strList[mid - (i + 1)], this.x, this.y - (i + 1) * 12);
-            ctx.fillText(strList[mid + (i + 1)], this.x, this.y + (i + 1) * 12);
+        var offset = (1 - strList.length) / 2;
+        for (var i = 0; i < strList.length; i++) {
+            ctx.fillText(strList[i], this.x, this.y + (i + offset) * this.textHeight);
         }
     }
+
+    ctx.strokeStyle = this.foregroundColor;
+    ctx.lineWidth = 2;
+    if (this.highlighted) {
+        ctx.strokeStyle = this.highlightColor;
+        ctx.lineWidth = this.highlightDiff;
+    }
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
+    ctx.closePath();
+    ctx.stroke();
 }
 
 

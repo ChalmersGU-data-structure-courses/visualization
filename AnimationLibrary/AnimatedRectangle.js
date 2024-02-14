@@ -26,20 +26,15 @@
 
 // Values for xJust / yJust:  "center", "left", "right", "top", "bottom"
 
-AnimatedRectangle = function(id, val, wth, hgt,  xJust, yJust, fillColor, edgeColor)
+AnimatedRectangle = function(id, val, wth, hgt, xJust, yJust, fillColor, edgeColor, highlightColor, labelColor)
 {
-    AnimatedRectangle.superclass.constructor.call(this);
+    AnimatedRectangle.superclass.constructor.call(this, fillColor, edgeColor, highlightColor, labelColor);
 
     this.w = wth;
     this.h = hgt;
     this.xJustify = xJust;
     this.yJustify = yJust;
     this.label = val;
-    this.labelColor = edgeColor
-
-    this.backgroundColor = fillColor;
-    this.foregroundColor = edgeColor;
-    this.labelColor = this.foregroundColor;
     this.objectID = id;
     this.nullPointer = false;
 }
@@ -61,85 +56,56 @@ AnimatedRectangle.prototype.getNull = function()
 
 AnimatedRectangle.prototype.left = function()
 {
-    if (this.xJustify == "left") {
-        return this.x;
-    }
-    else if (this.xJustify == "center") {
-        return this.x - this.w / 2.0;
-    }
-    else { // (this.xJustify == "right")
-        return this.x - this.w;
-    }
+    return (
+        this.xJustify == "right"  ? this.x - this.w   :
+        this.xJustify == "center" ? this.x - this.w/2 : 
+        /*   xJustify == "left"  */ this.x
+    );
 }
-
 
 AnimatedRectangle.prototype.centerX = function()
 {
-    if (this.xJustify == "center") {
-        return this.x;
-    }
-    else if (this.xJustify == "left") {
-        return this.x + this.w / 2.0;
-    }
-    else { // (this.xJustify == "right")
-        return this.x - this.w / 2.0;
-    }
+    return (
+        this.xJustify == "right"  ? this.x - this.w/2 :
+        this.xJustify == "center" ? this.x            : 
+        /*   xJustify == "left"  */ this.x + this.w/2
+    );
 }
-
-
-AnimatedRectangle.prototype.centerY = function()
-{
-    if (this.yJustify == "center") {
-        return this.y;
-    }
-    else if (this.yJustify == "top") {
-        return this.y + this.h / 2.0;
-    }
-    else { // (this.xJustify == "bottom")
-        return this.y - this.w / 2.0;
-    }
-}
-
-
-AnimatedRectangle.prototype.top = function()
-{
-    if (this.yJustify == "top") {
-        return  this.y;
-    }
-    else if (this.yJustify == "center") {
-        return this.y - this.h / 2.0;
-    }
-    else { //(this.xJustify == "bottom")
-        return this.y - this.h;
-    }
-}
-
-
-AnimatedRectangle.prototype.bottom = function()
-{
-    if (this.yJustify == "top") {
-        return  this.y + this.h;
-    }
-    else if (this.yJustify == "center") {
-        return this.y + this.h / 2.0;
-    }
-    else { // (this.xJustify == "bottom")
-        return this.y;
-    }
-}
-
 
 AnimatedRectangle.prototype.right = function()
 {
-    if (this.xJustify == "left") {
-        return  this.x + this.w;
-    }
-    else if (this.xJustify == "center") {
-        return this.x + this.w / 2.0;
-    }
-    else { // (this.xJustify == "right")
-        return this.x;
-    }
+    return (
+        this.xJustify == "right"  ? this.x            :
+        this.xJustify == "center" ? this.x + this.w/2 : 
+        /*   xJustify == "left"  */ this.x + this.w
+    );
+}
+
+AnimatedRectangle.prototype.top = function()
+{
+    return (
+        this.yJustify == "bottom" ? this.y - this.h   :
+        this.yJustify == "center" ? this.y - this.h/2 : 
+        /*   yJustify == "top"   */ this.y
+    );
+}
+
+AnimatedRectangle.prototype.centerY = function()
+{
+    return (
+        this.yJustify == "bottom" ? this.y - this.h/2 :
+        this.yJustify == "center" ? this.y            : 
+        /*   yJustify == "top"   */ this.y + this.h/2
+    );
+}
+
+AnimatedRectangle.prototype.bottom = function()
+{
+    return (
+        this.yJustify == "bottom" ? this.y            :
+        this.yJustify == "center" ? this.y + this.h/2 : 
+        /*   yJustify == "top"   */ this.y + this.h
+    );
 }
 
 
@@ -171,97 +137,46 @@ AnimatedRectangle.prototype.getHeight = function()
 }
 
 
-// TODO:  Fix me!
-AnimatedRectangle.prototype.draw = function(context)
+AnimatedRectangle.prototype.draw = function(ctx)
 {
-    if (!this.addedToScene) {
-        return;
-    }
+    if (!this.addedToScene) return;
 
-    var startX;
-    var startY;
-    var labelPosX;
-    var labelPosY;
+    var x = this.left();
+    var y = this.top();
+    var w = this.getWidth();
+    var h = this.getHeight();
 
-    context.globalAlpha = this.alpha;
+    ctx.globalAlpha = this.alpha;
 
-    if (this.xJustify == "left") {
-        startX = this.x;
-        labelPosX = this.x + this.w / 2.0;
-    }
-    else if (this.xJustify == "center") {
-        startX = this.x - this.w / 2.0;
-        labelPosX = this.x;
+    ctx.fillStyle = this.backgroundColor;
+    ctx.fillRect(x, y, w, h);
 
-    }
-    else if (this.xJustify == "right") {
-        startX = this.x - this.w;
-        labelPosX = this.x - this.w / 2.0
-    }
-    if (this.yJustify == "top") {
-        startY = this.y;
-        labelPosY = this.y + this.h / 2.0;
-    }
-    else if (this.yJustify == "center") {
-        startY = this.y - this.h / 2.0;
-        labelPosY = this.y;
-    }
-    else if (this.yJustify == "bottom") {
-        startY = this.y - this.h;
-        labelPosY = this.y - this.h / 2.0;
-    }
+    ctx.fillStyle = this.labelColor;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = this.textHeight + 'px sans-serif';
+    ctx.fillText(this.label, this.centerX(), this.centerY());
 
-    context.lineWidth = 1;
+    ctx.strokeStyle = this.foregroundColor;
+    ctx.lineWidth = 2;
+    if (this.nullPointer) {
+        ctx.beginPath();
+        ctx.moveTo(x, y); 
+        ctx.lineTo(x + w, y + h);
+        ctx.stroke();
+    }
 
     if (this.highlighted) {
-        context.strokeStyle = "#ff0000";
-        context.fillStyle = "#ff0000";
-
-        context.beginPath();
-        context.moveTo(startX - this.highlightDiff, startY- this.highlightDiff);
-        context.lineTo(startX+this.w + this.highlightDiff, startY- this.highlightDiff);
-        context.lineTo(startX+this.w+ this.highlightDiff, startY+this.h + this.highlightDiff);
-        context.lineTo(startX - this.highlightDiff, startY+this.h + this.highlightDiff);
-        context.lineTo(startX - this.highlightDiff, startY - this.highlightDiff);
-        context.closePath();
-        context.stroke();
-        context.fill();
+        ctx.strokeStyle = this.highlightColor;
+        ctx.lineWidth = this.highlightDiff;
     }
-    context.strokeStyle = this.foregroundColor;
-    context.fillStyle = this.backgroundColor;
-
-    context.beginPath();
-    context.moveTo(startX ,startY);
-    context.lineTo(startX + this.w, startY);
-    context.lineTo(startX + this.w, startY + this.h);
-    context.lineTo(startX, startY + this.h);
-    context.lineTo(startX, startY);
-    context.closePath();
-    context.stroke();
-    context.fill();
-
-    if (this.nullPointer) {
-        context.beginPath();
-        context.moveTo(startX, startY);
-        context.lineTo(startX + this.w, startY + this.h);
-        context.closePath();
-        context.stroke();
-    }
-
-    context.fillStyle = this.labelColor;
-
-    context.textAlign = 'center';
-    context.font = this.textHeight + 'px sans-serif';
-    context.textBaseline = 'middle';
-    context.lineWidth = 1;
-    context.fillText(this.label, this.x, this.y);
+    ctx.strokeRect(x, y, w, h);
 }
 
 
 AnimatedRectangle.prototype.setText = function(newText, textIndex)
 {
     this.label = newText;
-    // TODO: Setting text position?
 }
 
 

@@ -685,7 +685,7 @@ function ObjectManager(canvas)
     }
 
 
-    this.addRectangleObject = function(objectID,nodeLabel, width, height, xJustify , yJustify , backgroundColor, foregroundColor)
+    this.addRectangleObject = function(objectID,nodeLabel, width, height, xJustify, yJustify, backgroundColor, foregroundColor)
     {
         if (this.Nodes[objectID] != null) {
             throw new Error(`addRectangleObject: Object with same ID (${objectID}) already exists`);
@@ -705,7 +705,6 @@ function ObjectManager(canvas)
         }
         this.Nodes[objectID].x = newX;
         this.Nodes[objectID].y = newY;
-        // Don't need to dirty anything, since we repaint everything every frame
         // (TODO:  Revisit if we do conditional redraws)
     }
 

@@ -25,25 +25,26 @@
 // or implied, of the University of San Francisco
 
 
-var HighlightCircle = function(objectID, color, radius)
+var HighlightCircle = function(objectID, color, radius, thickness)
 {
-    HighlightCircle.superclass.constructor.call(this);
+    HighlightCircle.superclass.constructor.call(this, null, color);
 
     this.objectID = objectID;
     this.radius = radius;
-    this.thickness = 4;
-    this.foregroundColor = color;
+    this.thickness = thickness || 4;
 }
 HighlightCircle.inheritFrom(AnimatedObject);
 
 
 HighlightCircle.prototype.draw = function(ctx)
 {
+    if (!this.addedToScene) return;
+
     ctx.globalAlpha = this.alpha;
     ctx.strokeStyle = this.foregroundColor;
     ctx.lineWidth = this.thickness;
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2, true);
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
     ctx.closePath();
     ctx.stroke();
 }

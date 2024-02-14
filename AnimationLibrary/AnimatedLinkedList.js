@@ -24,15 +24,12 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
-
-function AnimatedLinkedList(id, val, wth, hgt, linkPer, verticalOrientation, linkPosEnd, numLab, fillColor, edgeColor)
+function AnimatedLinkedList(id, val, wth, hgt, linkPer, verticalOrientation, linkPosEnd, numLab, fillColor, edgeColor, highlightColor, labelColor)
 {
-    AnimatedLinkedList.superclass.constructor.call(this);
+    AnimatedLinkedList.superclass.constructor.call(this, fillColor, edgeColor, highlightColor, labelColor);
 
     this.w = wth;
     this.h = hgt;
-    this.backgroundColor = fillColor;
-    this.foregroundColor = edgeColor;
     this.val = val;
 
     this.vertical = verticalOrientation;
@@ -56,7 +53,7 @@ function AnimatedLinkedList(id, val, wth, hgt, linkPer, verticalOrientation, lin
         this.labels[i] = "";
         this.labelPosX[i] = 0;
         this.labelPosY[i] = 0;
-        this.labelColors[i] = this.foregroundColor;
+        this.labelColors[i] = this.labelColor;
     }
 
     this.labels[0] = this.val;
@@ -208,129 +205,85 @@ AnimatedLinkedList.prototype.getHeight = function()
 }
 
 
-AnimatedLinkedList.prototype.draw = function(context)
+AnimatedLinkedList.prototype.draw = function(ctx)
 {
-    var startX;
-    var startY;
+    if (!this.addedToScene) return;
 
-    startX = this.left();
-    startY = this.top();
+    var x0 = this.left();
+    var x1 = this.right();
+    var y0 = this.top();
+    var y1 = this.bottom();
 
-    if (this.highlighted) {
-        context.strokeStyle = "#ff0000";
-        context.fillStyle = "#ff0000";
+    ctx.globalAlpha = this.alpha;
 
-        context.beginPath();
-        context.moveTo(startX - this.highlightDiff,startY- this.highlightDiff);
-        context.lineTo(startX+this.w + this.highlightDiff,startY- this.highlightDiff);
-        context.lineTo(startX+this.w+ this.highlightDiff,startY+this.h + this.highlightDiff);
-        context.lineTo(startX - this.highlightDiff,startY+this.h + this.highlightDiff);
-        context.lineTo(startX - this.highlightDiff,startY - this.highlightDiff);
-        context.closePath();
-        context.stroke();
-        context.fill();
-    }
-    context.strokeStyle = this.foregroundColor;
-    context.fillStyle = this.backgroundColor;
+    ctx.fillStyle = this.backgroundColor;
+    ctx.fillRect(x0, y0, x1-x0, y1-y0);
 
-    context.beginPath();
-    context.moveTo(startX ,startY);
-    context.lineTo(startX + this.w, startY);
-    context.lineTo(startX + this.w, startY + this.h);
-    context.lineTo(startX, startY + this.h);
-    context.lineTo(startX, startY);
-    context.closePath();
-    context.stroke();
-    context.fill();
-
-    if (this.vertical) {
-        startX = this.left();
-        for (var i = 1; i < this.numLabels; i++) {
-            // TODO: this doesn't look right ...
-            startY = this.y + this.h*(1-this.linkPercent)*(i / this.numLabels - 1/2);
-
-            context.beginPath();
-            context.moveTo(startX ,startY);
-            context.lineTo(startX + this.w, startY);
-            context.closePath();
-            context.stroke();
-        }
-    }
-    else {
-        startY = this.top();
-        for (var i = 1; i < this.numLabels; i++) {
-            startX = this.x + this.w*(1-this.linkPercent)*(i / this.numLabels - 1/2);
-            context.beginPath();
-            context.moveTo(startX ,startY);
-            context.lineTo(startX, startY + this.h);
-            context.closePath();
-            context.stroke();
-        }
-    }
-
-    if (this.vertical && this.linkPositionEnd) {
-        startX = this.left();
-        startY = this.bottom() - this.h * this.linkPercent;
-
-        context.beginPath();
-        context.moveTo(startX + this.w ,startY);
-        context.lineTo(startX, startY);
-        if (this.nullPointer) {
-            context.lineTo(this.startX + this.w, this.bottom());
-        }
-        context.closePath();
-        context.stroke();
-    }
-    else if (this.vertical && !this.linkPositionEnd) {
-        startX = this.left();
-        startY = this.top() + this.h * this.linkPercent;
-
-        context.beginPath();
-        context.moveTo(startX + this.w ,startY);
-        context.lineTo(startX, startY);
-        if (this.nullPointer) {
-            context.lineTo(startX + this.w, this.top());
-        }
-        context.closePath();
-        context.stroke();
-    }
-    else if (!this.vertical && this.linkPositionEnd) {
-        startX = this.right() - this.w * this.linkPercent;
-        startY = this.top();
-
-        context.beginPath();
-        context.moveTo(startX, startY + this.h);
-        context.lineTo(startX, startY);
-        if (this.nullPointer) {
-            context.lineTo(this.right(), startY + this.h);
-        }
-        context.closePath();
-        context.stroke();
-    }
-    else { // (!vertical && !linkPositionEnd)
-        startX = this.left()  + this.w * this.linkPercent;
-        startY = this.top();
-
-        context.beginPath();
-        context.moveTo(startX, startY + this.h);
-        context.lineTo(startX, startY);
-        if (this.nullPointer) {
-            context.lineTo(this.left(), startY);
-        }
-        context.closePath();
-        context.stroke();
-    }
-
-    context.textAlign = 'center';
-    context.font = this.textHeight + 'px sans-serif';
-    context.textBaseline = 'middle';
-    context.lineWidth = 1;
+    ctx.fillStyle = this.labelColor;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = this.textHeight + 'px sans-serif';
 
     this.resetTextPosition();
     for (var i = 0; i < this.numLabels; i++) {
-        context.fillStyle = this.labelColors[i];
-        context.fillText(this.labels[i], this.labelPosX[i], this.labelPosY[i]);
+        ctx.fillStyle = this.labelColors[i];
+        ctx.fillText(this.labels[i], this.labelPosX[i], this.labelPosY[i]);
     }
+
+    ctx.strokeStyle = this.foregroundColor;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    if (this.vertical) {
+        if (this.linkPositionEnd) {
+            var y = y1 - this.h * this.linkPercent;
+            ctx.moveTo(x0, y); ctx.lineTo(x1, y);
+            if (this.nullPointer) {
+                ctx.moveTo(x0, y); ctx.lineTo(x1, y1);
+            }
+            y1 = y;
+        }
+        else {
+            var y = y0 + this.h * this.linkPercent;
+            ctx.moveTo(x0, y); ctx.lineTo(x1, y);
+            if (this.nullPointer) {
+                ctx.moveTo(x0, y0); ctx.lineTo(x1, y);
+            }
+            y0 = y;
+        }
+        for (var i = 1; i < this.numLabels; i++) {
+            var y = y0 + (y1-y0) * (i/this.numLabels-1/2);
+            ctx.moveTo(x0, y); ctx.lineTo(x1, y);
+        }
+    }
+    else { // !vertical
+        if (this.linkPositionEnd) {
+            var x = x1 - this.w * this.linkPercent;
+            ctx.moveTo(x, y0); ctx.lineTo(x, y1);
+            if (this.nullPointer) {
+                ctx.moveTo(x, y0); ctx.lineTo(x1, y1);
+            }
+            x1 = x;
+        }
+        else {
+            var x = x0 + this.w * this.linkPercent;
+            ctx.moveTo(x, y0); ctx.lineTo(x, y1);
+            if (this.nullPointer) {
+                ctx.moveTo(x0, y0); ctx.lineTo(x, y1);
+            }
+            x0 = x;
+        }
+        for (var i = 1; i < this.numLabels; i++) {
+            var x = x0 + (x1-x0) * (i/this.numLabels-1/2);
+            ctx.moveTo(x, y0); ctx.lineTo(x, y1);
+        }
+    }
+    ctx.stroke();
+
+    if (this.highlighted) {
+        ctx.strokeStyle = this.highlightColor;
+        ctx.lineWidth = this.highlightDiff;
+    }
+    ctx.strokeRect(this.left(), this.top(), this.getWidth(), this.getHeight());
 }
 
 

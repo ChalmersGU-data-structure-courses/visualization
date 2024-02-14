@@ -25,30 +25,23 @@
 // or implied, of the University of San Francisco
 
 
-function AnimatedBTreeNode(id, widthPerElem, h, numElems, fillColor, edgeColor, highlightColor)
+function AnimatedBTreeNode(id, widthPerElem, h, numElems, fillColor, edgeColor, highlightColor, labelColor)
 {
-    AnimatedBTreeNode.superclass.constructor.call(this);
+    AnimatedBTreeNode.superclass.constructor.call(this, fillColor, edgeColor, highlightColor, labelColor);
 
     this.objectID = id;
     this.widthPerElement = widthPerElem;
     this.nodeHeight = h;
     this.numLabels = numElems;
-    this.backgroundColor = fillColor || AnimatedBTreeNode.BACKGROUND_COLOR;
-    this.foregroundColor = edgeColor || AnimatedBTreeNode.FOREGROUND_COLOR;
-    this.highlightColor = highlightColor || AnimatedBTreeNode.HIGHLIGHT_COLOR;
 
     this.labels = new Array(this.numLabels);
     this.labelColors = new Array(this.numLabels);
     for (var i = 0; i < this.numLabels; i++) {
-        this.labelColors[i] = this.foregroundColor;
+        this.labelColors[i] = this.labelColor;
     }
 }
 AnimatedBTreeNode.inheritFrom(AnimatedObject);
 
-
-AnimatedBTreeNode.BACKGROUND_COLOR = "#FFFFFF";
-AnimatedBTreeNode.FOREGROUND_COLOR = "#000000";
-AnimatedBTreeNode.HIGHLIGHT_COLOR = "#FF0000";
 
 AnimatedBTreeNode.MIN_WIDTH = 10;
 AnimatedBTreeNode.CORNER_RADIUS = 10;
@@ -64,7 +57,7 @@ AnimatedBTreeNode.prototype.getNumElements = function()
 AnimatedBTreeNode.prototype.getWidth = function()
 {
     if (this.numLabels > 0) {
-        return  (this.widthPerElement * this.numLabels);
+        return this.widthPerElement * this.numLabels;
     }
     else {
         return AnimatedBTreeNode.MIN_WIDTH;
@@ -77,7 +70,7 @@ AnimatedBTreeNode.prototype.setNumElements = function(newNumElements)
     if (this.numLabels < newNumElements) {
         for (var i = this.numLabels; i < newNumElements; i++) {
             this.labels[i] = "";
-            this.labelColors[i] = this.foregroundColor;
+            this.labelColors[i] = this.labelColor;
         }
         this.numLabels = newNumElements;
     }
@@ -111,55 +104,47 @@ AnimatedBTreeNode.prototype.bottom = function()
 }
 
 
-AnimatedBTreeNode.prototype.draw = function(context)
+AnimatedBTreeNode.prototype.draw = function(ctx)
 {
-    var x0 = this.left();
-    var y0 = this.top();
-    if (isNaN(x0)) x0 = 0;
+    if (!this.addedToScene) return;
 
-    if (this.highlighted) {
-        context.strokeStyle = this.highlightColor;
-        context.fillStyle = this.highlightColor;
-        context.lineWidth = 2;
+    var x = this.left();
+    var y = this.top();
+    var w = this.getWidth();
+    var h = this.getHeight();
 
-        context.beginPath();
-        context.roundRect(
-            x0 - this.highlightDiff, 
-            y0 - this.highlightDiff, 
-            this.getWidth() + 2 * this.highlightDiff, 
-            this.nodeHeight + 2 * this.highlightDiff, 
-            AnimatedBTreeNode.CORNER_RADIUS
-        );
-        context.stroke();
-        context.fill();
-    }
+    ctx.globalAlpha = this.alpha;
 
-    context.strokeStyle = this.foregroundColor;
-    context.fillStyle = this.backgroundColor;
-    context.lineWidth = 2;
+    ctx.fillStyle = this.backgroundColor;
+    ctx.beginPath();
+    ctx.roundRect(x, y, w, h, AnimatedBTreeNode.CORNER_RADIUS);
+    ctx.fill();
 
-    context.beginPath();
-    context.roundRect(x0, y0, this.getWidth(), this.nodeHeight, AnimatedBTreeNode.CORNER_RADIUS);
-    context.stroke();
-    context.fill();
-
-    context.lineWidth = 1;
-    context.beginPath();
-    for (var i = 1; i < this.numLabels; i++) {
-        var x = x0 + i * this.widthPerElement;
-        context.moveTo(x, y0);
-        context.lineTo(x, y0 + this.nodeHeight);
-    }
-    context.stroke();
-
-    context.textAlign = 'center';
-    context.textBaseline = 'middle';
-
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
     for (var i = 0; i < this.numLabels; i++) {
         var labelx = this.x - this.widthPerElement * this.numLabels / 2 + this.widthPerElement / 2 + i * this.widthPerElement;
-        context.fillStyle = this.labelColors[i];
-        context.fillText(this.labels[i], labelx, this.y);
+        ctx.fillStyle = this.labelColors[i];
+        ctx.fillText(this.labels[i], labelx, this.y);
     }
+
+    ctx.strokeStyle = this.foregroundColor;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (var i = 1; i < this.numLabels; i++) {
+        x += this.widthPerElement;
+        ctx.moveTo(x, y);
+        ctx.lineTo(x, y + h);
+    }
+    ctx.stroke();
+
+    if (this.highlighted) {
+        ctx.strokeStyle = this.highlightColor;
+        ctx.lineWidth = this.highlightDiff;
+    }
+    ctx.beginPath();
+    ctx.roundRect(this.left(), this.top(), this.getWidth(), this.getHeight(), AnimatedBTreeNode.CORNER_RADIUS);
+    ctx.stroke();
 }
 
 
