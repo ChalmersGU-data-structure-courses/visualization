@@ -195,6 +195,10 @@ SearchArray.prototype.getIndexY = function(index) {
     return this.getIndexXY(index)[1];
 }
 
+SearchArray.prototype.getLabelY = function(index) {
+    return this.getIndexY(index) + this.getLabelYAdd();
+}
+
 
 
 SearchArray.prototype.resetAll = function()
@@ -219,7 +223,7 @@ SearchArray.prototype.resetAll = function()
     for (var i = 0; i < size; i++) {
         var xPos = this.getIndexX(i);
         var yPos = this.getIndexY(i);
-        var yLabelPos = yPos + this.getLabelYAdd();
+        var yLabelPos = this.getLabelY(i)
         this.cmd("CreateRectangle", this.arrayID[i], this.arrayData[i], this.getArrayElemWidth(), this.getArrayElemHeight(), xPos, yPos);
         this.cmd("CreateLabel", this.arrayLabelID[i], i, xPos, yLabelPos);
         this.cmd("SetForegroundColor", this.arrayLabelID[i], SearchArray.ARRAY_LABEL_FOREGROUND_COLOR);
@@ -375,7 +379,7 @@ SearchArray.prototype.binarySearch = function(searchVal)
     var size = this.getSize();
     var low = 0;
     var high = size - 1;
-    this.cmd("Move", this.lowCircleID, this.getIndexX(low), this.getIndexY(low));
+    this.cmd("Move", this.lowCircleID, this.getIndexX(low), this.getLabelY(low));
     this.cmd("SetText", this.searchForBoxID, searchVal);
     this.cmd("SetForegroundColor", this.binaryCodeID[1][0], SearchArray.CODE_HIGHLIGHT_COLOR);
     this.cmd("SetHighlight", this.lowBoxID, 1);
@@ -386,7 +390,7 @@ SearchArray.prototype.binarySearch = function(searchVal)
     this.cmd("SetForegroundColor", this.binaryCodeID[2][0], SearchArray.CODE_HIGHLIGHT_COLOR);
     this.cmd("SetHighlight", this.highBoxID, 1);
     this.cmd("SetText", this.highBoxID, high);
-    this.cmd("Move", this.highCircleID, this.getIndexX(high), this.getIndexY(high));
+    this.cmd("Move", this.highCircleID, this.getIndexX(high), this.getLabelY(high));
     this.cmd("Step");
     this.cmd("SetForegroundColor", this.binaryCodeID[2][0], SearchArray.CODE_STANDARD_COLOR);
     this.cmd("SetHighlight", this.highBoxID, 0);
@@ -410,7 +414,7 @@ SearchArray.prototype.binarySearch = function(searchVal)
             this.cmd("SetHighlight", this.lowBoxID, 1);
             this.cmd("SetHighlight", this.midBoxID, 1);
             this.cmd("SetText", this.midBoxID, mid);
-            this.cmd("Move", this.midCircleID, this.getIndexX(mid), this.getIndexY(mid));
+            this.cmd("Move", this.midCircleID, this.getIndexX(mid), this.getLabelY(mid));
             this.cmd("Step");
             this.cmd("SetForegroundColor", this.binaryCodeID[4][0], SearchArray.CODE_STANDARD_COLOR);
             this.cmd("SetHighlight", this.midBoxID, 0);
@@ -442,7 +446,7 @@ SearchArray.prototype.binarySearch = function(searchVal)
                     this.cmd("SetForegroundColor", this.binaryCodeID[8][0], SearchArray.CODE_HIGHLIGHT_COLOR);
                     this.cmd("SetHighlight", this.lowID,1);
                     this.cmd("SetText", this.lowBoxID, low);
-                    this.cmd("Move", this.lowCircleID, this.getIndexX(low), this.getIndexY(low));
+                    this.cmd("Move", this.lowCircleID, this.getIndexX(low), this.getLabelY(low));
                     for (var i = 0; i < low; i++) {
                         this.cmd("SetAlpha", this.arrayID[i], 0.2);
                     }
@@ -455,7 +459,7 @@ SearchArray.prototype.binarySearch = function(searchVal)
                     this.cmd("SetForegroundColor", this.binaryCodeID[10][0], SearchArray.CODE_HIGHLIGHT_COLOR);
                     this.cmd("SetHighlight", this.highBoxID,1);
                     this.cmd("SetText", this.highBoxID, high);
-                    this.cmd("Move", this.highCircleID, this.getIndexX(high), this.getIndexY(high));
+                    this.cmd("Move", this.highCircleID, this.getIndexX(high), this.getLabelY(high));
                     for (var i = high + 1; i < size; i++) {
                         this.cmd("SetAlpha", this.arrayID[i], 0.2);
                     }
@@ -522,7 +526,7 @@ SearchArray.prototype.linearSearch = function(searchVal)
     this.cmd("SetForegroundColor", this.linearCodeID[1][0], SearchArray.CODE_HIGHLIGHT_COLOR);
     this.cmd("SetHighlight", this.indexBoxID, 1);
     this.cmd("SetText", this.indexBoxID, 0);
-    this.cmd("Move", this.indexCircleID, this.getIndexX(0), this.getIndexY(0));
+    this.cmd("Move", this.indexCircleID, this.getIndexX(0), this.getLabelY(0));
     
     this.cmd("Step");
     this.cmd("SetForegroundColor", this.linearCodeID[1][0], SearchArray.CODE_STANDARD_COLOR);
@@ -557,7 +561,7 @@ SearchArray.prototype.linearSearch = function(searchVal)
         this.cmd("SetForegroundColor", this.linearCodeID[3][0], SearchArray.CODE_HIGHLIGHT_COLOR);
         this.cmd("SetHighlight", this.indexBoxID,1);
         this.cmd("SetText", this.indexBoxID, foundIndex);
-        this.cmd("Move", this.indexCircleID, this.getIndexX(foundIndex), this.getIndexY(foundIndex));
+        this.cmd("Move", this.indexCircleID, this.getIndexX(foundIndex), this.getLabelY(foundIndex));
         this.cmd("Step");
         this.cmd("SetForegroundColor", this.linearCodeID[3][0], SearchArray.CODE_STANDARD_COLOR);
         this.cmd("SetHighlight", this.indexBoxID,0);
