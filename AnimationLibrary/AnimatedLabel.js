@@ -25,345 +25,254 @@
 // or implied, of the University of San Francisco
 
 
-function AnimatedLabel(id, val, center, initialWidth, ctx, labelColor, highlightColor)
-{
-    AnimatedLabel.superclass.constructor.call(this, null, labelColor, highlightColor);
+class AnimatedLabel extends AnimatedObject {
+    centering;
+    drawingContext;
+    textWidth;
+    leftWidth;
+    centerWidth;
+    alwaysOnTop = true;
 
-    this.centering = center;
-    this.label = val;
-    this.objectID = id;
-    this.ctx = ctx; 
-    this.textWidth = initialWidth || this.getTextWidth();
-    this.leftWidth = -1;
-    this.centerWidth = -1;
-    this.highlightIndex = -1;
-}
-AnimatedLabel.inheritFrom(AnimatedObject);
+    constructor(id, val, center, initialWidth, drawingContext, labelColor, highlightColor) {
+        super(null, labelColor, highlightColor);
+        this.objectID = id;
+        this.label = val;
+        this.centering = center;
+        this.drawingContext = drawingContext;
+        this.textWidth = initialWidth || this.getTextWidth();
+        this.leftWidth = -1;
+        this.centerWidth = -1;
+    }
 
-AnimatedLabel.prototype.alwaysOnTop = true;
+    centered() {
+        return this.centering;
+    }
 
-
-AnimatedLabel.prototype.centered = function()
-{
-    return this.centering;
-}
-
-
-AnimatedLabel.prototype.draw = function(ctx)
-{
-    if (!this.addedToScene) return;
-
-    ctx.globalAlpha = this.alpha;
-    ctx.font = this.textHeight + 'px sans-serif';
-
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'top';
-    if (this.centering) {
-        if (this.highlightIndex < 0) {
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
+    getTextWidth() {
+        this.drawingContext.font = this.textHeight + 'px sans-serif';
+        var strList = this.label.split("\n");
+        var width = 0;
+        if (strList.length == 1) {
+            width = this.drawingContext.measureText(this.label).width;
         }
         else {
-            x0 = this.x - this.textWidth / 2;
-            ctx.textAlign = 'left';
-            ctx.textBaseline = 'middle';
+            for (var i = 0; i < strList.length; i++) {
+                width = Math.max(width, this.drawingContext.measureText(strList[i]).width);
+            }
+        }
+        return width;
+    }
+
+    alignLeft(other) {
+        if (this.centering) {
+            this.y = other.centerY();
+            this.x = other.left() - this.textWidth / 2;
+        } else {
+            this.y = other.centerY() - this.textHeight / 2;
+            this.x = other.left() - this.textWidth;
         }
     }
 
-    if (this.highlighted) {
-        ctx.strokeStyle = this.highlightColor;
-        ctx.lineWidth = this.highlightDiff;
-        ctx.strokeText(this.label, this.x, this.y);
+    getAlignLeftPos(other) {
+        if (this.centering) {
+            return [other.left() - this.textWidth / 2, this.y = other.centerY()];
+        } else {
+            return [other.left() - this.textWidth, other.centerY() - this.textHeight / 2];
+        }
     }
 
-    ctx.fillStyle = this.labelColor;
-    strList = this.label.split("\n");
-    if (strList.length == 1) {
-        if (this.highlightIndex < 0 || this.highlightIndex >= this.label.length) {
-            ctx.fillText(this.label, this.x, this.y);
+    alignRight(other) {
+        if (this.centering) {
+            this.y = other.centerY();
+            this.x = other.right() + this.textWidth / 2;
+        } else {
+            this.y = other.centerY() - this.textHeight / 2;
+            this.x = other.right();
+        }
+    }
+
+    getAlignRightPos(other) {
+        if (this.centering) {
+            return [other.right() + this.textWidth / 2, other.centerY()];
+        } else {
+            return [other.right(), other.centerY() - this.textHeight / 2];
+        }
+    }
+
+    alignTop(other) {
+        if (this.centering) {
+            this.y = other.top() - this.textHeight / 2;
+            this.x = other.centerX();
+        } else {
+            this.y = other.top() - 10;
+            this.x = other.centerX() - this.textWidth / 2;
+        }
+    }
+
+    getAlignTopPos(other) {
+        if (this.centering) {
+            return [other.centerX(), other.top() - this.textHeight / 2];
+        } else {
+            return [other.centerX() - this.textWidth / 2, other.top() - 10];
+        }
+    }
+
+    alignBottom(other) {
+        if (this.centering) {
+            this.y = other.bottom() + this.textHeight / 2;
+            this.x = other.centerX();
+        } else {
+            this.y = other.bottom();
+            this.x = other.centerX() - this.textWidth / 2;
+        }
+    }
+
+    getAlignBottomPos(other) {
+        if (this.centering) {
+            return [other.centerX(), other.bottom() + this.textHeight / 2];
+        } else {
+            return [other.centerX() - this.textWidth / 2, other.bottom()];
+        }
+    }
+
+    getWidth() {
+        return this.textWidth;
+    }
+
+    getHeight() {
+        return this.textHeight;
+    }
+
+    setHeight(newHeight) {
+        this.textHeight = newHeight;
+        this.textWidth = this.getTextWidth();
+    }
+
+    left() {
+        return this.centering ? this.x - this.textWidth/2 : this.x;
+    }
+
+    centerX() {
+        return this.centering ? this.x : this.x + this.textWidth;
+    }
+
+    right() {
+        return this.centering ? this.x + this.textWidth/2 : this.x + this.textWidth;
+    }
+
+    top() {
+        return this.centering ? this.y - this.textHeight/2 : this.y;
+    }
+
+    centerY() {
+        return this.centering ? this.y : this.y + this.textHeight/2;
+    }
+
+    bottom() {
+        return this.centering ? this.y + this.textHeight/2 : this.y + this.textHeight;
+    }
+
+    setHighlightIndex(hlIndex) {
+        // Only allow highlight index for labels that don't have End-Of-Line
+        if (this.label.indexOf("\n") < 0 && this.label.length > hlIndex) {
+            this.highlightIndex = hlIndex;
         }
         else {
-            var leftStr = this.label.substring(0, this.highlightIndex);
-            var highlightStr = this.label.substring(this.highlightIndex, this.highlightIndex + 1)
-            var rightStr = this.label.substring(this.highlightIndex + 1)
-            var leftWidth = ctx.measureText(leftStr).width;
-            var centerWidth = ctx.measureText(highlightStr).width;
-            ctx.fillText(leftStr, x0, this.y)
-            ctx.fillText(rightStr, x0 + leftWidth + centerWidth, this.y)
-            ctx.fillStyle = this.highlightColor;
-            ctx.fillText(highlightStr, x0 + leftWidth, this.y)
+            this.highlightIndex = -1;
         }
     }
-    else {
-        var offset = (this.centering) ? (1 - strList.length) / 2 : 0;
-        for (var i = 0; i < strList.length; i++) {
-            ctx.fillText(strList[i], this.x, this.y + (i + offset) * this.textHeight);
+
+    getTailPointerAttachPos(fromX, fromY, anchorPoint) {
+        return this.getClosestCardinalPoint(fromX, fromY);
+    }
+
+    getHeadPointerAttachPos(fromX, fromY) {
+        return this.getClosestCardinalPoint(fromX, fromY);
+    }
+
+    setText(newText, textIndex, initialWidth) {
+        this.label = newText;
+        this.textWidth = initialWidth || this.getTextWidth();
+    }
+
+    draw(ctx) {
+        if (!this.addedToScene) return;
+
+        ctx.globalAlpha = this.alpha;
+        ctx.font = this.textHeight + 'px sans-serif';
+
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+        if (this.centering) {
+            if (this.highlightIndex < 0) {
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+            }
+            else {
+                x0 = this.x - this.textWidth / 2;
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'middle';
+            }
+        }
+
+        if (this.highlighted) {
+            ctx.strokeStyle = this.highlightColor;
+            ctx.lineWidth = this.highlightDiff;
+            ctx.strokeText(this.label, this.x, this.y);
+        }
+
+        ctx.fillStyle = this.labelColor;
+        var strList = this.label.split("\n");
+        if (strList.length == 1) {
+            if (this.highlightIndex < 0 || this.highlightIndex >= this.label.length) {
+                ctx.fillText(this.label, this.x, this.y);
+            }
+            else {
+                var leftStr = this.label.substring(0, this.highlightIndex);
+                var highlightStr = this.label.substring(this.highlightIndex, this.highlightIndex + 1);
+                var rightStr = this.label.substring(this.highlightIndex + 1);
+                var leftWidth = ctx.measureText(leftStr).width;
+                var centerWidth = ctx.measureText(highlightStr).width;
+                ctx.fillText(leftStr, x0, this.y);
+                ctx.fillText(rightStr, x0 + leftWidth + centerWidth, this.y);
+                ctx.fillStyle = this.highlightColor;
+                ctx.fillText(highlightStr, x0 + leftWidth, this.y);
+            }
+        }
+        else {
+            var offset = (this.centering) ? (1 - strList.length) / 2 : 0;
+            for (var i = 0; i < strList.length; i++) {
+                ctx.fillText(strList[i], this.x, this.y + (i + offset) * this.textHeight);
+            }
         }
     }
-}
 
-
-AnimatedLabel.prototype.getTextWidth = function()
-{
-    this.ctx.font = this.textHeight + 'px sans-serif';
-    var strList = this.label.split("\n");
-    var width = 0;
-    if (strList.length == 1) {
-        width = this.ctx.measureText(this.label).width;
-    }
-    else {
-        for (var i = 0; i < strList.length; i++) {
-            width = Math.max(width, this.ctx.measureText(strList[i]).width);
-        }
-    }
-    return width;
-}
-
-
-AnimatedLabel.prototype.getAlignLeftPos = function(otherObject)
-{
-    if (this.centering) {
-        return [otherObject.left() - this.textWidth / 2, this.y = otherObject.centerY()];
-    }
-    else {
-        return [otherObject.left() - this.textWidth, otherObject.centerY() - this.textHeight / 2];
+    createUndoDelete() {
+        return new UndoDeleteLabel(this.objectID, this.label, this.x, this.y, this.centering, this.labelColor, this.layer, this.highlightIndex);
     }
 }
 
 
-AnimatedLabel.prototype.alignLeft = function(otherObject)
-{
-    if (this.centering) {
-        this.y = otherObject.centerY();
-        this.x = otherObject.left() - this.textWidth / 2;
-    }
-    else {
-        this.y = otherObject.centerY() - this.textHeight / 2;
-        this.x = otherObject.left() - this.textWidth;
-    }
-}
 
-
-AnimatedLabel.prototype.alignRight = function(otherObject)
-{
-    if (this.centering) {
-        this.y = otherObject.centerY();
-        this.x = otherObject.right() + this.textWidth / 2;
+class UndoDeleteLabel extends UndoBlock {
+    constructor(id, lab, x, y, centered, color, l, hli) {
+        super();
+        this.objectID = id;
+        this.posX = x;
+        this.posY = y;
+        this.nodeLabel = lab;
+        this.labCentered = centered;
+        this.labelColor = color;
+        this.layer = l;
+        this.highlightIndex = hli;
     }
-    else {
-        this.y = otherObject.centerY() - this.textHeight / 2;
-        this.x = otherObject.right();
+
+    undoInitialStep(world) {
+        world.addLabelObject(this.objectID, this.nodeLabel, this.labCentered);
+        world.setNodePosition(this.objectID, this.posX, this.posY);
+        world.setForegroundColor(this.objectID, this.labelColor);
+        world.setLayer(this.objectID, this.layer);
     }
 }
 
-
-AnimatedLabel.prototype.getAlignRightPos = function(otherObject)
-{
-    if (this.centering) {
-        return [otherObject.right() + this.textWidth / 2, otherObject.centerY()];
-    }
-    else {
-        return [otherObject.right(), otherObject.centerY() - this.textHeight / 2];
-    }
-}
-
-
-AnimatedLabel.prototype.alignTop = function(otherObject)
-{
-    if (this.centering) {
-        this.y = otherObject.top() - this.textHeight / 2;
-        this.x = otherObject.centerX();
-    }
-    else {
-        this.y = otherObject.top() - 10;
-        this.x = otherObject.centerX() - this.textWidth / 2;
-    }
-}
-
-
-AnimatedLabel.prototype.getAlignTopPos = function(otherObject)
-{
-    if (this.centering) {
-        return [otherObject.centerX(), otherObject.top() - this.textHeight / 2];
-    }
-    else {
-        return [otherObject.centerX() - this.textWidth / 2, otherObject.top() - 10];
-    }
-}
-
-
-AnimatedLabel.prototype.alignBottom = function(otherObject)
-{
-    if (this.centering) {
-        this.y = otherObject.bottom() + this.textHeight / 2;
-        this.x = otherObject.centerX();
-    }
-    else {
-        this.y = otherObject.bottom();
-        this.x = otherObject.centerX() - this.textWidth / 2;
-    }
-}
-
-
-AnimatedLabel.prototype.getAlignBottomPos = function(otherObject)
-{
-    if (this.centering) {
-        return [otherObject.centerX(),  otherObject.bottom() + this.textHeight / 2];
-    }
-    else {
-        return [otherObject.centerX() - this.textWidth / 2,  otherObject.bottom()];
-    }
-}
-
-
-AnimatedLabel.prototype.getWidth = function()
-{
-    return this.textWidth;
-}
-
-
-AnimatedLabel.prototype.getHeight = function()
-{
-    return this.textHeight;
-}
-
-
-AnimatedLabel.prototype.setHeight = function(newHeight)
-{
-    this.textHeight = newHeight;
-    this.textWidth = this.getTextWidth();
-}
-
-
-AnimatedLabel.prototype.setHighlight = function(value)
-{
-    this.highlighted = value;
-}
-
-
-AnimatedLabel.prototype.createUndoDelete = function()
-{
-    return new UndoDeleteLabel(this.objectID, this.label, this.x, this.y, this.centering, this.labelColor, this.layer, this.highlightIndex);
-}
-
-
-AnimatedLabel.prototype.centerX = function()
-{
-    if (this.centering) {
-        return this.x;
-    }
-    else {
-        return this.x + this.textWidth;
-    }
-}
-
-
-AnimatedLabel.prototype.centerY = function()
-{
-    if (this.centering) {
-        return this.y;
-    }
-    else {
-        return this.y + this.textHeight / 2;
-    }
-}
-
-
-AnimatedLabel.prototype.top = function()
-{
-    if (this.centering) {
-        return  this.y - this.textHeight / 2;
-    }
-    else {
-        return this.y;
-    }
-}
-
-
-AnimatedLabel.prototype.bottom = function()
-{
-    if (this.centering) {
-        return this.y + this.textHeight / 2;
-    }
-    else {
-        return this.y + this.textHeight;
-    }
-}
-
-
-AnimatedLabel.prototype.right = function()
-{
-    if (this.centering) {
-        return this.x + this.textWidth / 2;
-    }
-    else {
-        return this.x + this.textWidth;
-    }
-}
-
-
-AnimatedLabel.prototype.left = function()
-{
-    if (this.centering) {
-        return this.x - this.textWidth / 2;
-    }
-    else {
-        return this.x;
-    }
-}
-
-
-AnimatedLabel.prototype.setHighlightIndex = function(hlIndex)
-{
-    // Only allow highlight index for labels that don't have End-Of-Line
-    if (this.label.indexOf("\n") == -1 && this.label.length > hlIndex) {
-        this.highlightIndex = hlIndex;
-    }
-    else {
-        this.highlightIndex = -1;
-    }
-}
-
-
-AnimatedLabel.prototype.getTailPointerAttachPos = function(fromX, fromY, anchorPoint)
-{
-    return this.getClosestCardinalPoint(fromX, fromY);
-}
-
-
-AnimatedLabel.prototype.getHeadPointerAttachPos = function (fromX, fromY)
-{
-    return this.getClosestCardinalPoint(fromX, fromY);
-}
-
-
-AnimatedLabel.prototype.setText = function(newText, textIndex, initialWidth)
-{
-    this.label = newText;
-    this.textWidth = initialWidth || this.getTextWidth();
-}
-
-
-
-function UndoDeleteLabel(id, lab, x, y, centered, color, l, hli)
-{
-    this.objectID = id;
-    this.posX = x;
-    this.posY = y;
-    this.nodeLabel = lab;
-    this.labCentered = centered;
-    this.labelColor = color;
-    this.layer = l;
-    this.highlightIndex = hli;
-}
-
-UndoDeleteLabel.inheritFrom(UndoBlock);
-
-UndoDeleteLabel.prototype.undoInitialStep = function(world)
-{
-    world.addLabelObject(this.objectID, this.nodeLabel, this.labCentered);
-    world.setNodePosition(this.objectID, this.posX, this.posY);
-    world.setForegroundColor(this.objectID, this.labelColor);
-    world.setLayer(this.objectID, this.layer);
-}
 

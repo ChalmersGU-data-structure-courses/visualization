@@ -25,300 +25,566 @@
 // or implied, of the University of San Francisco
 
 
-// Utility function to read a cookie
-function getCookie(cookieName)
-{
-    // console.log(`Current cookies: ${document.cookie}`);
-    for (var cookie of document.cookie.split(";")) {
-        var [x, y] = cookie.split("=", 2);
-        if (x.trim() == cookieName) {
-            return decodeURIComponent(y);
-        }
-    }
-}
-
-
-// Utility funciton to write a cookie
-function setCookie(cookieName, value, expireDays)
-{
-    value = encodeURIComponent(value);
-    if (expireDays > 0) {
-        var exdate = new Date();
-        exdate.setDate(exdate.getDate() + expireDays);
-        value += "; expires=" + exdate.toUTCString();
-    }
-    document.cookie = cookieName + "=" + value;
-    // console.log(`Setting cookie ${cookieName} = ${value}`);
-}
-
-
-// Utility function for parsing a boolean value
-function parseBool(str, default_)
-{
-    if (str == null) return default_;
-    var uppercase = str.trim().toUpperCase();
-    var returnVal = !(uppercase == "FALSE" || uppercase == "F" || uppercase == "0" || uppercase == "");
-    return returnVal;
-}
-
-
-// Utility function for parsing a color value
-function parseColor(clr, default_)
-{
-    if (clr == null) return default_;
-    if (clr.charAt(0) == "#") {
-        return clr;
-    }
-    else if (clr.substring(0,2) == "0x") {
-        return "#" + clr.substring(2);
-    }
-}
-
-
-var ANIMATION_SPEED_DEFAULT = "Fast";
-var ANIMATION_SPEEDS = {
-    "Slowest": 25,
-    "Slow": 50,
-    "Fast": 75,
-    "Fastest": 100,
-}
-
-var CANVAS_SIZE_DEFAULT = "Large";
-var CANVAS_SIZES = {
-    "Small":  {w: 500, h: 300},
-    "Medium": {w: 750, h: 450},
-    "Large":  {w:1000, h: 600},
-}
-
-
-function animWaiting()
-{
-    this.stepForwardButton.disabled = false;
-    if (this.skipBackButton.disabled == false) {
-        this.stepBackButton.disabled = false;
-    }
-    this.objectManager.statusReport.setText("Animation Paused");
-    this.objectManager.statusReport.setForegroundColor("#FF0000");
-}
-
-
-function animStarted()
-{
-    this.skipForwardButton.disabled = false;
-    this.skipBackButton.disabled = false;
-    this.stepForwardButton.disabled = true;
-    this.stepBackButton.disabled = true;
-    this.objectManager.statusReport.setText("Animation Running");
-    this.objectManager.statusReport.setForegroundColor("#009900");
-}
-
-
-function animEnded()
-{
-    this.skipForwardButton.disabled = true;
-    this.stepForwardButton.disabled = true;
-    if (this.skipBackButton.disabled == false && this.animationPaused) {
-        this.stepBackButton.disabled = false;
-    }
-    this.objectManager.statusReport.setText("Animation Completed");
-    this.objectManager.statusReport.setForegroundColor("#000000");
-    // console.log("---- Animation ended ----");
-}
-
-
-function animUndoUnavailable()
-{
-    this.skipBackButton.disabled = true;
-    this.stepBackButton.disabled = true;
-}
-
-
-function timeout()
-{
-    // We need to set the timeout *first*, otherwise if we
-    // try to clear it later, we get behavior we don't want ...
-    this.timer = setTimeout(timeout.bind(this), 30);
-    this.update();
-    this.objectManager.draw();
-}
-
-
-function togglePlayPause()
-{
-    this.setPaused(!this.animationPaused);
-}
-
-
-// Creates and returs an AnimationManager
-function initCanvas(canvas, generalControlBar, algorithmControlBar)
-{
+// Creates and returns an AnimationManager
+function initCanvas(canvas, generalControlBar, algorithmControlBar) {
     // UI nodes should be given, otherwise use defaults.
     if (!(canvas instanceof HTMLElement)) canvas = document.getElementById(canvas || "canvas");
     generalControlBar = new Toolbar(generalControlBar || "generalAnimationControls");
     algorithmControlBar = new Toolbar(algorithmControlBar || "algorithmSpecificControls");
 
-    var objectManager = new ObjectManager(canvas);
-    var animationManager = new AnimationManager(objectManager);
-    animationManager.canvas = canvas;
-    animationManager.generalControlBar = generalControlBar;
-    animationManager.algorithmControlBar = algorithmControlBar;
+    var controlBars = [generalControlBar, algorithmControlBar];
 
-    animationManager.skipBackButton = generalControlBar.addInput("Button", "⏮", {title: "Skip back"});
-    animationManager.skipBackButton.onclick = animationManager.skipBack.bind(animationManager);
-    animationManager.stepBackButton = generalControlBar.addInput("Button", "⏴", {title: "Step back"});
-    animationManager.stepBackButton.onclick = animationManager.stepBack.bind(animationManager);
-    animationManager.playPauseBackButton = generalControlBar.addInput("Button", "⏯︎", {title: "Run/pause animation"});
-    animationManager.playPauseBackButton.onclick = togglePlayPause.bind(animationManager);
-    animationManager.stepForwardButton = generalControlBar.addInput("Button", "⏵", {title: "Step forward"});
-    animationManager.stepForwardButton.onclick = animationManager.step.bind(animationManager) ;
-    animationManager.skipForwardButton = generalControlBar.addInput("Button", "⏭", {title: "Skip forward"});
-    animationManager.skipForwardButton.onclick = animationManager.skipForward.bind(animationManager);
+    var animationSpeeds = {
+        default: 75,
+        values: [25, 50, 75, 100],
+        labels: ["Slowest", "Slow", "Fast", "Fastest"],
+    };
 
-    animationManager.setPaused(false);
+    var canvasSizes = {
+        default: "750:450",
+        values: ["500:300", "750:450", "1000:600"],
+        labels: ["Small", "Medium", "Large"],
+    };
 
-    generalControlBar.addBreak();
-
-    generalControlBar.addLabel("Animation speed:");
-    animationManager.speedSelector = generalControlBar.addSelect(Object.keys(ANIMATION_SPEEDS));
-    animationManager.speedSelector.onchange = animationManager.setAnimationSpeed.bind(animationManager);
-
-    var speed = getCookie("VisualizationSpeed");
-    if (!speed) speed = ANIMATION_SPEED_DEFAULT;
-    animationManager.setAnimationSpeed(speed);
-
-    generalControlBar.addBreak();
-
-    generalControlBar.addLabel("Canvas size:");
-    animationManager.sizeSelector = generalControlBar.addSelect(Object.keys(CANVAS_SIZES));
-    animationManager.sizeSelector.onchange = animationManager.changeSize.bind(animationManager);
-
-    var size = getCookie("VisualizationSize");
-    if (!size) size = CANVAS_SIZE_DEFAULT;
-    animationManager.changeSize(size);
-
-    animationManager.addListener("AnimationStarted", animationManager, animStarted);
-    animationManager.addListener("AnimationEnded", animationManager, animEnded);
-    animationManager.addListener("AnimationWaiting", animationManager, animWaiting);
-    animationManager.addListener("AnimationUndoUnavailable", animationManager, animUndoUnavailable);
-    return animationManager;
+    var am = new AnimationManager(canvas, controlBars, animationSpeeds, canvasSizes);
+    am.algorithmControlBar = algorithmControlBar;
+    return am;
 }
 
 
-function AnimationManager(objectManager)
-{
-    AnimationManager.superclass.constructor.call(this);
+class AnimationManager extends EventListener {
+    static DEFAULT_ANIMATION_SPEED = 75;
+    static DEFAULT_CANVAS_SIZE = "750:450";
+    static DEFAULT_PAUSED_VALUE = false;
+    
+    constructor(canvas, controlBars, animationSpeeds, canvasSizes) {
+        super();
 
-    // Holder for all animated objects.
-    // All animation is done by manipulating objects in this container
-    this.animatedObjects = objectManager;
-    // TODO: change this to animatedObjects later
-    this.objectManager = objectManager;
+        var objectManager = new ObjectManager(canvas);
+        // Holder for all animated objects.
+        // All animation is done by manipulating objects in this container
+        this.animatedObjects = objectManager;
+        this.objectManager = objectManager;  // TODO: change this to animatedObjects later
+        this.canvas = canvas;
+        this.controlBars = controlBars;
+        this.setupGeneralControlBar(animationSpeeds, canvasSizes);
 
-    // Control variables for stopping / starting animation
-    this.animationPaused = false;
-    this.awaitingStep = false;
-    this.currentlyAnimating = false;
+        this.updatePaused();
+        this.updateAnimationSpeed();
+        this.updateCanvasSize();
 
-    // Array holding the code for the animation.  This is
-    // an array of strings, each of which is an animation command
-    // currentAnimation is an index into this array
-    this.AnimationSteps = [];
-    this.currentAnimation = 0;
+        // Control variables for stopping / starting animation
+        // this.animationPaused() ??= false;
+        this.awaitingStep = false;
+        this.currentlyAnimating = false;
 
-    this.previousAnimationSteps = [];
+        // Array holding the code for the animation.  This is
+        // an array of strings, each of which is an animation command
+        // currentAnimation is an index into this array
+        this.AnimationSteps = [];
+        this.currentAnimation = 0;
+        this.previousAnimationSteps = [];
 
-    // Control variables for where we are in the current animation block.
-    //  currFrame holds the frame number of the current animation block,
-    //  while animationBlockLength holds the length of the current animation
-    //  block (in frame numbers).
-    this.currFrame = 0;
-    this.animationBlockLength = 0;
+        // Control variables for where we are in the current animation block.
+        // currFrame holds the frame number of the current animation block,
+        // while animationBlockLength holds the length of the current animation
+        // block (in frame numbers).
+        this.currFrame = 0;
+        this.animationBlockLength ??= 0;
 
-    //  The animation block that is currently running.  Array of singleAnimations
-    this.currentBlock = null;
+        // The animation block that is currently running.  Array of singleAnimations
+        this.currentBlock = null;
 
-    /////////////////////////////////////
-    // Variables for handling undo.
-    ////////////////////////////////////
-    //  A stack of UndoBlock objects (subclassed, UndoBlock is an abstract base class)
-    //  each of which can undo a single animation element
-    this.undoStack = [];
-    this.doingUndo = false;
+        // Animation listeners
+        this.addListener("AnimationStarted", this, this.animationStarted);
+        this.addListener("AnimationEnded", this, this.animationEnded);
+        this.addListener("AnimationWaiting", this, this.animationWaiting);
+        this.addListener("AnimationUndoUnavailable", this, this.animationUndoUnavailable);
 
-    // A stack containing the beginning of each animation block, as an index
-    // into the AnimationSteps array
-    this.undoAnimationStepIndices = [];
-    this.undoAnimationStepIndicesStack = [];
+        /////////////////////////////////////
+        // Variables for handling undo.
+        ////////////////////////////////////
+        //  A stack of UndoBlock objects (subclassed, UndoBlock is an abstract base class)
+        //  each of which can undo a single animation element
+        this.undoStack = [];
+        this.doingUndo = false;
 
-    this.animationBlockLength = 10;
+        // A stack containing the beginning of each animation block, as an index
+        // into the AnimationSteps array
+        this.undoAnimationStepIndices = [];
+        this.undoAnimationStepIndicesStack = [];
+    }
 
-    this.lerp = function(from, to, percent)
-    {
+    setupGeneralControlBar(animationSpeeds, canvasSizes) {
+        if (!this.controlBars?.length) return;
+        var bar = this.controlBars[0];
+
+        this.skipBackButton = bar.addButton("⏮", {title: "Skip back"});
+        this.skipBackButton.onclick = this.skipBack.bind(this);
+        this.stepBackButton = bar.addButton("⏴", {title: "Step back"});
+        this.stepBackButton.onclick = this.stepBack.bind(this);
+        this.playPauseBackButton = bar.addButton("⏯︎", {title: "Run/pause animation"});
+        this.playPauseBackButton.onclick = this.togglePlayPause.bind(this);
+        this.stepForwardButton = bar.addButton("⏵", {title: "Step forward"});
+        this.stepForwardButton.onclick = this.step.bind(this) ;
+        this.skipForwardButton = bar.addButton("⏭", {title: "Skip forward"});
+        this.skipForwardButton.onclick = this.skipForward.bind(this);
+
+        if (animationSpeeds) {
+            bar.addBreak();
+            bar.addLabel("Animation speed:");
+            this.speedSelector = bar.addSelect(animationSpeeds.values, animationSpeeds.labels);
+            this.speedSelector.onchange = this.updateAnimationSpeed.bind(this);
+            var speed = this.getCookie("VisualizationSpeed") || animationSpeeds.default;
+            this.speedSelector.value = speed;
+        }
+
+        if (canvasSizes) {
+            bar.addBreak();
+            bar.addLabel("Canvas size:");
+            this.sizeSelector = bar.addSelect(canvasSizes.values, canvasSizes.labels);
+            this.sizeSelector.onchange = this.updateCanvasSize.bind(this);
+            var size = this.getCookie("VisualizationSize") || canvasSizes.default;
+            this.sizeSelector.value = size;
+        }
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Utility methods
+
+    lerp(from, to, percent) {
         return (to - from) * percent + from;
     }
 
-    // Pause / unpause animation
-    this.setPaused = function(pausedValue)
-    {
-        this.animationPaused = pausedValue;
-        if (this.animationPaused) {
-            this.playPauseBackButton.setAttribute("value", "⏯︎");
-            this.playPauseBackButton.setAttribute("title", "Run animation");
-            if (this.skipBackButton.disabled == false) {
-                this.stepBackButton.disabled = false;
+    parseBool(str, defaultValue) {
+        if (str == null) return defaultValue;
+        var uppercase = str.trim().toUpperCase();
+        var returnVal = !(uppercase == "FALSE" || uppercase == "F" || uppercase == "0" || uppercase == "");
+        return returnVal;
+    }
+
+    parseColor(color, defaultColor) {
+        if (!color) return defaultColor;
+        if (color.startsWith("0x")) return "#" + color.substring(2);
+        return color;
+    }
+
+    getCookie(cookieName) {
+        // console.log(`Current cookies: ${document.cookie}`);
+        for (var cookie of document.cookie.split(";")) {
+            var [x, y] = cookie.split("=", 2);
+            if (x.trim() == cookieName) {
+                return decodeURIComponent(y);
             }
         }
-        else {
-            this.playPauseBackButton.setAttribute("value", "⏸");
-            this.playPauseBackButton.setAttribute("title", "Pause animation");
+    }
+
+    setCookie(cookieName, value, expireDays) {
+        value = encodeURIComponent(value);
+        if (expireDays > 0) {
+            var exdate = new Date();
+            exdate.setDate(exdate.getDate() + expireDays);
+            value += "; expires=" + exdate.toUTCString();
         }
-        if (!this.animationPaused) {
+        document.cookie = cookieName + "=" + value;
+        // console.log(`Setting cookie ${cookieName} = ${value}`);
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    // The state of the toolbar
+
+    togglePlayPause()
+    {
+        this.playPauseBackButton.value = this.animationPaused() ? "" : "paused";
+        this.updatePaused();
+    }
+
+    updatePaused() {
+        if (this.playPauseBackButton) {
+            if (this.animationPaused()) {
+                this.playPauseBackButton.innerText = "⏯︎";
+                this.playPauseBackButton.setAttribute("title", "Run animation");
+                if (this.skipBackButton.disabled == false) {
+                    this.stepBackButton.disabled = false;
+                }
+            } else {
+                this.playPauseBackButton.innerText = "⏸";
+                this.playPauseBackButton.setAttribute("title", "Pause animation");
+            }
+        }
+        if (!this.animationPaused()) {
             this.step();
         }
     }
 
-    // Set the speed of the animation
-    this.setAnimationSpeed = function(speed)
-    {
-        if (ANIMATION_SPEEDS.hasOwnProperty(speed)) {
-            this.speedSelector.value = speed;
-        } else {
-            speed = this.speedSelector.value;
-        }
-        var numericSpeed = ANIMATION_SPEEDS[speed];
-        this.animationBlockLength = Math.floor((100 - numericSpeed) / 2);
-        setCookie("VisualizationSpeed", speed, 30);
-        // console.log(`New animation speed: ${speed} = ${numericSpeed} --> animation block length: ${this.animationBlockLength}`);
+    animationPaused() {
+        return this.playPauseBackButton?.value || AnimationManager.DEFAULT_PAUSED_VALUE;
     }
 
-    // Set the size of the canvas
-    this.changeSize = function(size)
-    {
-        if (CANVAS_SIZES.hasOwnProperty(size)) {
-            this.sizeSelector.value = size;
-        } else {
-            size = this.sizeSelector.value;
-        }
-        this.canvas.width = CANVAS_SIZES[size].w;
-        this.canvas.height = CANVAS_SIZES[size].h;
-        setCookie("VisualizationSize", size, 30);
-        // console.log(`New canvas size: ${size} = ${this.canvas.width} x ${this.canvas.height}`);
+    updateAnimationSpeed() {
+        var speed = this.speedSelector?.value || AnimationManager.DEFAULT_ANIMATION_SPEED
+        this.setCookie("VisualizationSpeed", speed, 30);
+        // console.log(`New animation speed: ${speed}`);
+    }
 
+    animationBlockLength() {
+        var speed = Number(this.speedSelector?.value) || AnimationManager.DEFAULT_ANIMATION_SPEED;
+        return Math.floor((100 - speed) / 2);
+    }
+
+    updateCanvasSize() {
+        var size = this.sizeSelector?.value || AnimationManager.DEFAULT_CANVAS_SIZE;
+        var [w, h] = size.split(":").map((n) => parseInt(n));
+        if (isNaN(w) || isNaN(h)) {
+            [w, h] = AnimationManager.DEFAULT_CANVAS_SIZE.split(":").map((n) => parseInt(n));
+        }
+        this.canvas.width = w;
+        this.canvas.height = h;
+        this.setCookie("VisualizationSize", w+":"+h, 30);
+        // console.log(`New canvas size: ${this.canvas.width} x ${this.canvas.height}`);
         this.animatedObjects.draw();
         this.fireEvent("CanvasSizeChanged", {width: this.canvas.width, height: this.canvas.height});
     }
 
 
-    this.startNextBlock = function()
-    {
+    ///////////////////////////////////////////////////////////////////////////
+    // Listeners
+
+    animationWaiting() {
+        if (this.playPauseBackButton) {
+            this.stepForwardButton.disabled = false;
+            if (this.skipBackButton.disabled == false) {
+                this.stepBackButton.disabled = false;
+            }
+        }
+        this.objectManager.setStatus("Animation paused", "red");
+    }
+
+    animationStarted() {
+        if (this.playPauseBackButton) {
+            this.skipForwardButton.disabled = false;
+            this.skipBackButton.disabled = false;
+            this.stepForwardButton.disabled = true;
+            this.stepBackButton.disabled = true;
+        }
+        this.objectManager.setStatus("Animation running", "darkgreen");
+    }
+
+    animationEnded() {
+        if (this.playPauseBackButton) {
+            this.skipForwardButton.disabled = true;
+            this.stepForwardButton.disabled = true;
+            if (this.skipBackButton.disabled == false && this.animationPaused()) {
+                this.stepBackButton.disabled = false;
+            }
+        }
+        this.objectManager.setStatus("Animation completed", "black");
+    }
+
+    animationUndoUnavailable() {
+        if (this.playPauseBackButton) {
+            this.skipBackButton.disabled = true;
+            this.stepBackButton.disabled = true;
+        }
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Animations, timers
+
+    stopTimer() {
+        clearTimeout(this.timer);
+    }
+
+    startTimer() {
+        this.timer = setTimeout(() => {
+            // We need to set the timeout *first*, otherwise if we
+            // try to clear it later, we get behavior we don't want ...
+            this.startTimer();
+            this.update();
+            this.objectManager.draw();
+        }, 30);
+    }
+
+    update() {
+        if (this.currentlyAnimating) {
+            var animBlockLength = this.animationBlockLength();
+            this.currFrame = this.currFrame + 1;
+            for (var i = 0; i < this.currentBlock.length; i++) {
+                if (this.currFrame == animBlockLength || (this.currFrame == 1 && animBlockLength == 0)) {
+                    this.animatedObjects.setNodePosition(
+                        this.currentBlock[i].objectID,
+                        this.currentBlock[i].toX,
+                        this.currentBlock[i].toY
+                    );
+                }
+                else if (this.currFrame < animBlockLength) {
+                    var objectID = this.currentBlock[i].objectID;
+                    var percent = 1 / (animBlockLength - this.currFrame);
+                    var oldX = this.animatedObjects.getNodeX(objectID);
+                    var oldY = this.animatedObjects.getNodeY(objectID);
+                    var targetX = this.currentBlock[i].toX;
+                    var targetY = this.currentBlock[i].toY;
+                    var newX = this.lerp(oldX, targetX, percent);
+                    var newY = this.lerp(oldY, targetY, percent);
+                    this.animatedObjects.setNodePosition(objectID, newX, newY);
+                }
+            }
+            if (this.currFrame >= animBlockLength) {
+                if (this.doingUndo) {
+                    if (this.finishUndoBlock(this.undoStack.pop())) {
+                        this.awaitingStep = true;
+                        this.fireEvent("AnimationWaiting", "NoData");
+                    }
+                }
+                else {
+                    if (this.animationPaused() && (this.currentAnimation < this.AnimationSteps.length)) {
+                        this.awaitingStep = true;
+                        this.fireEvent("AnimationWaiting", "NoData");
+                        this.currentBlock = [];
+                    }
+                    else {
+                        this.startNextBlock();
+                    }
+                }
+            }
+            this.animatedObjects.update();
+        }
+    }
+
+    resetAll() {
+        this.clearHistory();
+        this.animatedObjects.clearAllObjects();
+        this.animatedObjects.draw();
+        this.stopTimer();
+    }
+
+    setLayer(shown, layers) {
+        this.animatedObjects.setLayer(shown, layers);
+        // Drop in an extra draw call here, just in case we are not
+        // in the middle of an update loop when this changes
+        this.animatedObjects.draw();
+    }
+
+    setAllLayers(layers) {
+        this.animatedObjects.setAllLayers(layers);
+        // Drop in an extra draw call here, just in case we are not
+        // in the middle of an update loop when this changes
+        this.animatedObjects.draw();
+    }
+
+    /// WARNING:  Could be dangerous to call while an animation is running ...
+    clearHistory() {
+        this.undoStack = [];
+        this.undoAnimationStepIndices = null;
+        this.previousAnimationSteps = [];
+        this.undoAnimationStepIndicesStack = [];
+        this.AnimationSteps = null;
+        this.fireEvent("AnimationUndoUnavailable", "NoData");
+        this.stopTimer();
+        this.animatedObjects.update();
+        this.animatedObjects.draw();
+    }
+
+    //  Start a new animation.  The input parameter commands is an array of strings,
+    //  which represents the animation to start
+    StartNewAnimation(commands) {
+        this.stopTimer();
+        if (this.AnimationSteps != null) {
+            this.previousAnimationSteps.push(this.AnimationSteps);
+            this.undoAnimationStepIndicesStack.push(this.undoAnimationStepIndices);
+        }
+        if (commands == undefined || commands.length == 0) {
+            this.AnimationSteps = ["Step"];
+        }
+        else {
+            this.AnimationSteps = commands;
+        }
+        this.undoAnimationStepIndices = new Array();
+        this.currentAnimation = 0;
+        this.startNextBlock();
+        this.currentlyAnimating = true;
+        this.fireEvent("AnimationStarted", "NoData");
+        this.startTimer();
+    }
+
+    // Step backwards one step.  A no-op if the animation is not currently paused
+    stepBack() {
+        if (this.awaitingStep && this.undoStack != null && this.undoStack.length != 0) {
+            //  TODO:  Get events working correctly!
+            this.fireEvent("AnimationStarted", "NoData");
+            this.stopTimer();
+            this.awaitingStep = false;
+            this.undoLastBlock();
+            // Re-kick thie timer.  The timer may or may not be running at this point,
+            // so to be safe we'll kill it and start it again.
+            this.stopTimer();
+            this.startTimer();
+        }
+        else if (!this.currentlyAnimating && this.animationPaused() && this.undoAnimationStepIndices != null) {
+            this.fireEvent("AnimationStarted", "NoData");
+            this.currentlyAnimating = true;
+            this.undoLastBlock();
+            // Re-kick thie timer.  The timer may or may not be running at this point,
+            // so to be safe we'll kill it and start it again.
+            this.stopTimer();
+            this.startTimer();
+        }
+    }
+
+    // Step forwards one step.  A no-op if the animation is not currently paused
+    step() {
+        if (this.awaitingStep) {
+            this.startNextBlock();
+            this.fireEvent("AnimationStarted", "NoData");
+            this.currentlyAnimating = true;
+            // Re-kick thie timer.  The timer should be going now, but we've had some difficulty with
+            // it timing itself out, so we'll be safe and kick it now.
+            this.stopTimer();
+            this.startTimer();
+        }
+    }
+
+    skipBack() {
+        var keepUndoing = this.undoAnimationStepIndices != null && this.undoAnimationStepIndices.length != 0;
+        if (keepUndoing) {
+            for (var i = 0; this.currentBlock != null && i < this.currentBlock.length; i++) {
+                var objectID = this.currentBlock[i].objectID;
+                this.animatedObjects.setNodePosition(
+                    objectID,
+                    this.currentBlock[i].toX,
+                    this.currentBlock[i].toY
+                );
+            }
+            if (this.doingUndo) {
+                this.finishUndoBlock(this.undoStack.pop());
+            }
+            while (keepUndoing) {
+                this.undoLastBlock();
+                for (var i = 0; i < this.currentBlock.length; i++) {
+                    objectID = this.currentBlock[i].objectID;
+                    this.animatedObjects.setNodePosition(
+                        objectID,
+                        this.currentBlock[i].toX,
+                        this.currentBlock[i].toY
+                    );
+                }
+                keepUndoing = this.finishUndoBlock(this.undoStack.pop());
+            }
+            this.stopTimer();
+            this.animatedObjects.update();
+            this.animatedObjects.draw();
+            if (this.undoStack == null || this.undoStack.length == 0) {
+                this.fireEvent("AnimationUndoUnavailable", "NoData");
+            }
+        }
+    }
+
+    skipForward() {
+        if (this.currentlyAnimating) {
+            this.animatedObjects.runFast = true;
+            while (this.AnimationSteps != null && this.currentAnimation < this.AnimationSteps.length) {
+                for (var i = 0; this.currentBlock != null && i < this.currentBlock.length; i++) {
+                    var objectID = this.currentBlock[i].objectID;
+                    this.animatedObjects.setNodePosition(
+                        objectID,
+                        this.currentBlock[i].toX,
+                        this.currentBlock[i].toY
+                    );
+                }
+                if (this.doingUndo) {
+                    this.finishUndoBlock(this.undoStack.pop());
+                }
+                this.startNextBlock();
+                for (var i = 0; i < this.currentBlock.length; i++) {
+                    var objectID = this.currentBlock[i].objectID;
+                    this.animatedObjects.setNodePosition(
+                        objectID,
+                        this.currentBlock[i].toX,
+                        this.currentBlock[i].toY
+                    );
+                }
+            }
+            this.animatedObjects.update();
+            this.currentlyAnimating = false;
+            this.awaitingStep = false;
+            this.doingUndo = false;
+
+            this.animatedObjects.runFast = false;
+            this.fireEvent("AnimationEnded", "NoData");
+            this.stopTimer();
+            this.animatedObjects.update();
+            this.animatedObjects.draw();
+        }
+    }
+
+    finishUndoBlock(undoBlock) {
+        for (var i = undoBlock.length - 1; i >= 0; i--) {
+            undoBlock[i].undoInitialStep(this.animatedObjects);
+        }
+        this.doingUndo = false;
+
+        // If we are at the final end of the animation ...
+        if (this.undoAnimationStepIndices.length == 0) {
+            this.awaitingStep = false;
+            this.currentlyAnimating = false;
+            this.undoAnimationStepIndices = this.undoAnimationStepIndicesStack.pop();
+            this.AnimationSteps = this.previousAnimationSteps.pop();
+            this.fireEvent("AnimationEnded", "NoData");
+            this.fireEvent("AnimationUndo", "NoData");
+            this.currentBlock = [];
+            if (this.undoStack == null || this.undoStack.length == 0) {
+                this.currentlyAnimating = false;
+                this.awaitingStep = false;
+                this.fireEvent("AnimationUndoUnavailable", "NoData");
+            }
+            this.stopTimer();
+            this.animatedObjects.update();
+            this.animatedObjects.draw();
+            return false;
+        }
+        return true;
+    }
+
+    undoLastBlock() {
+        if (this.undoAnimationStepIndices.length == 0) {
+            // Nothing on the undo stack.  Return
+            return;
+        }
+        if (this.undoAnimationStepIndices.length > 0) {
+            this.doingUndo = true;
+            var anyAnimations = false;
+            this.currentAnimation = this.undoAnimationStepIndices.pop();
+            this.currentBlock = [];
+            var undo = this.undoStack[this.undoStack.length - 1];
+            for (var i = undo.length - 1; i >= 0; i--) {
+                var animateNext = undo[i].addUndoAnimation(this.currentBlock);
+                anyAnimations = anyAnimations || animateNext;
+            }
+            this.currFrame = 0;
+
+            // Hack:  If there are not any animations, and we are currently paused,
+            // then set the current frame to the end of the animation, so that we will
+            // advance immediagely upon the next step button.  If we are not paused, then
+            // animate as normal.
+            if (!anyAnimations && this.animationPaused()) {
+                this.currFrame = this.animationBlockLength();
+            }
+            this.currentlyAnimating = true;
+        }
+    }
+
+    startNextBlock() {
         this.awaitingStep = false;
         this.currentBlock = [];
-        var undoBlock = []
+        var undoBlock = [];
         if (this.currentAnimation == this.AnimationSteps.length) {
             this.currentlyAnimating = false;
             this.awaitingStep = false;
             this.fireEvent("AnimationEnded", "NoData");
-            clearTimeout(this.timer);
+            this.stopTimer();
             this.animatedObjects.update();
             this.animatedObjects.draw();
             return;
@@ -343,9 +609,9 @@ function AnimationManager(objectManager)
             }
             else if (cmd == "CONNECT") {
                 var toID = Number(args.shift());
-                var color = parseColor(args.shift(), "#000000");
+                var color = this.parseColor(args.shift(), "black");
                 var curve = Number(args.shift()) || 0.0;
-                var directed = parseBool(args.shift(), true);
+                var directed = this.parseBool(args.shift(), true);
                 var label = args.shift() || "";
                 var connectionPoint = Number(args.shift()) || 0;
                 this.animatedObjects.connectEdge(id, toID, color, curve, directed, label, connectionPoint);
@@ -390,18 +656,18 @@ function AnimationManager(objectManager)
             }
             else if (cmd == "SETFOREGROUNDCOLOR") {
                 var oldColor = this.animatedObjects.foregroundColor(id);
-                var color = parseColor(args.shift());
+                var color = this.parseColor(args.shift());
                 this.animatedObjects.setForegroundColor(id, color);
                 undoBlock.push(new UndoSetForegroundColor(id, oldColor));
             }
             else if (cmd == "SETBACKGROUNDCOLOR") {
                 var oldColor = this.animatedObjects.backgroundColor(id);
-                var color = parseColor(args.shift());
+                var color = this.parseColor(args.shift());
                 this.animatedObjects.setBackgroundColor(id, color);
                 undoBlock.push(new UndoSetBackgroundColor(id, oldColor));
             }
             else if (cmd == "SETHIGHLIGHT") {
-                var highlight = parseBool(args.shift());
+                var highlight = this.parseBool(args.shift());
                 this.animatedObjects.setHighlight(id, highlight);
                 undoBlock.push(new UndoHighlight(id, !highlight));
             }
@@ -439,7 +705,7 @@ function AnimationManager(objectManager)
                 }
             }
             else if (cmd == "CREATEHIGHLIGHTCIRCLE") {
-                var color = parseColor(args.shift());
+                var color = this.parseColor(args.shift());
                 var x = Number(args.shift());
                 var y = Number(args.shift());
                 var radius = Number(args.shift()) || 20;
@@ -453,7 +719,7 @@ function AnimationManager(objectManager)
                 var label = args.shift();
                 var x = Number(args.shift());
                 var y = Number(args.shift());
-                var centering = parseBool(args.shift(), true);
+                var centering = this.parseBool(args.shift(), true);
                 this.animatedObjects.addLabelObject(id, label, centering);
                 if (!isNaN(x) && !isNaN(y)) {
                     this.animatedObjects.setNodePosition(id, x, y);
@@ -462,7 +728,7 @@ function AnimationManager(objectManager)
             }
             else if (cmd == "SETEDGECOLOR") {
                 var toID = Number(args.shift());
-                var color = parseColor(args.shift());
+                var color = this.parseColor(args.shift());
                 var oldColor = this.animatedObjects.setEdgeColor(id, toID, color);
                 undoBlock.push(new UndoSetEdgeColor(id, toID, oldColor));
             }
@@ -474,7 +740,7 @@ function AnimationManager(objectManager)
             }
             else if (cmd == "SETEDGEHIGHLIGHT") {
                 var toID = Number(args.shift());
-                var highlight = parseBool(args.shift());
+                var highlight = this.parseBool(args.shift());
                 var oldHighlight = this.animatedObjects.setEdgeHighlight(id, toID, highlight);
                 undoBlock.push(new UndoHighlightEdge(id, toID, oldHighlight));
             }
@@ -496,11 +762,11 @@ function AnimationManager(objectManager)
                 var x = Number(args.shift());
                 var y = Number(args.shift());
                 var linkPercent = Number(args.shift()) || 0.25;
-                var verticalOrientation = parseBool(args.shift(), true);
-                var linkPosEnd = parseBool(args.shift(), false);
+                var verticalOrientation = this.parseBool(args.shift(), true);
+                var linkPosEnd = this.parseBool(args.shift(), false);
                 var numLabels = Number(args.shift()) || 1;
                 this.animatedObjects.addLinkedListObject(
-                    id, label, width, height, 
+                    id, label, width, height,
                     linkPercent, verticalOrientation, linkPosEnd, numLabels
                 );
                 if (!isNaN(x) && !isNaN(y)) {
@@ -509,13 +775,13 @@ function AnimationManager(objectManager)
                 undoBlock.push(new UndoCreate(id));
             }
             else if (cmd == "SETNULL") {
-                var nullVal = parseBool(args.shift());
+                var nullVal = this.parseBool(args.shift());
                 var oldNull = this.animatedObjects.getNull(id);
                 this.animatedObjects.setNull(id, nullVal);
                 undoBlock.push(new UndoSetNull(id, oldNull));
             }
             else if (cmd == "SETTEXTCOLOR") {
-                var color = parseColor(args.shift());
+                var color = this.parseColor(args.shift());
                 var index = Number(args.shift()) || 0;
                 var oldColor = this.animatedObjects.getTextColor(id, index);
                 this.animatedObjects.setTextColor(id, color, index);
@@ -527,8 +793,8 @@ function AnimationManager(objectManager)
                 var numElems = Number(args.shift());
                 var x = Number(args.shift());
                 var y = Number(args.shift());
-                var bgColor = parseColor(args.shift(), "#FFFFFF");
-                var fgColor = parseColor(args.shift(), "#000000");
+                var bgColor = this.parseColor(args.shift(), "white");
+                var fgColor = this.parseColor(args.shift(), "black");
                 this.animatedObjects.addBTreeNode(id, widthPerElem, height, numElems, bgColor, fgColor);
                 if (!isNaN(x) && !isNaN(y)) {
                     this.animatedObjects.setNodePosition(id, x, y);
@@ -593,7 +859,7 @@ function AnimationManager(objectManager)
             }
             else if (cmd == "SETHIGHLIGHTINDEX") {
                 var index = Number(args.shift());
-                var oldIndex = this.animatedObjects.getHighlightIndex(id)
+                var oldIndex = this.animatedObjects.getHighlightIndex(id);
                 this.animatedObjects.setHighlightIndex(id, index);
                 undoBlock.push(new UndoSetHighlightIndex(id, oldIndex));
             }
@@ -604,321 +870,41 @@ function AnimationManager(objectManager)
         }
         this.currFrame = 0;
 
-        // Hack:  If there are not any animations, and we are currently paused,
+        // Hack: If there are not any animations, and we are currently paused,
         // then set the current frame to the end of the anumation, so that we will
-        // advance immediagely upon the next step button.  If we are not paused, then
+        // advance immediately upon the next step button. If we are not paused, then
         // animate as normal.
-        if (!anyAnimations && this.animationPaused || (!anyAnimations && this.currentAnimation == this.AnimationSteps.length) ) {
-            this.currFrame = this.animationBlockLength;
+        if (!anyAnimations && this.animationPaused() || (!anyAnimations && this.currentAnimation == this.AnimationSteps.length)) {
+            this.currFrame = this.animationBlockLength();
         }
 
         this.undoStack.push(undoBlock);
     }
-
-    //  Start a new animation.  The input parameter commands is an array of strings,
-    //  which represents the animation to start
-    this.StartNewAnimation = function(commands)
-    {
-        clearTimeout(this.timer);
-        if (this.AnimationSteps != null) {
-            this.previousAnimationSteps.push(this.AnimationSteps);
-            this.undoAnimationStepIndicesStack.push(this.undoAnimationStepIndices);
-        }
-        if (commands == undefined || commands.length == 0) {
-            this.AnimationSteps = ["Step"];
-        }
-        else {
-            this.AnimationSteps = commands;
-        }
-        this.undoAnimationStepIndices = new Array();
-        this.currentAnimation = 0;
-        this.startNextBlock();
-        this.currentlyAnimating = true;
-        this.fireEvent("AnimationStarted", "NoData");
-        this.timer = setTimeout(timeout.bind(this), 30);
-    }
-
-    // Step backwards one step.  A no-op if the animation is not currently paused
-    this.stepBack = function() 
-    {
-        if (this.awaitingStep && this.undoStack != null && this.undoStack.length != 0) {
-            //  TODO:  Get events working correctly!
-            this.fireEvent("AnimationStarted", "NoData");
-            clearTimeout(this.timer);
-            this.awaitingStep = false;
-            this.undoLastBlock();
-            // Re-kick thie timer.  The timer may or may not be running at this point,
-            // so to be safe we'll kill it and start it again.
-            clearTimeout(this.timer);
-            this.timer = setTimeout(timeout.bind(this), 30);
-        }
-        else if (!this.currentlyAnimating && this.animationPaused && this.undoAnimationStepIndices != null) {
-            this.fireEvent("AnimationStarted", "NoData");
-            this.currentlyAnimating = true;
-            this.undoLastBlock();
-            // Re-kick thie timer.  The timer may or may not be running at this point,
-            // so to be safe we'll kill it and start it again.
-            clearTimeout(this.timer);
-            this.timer = setTimeout(timeout.bind(this), 30);
-        }
-    }
-
-    // Step forwards one step.  A no-op if the animation is not currently paused
-    this.step = function() 
-    {
-        if (this.awaitingStep) {
-            this.startNextBlock();
-            this.fireEvent("AnimationStarted", "NoData");
-            this.currentlyAnimating = true;
-            // Re-kick thie timer.  The timer should be going now, but we've had some difficulty with
-            // it timing itself out, so we'll be safe and kick it now.
-            clearTimeout(this.timer);
-            this.timer = setTimeout(timeout.bind(this), 30);
-        }
-    }
-
-    /// WARNING:  Could be dangerous to call while an animation is running ...
-    this.clearHistory = function() 
-    {
-        this.undoStack = [];
-        this.undoAnimationStepIndices = null;
-        this.previousAnimationSteps = [];
-        this.undoAnimationStepIndicesStack = [];
-        this.AnimationSteps = null;
-        this.fireEvent("AnimationUndoUnavailable", "NoData");
-        clearTimeout(this.timer);
-        this.animatedObjects.update();
-        this.animatedObjects.draw();
-    }
-
-    this.skipBack = function() 
-    {
-        var keepUndoing = this.undoAnimationStepIndices != null && this.undoAnimationStepIndices.length != 0;
-        if (keepUndoing) {
-            for (var i = 0; this.currentBlock != null && i < this.currentBlock.length; i++) {
-                var objectID = this.currentBlock[i].objectID;
-                this.animatedObjects.setNodePosition(
-                    objectID,
-                    this.currentBlock[i].toX,
-                    this.currentBlock[i].toY
-                );
-            }
-            if (this.doingUndo) {
-                this.finishUndoBlock(this.undoStack.pop())
-            }
-            while (keepUndoing) {
-                this.undoLastBlock();
-                for (var i = 0; i < this.currentBlock.length; i++) {
-                    objectID = this.currentBlock[i].objectID;
-                    this.animatedObjects.setNodePosition(
-                        objectID,
-                        this.currentBlock[i].toX,
-                        this.currentBlock[i].toY
-                    );
-                }
-                keepUndoing = this.finishUndoBlock(this.undoStack.pop());
-            }
-            clearTimeout(this.timer);
-            this.animatedObjects.update();
-            this.animatedObjects.draw();
-            if (this.undoStack == null || this.undoStack.length == 0) {
-                this.fireEvent("AnimationUndoUnavailable", "NoData");
-            }
-        }
-    }
-
-    this.resetAll = function() 
-    {
-        this.clearHistory();
-        this.animatedObjects.clearAllObjects();
-        this.animatedObjects.draw();
-        clearTimeout(this.timer);
-    }
-
-    this.skipForward = function() 
-    {
-        if (this.currentlyAnimating) {
-            this.animatedObjects.runFast = true;
-            while (this.AnimationSteps != null && this.currentAnimation < this.AnimationSteps.length) {
-                for (var i = 0; this.currentBlock != null && i < this.currentBlock.length; i++) {
-                    var objectID = this.currentBlock[i].objectID;
-                    this.animatedObjects.setNodePosition(
-                        objectID,
-                        this.currentBlock[i].toX,
-                        this.currentBlock[i].toY
-                    );
-                }
-                if (this.doingUndo) {
-                    this.finishUndoBlock(this.undoStack.pop())
-                }
-                this.startNextBlock();
-                for (var i = 0; i < this.currentBlock.length; i++) {
-                    var objectID = this.currentBlock[i].objectID;
-                    this.animatedObjects.setNodePosition(
-                        objectID,
-                        this.currentBlock[i].toX,
-                        this.currentBlock[i].toY
-                    );
-                }
-            }
-            this.animatedObjects.update();
-            this.currentlyAnimating = false;
-            this.awaitingStep = false;
-            this.doingUndo = false;
-
-            this.animatedObjects.runFast = false;
-            this.fireEvent("AnimationEnded", "NoData");
-            clearTimeout(this.timer);
-            this.animatedObjects.update();
-            this.animatedObjects.draw();
-        }
-    }
-
-    this.finishUndoBlock = function(undoBlock) 
-    {
-        for (var i = undoBlock.length - 1; i >= 0; i--) {
-            undoBlock[i].undoInitialStep(this.animatedObjects);
-        }
-        this.doingUndo = false;
-
-        // If we are at the final end of the animation ...
-        if (this.undoAnimationStepIndices.length == 0) {
-            this.awaitingStep = false;
-            this.currentlyAnimating = false;
-            this.undoAnimationStepIndices = this.undoAnimationStepIndicesStack.pop();
-            this.AnimationSteps = this.previousAnimationSteps.pop();
-            this.fireEvent("AnimationEnded", "NoData");
-            this.fireEvent("AnimationUndo", "NoData");
-            this.currentBlock = [];
-            if (this.undoStack == null || this.undoStack.length == 0) {
-                this.currentlyAnimating = false;
-                this.awaitingStep = false;
-                this.fireEvent("AnimationUndoUnavailable","NoData");
-            }
-            clearTimeout(this.timer);
-            this.animatedObjects.update();
-            this.animatedObjects.draw();
-            return false;
-        }
-        return true;
-    }
-
-    this.undoLastBlock = function() 
-    {
-        if (this.undoAnimationStepIndices.length == 0) {
-            // Nothing on the undo stack.  Return
-            return;
-        }
-        if (this.undoAnimationStepIndices.length > 0) {
-            this.doingUndo = true;
-            var anyAnimations = false;
-            this.currentAnimation = this.undoAnimationStepIndices.pop();
-            this.currentBlock = [];
-            var undo = this.undoStack[this.undoStack.length - 1];
-            for (var i = undo.length - 1; i >= 0; i--) {
-                var animateNext = undo[i].addUndoAnimation(this.currentBlock);
-                anyAnimations = anyAnimations || animateNext;
-            }
-            this.currFrame = 0;
-
-            // Hack:  If there are not any animations, and we are currently paused,
-            // then set the current frame to the end of the animation, so that we will
-            // advance immediagely upon the next step button.  If we are not paused, then
-            // animate as normal.
-            if (!anyAnimations && this.animationPaused) {
-                this.currFrame = this.animationBlockLength;
-            }
-            this.currentlyAnimating = true;
-        }
-    }
-
-    this.setLayer = function(shown, layers)
-    {
-        this.animatedObjects.setLayer(shown, layers)
-        // Drop in an extra draw call here, just in case we are not
-        // in the middle of an update loop when this changes
-        this.animatedObjects.draw();
-    }
-
-    this.setAllLayers = function(layers)
-    {
-        this.animatedObjects.setAllLayers(layers);
-        // Drop in an extra draw call here, just in case we are not
-        // in the middle of an update loop when this changes
-        this.animatedObjects.draw();
-    }
-
-    this.update = function()
-    {
-        if (this.currentlyAnimating) {
-            this.currFrame = this.currFrame + 1;
-            for (var i = 0; i < this.currentBlock.length; i++) {
-                if (this.currFrame == this.animationBlockLength || (this.currFrame == 1 && this.animationBlockLength == 0)) {
-                    this.animatedObjects.setNodePosition(
-                        this.currentBlock[i].objectID,
-                        this.currentBlock[i].toX,
-                        this.currentBlock[i].toY
-                    );
-                }
-                else if (this.currFrame < this.animationBlockLength) {
-                    var objectID = this.currentBlock[i].objectID;
-                    var percent = 1 / (this.animationBlockLength - this.currFrame);
-                    var oldX = this.animatedObjects.getNodeX(objectID);
-                    var oldY = this.animatedObjects.getNodeY(objectID);
-                    var targetX = this.currentBlock[i].toX;
-                    var targetY = this.currentBlock[i].toY;
-                    var newX = this.lerp(oldX, targetX, percent);
-                    var newY = this.lerp(oldY, targetY, percent);
-                    this.animatedObjects.setNodePosition(objectID, newX, newY);
-                }
-            }
-            if (this.currFrame >= this.animationBlockLength) {
-                if (this.doingUndo) {
-                    if (this.finishUndoBlock(this.undoStack.pop())) {
-                        this.awaitingStep = true;
-                        this.fireEvent("AnimationWaiting", "NoData");
-                    }
-                }
-                else {
-                    if (this.animationPaused && (this.currentAnimation < this.AnimationSteps.length)) {
-                        this.awaitingStep = true;
-                        this.fireEvent("AnimationWaiting", "NoData");
-                        this.currentBlock = [];
-                    }
-                    else {
-                        this.startNextBlock();
-                    }
-                }
-            }
-            this.animatedObjects.update();
-        }
-    }
-}
-
-AnimationManager.inheritFrom(EventListener);
-
-
-function SingleAnimation(id, fromX, fromY, toX, toY)
-{
-    this.objectID = id;
-    this.fromX = fromX;
-    this.fromY = fromY;
-    this.toX = toX;
-    this.toY = toY;
 }
 
 
-function Toolbar(toolbar)
-{
-    if (typeof(toolbar) == "string") {
-        toolbar = document.getElementById(toolbar);
+class SingleAnimation {
+    constructor(id, fromX, fromY, toX, toY) {
+        this.objectID = id;
+        this.fromX = fromX;
+        this.fromY = fromY;
+        this.toX = toX;
+        this.toY = toY;
     }
-    this.toolbar = toolbar;
-    toolbar.innerHTML = "";
-    toolbar.classList.add("toolbar");
+}
 
-    this.element = function(tag, attrs, ...children)
-    {
+
+class Toolbar {
+    constructor(toolbar) {
+        if (typeof (toolbar) == "string") {
+            toolbar = document.getElementById(toolbar);
+        }
+        this.toolbar = toolbar;
+        toolbar.innerHTML = "";
+        toolbar.classList.add("toolbar");
+    }
+
+    element(tag, attrs, ...children) {
         var element = document.createElement(tag);
         if (attrs) {
             for (var name in attrs) {
@@ -931,55 +917,51 @@ function Toolbar(toolbar)
         return element;
     }
 
-    this.input = function(type, value, attrs)
-    {
+    input(type, value, attrs) {
         if (!attrs) attrs = {};
         attrs["type"] = type;
         attrs["value"] = value;
         return this.element("input", attrs);
     }
 
-    this.add = function(element)
-    {
+    add(element) {
         return this.toolbar.appendChild(element);
     }
 
-    this.addBreak = function() 
-    {
-        return this.add(this.element("span", {class: "break"}));
+    addBreak() {
+        return this.add(this.element("span", { class: "break" }));
     }
 
-    this.addLabel = function(...content) 
-    {
-        return this.add(this.element("span", {class: "label"}, ...content));
+    addLabel(...content) {
+        return this.add(this.element("span", { class: "label" }, ...content));
     }
 
-    this.addInput = function(type, value, attrs)
-    {
+    addInput(type, value, attrs) {
         return this.add(this.input(type, value, attrs));
     }
 
-    this.addCheckbox = function(label, attrs)
-    {
+    addButton(text, attrs) {
+        return this.add(this.element("button", attrs, text));
+    }
+
+    addCheckbox(label, attrs) {
         if (!attrs) attrs = {};
         if (!attrs.id) attrs.id = `${this.toolbar.id}-${this.toolbar.childElementCount}`;
         var checkbox = this.addInput("checkbox", label, attrs);
-        this.add(this.element("label", {for: attrs.id}, label));
+        this.add(this.element("label", { for: attrs.id }, label));
         return checkbox;
     }
 
-    this.addRadio = function(label, group, attrs)
-    {
+    addRadio(label, group, attrs) {
         if (!attrs) attrs = {};
         if (!attrs.id) attrs.id = `${this.toolbar.id}-${this.toolbar.childElementCount}`;
         attrs.name = group;
         var radio = this.addInput("radio", label, attrs);
-        this.add(this.element("label", {for: attrs.id}, label));
+        this.add(this.element("label", { for: attrs.id }, label));
         return radio;
     }
 
-    this.addRadioButtons = function(labels, group, attrs)
-    {
+    addRadioButtons(labels, group, attrs) {
         var radioList = [];
         for (var lbl of labels) {
             radioList.push(this.addRadio(lbl, group, attrs));
@@ -987,11 +969,11 @@ function Toolbar(toolbar)
         return radioList;
     }
 
-    this.addSelect = function(values, labels, attrs) {
+    addSelect(values, labels, attrs) {
         var options = [];
         for (var i = 0; i < values.length; i++) {
             options.push(
-                this.element("option", {value: values[i]}, labels ? labels[i] : values[i])
+                this.element("option", { value: values[i] }, labels ? labels[i] : values[i])
             );
         }
         return this.add(this.element("select", attrs, ...options));

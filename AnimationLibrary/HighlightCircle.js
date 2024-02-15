@@ -25,58 +25,52 @@
 // or implied, of the University of San Francisco
 
 
-var HighlightCircle = function(objectID, color, radius, thickness)
-{
-    HighlightCircle.superclass.constructor.call(this, null, color);
+class HighlightCircle extends AnimatedObject {
+    radius;
+    thickness;
 
-    this.objectID = objectID;
-    this.radius = radius;
-    this.thickness = thickness || 4;
-}
-HighlightCircle.inheritFrom(AnimatedObject);
+    constructor(objectID, color, radius = 20, thickness = 4) {
+        super(null, color);
+        this.objectID = objectID;
+        this.radius = radius;
+        this.thickness = thickness;
+    }
 
+    draw(ctx) {
+        if (!this.addedToScene) return;
+        ctx.globalAlpha = this.alpha;
+        ctx.strokeStyle = this.foregroundColor;
+        ctx.lineWidth = this.thickness;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
+        ctx.closePath();
+        ctx.stroke();
+    }
 
-HighlightCircle.prototype.draw = function(ctx)
-{
-    if (!this.addedToScene) return;
-
-    ctx.globalAlpha = this.alpha;
-    ctx.strokeStyle = this.foregroundColor;
-    ctx.lineWidth = this.thickness;
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
-    ctx.closePath();
-    ctx.stroke();
-}
-
-
-HighlightCircle.prototype.createUndoDelete = function()
-{
-    return new UndoDeleteHighlightCircle(this.objectID, this.x, this.y, this.foregroundColor, this.radius, this.layer, this.alpha);
-}
-
-
-function UndoDeleteHighlightCircle(objectID, x, y, circleColor, r, layer, alpha)
-{
-    this.objectID = objectID;
-    this.x = x;
-    this.y = y;
-    this.color = circleColor;
-    this.r = r;
-    this.layer = layer;
-    this.alpha = alpha
-}
-
-UndoDeleteHighlightCircle.inheritFrom(UndoBlock);
-
-UndoDeleteHighlightCircle.prototype.undoInitialStep = function(world)
-{
-    world.addHighlightCircleObject(this.objectID, this.color, this.r);
-    world.setLayer(this.objectID, this.layer)
-    world.setNodePosition(this.objectID, this.x, this.y);
-    world.setAlpha(this.objectID, this.alpha)
+    createUndoDelete() {
+        return new UndoDeleteHighlightCircle(this.objectID, this.x, this.y, this.foregroundColor, this.radius, this.layer, this.alpha);
+    }
 }
 
 
 
+class UndoDeleteHighlightCircle extends UndoBlock {
+    constructor(objectID, x, y, circleColor, r, layer, alpha) {
+        super();
+        this.objectID = objectID;
+        this.x = x;
+        this.y = y;
+        this.color = circleColor;
+        this.r = r;
+        this.layer = layer;
+        this.alpha = alpha;
+    }
+
+    undoInitialStep(world) {
+        world.addHighlightCircleObject(this.objectID, this.color, this.r);
+        world.setLayer(this.objectID, this.layer);
+        world.setNodePosition(this.objectID, this.x, this.y);
+        world.setAlpha(this.objectID, this.alpha);
+    }
+}
 

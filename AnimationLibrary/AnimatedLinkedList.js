@@ -24,342 +24,285 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
-function AnimatedLinkedList(id, val, wth, hgt, linkPer, verticalOrientation, linkPosEnd, numLab, fillColor, edgeColor, highlightColor, labelColor)
-{
-    AnimatedLinkedList.superclass.constructor.call(this, fillColor, edgeColor, highlightColor, labelColor);
 
-    this.w = wth;
-    this.h = hgt;
-    this.val = val;
+class AnimatedLinkedList extends AnimatedObject {
+    w;
+    h;
+    val;
+    vertical;
+    linkPositionEnd;
+    linkPercent;
+    numLabels;
 
-    this.vertical = verticalOrientation;
-    this.linkPositionEnd = linkPosEnd;
-    this.linkPercent = linkPer;
+    nullPointer = false;
+    labels = [];
+    labelColors = [];
+    currentHeightDif = 6;
+    maxHeightDiff = 5;
+    minHeightDiff = 3;
 
-    this.numLabels = numLab;
-    this.objectID = id;
+    constructor(id, val, wth, hgt, linkPercent, verticalOrientation, linkPositionEnd, 
+                numLabels, fillColor, edgeColor, highlightColor, labelColor) {
+        super(fillColor, edgeColor, highlightColor, labelColor);
+        this.w = wth;
+        this.h = hgt;
+        this.val = val;
+        this.vertical = verticalOrientation;
+        this.linkPositionEnd = linkPositionEnd;
+        this.linkPercent = linkPercent;
+        this.numLabels = numLabels;
+        this.objectID = id;
 
-    this.labels = [];
-    this.labelPosX = [];
-    this.labelPosY = [];
-    this.labelColors = [];
-    this.nullPointer = false;
-
-    this.currentHeightDif = 6;
-    this.maxHeightDiff = 5;
-    this.minHeightDiff = 3;
-
-    for (var i = 0; i < this.numLabels; i++) {
-        this.labels[i] = "";
-        this.labelPosX[i] = 0;
-        this.labelPosY[i] = 0;
-        this.labelColors[i] = this.labelColor;
+        for (var i = 0; i < this.numLabels; i++) {
+            this.labels[i] = "";
+            this.labelColors[i] = this.labelColor;
+        }
+        this.labels[0] = this.val;
     }
 
-    this.labels[0] = this.val;
-}
-AnimatedLinkedList.inheritFrom(AnimatedObject);
-
-
-AnimatedLinkedList.prototype.setNull = function(np)
-{
-    if (this.nullPointer != np) {
+    setNull(np) {
         this.nullPointer = np;
     }
-}
 
-
-AnimatedLinkedList.prototype.getNull = function()
-{
-    return this.nullPointer;
-}
-
-
-AnimatedLinkedList.prototype.left = function()
-{
-    if (this.vertical) {
-        return this.x - this.w / 2.0;
+    getNull() {
+        return this.nullPointer;
     }
-    else if (this.linkPositionEnd) {
-        return this.x - ((this.w * (1 - this.linkPercent)) / 2);
-    }
-    else {
-        return this.x  - (this.w * (this.linkPercent + 1)) / 2;
-    }
-}
 
+    getWidth() {
+        return this.w;
+    }
 
-AnimatedLinkedList.prototype.right = function()
-{
-    if (this.vertical) {
-        return this.x + this.w / 2.0;
+    setWidth(wdth) {
+        this.w = wdth;
     }
-    else if (this.linkPositionEnd) {
-        return this.x + ((this.w * (this.linkPercent + 1)) / 2);
-    }
-    else {
-        return this.x + (this.w * (1 - this.linkPercent)) / 2;
-    }
-}
 
-
-AnimatedLinkedList.prototype.top = function()
-{
-    if (!this.vertical) {
-        return this.y - this.h / 2.0;
+    getHeight() {
+        return this.h;
     }
-    else if (this.linkPositionEnd) {
-        return this.y - (this.h * (1 -this.linkPercent)) / 2;
-    }
-    else {
-        return this.y - (this.h * (1 + this.linkPercent)) / 2;
-    }
-}
 
-
-AnimatedLinkedList.prototype.bottom = function()
-{
-    if (!this.vertical) {
-        return this.y + this.h / 2.0;
+    setHeight(hght) {
+        this.h = hght;
     }
-    else if (this.linkPositionEnd) {
-        return this.y + (this.h * (1 +this.linkPercent)) / 2;
+
+    left() {
+        var w = (
+            this.vertical ?        this.w                          : 
+            this.linkPositionEnd ? this.w * (1 - this.linkPercent) : 
+            /* otherwise */        this.w * (1 + this.linkPercent)
+        );
+        return this.x - w/2;
     }
-    else {
-        return this.y + (this.h * (1 - this.linkPercent)) / 2;
+
+    right() {
+        var w = (
+            this.vertical ?        this.w                          : 
+            this.linkPositionEnd ? this.w * (1 + this.linkPercent) : 
+            /* otherwise */        this.w * (1 - this.linkPercent)
+        );
+        return this.x + w/2;
     }
-}
 
+    top() {
+        var h = (
+            !this.vertical ?       this.h                          : 
+            this.linkPositionEnd ? this.h * (1 - this.linkPercent) : 
+            /* otherwise */        this.h * (1 + this.linkPercent)
+        );
+        return this.y - h/2;
+    }
 
-// TODO: Should we move this to the draw function, and save the
-//       space of the arrays?  Bit of a leftover from the Flash code,
-//       which did drawing differently
-AnimatedLinkedList.prototype.resetTextPosition = function()
-{
-    if (this.vertical) {
-        this.labelPosX[0] = this.x;
+    bottom() {
+        var h = (
+            !this.vertical ?       this.h                          : 
+            this.linkPositionEnd ? this.h * (1 + this.linkPercent) : 
+            /* otherwise */        this.h * (1 - this.linkPercent)
+        );
+        return this.y + h/2;
+    }
 
-        this.labelPosY[0] = this.y + this.h * (1-this.linkPercent)/2 *(1/this.numLabels - 1);
-        //   labelPosY[0] = -height * (1-linkPercent) / 2 + height*(1-linkPercent)/2*numLabels;
-        for (var i = 1; i < this.numLabels; i++) {
-            this.labelPosY[i] = this.labelPosY[i-1] + this.h*(1-this.linkPercent)/this.numLabels;
-            this.labelPosX[i] = this.x;
+    getTailPointerAttachPos(fromX, fromY, anchor) {
+        if (this.vertical && this.linkPositionEnd) {
+            return [this.x, this.y + this.h / 2.0];
+        }
+        else if (this.vertical && !this.linkPositionEnd) {
+            return [this.x, this.y - this.h / 2.0];
+        }
+        else if (!this.vertical && this.linkPositionEnd) {
+            return [this.x + this.w / 2.0, this.y];
+        }
+        else { // (!this.vertical && !this.linkPositionEnd)
+            return [this.x - this.w / 2.0, this.y];
         }
     }
-    else {
-        this.labelPosY[0] = this.y;
-        this.labelPosX[0] = this.x + this.w * (1-this.linkPercent)/2*(1/this.numLabels - 1);
-        for (var i = 1; i < this.numLabels; i++) {
-            this.labelPosY[i] = this.y;
-            this.labelPosX[i] = this.labelPosX[i-1] +  this.w*(1-this.linkPercent)/this.numLabels;
+
+    getHeadPointerAttachPos(fromX, fromY) {
+        return this.getClosestCardinalPoint(fromX, fromY);
+    }
+
+    getTextColor(textIndex) {
+        return this.labelColors[textIndex];
+    }
+
+    setTextColor(color, textIndex) {
+        this.labelColors[textIndex] = color;
+    }
+
+    getText(index) {
+        return this.labels[index];
+    }
+
+    setText(newText, textIndex) {
+        this.labels[textIndex] = newText;
+    }
+
+    draw(ctx) {
+        if (!this.addedToScene) return;
+
+        var x0 = this.left();
+        var x1 = this.right();
+        var y0 = this.top();
+        var y1 = this.bottom();
+
+        ctx.globalAlpha = this.alpha;
+
+        ctx.fillStyle = this.backgroundColor;
+        ctx.fillRect(x0, y0, x1 - x0, y1 - y0);
+
+        ctx.fillStyle = this.labelColor;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.font = this.textHeight + 'px sans-serif';
+
+        var labelPos = this.resetTextPositions();
+        for (var i = 0; i < this.numLabels; i++) {
+            ctx.fillStyle = this.labelColors[i];
+            ctx.fillText(this.labels[i], labelPos[i].x, labelPos[i].y);
         }
-    }
-}
 
-
-AnimatedLinkedList.prototype.getTailPointerAttachPos = function(fromX, fromY, anchor)
-{
-    if (this.vertical && this.linkPositionEnd) {
-        return [this.x, this.y + this.h / 2.0];
-    }
-    else if (this.vertical && !this.linkPositionEnd) {
-        return [this.x, this.y - this.h / 2.0];
-    }
-    else if (!this.vertical && this.linkPositionEnd) {
-        return [this.x + this.w / 2.0, this.y];
-    }
-    else { // (!this.vertical && !this.linkPositionEnd)
-        return [this.x - this.w / 2.0, this.y];
-    }
-}
-
-
-AnimatedLinkedList.prototype.getHeadPointerAttachPos = function(fromX, fromY)
-{
-    return this.getClosestCardinalPoint(fromX, fromY);
-}
-
-
-AnimatedLinkedList.prototype.setWidth = function(wdth)
-{
-    this.w = wdth;
-    this.resetTextPosition();
-}
-
-
-AnimatedLinkedList.prototype.setHeight = function(hght)
-{
-    this.h = hght;
-    this.resetTextPosition();
-}
-
-
-AnimatedLinkedList.prototype.getWidth = function()
-{
-    return this.w;
-}
-
-AnimatedLinkedList.prototype.getHeight = function()
-{
-    return this.h;
-}
-
-
-AnimatedLinkedList.prototype.draw = function(ctx)
-{
-    if (!this.addedToScene) return;
-
-    var x0 = this.left();
-    var x1 = this.right();
-    var y0 = this.top();
-    var y1 = this.bottom();
-
-    ctx.globalAlpha = this.alpha;
-
-    ctx.fillStyle = this.backgroundColor;
-    ctx.fillRect(x0, y0, x1-x0, y1-y0);
-
-    ctx.fillStyle = this.labelColor;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.font = this.textHeight + 'px sans-serif';
-
-    this.resetTextPosition();
-    for (var i = 0; i < this.numLabels; i++) {
-        ctx.fillStyle = this.labelColors[i];
-        ctx.fillText(this.labels[i], this.labelPosX[i], this.labelPosY[i]);
-    }
-
-    ctx.strokeStyle = this.foregroundColor;
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    if (this.vertical) {
-        if (this.linkPositionEnd) {
-            var y = y1 - this.h * this.linkPercent;
-            ctx.moveTo(x0, y); ctx.lineTo(x1, y);
-            if (this.nullPointer) {
-                ctx.moveTo(x0, y); ctx.lineTo(x1, y1);
+        ctx.strokeStyle = this.foregroundColor;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        if (this.vertical) {
+            if (this.linkPositionEnd) {
+                var y = y1 - this.h * this.linkPercent;
+                ctx.moveTo(x0, y); ctx.lineTo(x1, y);
+                if (this.nullPointer) {
+                    ctx.moveTo(x0, y); ctx.lineTo(x1, y1);
+                }
+                y1 = y;
             }
-            y1 = y;
-        }
-        else {
-            var y = y0 + this.h * this.linkPercent;
-            ctx.moveTo(x0, y); ctx.lineTo(x1, y);
-            if (this.nullPointer) {
-                ctx.moveTo(x0, y0); ctx.lineTo(x1, y);
+            else {
+                var y = y0 + this.h * this.linkPercent;
+                ctx.moveTo(x0, y); ctx.lineTo(x1, y);
+                if (this.nullPointer) {
+                    ctx.moveTo(x0, y0); ctx.lineTo(x1, y);
+                }
+                y0 = y;
             }
-            y0 = y;
-        }
-        for (var i = 1; i < this.numLabels; i++) {
-            var y = y0 + (y1-y0) * (i/this.numLabels-1/2);
-            ctx.moveTo(x0, y); ctx.lineTo(x1, y);
-        }
-    }
-    else { // !vertical
-        if (this.linkPositionEnd) {
-            var x = x1 - this.w * this.linkPercent;
-            ctx.moveTo(x, y0); ctx.lineTo(x, y1);
-            if (this.nullPointer) {
-                ctx.moveTo(x, y0); ctx.lineTo(x1, y1);
+            for (var i = 1; i < this.numLabels; i++) {
+                var y = y0 + (y1 - y0) * (i / this.numLabels - 1 / 2);
+                ctx.moveTo(x0, y); ctx.lineTo(x1, y);
             }
-            x1 = x;
         }
-        else {
-            var x = x0 + this.w * this.linkPercent;
-            ctx.moveTo(x, y0); ctx.lineTo(x, y1);
-            if (this.nullPointer) {
-                ctx.moveTo(x0, y0); ctx.lineTo(x, y1);
+        else { // !vertical
+            if (this.linkPositionEnd) {
+                var x = x1 - this.w * this.linkPercent;
+                ctx.moveTo(x, y0); ctx.lineTo(x, y1);
+                if (this.nullPointer) {
+                    ctx.moveTo(x, y0); ctx.lineTo(x1, y1);
+                }
+                x1 = x;
             }
-            x0 = x;
+            else {
+                var x = x0 + this.w * this.linkPercent;
+                ctx.moveTo(x, y0); ctx.lineTo(x, y1);
+                if (this.nullPointer) {
+                    ctx.moveTo(x0, y0); ctx.lineTo(x, y1);
+                }
+                x0 = x;
+            }
+            for (var i = 1; i < this.numLabels; i++) {
+                var x = x0 + (x1 - x0) * (i / this.numLabels - 1 / 2);
+                ctx.moveTo(x, y0); ctx.lineTo(x, y1);
+            }
         }
-        for (var i = 1; i < this.numLabels; i++) {
-            var x = x0 + (x1-x0) * (i/this.numLabels-1/2);
-            ctx.moveTo(x, y0); ctx.lineTo(x, y1);
+        ctx.stroke();
+
+        if (this.highlighted) {
+            ctx.strokeStyle = this.highlightColor;
+            ctx.lineWidth = this.highlightDiff;
+        }
+        ctx.strokeRect(this.left(), this.top(), this.getWidth(), this.getHeight());
+    }
+
+    resetTextPositions() {
+        var labelPos = []
+        if (this.vertical) {
+            labelPos[0] = {
+                x: this.x,
+                y: this.y + this.h * (1 - this.linkPercent) / 2 * (1 / this.numLabels - 1),
+                // -height * (1-linkPercent) / 2 + height*(1-linkPercent)/2*numLabels;
+            };
+            for (var i = 1; i < this.numLabels; i++) {
+                labelPos[i] = {
+                    x: this.x,
+                    y: labelPos[i-1].y + this.h * (1 - this.linkPercent) / this.numLabels,
+                };
+            }
+        }
+        else { 
+            labelPos[0] = {
+                y: this.y,
+                x: this.x + this.w * (1 - this.linkPercent) / 2 * (1 / this.numLabels - 1),
+            };
+            for (var i = 1; i < this.numLabels; i++) {
+                labelPosY[i] = {
+                    y: this.y,
+                    x: labelPos[i-1].x + this.w * (1 - this.linkPercent) / this.numLabels,
+                };
+            }
+        }
+        return labelPos;
+    }
+
+    createUndoDelete() {
+        return new UndoDeleteLinkedList(this.objectID, this.numLabels, this.labels, this.x, this.y, this.w, this.h, this.linkPercent,
+            this.linkPositionEnd, this.vertical, this.labelColors, this.backgroundColor, this.foregroundColor,
+            this.layer, this.nullPointer);
+    }
+}
+
+
+
+class UndoDeleteLinkedList extends UndoBlock {
+    constructor(id, numlab, lab, x, y, w, h, linkper, posEnd, vert, labColors, bgColor, fgColor, l, np) {
+        super();
+        this.objectID = id;
+        this.posX = x;
+        this.posY = y;
+        this.width = w;
+        this.height = h;
+        this.backgroundColor = bgColor;
+        this.foregroundColor = fgColor;
+        this.labels = lab;
+        this.linkPercent = linkper;
+        this.verticalOrentation = vert;
+        this.linkAtEnd = posEnd;
+        this.labelColors = labColors;
+        this.layer = l;
+        this.numLabels = numlab;
+        this.nullPointer = np;
+    }
+
+    undoInitialStep(world) {
+        world.addLinkedListObject(this.objectID, this.labels[0], this.width, this.height, this.linkPercent, this.verticalOrentation, this.linkAtEnd, this.numLabels, this.backgroundColor, this.foregroundColor);
+        world.setNodePosition(this.objectID, this.posX, this.posY);
+        world.setLayer(this.objectID, this.layer);
+        world.setNull(this.objectID, this.nullPointer);
+        for (var i = 0; i < this.numLabels; i++) {
+            world.setText(this.objectID, this.labels[i], i);
+            world.setTextColor(this.objectID, this.labelColors[i], i);
         }
     }
-    ctx.stroke();
-
-    if (this.highlighted) {
-        ctx.strokeStyle = this.highlightColor;
-        ctx.lineWidth = this.highlightDiff;
-    }
-    ctx.strokeRect(this.left(), this.top(), this.getWidth(), this.getHeight());
 }
 
-
-AnimatedLinkedList.prototype.setTextColor = function(color, textIndex)
-{
-    this.labelColors[textIndex] = color;
-}
-
-
-AnimatedLinkedList.prototype.getTextColor = function(textIndex)
-{
-    return this.labelColors[textIndex];
-}
-
-
-AnimatedLinkedList.prototype.getText = function(index)
-{
-    return this.labels[index];
-}
-
-
-AnimatedLinkedList.prototype.setText = function(newText, textIndex)
-{
-    this.labels[textIndex] = newText;
-    this.resetTextPosition();
-}
-
-
-AnimatedLinkedList.prototype.createUndoDelete = function()
-{
-    return new UndoDeleteLinkedList(this.objectID, this.numLabels, this.labels, this.x, this.y, this.w, this.h, this.linkPercent,
-                                    this.linkPositionEnd, this.vertical, this.labelColors, this.backgroundColor, this.foregroundColor,
-                                    this.layer, this.nullPointer);
-}
-
-
-AnimatedLinkedList.prototype.setHighlight = function(value)
-{
-    if (value != this.highlighted) {
-        this.highlighted = value;
-    }
-}
-
-
-
-function UndoDeleteLinkedList(id, numlab, lab, x, y, w, h, linkper, posEnd, vert, labColors, bgColor, fgColor, l, np)
-{
-    this.objectID = id;
-    this.posX = x;
-    this.posY = y;
-    this.width = w;
-    this.height = h;
-    this.backgroundColor= bgColor;
-    this.foregroundColor = fgColor;
-    this.labels = lab;
-    this.linkPercent = linkper;
-    this.verticalOrentation = vert;
-    this.linkAtEnd = posEnd;
-    this.labelColors = labColors
-    this.layer = l;
-    this.numLabels = numlab;
-    this.nullPointer = np;
-}
-
-UndoDeleteLinkedList.inheritFrom(UndoBlock);
-
-
-
-UndoDeleteLinkedList.prototype.undoInitialStep =function(world)
-{
-    world.addLinkedListObject(this.objectID,this.labels[0], this.width, this.height, this.linkPercent, this.verticalOrentation, this.linkAtEnd, this.numLabels, this.backgroundColor, this.foregroundColor);
-    world.setNodePosition(this.objectID, this.posX, this.posY);
-    world.setLayer(this.objectID, this.layer);
-    world.setNull(this.objectID, this.nullPointer);
-    for (var i = 0; i < this.numLabels; i++) {
-        world.setText(this.objectID, this.labels[i], i);
-        world.setTextColor(this.objectID, this.labelColors[i], i);
-    }
-}

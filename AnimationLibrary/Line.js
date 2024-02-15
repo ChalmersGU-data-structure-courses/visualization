@@ -29,171 +29,149 @@
 //  pointers in linked lists, and so on.
 
 
-Line.MAX_HEIGHT_DIFF = 5;
-Line.MIN_HEIGHT_DIFF = 3;
-Line.RANGE = Line.MAX_HEIGHT_DIFF - Line.MIN_HEIGHT_DIFF + 1;
-Line.HIGHLIGHT_DIFF = 3;
+class Line extends AnimatedObject {
+    static MAX_HEIGHT_DIFF = 5;
+    static MIN_HEIGHT_DIFF = 3;
+    static RANGE = Line.MAX_HEIGHT_DIFF - Line.MIN_HEIGHT_DIFF + 1;
+    static HIGHLIGHT_DIFF = 3;
 
+    node1;
+    node2;
+    color;
+    curve;
+    directed;
+    anchorPoint;
 
-function Line(n1, n2, color, cv, d, weight, anchorIndex, highlightColor)
-{
-    this.arrowHeight = 8;
-    this.arrowWidth = 4;
+    addedToScene = true;
+    arrowHeight = 8;
+    arrowWidth = 4;
+    highlightDiff = 0;
 
-    this.Node1 = n1;
-    this.Node2 = n2;
-    this.directed = d;
-    this.edgeColor = color;
-    this.edgeLabel = weight;
-    this.highlighted = false;
-    this.highlightColor = highlightColor;
-    this.addedToScene = true;
-    this.anchorPoint = anchorIndex;
-    this.highlightDiff = 0;
-    this.curve = cv;
-    this.alpha = 1.0;
-}
-
-Line.prototype.color = function color()
-{
-    return this.edgeColor;
-}
-
-Line.prototype.setColor = function(newColor)
-{
-    this.edgeColor = newColor;
-}
-
-Line.prototype.setHighlight = function(highlightVal)
-{
-    this.highlighted = highlightVal;
-}
-
-Line.prototype.pulseHighlight = function(frameNum)
-{
-    if (this.highlighted) {
-        var frameMod = frameNum / 14.0;
-        var delta = Math.abs((frameMod) % (2 * Line.RANGE - 2) - Line.RANGE + 1)
-        this.highlightDiff = delta + Line.MIN_HEIGHT_DIFF;
-    }
-}
-
-
-Line.prototype.hasNode = function(n) {
-    return ((this.Node1 == n) || (this.Node2 == n));
-}
-
-
-Line.prototype.createUndoDisconnect = function()
-{
-    return new UndoConnect(this.Node1.objectID, this.Node2.objectID, true, this.edgeColor, this.directed, this.curve, this.edgeLabel, this.anchorPoint);
-}
-
-
-Line.prototype.sign = function(n)
-{
-    return n > 0 ? 1 : -1;
-}
-
-
-Line.prototype.draw = function(ctx)
-{
-    if (!this.addedToScene) return;
-
-    ctx.globalAlpha = this.alpha;
-
-    if (this.highlighted) {
-        ctx.fillStyle = ctx.strokeStyle = this.highlightColor;
-        ctx.lineWidth = this.highlightDiff;
-    } else {
-        ctx.fillStyle = ctx.strokeStyle = this.edgeColor;
-        ctx.lineWidth = 2;
+    constructor(n1, n2, color, curve = 0, directed = false, label = "", anchorPoint = 0, highlightColor, labelColor) {
+        super(color, color, highlightColor, labelColor);
+        this.node1 = n1;
+        this.node2 = n2;
+        this.color = color || this.foregroundColor;
+        this.directed = directed;
+        this.label = label;
+        this.anchorPoint = anchorPoint;
+        this.curve = curve;
     }
 
-    var fromPos = this.Node1.getTailPointerAttachPos(this.Node2.x, this.Node2.y, this.anchorPoint);
-    var toPos = this.Node2.getHeadPointerAttachPos(this.Node1.x, this.Node1.y);
+    color() {
+        return this.color;
+    }
 
-    var fromPos = this.Node1.getTailPointerAttachPos(this.Node2.x, this.Node2.y, this.anchorPoint);
-    var toPos = this.Node2.getHeadPointerAttachPos(this.Node1.x, this.Node1.y);
+    setColor(newColor) {
+        this.color = newColor;
+    }
 
-    var deltaX = toPos[0] - fromPos[0];
-    var deltaY = toPos[1] - fromPos[1];
-    var midX = (deltaX) / 2.0 + fromPos[0];
-    var midY = (deltaY) / 2.0 + fromPos[1];
-    var controlX = midX - deltaY * this.curve;
-    var controlY = midY + deltaX * this.curve;
+    hasNode(n) {
+        return this.node1 == n || this.node2 == n;
+    }
 
-    ctx.beginPath();
-    ctx.moveTo(fromPos[0], fromPos[1]);
-    ctx.quadraticCurveTo(controlX, controlY, toPos[0], toPos[1]);
-    ctx.stroke();
+    draw(ctx) {
+        if (!this.addedToScene) return;
 
-    if (this.edgeLabel != null && this.edgeLabel !== "") {
-        // Position of the edge label:  First, we will place it right along the
-        // middle of the curve (or the middle of the line, for curve == 0)
-        var labelPosX = 0.25*fromPos[0] + 0.5*controlX + 0.25*toPos[0];
-        var labelPosY = 0.25*fromPos[1] + 0.5*controlY + 0.25*toPos[1];
+        ctx.globalAlpha = this.alpha;
 
-        // Next, we push the edge position label out just a little in the direction of
-        // the curve, so that the label doesn't intersect the cuve (as long as the label
-        // is only a few characters, that is)
-        var midLen = Math.sqrt(deltaY*deltaY + deltaX*deltaX);
-        if (midLen != 0) {
-            labelPosX += (-deltaY * this.sign(this.curve))  / midLen * 10
-            labelPosY += ( deltaX * this.sign(this.curve))  / midLen * 10
+        if (this.highlighted) {
+            ctx.fillStyle = ctx.strokeStyle = this.highlightColor;
+            ctx.lineWidth = this.highlightDiff;
+        } else {
+            ctx.fillStyle = ctx.strokeStyle = this.color;
+            ctx.lineWidth = 2;
         }
 
-        ctx.textAlign = 'center';
-        ctx.font = this.textHeight + 'px sans-serif';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(this.edgeLabel, labelPosX, labelPosY);
-    }
+        var fromPos = this.node1.getTailPointerAttachPos(this.node2.x, this.node2.y, this.anchorPoint);
+        var toPos = this.node2.getHeadPointerAttachPos(this.node1.x, this.node1.y);
 
-    if (this.directed) {
-        var xVec = controlX - toPos[0];
-        var yVec = controlY - toPos[1];
-        var len = Math.sqrt(xVec * xVec + yVec*yVec);
-        if (len > 0) {
-            xVec = xVec / len
-            yVec = yVec / len;
-            ctx.beginPath();
-            ctx.moveTo(toPos[0], toPos[1]);
-            ctx.lineTo(toPos[0] + xVec*this.arrowHeight - yVec*this.arrowWidth, toPos[1] + yVec*this.arrowHeight + xVec*this.arrowWidth);
-            ctx.lineTo(toPos[0] + xVec*this.arrowHeight + yVec*this.arrowWidth, toPos[1] + yVec*this.arrowHeight - xVec*this.arrowWidth);
-            ctx.lineTo(toPos[0], toPos[1]);
-            ctx.closePath();
-            ctx.stroke();
-            ctx.fill();
+        var fromPos = this.node1.getTailPointerAttachPos(this.node2.x, this.node2.y, this.anchorPoint);
+        var toPos = this.node2.getHeadPointerAttachPos(this.node1.x, this.node1.y);
+
+        var deltaX = toPos[0] - fromPos[0];
+        var deltaY = toPos[1] - fromPos[1];
+        var midX = (deltaX) / 2.0 + fromPos[0];
+        var midY = (deltaY) / 2.0 + fromPos[1];
+        var controlX = midX - deltaY * this.curve;
+        var controlY = midY + deltaX * this.curve;
+
+        ctx.beginPath();
+        ctx.moveTo(fromPos[0], fromPos[1]);
+        ctx.quadraticCurveTo(controlX, controlY, toPos[0], toPos[1]);
+        ctx.stroke();
+
+        if (this.label != null && this.label !== "") {
+            // Position of the edge label:  First, we will place it right along the
+            // middle of the curve (or the middle of the line, for curve == 0)
+            var labelPosX = 0.25 * fromPos[0] + 0.5 * controlX + 0.25 * toPos[0];
+            var labelPosY = 0.25 * fromPos[1] + 0.5 * controlY + 0.25 * toPos[1];
+
+            // Next, we push the edge position label out just a little in the direction of
+            // the curve, so that the label doesn't intersect the cuve (as long as the label
+            // is only a few characters, that is)
+            var midLen = Math.sqrt(deltaY * deltaY + deltaX * deltaX);
+            if (midLen != 0) {
+                labelPosX += (-deltaY * Math.sign(this.curve)) / midLen * 10;
+                labelPosY += (deltaX * Math.sign(this.curve)) / midLen * 10;
+            }
+
+            ctx.textAlign = 'center';
+            ctx.font = this.textHeight + 'px sans-serif';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(this.label, labelPosX, labelPosY);
+        }
+
+        if (this.directed) {
+            var xVec = controlX - toPos[0];
+            var yVec = controlY - toPos[1];
+            var len = Math.sqrt(xVec * xVec + yVec * yVec);
+            if (len > 0) {
+                xVec = xVec / len;
+                yVec = yVec / len;
+                ctx.beginPath();
+                ctx.moveTo(toPos[0], toPos[1]);
+                ctx.lineTo(toPos[0] + xVec * this.arrowHeight - yVec * this.arrowWidth, toPos[1] + yVec * this.arrowHeight + xVec * this.arrowWidth);
+                ctx.lineTo(toPos[0] + xVec * this.arrowHeight + yVec * this.arrowWidth, toPos[1] + yVec * this.arrowHeight - xVec * this.arrowWidth);
+                ctx.lineTo(toPos[0], toPos[1]);
+                ctx.closePath();
+                ctx.stroke();
+                ctx.fill();
+            }
         }
     }
-}
 
-
-function UndoConnect(from, to, createConnection, edgeColor, isDirected, cv, lab, anch)
-{
-    this.fromID = from;
-    this.toID = to;
-    this.connect = createConnection;
-    this.color = edgeColor;
-    this.directed = isDirected;
-    this.curve = cv;
-    this.edgeLabel = lab;
-    this.anchorPoint = anch;
-}
-
-
-UndoConnect.prototype.undoInitialStep = function(world)
-{
-    if (this.connect) {
-        world.connectEdge(this.fromID, this.toID, this.color, this.curve, this.directed, this.edgeLabel, this.anchorPoint);
-    }
-    else {
-        world.disconnect(this.fromID,this.toID);
+    createUndoDisconnect() {
+        return new UndoConnect(this.node1.objectID, this.node2.objectID, true, this.color, this.directed, this.curve, this.label, this.anchorPoint);
     }
 }
 
 
-UndoConnect.prototype.addUndoAnimation = function(animationList)
-{
-    return false;
+
+class UndoConnect extends UndoBlock {
+    constructor(from, to, createConnection, edgeColor, isDirected, cv, lab, anch) {
+        super();
+        this.fromID = from;
+        this.toID = to;
+        this.connect = createConnection;
+        this.color = edgeColor;
+        this.directed = isDirected;
+        this.curve = cv;
+        this.label = lab;
+        this.anchorPoint = anch;
+    }
+
+    undoInitialStep(world) {
+        if (this.connect) {
+            world.connectEdge(this.fromID, this.toID, this.color, this.curve, this.directed, this.label, this.anchorPoint);
+        }
+        else {
+            world.disconnect(this.fromID, this.toID);
+        }
+    }
+
+    addUndoAnimation(animationList) {
+        return false;
+    }
 }
+

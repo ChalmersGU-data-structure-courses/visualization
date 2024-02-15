@@ -24,317 +24,240 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
-AnimatedObject.DEFAULT_TEXT_HEIGHT = 14;
 
-AnimatedObject.BACKGROUND_COLOR = "#FFFFFF";
-AnimatedObject.FOREGROUND_COLOR = "#000000";
-AnimatedObject.HIGHLIGHT_COLOR = "#FF0000";
+class AnimatedObject {
+    backgroundColor;
+    foregroundColor;
+    labelColor;
+    highlightColor;
+    textHeight = 14;
+    highlighted = false;
+    objectID = -1;
+    layer = 0;
+    label = "";
+    alpha = 1.0;
+    x = 0;
+    y = 0;
+    minHeightDiff = 3;
+    range = 5;
+    highlightIndex = -1;
+    alwaysOnTop = false;
+    addedToScene = true;
 
+    constructor(backgroundColor = "white", foregroundColor = "black", highlightColor = "red", labelColor = "black") {
+        this.backgroundColor = backgroundColor;
+        this.foregroundColor = foregroundColor;
+        this.highlightColor = highlightColor;
+        this.labelColor = labelColor;
+    }
 
-function AnimatedObject(backgroundColor, foregroundColor, highlightColor, labelColor)
-{
-    this.backgroundColor = backgroundColor || AnimatedObject.BACKGROUND_COLOR;
-    this.foregroundColor = foregroundColor || AnimatedObject.FOREGROUND_COLOR;
-    this.highlightColor = highlightColor || AnimatedObject.HIGHLIGHT_COLOR;
-    this.highlighted = false;
-    this.objectID = -1;
-    this.layer = 0;
-    this.addedToScene = true;
-    this.label = "";
-    this.labelColor = labelColor || this.foregroundColor;
-    this.alpha = 1.0;
-    this.x = 0;
-    this.y = 0;
-    this.minHeightDiff = 3;
-    this.range = 5;
-    this.highlightIndex = -1;
-    this.textHeight = AnimatedObject.DEFAULT_TEXT_HEIGHT;
-}
+    setForegroundColor(newColor) {
+        this.foregroundColor = newColor;
+        this.labelColor = newColor;
+    }
 
+    setBackgroundColor(newColor) {
+        this.backgroundColor = newColor;
+    }
 
-AnimatedObject.prototype.alwaysOnTop = false;
+    getNull() {
+        return false;
+    }
 
+    setNull() {
+    }
 
-AnimatedObject.prototype.setBackgroundColor = function(newColor)
-{
-    this.backgroundColor = newColor;
-}
+    getAlpha() {
+        return this.alpha;
+    }
 
-AnimatedObject.prototype.setForegroundColor = function(newColor)
-{
-    this.foregroundColor = newColor;
-    this.labelColor = newColor;
-}
+    setAlpha(newAlpha) {
+        this.alpha = newAlpha;
+    }
 
+    getHighlight() {
+        return this.highlighted;
+    }
 
-AnimatedObject.prototype.setNull = function()
-{
-}
+    setHighlight(value) {
+        this.highlighted = value;
+    }
 
-AnimatedObject.prototype.getNull = function()
-{
-    return false;
-}
+    getWidth() {
+        // TODO:  Do we want to throw here?  Should always override this ...
+        return 0;
+    }
 
+    setWidth(newWidth) {
+        // TODO:  Do we want to throw here?  Should always override this ...
+    }
 
-AnimatedObject.prototype.setAlpha = function(newAlpha)
-{
-    this.alpha = newAlpha;
-}
+    getHeight() {
+        // TODO:  Do we want to throw here?  Should always override this ...
+        return 0;
+    }
 
-AnimatedObject.prototype.getAlpha = function()
-{
-    return this.alpha;
-}
+    setHeight() {
+        // TODO:  Do we want to throw here?  Should always override this ...
+    }
 
+    left() {
+        return this.centerX() - this.getWidth() / 2;
+    }
 
+    centerX() {
+        return this.x;
+    }
 
-AnimatedObject.prototype.getHighlight = function()
-{
-    return this.highlighted;
-}
+    right() {
+        return this.centerX() + this.getWidth() / 2;
+    }
 
-AnimatedObject.prototype.setHighlight = function(value)
-{
-    this.highlighted = value;
-}
+    top() {
+        return this.centerY() - this.getHeight() / 2;
+    }
 
+    centerY() {
+        return this.y;
+    }
 
-AnimatedObject.prototype.getWidth = function()
-{
-    // TODO:  Do we want to throw here?  Should always override this ...
-    return 0;
-}    
+    bottom() {
+        return this.centerY() + this.getHeight() / 2;
+    }
 
-AnimatedObject.prototype.setWidth = function(newWidth)
-{
-    // TODO:  Do we want to throw here?  Should always override this ...
-}    
+    getAlignLeftPos(other) {
+        return [other.right() + this.getWidth() / 2, other.centerY()];
+    }
 
-AnimatedObject.prototype.getHeight = function()
-{
-    // TODO:  Do we want to throw here?  Should always override this ...
-    return 0;
-}    
+    getAlignRightPos(other) {
+        return [other.left() - this.getWidth() / 2, other.centerY()];
+    }
 
-AnimatedObject.prototype.setHeight = function()
-{
-    // TODO:  Do we want to throw here?  Should always override this ...
-}    
+    getAlignTopPos(other) {
+        return [other.centerX(), other.top() - this.getHeight() / 2];
+    }
 
+    getAlignBottomPos(other) {
+        return [other.centerX(), other.bottom() + this.getHeight() / 2];
+    }
 
-AnimatedObject.prototype.centerX = function()
-{
-    return this.x;
-}
-
-AnimatedObject.prototype.centerY = function()
-{
-    return this.y;
-}
-
-
-AnimatedObject.prototype.getAlignLeftPos = function(otherObject)
-{
-    return [otherObject.right()+ this.getWidth() / 2, otherObject.centerY()];
-}
-
-AnimatedObject.prototype.getAlignRightPos = function(otherObject)
-{
-    return [otherObject.left() - this.getWidth() / 2, otherObject.centerY()];
-}
-
-AnimatedObject.prototype.getAlignTopPos = function(otherObject)
-{
-    return [otherObject.centerX(), otherObject.top() - this.getHeight() / 2];
-}
-
-AnimatedObject.prototype.getAlignBottomPos = function(otherObject)
-{
-    return [otherObject.centerX(), otherObject.bottom() + this.getHeight() / 2];
-}
-
-
-AnimatedObject.prototype.alignMiddle = function(otherObject)
-{
-    // Assuming centering. Overridden method could modify if not centered
+    // Aligning assumes centering. Overridden method could modify if not centered
     // (See AnimatedLabel, for instance)
-    this.y = otherObject.centerY();
-    this.x = otherObject.centerX();
-}
+    alignMiddle(other) {
+        this.y = other.centerY();
+        this.x = other.centerX();
+    }
 
-AnimatedObject.prototype.alignLeft = function(otherObject)
-{
-    // Assuming centering. Overridden method could modify if not centered
-    // (See AnimatedLabel, for instance)
-    this.y = otherObject.centerY();
-    this.x = otherObject.right() + this.getWidth() / 2;
-}
+    alignLeft(other) {
+        this.y = other.centerY();
+        this.x = other.right() + this.getWidth() / 2;
+    }
 
-AnimatedObject.prototype.alignRight = function(otherObject)
-{
-    // Assuming centering. Overridden method could modify if not centered
-    this.y = otherObject.centerY();
-    this.x = otherObject.left() - this.getWidth() / 2;
-}
+    alignRight(other) {
+        this.y = other.centerY();
+        this.x = other.left() - this.getWidth() / 2;
+    }
 
+    alignTop(other) {
+        this.x = other.centerX();
+        this.y = other.top() - this.getHeight() / 2;
+    }
 
-AnimatedObject.prototype.alignTop = function(otherObject)
-{
-    // Assuming centering. Overridden method could modify if not centered
-    this.x = otherObject.centerX();
-    this.y = otherObject.top() - this.getHeight() / 2;
-}
+    alignBottom(other) {
+        this.x = other.centerX();
+        this.y = other.bottom() + this.getHeight() / 2;
+    }
 
-AnimatedObject.prototype.alignBottom = function(otherObject)
-{
-    // Assuming centering. Overridden method could modify if not centered
-    this.x = otherObject.centerX();
-    this.y = otherObject.bottom() + this.getHeight() / 2;
+    getClosestCardinalPoint(fromX, fromY) {
+        let xDelta;
+        let yDelta;
+        let xPos;
+        let yPos;
 
-}
-
-
-/* TODO:  Do we need these in the base?
-        function left(): Number
-        {
-            return x - getWidth() / 2;
+        if (fromX < this.left()) {
+            xDelta = this.left() - fromX;
+            xPos = this.left();
+        } else if (fromX > this.right()) {
+            xDelta = fromX - this.right();
+            xPos = this.right();
+        } else {
+            xDelta = 0;
+            xPos = this.centerX();
         }
 
-        function right():Number
-        {
-            return x + getWidth() / 2;
+        if (fromY < this.top()) {
+            yDelta = this.top() - fromY;
+            yPos = this.top();
+        } else if (fromY > this.bottom()) {
+            yDelta = fromY - this.bottom();
+            yPos = this.bottom();
+        } else {
+            yDelta = 0;
+            yPos = this.centerY();
         }
 
-        function top():Number
-        {
-            return y - getHeight() / 2;
+        if (yDelta > xDelta) {
+            xPos = this.centerX();
+        } else {
+            yPos = this.centerY();
         }
+        return [xPos, yPos];
+    }
 
-        function bottom():Number
-        {
-            return y + getHeight() / 2;
+    centered() {
+        return false;
+    }
+
+    pulseHighlight(frameNum) {
+        if (this.highlighted) {
+            const frameMod = frameNum / 7.0;
+            const delta = Math.abs((frameMod) % (2 * this.range - 2) - this.range + 1);
+            this.highlightDiff = delta + this.minHeightDiff;
         }
-
-        function centerX():Number
-        {
-            return x;
-        }
-
-        function centerY():Number
-        {
-            return y;
-        }
-        */
-
-
-AnimatedObject.prototype.getClosestCardinalPoint = function(fromX, fromY)
-{
-    var xDelta;
-    var yDelta;
-    var xPos;
-    var yPos;
-
-    if (fromX < this.left()) {
-        xDelta = this.left() - fromX;
-        xPos = this.left();
-     }
-    else if (fromX > this.right()) {
-        xDelta = fromX - this.right();
-        xPos = this.right();
-    }
-    else {
-        xDelta = 0;
-        xPos = this.centerX();
     }
 
-    if (fromY < this.top()) {
-        yDelta = this.top() - fromY;
-        yPos = this.top();
-    }
-    else if (fromY > this.bottom()) {
-        yDelta = fromY - this.bottom();
-        yPos = this.bottom();
-    }
-    else {
-        yDelta = 0;
-        yPos = this.centerY();
+    getTailPointerAttachPos(fromX, fromY, anchorPoint) {
+        return [this.x, this.y];
     }
 
-    if (yDelta > xDelta) {
-        xPos = this.centerX();
-    }
-    else {
-        yPos = this.centerY();
+    getHeadPointerAttachPos(fromX, fromY) {
+        return [this.x, this.y];
     }
 
-    return [xPos, yPos];
-}
-
-
-AnimatedObject.prototype.centered = function()
-{
-    return false;
-}
-
-
-AnimatedObject.prototype.pulseHighlight = function(frameNum)
-{
-    if (this.highlighted) {
-        var frameMod = frameNum / 7.0;
-        var delta = Math.abs((frameMod) % (2 * this.range - 2) - this.range + 1)
-        this.highlightDiff = delta + this.minHeightDiff;
+    createUndoDelete() {
+        console.error("createUndoDelete: Must be overridden!");
     }
-}
 
+    identifier() {
+        return this.objectID;
+    }
 
-AnimatedObject.prototype.getTailPointerAttachPos = function(fromX, fromY, anchorPoint)
-{
-    return [this.x, this.y];
-}
+    getText(index) {
+        return this.label;
+    }
 
+    getTextColor(textIndex) {
+        return this.labelColor;
+    }
 
-AnimatedObject.prototype.getHeadPointerAttachPos = function(fromX, fromY)
-{
-    return [this.x, this.y];
-}
-
-/* Must be overridden!
-public function createUndoDelete() : UndoBlock {}
-*/
-
-AnimatedObject.prototype.identifier = function()
-{
-    return this.objectID;
-}
-
-AnimatedObject.prototype.getText = function(index)
-{
-    return this.label;
-}
-
-AnimatedObject.prototype.getTextColor = function(textIndex)
-{
-    return this.labelColor
-}
-
-AnimatedObject.prototype.setTextColor = function(color, textIndex)
-{
+    setTextColor(color, textIndex) {
         this.labelColor = color;
+    }
+
+    setText(newText, textIndex) {
+        this.label = newText;
+    }
+
+    getHighlightIndex() {
+        return this.highlightIndex;
+    }
+
+    setHighlightIndex(hlIndex) {
+        this.highlightIndex = hlIndex;
+    }
+
+    draw() {
+        console.error("draw: Must be overridden!");
+    }
 }
 
-AnimatedObject.prototype.setText = function(newText, textIndex)
-{
-    this.label = newText;
-}
-
-AnimatedObject.prototype.setHighlightIndex = function(hlIndex)
-{
-   this.highlightIndex = hlIndex;
-}
-
-
-AnimatedObject.prototype.getHighlightIndex = function()
-{
-   return this.highlightIndex;
-}

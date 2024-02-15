@@ -133,7 +133,7 @@ canvas {
 	padding-right: 12px;
 }
 
-.toolbar select, .toolbar input {
+.toolbar select, .toolbar input, .toolbar button {
 	padding: 3px 6px;
 	background-color: white;
 	border: solid 1px green;
