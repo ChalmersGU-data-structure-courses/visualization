@@ -99,12 +99,14 @@ function initializeAlgorithm() {
     var algoName = new URL(window.location).searchParams.get("algorithm");
     var algoSelect = document.getElementById("algorithmSelector");
     algoSelect.value = algoName;
-    if (algoSelect.value) {
-      var algoClass = window[algoName];
-      new algoClass(aniManager);
+    if (algoSelect.value && /^[A-Z]\w+$/.test(algoName)) {
+        var algoClass = eval(algoName);
+        if (algoClass.prototype instanceof Algorithm) {
+            new algoClass(aniManager);
+        }
     } else {
-      algoSelect.value = "";
-      window.history.replaceState("", "", window.location.pathname);
+        algoSelect.value = "";
+        window.history.replaceState("", "", window.location.pathname);
     }
     document.getElementById("about").open = !algoSelect.value;
 }
