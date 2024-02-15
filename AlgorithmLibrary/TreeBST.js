@@ -25,648 +25,591 @@
 // or implied, of the University of San Francisco
 
 
-function TreeBST(am)
-{
-    this.init(am);
-}
-TreeBST.inheritFrom(Algorithm);
+class BSTNode {
+    constructor(val, id, initialX, initialY) {
+        this.data = val;
+        this.x = initialX;
+        this.y = initialY;
+        this.graphicID = id;
+        this.left = null;
+        this.right = null;
+        this.parent = null;
+        this.leftWidth = 0;
+        this.rightWidth = 0;
+    }
 
-
-// Various constants
-
-TreeBST.FOREGROUND_COLOR = "#007700";
-TreeBST.BACKGROUND_COLOR = "#EEFFEE";
-
-TreeBST.LINK_COLOR = TreeBST.FOREGROUND_COLOR;
-TreeBST.HIGHLIGHT_CIRCLE_COLOR = TreeBST.FOREGROUND_COLOR;
-TreeBST.PRINT_COLOR = TreeBST.FOREGROUND_COLOR;
-
-TreeBST.NODE_SIZE = 40;
-TreeBST.WIDTH_DELTA = TreeBST.NODE_SIZE + 10;
-TreeBST.HEIGHT_DELTA = TreeBST.NODE_SIZE + 10;
-TreeBST.STARTING_Y = 50;
-
-TreeBST.FIRST_PRINT_POS_X = 50;
-TreeBST.PRINT_VERTICAL_GAP = 20;
-TreeBST.PRINT_HORIZONTAL_GAP = 50;
-
-TreeBST.MESSAGE_X = 10;
-TreeBST.MESSAGE_Y = 10;
-
-
-
-TreeBST.prototype.init = function(am)
-{
-    TreeBST.superclass.init.call(this, am);
-    this.addControls();
-    this.setup();
 }
 
 
-TreeBST.prototype.setup = function() 
-{
-    this.nextIndex = 0;
-    this.commands = [];
-    this.messageID = this.nextIndex++;
-    this.cmd("CreateLabel", this.messageID, "", TreeBST.MESSAGE_X, TreeBST.MESSAGE_Y, 0);
+class TreeBST extends Algorithm {
 
-    this.initialIndex = this.nextIndex;
-    this.animationManager.StartNewAnimation(this.commands);
-    this.animationManager.skipForward();
-    this.animationManager.clearHistory();
+    static FOREGROUND_COLOR = "#007700";
+    static BACKGROUND_COLOR = "#EEFFEE";
+    
+    static LINK_COLOR = TreeBST.FOREGROUND_COLOR;
+    static HIGHLIGHT_CIRCLE_COLOR = TreeBST.FOREGROUND_COLOR;
+    static PRINT_COLOR = TreeBST.FOREGROUND_COLOR;
+    
+    static NODE_SIZE = 40;
+    static WIDTH_DELTA = TreeBST.NODE_SIZE + 10;
+    static HEIGHT_DELTA = TreeBST.NODE_SIZE + 10;
+    static STARTING_Y = 50;
+    
+    static FIRST_PRINT_POS_X = 50;
+    static PRINT_VERTICAL_GAP = 20;
+    static PRINT_HORIZONTAL_GAP = 50;
+    
+    static MESSAGE_X = 10;
+    static MESSAGE_Y = 10;
 
-    this.sizeChanged();
-}
 
-TreeBST.prototype.sizeChanged = function()
-{
-    var w = this.getCanvasWidth();
-    var h = this.getCanvasHeight();
+    constructor(am) {
+        super();
+        this.init(am);
+    }
 
-    this.startingX = w / 2;
-    this.first_print_pos_y = h - 3 * TreeBST.PRINT_VERTICAL_GAP;
-    this.print_max = w - TreeBST.PRINT_HORIZONTAL_GAP;
+    init(am) {
+        super.init(am);
+        this.addControls();
+        this.setup();
+    }
 
-    this.implementAction(() => {
+    setup() {
+        this.nextIndex = 0;
         this.commands = [];
-        this.resizeTree();
-        return this.commands;
-    });
-}
+        this.messageID = this.nextIndex++;
+        this.cmd("CreateLabel", this.messageID, "", TreeBST.MESSAGE_X, TreeBST.MESSAGE_Y, 0);
 
+        this.initialIndex = this.nextIndex;
+        this.animationManager.StartNewAnimation(this.commands);
+        this.animationManager.skipForward();
+        this.animationManager.clearHistory();
 
-TreeBST.prototype.addControls = function()
-{
-    this.insertField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
-    this.addReturnSubmit(this.insertField, "ALPHANUM", this.insertCallback.bind(this));
-    this.insertButton = this.addControlToAlgorithmBar("Button", "Insert");
-    this.insertButton.onclick = this.insertCallback.bind(this);
-    this.addBreakToAlgorithmBar();
-
-    this.deleteField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
-    this.addReturnSubmit(this.deleteField, "ALPHANUM", this.deleteCallback.bind(this));
-    this.deleteButton = this.addControlToAlgorithmBar("Button", "Delete");
-    this.deleteButton.onclick = this.deleteCallback.bind(this);
-    this.addBreakToAlgorithmBar();
-
-    this.findField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
-    this.addReturnSubmit(this.findField, "ALPHANUM", this.findCallback.bind(this));
-    this.findButton = this.addControlToAlgorithmBar("Button", "Find");
-    this.findButton.onclick = this.findCallback.bind(this);
-    this.addBreakToAlgorithmBar();
-
-    this.printButton = this.addControlToAlgorithmBar("Button", "Print");
-    this.printButton.onclick = this.printCallback.bind(this);
-    this.addBreakToAlgorithmBar();
-
-    this.clearButton = this.addControlToAlgorithmBar("Button", "Clear");
-    this.clearButton.onclick = this.clearCallback.bind(this);
-}
-
-
-TreeBST.prototype.reset = function()
-{
-    this.nextIndex = this.initialIndex;
-    this.treeRoot = null;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-// Callback functions for the algorithm control bar
-
-TreeBST.prototype.insertCallback = function(event)
-{
-    var insertedValue = this.normalizeNumber(this.insertField.value);
-    if (insertedValue !== "") {
-        this.insertField.value = "";
-        this.implementAction(this.insertElement.bind(this), insertedValue);
+        this.sizeChanged();
     }
-}
 
-TreeBST.prototype.deleteCallback = function(event)
-{
-    var deletedValue = this.normalizeNumber(this.deleteField.value);
-    if (deletedValue !== "") {
-        this.deleteField.value = "";
-        this.implementAction(this.deleteElement.bind(this), deletedValue);
+    sizeChanged() {
+        var w = this.getCanvasWidth();
+        var h = this.getCanvasHeight();
+
+        this.startingX = w / 2;
+        this.first_print_pos_y = h - 3 * TreeBST.PRINT_VERTICAL_GAP;
+        this.print_max = w - TreeBST.PRINT_HORIZONTAL_GAP;
+
+        this.implementAction(() => {
+            this.commands = [];
+            this.resizeTree();
+            return this.commands;
+        });
     }
-}
 
-TreeBST.prototype.findCallback = function(event)
-{
-    var findValue = this.normalizeNumber(this.findField.value);
-    if (findValue !== "") {
-        this.findField.value = "";
-        this.implementAction(this.findElement.bind(this), findValue);
+    addControls() {
+        this.insertField = this.addControlToAlgorithmBar("Text", "", { maxlength: 4, size: 4 });
+        this.addReturnSubmit(this.insertField, "ALPHANUM", this.insertCallback.bind(this));
+        this.insertButton = this.addControlToAlgorithmBar("Button", "Insert");
+        this.insertButton.onclick = this.insertCallback.bind(this);
+        this.addBreakToAlgorithmBar();
+
+        this.deleteField = this.addControlToAlgorithmBar("Text", "", { maxlength: 4, size: 4 });
+        this.addReturnSubmit(this.deleteField, "ALPHANUM", this.deleteCallback.bind(this));
+        this.deleteButton = this.addControlToAlgorithmBar("Button", "Delete");
+        this.deleteButton.onclick = this.deleteCallback.bind(this);
+        this.addBreakToAlgorithmBar();
+
+        this.findField = this.addControlToAlgorithmBar("Text", "", { maxlength: 4, size: 4 });
+        this.addReturnSubmit(this.findField, "ALPHANUM", this.findCallback.bind(this));
+        this.findButton = this.addControlToAlgorithmBar("Button", "Find");
+        this.findButton.onclick = this.findCallback.bind(this);
+        this.addBreakToAlgorithmBar();
+
+        this.printButton = this.addControlToAlgorithmBar("Button", "Print");
+        this.printButton.onclick = this.printCallback.bind(this);
+        this.addBreakToAlgorithmBar();
+
+        this.clearButton = this.addControlToAlgorithmBar("Button", "Clear");
+        this.clearButton.onclick = this.clearCallback.bind(this);
     }
-}
 
-TreeBST.prototype.clearCallback = function(event)
-{
-    this.implementAction(this.clearTree.bind(this), "");
-}
-
-TreeBST.prototype.printCallback = function(event)
-{
-    this.implementAction(this.printTree.bind(this), "");
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-// Functions that do the actual work
-
-TreeBST.prototype.printTree = function(unused)
-{
-    if (this.treeRoot == null) return [];
-    this.commands = [];
-    this.cmd("SetText", this.messageID, "Printing tree");
-    this.highlightID = this.nextIndex++;
-    this.cmd("CreateHighlightCircle", this.highlightID, TreeBST.HIGHLIGHT_CIRCLE_COLOR, this.treeRoot.x, this.treeRoot.y);
-    var firstLabel = this.nextIndex;
-
-    this.xPosOfNextLabel = TreeBST.FIRST_PRINT_POS_X;
-    this.yPosOfNextLabel = this.first_print_pos_y;
-
-    this.printTreeRec(this.treeRoot);
-    this.cmd("Delete", this.highlightID);
-    this.cmd("Step");
-    for (var i = firstLabel; i < this.nextIndex; i++) {
-        this.cmd("Delete", i);
+    reset() {
+        this.nextIndex = this.initialIndex;
+        this.treeRoot = null;
     }
-    this.nextIndex = this.highlightID;  // Reuse objects. Not necessary.
-    this.cmd("SetText", this.messageID, "");
-    return this.commands;
-}
 
-TreeBST.prototype.printTreeRec = function(tree)
-{
-    this.cmd("Step");
-    if (tree.left != null) {
-        this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
-        this.printTreeRec(tree.left);
-        this.cmd("Move", this.highlightID, tree.x, tree.y);
-        this.cmd("Step");
+    ///////////////////////////////////////////////////////////////////////////////
+    // Callback functions for the algorithm control bar
+
+    insertCallback(event) {
+        var insertedValue = this.normalizeNumber(this.insertField.value);
+        if (insertedValue !== "") {
+            this.insertField.value = "";
+            this.implementAction(this.insertElement.bind(this), insertedValue);
+        }
     }
-    var nextLabelID = this.nextIndex++;
-    this.cmd("CreateLabel", nextLabelID, tree.data, tree.x, tree.y);
-    this.cmd("SetForegroundColor", nextLabelID, TreeBST.PRINT_COLOR);
-    this.cmd("Move", nextLabelID, this.xPosOfNextLabel, this.yPosOfNextLabel);
-    this.cmd("Step");
 
-    this.xPosOfNextLabel += TreeBST.PRINT_HORIZONTAL_GAP;
-    if (this.xPosOfNextLabel > this.print_max) {
+    deleteCallback(event) {
+        var deletedValue = this.normalizeNumber(this.deleteField.value);
+        if (deletedValue !== "") {
+            this.deleteField.value = "";
+            this.implementAction(this.deleteElement.bind(this), deletedValue);
+        }
+    }
+
+    findCallback(event) {
+        var findValue = this.normalizeNumber(this.findField.value);
+        if (findValue !== "") {
+            this.findField.value = "";
+            this.implementAction(this.findElement.bind(this), findValue);
+        }
+    }
+
+    clearCallback(event) {
+        this.implementAction(this.clearTree.bind(this), "");
+    }
+
+    printCallback(event) {
+        this.implementAction(this.printTree.bind(this), "");
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////
+    // Functions that do the actual work
+
+    printTree() {
+        if (this.treeRoot == null) return [];
+        this.commands = [];
+        this.cmd("SetText", this.messageID, "Printing tree");
+        this.highlightID = this.nextIndex++;
+        this.cmd("CreateHighlightCircle", this.highlightID, TreeBST.HIGHLIGHT_CIRCLE_COLOR, this.treeRoot.x, this.treeRoot.y);
+        var firstLabel = this.nextIndex;
+
         this.xPosOfNextLabel = TreeBST.FIRST_PRINT_POS_X;
-        this.yPosOfNextLabel += TreeBST.PRINT_VERTICAL_GAP;
-    }
-    if (tree.right != null) {
-        this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
-        this.printTreeRec(tree.right);
-        this.cmd("Move", this.highlightID, tree.x, tree.y);
+        this.yPosOfNextLabel = this.first_print_pos_y;
+
+        this.printTreeRec(this.treeRoot);
+        this.cmd("Delete", this.highlightID);
         this.cmd("Step");
+        for (var i = firstLabel; i < this.nextIndex; i++) {
+            this.cmd("Delete", i);
+        }
+        this.nextIndex = this.highlightID; // Reuse objects. Not necessary.
+        this.cmd("SetText", this.messageID, "");
+        return this.commands;
     }
-}
 
-
-TreeBST.prototype.clearTree = function(ignored)
-{
-    this.commands = [];
-    this.deleteTree(this.treeRoot);
-    this.treeRoot = null;
-    this.nextIndex = this.initialIndex;
-    return this.commands;
-}
-
-
-TreeBST.prototype.deleteTree = function(tree)
-{
-    if (tree != null) {
-        if (tree.left) {
-            this.cmd("Disconnect", tree.graphicID, tree.left.graphicID);
-            this.deleteTree(tree.left);
-            tree.left == null;
-        }
-        if (tree.right) {
-            this.cmd("Disconnect", tree.graphicID, tree.right.graphicID);
-            this.deleteTree(tree.right);
-            tree.right == null;
-        }
-        this.cmd("Delete", tree.graphicID);
-    }
-}
-
-
-TreeBST.prototype.findElement = function(findValue)
-{
-    this.commands = [];
-    this.cmd("SetText", this.messageID, `Searching for ${findValue}`);
-    this.highlightID = this.nextIndex++;
-    var found = this.doFind(this.treeRoot, findValue);
-    this.cmd("SetText", this.messageID, `Element ${findValue} ${found?"found":"not found"}`);
-    return this.commands;
-}
-
-
-TreeBST.prototype.doFind = function(tree, value)
-{
-    if (tree != null) {
-        this.cmd("SetHighlight", tree.graphicID, 1);
-        var cmp = this.compare(tree.data, value);
-        if (cmp == 0) {
-            this.cmd("SetText", this.messageID, `Searching for ${value}: ${value} = ${tree.data} (element found!)`);
-            this.cmd("Step");
-            this.cmd("SetText", this.messageID, `Found ${value}`);
-            this.cmd("SetHighlight", tree.graphicID, 0);
-            return true;
-        }
-        else if (cmp > 0) {
-            this.cmd("SetText", this.messageID, `Searching for ${value}: ${value} < ${tree.data} (look to left subtree)`);
-            this.cmd("Step");
-            this.cmd("SetHighlight", tree.graphicID, 0);
-            if (tree.left != null) {
-                this.cmd("CreateHighlightCircle", this.highlightID, TreeBST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
-                this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
-                this.cmd("Step");
-                this.cmd("Delete", this.highlightID);
-            }
-            return this.doFind(tree.left, value);
-        }
-        else {
-            this.cmd("SetText", this.messageID, `Searching for ${value}: ${value} > ${tree.data} (look to right subtree)`);
-            this.cmd("Step");
-            this.cmd("SetHighlight", tree.graphicID, 0);
-            if (tree.right!= null) {
-                this.cmd("CreateHighlightCircle", this.highlightID, TreeBST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
-                this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
-                this.cmd("Step");
-                this.cmd("Delete", this.highlightID);
-            }
-            return this.doFind(tree.right, value);
-        }
-    }
-    else {
-        return false;
-    }
-}
-
-
-TreeBST.prototype.insertElement = function(insertedValue)
-{
-    this.commands = [];
-    this.cmd("SetText", this.messageID, `Inserting ${insertedValue}`);
-    this.highlightID = this.nextIndex++;
-    var treeNodeID = this.nextIndex++;
-
-    if (this.treeRoot == null) {
-        var x = this.startingX, y = TreeBST.STARTING_Y;
-        this.cmd("CreateCircle", treeNodeID, insertedValue, x, y);
-        this.cmd("SetWidth", treeNodeID, TreeBST.NODE_SIZE);
-        this.cmd("SetForegroundColor", treeNodeID, TreeBST.FOREGROUND_COLOR);
-        this.cmd("SetBackgroundColor", treeNodeID, TreeBST.BACKGROUND_COLOR);
+    printTreeRec(tree) {
         this.cmd("Step");
-        this.treeRoot = new BSTNode(insertedValue, treeNodeID, x, y);
-    }
-    else {
-        var x = TreeBST.STARTING_Y, y = 2 * TreeBST.STARTING_Y;
-        this.cmd("CreateCircle", treeNodeID, insertedValue, x, y);
-        this.cmd("SetWidth", treeNodeID, TreeBST.NODE_SIZE);
-        this.cmd("SetForegroundColor", treeNodeID, TreeBST.FOREGROUND_COLOR);
-        this.cmd("SetBackgroundColor", treeNodeID, TreeBST.BACKGROUND_COLOR);
-        this.cmd("Step");
-        var insertElem = new BSTNode(insertedValue, treeNodeID, x, y);
-        this.cmd("SetHighlight", insertElem.graphicID, 1);
-        this.insert(insertElem, this.treeRoot);
-    }
-    this.resizeTree();
-    this.cmd("SetText", this.messageID, "");
-    this.validateTree();
-    return this.commands;
-}
-
-
-TreeBST.prototype.insert = function(elem, tree)
-{
-    this.cmd("SetHighlight", tree.graphicID, 1);
-    this.cmd("SetHighlight", elem.graphicID, 1);
-
-    var cmp = this.compare(elem.data, tree.data);
-    if (cmp < 0) {
-        this.cmd("SetText", this.messageID, `${elem.data} < ${tree.data}: Looking at left subtree`);
-    }
-    else {
-        this.cmd("SetText", this.messageID, `${elem.data} >= ${tree.data}: Looking at right subtree`);
-    }
-    this.cmd("Step");
-    this.cmd("SetHighlight", tree.graphicID, 0);
-    this.cmd("SetHighlight", elem.graphicID, 0);
-
-    if (cmp < 0) {
-        if (tree.left == null) {
-            this.cmd("SetText", this.messageID, "Found null tree, inserting element");
-            this.cmd("SetHighlight", elem.graphicID, 0);
-            tree.left = elem;
-            elem.parent = tree;
-            this.cmd("Connect", tree.graphicID, elem.graphicID, TreeBST.LINK_COLOR);
-        }
-        else {
-            this.cmd("CreateHighlightCircle", this.highlightID, TreeBST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+        if (tree.left != null) {
             this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
+            this.printTreeRec(tree.left);
+            this.cmd("Move", this.highlightID, tree.x, tree.y);
             this.cmd("Step");
-            this.cmd("Delete", this.highlightID);
-            this.insert(elem, tree.left);
         }
-    }
-    else {
-        if (tree.right == null) {
-            this.cmd("SetText", this.messageID, "Found null tree, inserting element");
-            this.cmd("SetHighlight", elem.graphicID, 0);
-            tree.right = elem;
-            elem.parent = tree;
-            this.cmd("Connect", tree.graphicID, elem.graphicID, TreeBST.LINK_COLOR);
-            elem.x = tree.x + TreeBST.WIDTH_DELTA / 2;
-            elem.y = tree.y + TreeBST.HEIGHT_DELTA;
-            this.cmd("Move", elem.graphicID, elem.x, elem.y);
+        var nextLabelID = this.nextIndex++;
+        this.cmd("CreateLabel", nextLabelID, tree.data, tree.x, tree.y);
+        this.cmd("SetForegroundColor", nextLabelID, TreeBST.PRINT_COLOR);
+        this.cmd("Move", nextLabelID, this.xPosOfNextLabel, this.yPosOfNextLabel);
+        this.cmd("Step");
+
+        this.xPosOfNextLabel += TreeBST.PRINT_HORIZONTAL_GAP;
+        if (this.xPosOfNextLabel > this.print_max) {
+            this.xPosOfNextLabel = TreeBST.FIRST_PRINT_POS_X;
+            this.yPosOfNextLabel += TreeBST.PRINT_VERTICAL_GAP;
         }
-        else {
-            this.cmd("CreateHighlightCircle", this.highlightID, TreeBST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+        if (tree.right != null) {
             this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
+            this.printTreeRec(tree.right);
+            this.cmd("Move", this.highlightID, tree.x, tree.y);
             this.cmd("Step");
-            this.cmd("Delete", this.highlightID);
-            this.insert(elem, tree.right);
         }
     }
-}
 
+    clearTree() {
+        this.commands = [];
+        this.deleteTree(this.treeRoot);
+        this.treeRoot = null;
+        this.nextIndex = this.initialIndex;
+        return this.commands;
+    }
 
-TreeBST.prototype.deleteElement = function(deletedValue)
-{
-    this.commands = [];
-    this.cmd("SetText", this.messageID, `Deleting ${deletedValue}`);
-    this.cmd("Step");
-    this.cmd("SetText", this.messageID, "");
-    this.highlightID = this.nextIndex++;
-    this.treeDelete(this.treeRoot, deletedValue);
-    this.cmd("SetText", this.messageID, "");
-    this.validateTree();
-    return this.commands;
-}
-
-
-TreeBST.prototype.treeDelete = function(tree, valueToDelete)
-{
-    var leftchild = false;
-    if (tree != null) {
-        if (tree.parent != null) {
-            leftchild = tree.parent.left == tree;
+    deleteTree(tree) {
+        if (tree != null) {
+            if (tree.left) {
+                this.cmd("Disconnect", tree.graphicID, tree.left.graphicID);
+                this.deleteTree(tree.left);
+                tree.left == null;
+            }
+            if (tree.right) {
+                this.cmd("Disconnect", tree.graphicID, tree.right.graphicID);
+                this.deleteTree(tree.right);
+                tree.right == null;
+            }
+            this.cmd("Delete", tree.graphicID);
         }
-        this.cmd("SetHighlight", tree.graphicID, 1);
-        var cmp = this.compare(valueToDelete, tree.data);
-        if (cmp < 0) {
-            this.cmd("SetText", this.messageID, `${valueToDelete} < ${tree.data}: Looking at left subtree`);
-        }
-        else if (cmp > 0) {
-            this.cmd("SetText", this.messageID, `${valueToDelete} > ${tree.data}: Looking at right subtree`);
+    }
+
+    findElement(findValue) {
+        this.commands = [];
+        this.cmd("SetText", this.messageID, `Searching for ${findValue}`);
+        this.highlightID = this.nextIndex++;
+        var found = this.doFind(this.treeRoot, findValue);
+        this.cmd("SetText", this.messageID, `Element ${findValue} ${found ? "found" : "not found"}`);
+        return this.commands;
+    }
+
+    doFind(tree, value) {
+        if (tree != null) {
+            this.cmd("SetHighlight", tree.graphicID, 1);
+            var cmp = this.compare(tree.data, value);
+            if (cmp == 0) {
+                this.cmd("SetText", this.messageID, `Searching for ${value}: ${value} = ${tree.data} (element found!)`);
+                this.cmd("Step");
+                this.cmd("SetText", this.messageID, `Found ${value}`);
+                this.cmd("SetHighlight", tree.graphicID, 0);
+                return true;
+            }
+            else if (cmp > 0) {
+                this.cmd("SetText", this.messageID, `Searching for ${value}: ${value} < ${tree.data} (look to left subtree)`);
+                this.cmd("Step");
+                this.cmd("SetHighlight", tree.graphicID, 0);
+                if (tree.left != null) {
+                    this.cmd("CreateHighlightCircle", this.highlightID, TreeBST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+                    this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
+                    this.cmd("Step");
+                    this.cmd("Delete", this.highlightID);
+                }
+                return this.doFind(tree.left, value);
+            }
+            else {
+                this.cmd("SetText", this.messageID, `Searching for ${value}: ${value} > ${tree.data} (look to right subtree)`);
+                this.cmd("Step");
+                this.cmd("SetHighlight", tree.graphicID, 0);
+                if (tree.right != null) {
+                    this.cmd("CreateHighlightCircle", this.highlightID, TreeBST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+                    this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
+                    this.cmd("Step");
+                    this.cmd("Delete", this.highlightID);
+                }
+                return this.doFind(tree.right, value);
+            }
         }
         else {
-            this.cmd("SetText", this.messageID, `${valueToDelete} == ${tree.data}: Found node to delete`);
+            return false;
+        }
+    }
+
+    insertElement(insertedValue) {
+        this.commands = [];
+        this.cmd("SetText", this.messageID, `Inserting ${insertedValue}`);
+        this.highlightID = this.nextIndex++;
+        var treeNodeID = this.nextIndex++;
+
+        if (this.treeRoot == null) {
+            var x = this.startingX, y = TreeBST.STARTING_Y;
+            this.cmd("CreateCircle", treeNodeID, insertedValue, x, y);
+            this.cmd("SetWidth", treeNodeID, TreeBST.NODE_SIZE);
+            this.cmd("SetForegroundColor", treeNodeID, TreeBST.FOREGROUND_COLOR);
+            this.cmd("SetBackgroundColor", treeNodeID, TreeBST.BACKGROUND_COLOR);
+            this.cmd("Step");
+            this.treeRoot = new BSTNode(insertedValue, treeNodeID, x, y);
+        }
+        else {
+            var x = TreeBST.STARTING_Y, y = 2 * TreeBST.STARTING_Y;
+            this.cmd("CreateCircle", treeNodeID, insertedValue, x, y);
+            this.cmd("SetWidth", treeNodeID, TreeBST.NODE_SIZE);
+            this.cmd("SetForegroundColor", treeNodeID, TreeBST.FOREGROUND_COLOR);
+            this.cmd("SetBackgroundColor", treeNodeID, TreeBST.BACKGROUND_COLOR);
+            this.cmd("Step");
+            var insertElem = new BSTNode(insertedValue, treeNodeID, x, y);
+            this.cmd("SetHighlight", insertElem.graphicID, 1);
+            this.insert(insertElem, this.treeRoot);
+        }
+        this.resizeTree();
+        this.cmd("SetText", this.messageID, "");
+        this.validateTree();
+        return this.commands;
+    }
+
+    insert(elem, tree) {
+        this.cmd("SetHighlight", tree.graphicID, 1);
+        this.cmd("SetHighlight", elem.graphicID, 1);
+
+        var cmp = this.compare(elem.data, tree.data);
+        if (cmp < 0) {
+            this.cmd("SetText", this.messageID, `${elem.data} < ${tree.data}: Looking at left subtree`);
+        }
+        else {
+            this.cmd("SetText", this.messageID, `${elem.data} >= ${tree.data}: Looking at right subtree`);
         }
         this.cmd("Step");
         this.cmd("SetHighlight", tree.graphicID, 0);
+        this.cmd("SetHighlight", elem.graphicID, 0);
 
-        if (cmp == 0) {
-            if (tree.left == null && tree.right == null) {
-                this.cmd("SetText", this.messageID, "Node to delete is a leaf: Delete it");
-                this.cmd("Delete", tree.graphicID);
-                if (leftchild && tree.parent != null) {
-                    tree.parent.left = null;
-                }
-                else if (tree.parent != null) {
-                    tree.parent.right = null;
-                }
-                else {
-                    this.treeRoot = null;
-                }
-                this.resizeTree();
-                this.cmd("Step");
+        if (cmp < 0) {
+            if (tree.left == null) {
+                this.cmd("SetText", this.messageID, "Found null tree, inserting element");
+                this.cmd("SetHighlight", elem.graphicID, 0);
+                tree.left = elem;
+                elem.parent = tree;
+                this.cmd("Connect", tree.graphicID, elem.graphicID, TreeBST.LINK_COLOR);
             }
-            else if (tree.left == null) {
-                this.cmd("SetText", this.messageID, "Node to delete has no left child: \nSet parent of deleted node to right child of deleted node");
-                if (tree.parent != null) {
-                    this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
-                    this.cmd("Connect", tree.parent.graphicID, tree.right.graphicID, TreeBST.LINK_COLOR);
-                    this.cmd("Step");
-                    this.cmd("Delete", tree.graphicID);
-                    if (leftchild) {
-                        tree.parent.left = tree.right;
-                    }
-                    else {
-                        tree.parent.right = tree.right;
-                    }
-                    tree.right.parent = tree.parent;
-                }
-                else {
-                    this.cmd("Delete", tree.graphicID);
-                    this.treeRoot = tree.right;
-                    this.treeRoot.parent = null;
-                }
-                this.resizeTree();
-            }
-            else if (tree.right == null) {
-                this.cmd("SetText", this.messageID, "Node to delete has no right child: \nSet parent of deleted node to left child of deleted node");
-                if (tree.parent != null) {
-                    this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
-                    this.cmd("Connect", tree.parent.graphicID, tree.left.graphicID, TreeBST.LINK_COLOR);
-                    this.cmd("Step");
-                    this.cmd("Delete", tree.graphicID);
-                    if (leftchild) {
-                        tree.parent.left = tree.left;
-                    }
-                    else {
-                        tree.parent.right = tree.left;
-                    }
-                    tree.left.parent = tree.parent;
-                }
-                else {
-                    this.cmd("Delete", tree.graphicID);
-                    this.treeRoot = tree.left;
-                    this.treeRoot.parent = null;
-                }
-                this.resizeTree();
-            }
-            else { // tree.left != null && tree.right != null
-                this.cmd("SetText", this.messageID, "Node to delete has two children: \nFind largest node in left subtree");
-                this.highlightID = this.nextIndex++;
-                this.cmd("CreateHighlightCircle", this.highlightID, TreeBST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
-                var tmp = tree;
-                tmp = tree.left;
-                this.cmd("Move", this.highlightID, tmp.x, tmp.y);
-                this.cmd("Step");
-                while (tmp.right != null) {
-                    tmp = tmp.right;
-                    this.cmd("Move", this.highlightID, tmp.x, tmp.y);
-                    this.cmd("Step");
-                }
-                this.cmd("SetText", tree.graphicID, " ");
-                var labelID = this.nextIndex++;
-                this.cmd("CreateLabel", labelID, tmp.data, tmp.x, tmp.y);
-                tree.data = tmp.data;
-                this.cmd("Move", labelID, tree.x, tree.y);
-                this.cmd("SetText", this.messageID, "Copy largest value of left subtree into node to delete");
-
-                this.cmd("Step");
-                this.cmd("SetHighlight", tree.graphicID, 0);
-                this.cmd("Delete", labelID);
-                this.cmd("SetText", tree.graphicID, tree.data);
-                this.cmd("Delete", this.highlightID);
-                this.cmd("SetText", this.messageID, "Remove node whose value we copied");
-
-                if (tmp.left == null) {
-                    if (tmp.parent != tree) {
-                        tmp.parent.right = null;
-                    }
-                    else {
-                        tree.left = null;
-                    }
-                    this.cmd("Delete", tmp.graphicID);
-                    this.resizeTree();
-                }
-                else {
-                    this.cmd("Disconnect", tmp.parent.graphicID, tmp.graphicID);
-                    this.cmd("Connect", tmp.parent.graphicID, tmp.left.graphicID, TreeBST.LINK_COLOR);
-                    this.cmd("Step");
-                    this.cmd("Delete", tmp.graphicID);
-                    if (tmp.parent != tree) {
-                        tmp.parent.right = tmp.left;
-                        tmp.left.parent = tmp.parent;
-                    }
-                    else {
-                        tree.left = tmp.left;
-                        tmp.left.parent = tree;
-                    }
-                    this.resizeTree();
-                }
-            }
-        }
-        else if (cmp < 0) {
-            if (tree.left != null) {
+            else {
                 this.cmd("CreateHighlightCircle", this.highlightID, TreeBST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
                 this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
                 this.cmd("Step");
                 this.cmd("Delete", this.highlightID);
+                this.insert(elem, tree.left);
             }
-            this.treeDelete(tree.left, valueToDelete);
         }
         else {
-            if (tree.right != null) {
+            if (tree.right == null) {
+                this.cmd("SetText", this.messageID, "Found null tree, inserting element");
+                this.cmd("SetHighlight", elem.graphicID, 0);
+                tree.right = elem;
+                elem.parent = tree;
+                this.cmd("Connect", tree.graphicID, elem.graphicID, TreeBST.LINK_COLOR);
+                elem.x = tree.x + TreeBST.WIDTH_DELTA / 2;
+                elem.y = tree.y + TreeBST.HEIGHT_DELTA;
+                this.cmd("Move", elem.graphicID, elem.x, elem.y);
+            }
+            else {
                 this.cmd("CreateHighlightCircle", this.highlightID, TreeBST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
                 this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
                 this.cmd("Step");
                 this.cmd("Delete", this.highlightID);
+                this.insert(elem, tree.right);
             }
-            this.treeDelete(tree.right, valueToDelete);
         }
     }
-    else {
-        this.cmd("SetText", this.messageID, `Element ${valueToDelete} not found, could not delete`);
+
+    deleteElement(deletedValue) {
+        this.commands = [];
+        this.cmd("SetText", this.messageID, `Deleting ${deletedValue}`);
         this.cmd("Step");
+        this.cmd("SetText", this.messageID, "");
+        this.highlightID = this.nextIndex++;
+        this.treeDelete(this.treeRoot, deletedValue);
+        this.cmd("SetText", this.messageID, "");
+        this.validateTree();
+        return this.commands;
     }
-}
 
+    treeDelete(tree, valueToDelete) {
+        var leftchild = false;
+        if (tree != null) {
+            if (tree.parent != null) {
+                leftchild = tree.parent.left == tree;
+            }
+            this.cmd("SetHighlight", tree.graphicID, 1);
+            var cmp = this.compare(valueToDelete, tree.data);
+            if (cmp < 0) {
+                this.cmd("SetText", this.messageID, `${valueToDelete} < ${tree.data}: Looking at left subtree`);
+            }
+            else if (cmp > 0) {
+                this.cmd("SetText", this.messageID, `${valueToDelete} > ${tree.data}: Looking at right subtree`);
+            }
+            else {
+                this.cmd("SetText", this.messageID, `${valueToDelete} == ${tree.data}: Found node to delete`);
+            }
+            this.cmd("Step");
+            this.cmd("SetHighlight", tree.graphicID, 0);
 
-TreeBST.prototype.validateTree = function(tree, parent)
-{
-    if (!tree) {
-        tree = this.treeRoot;
-        if (!tree) return;
-        // console.log("Validating tree", tree);
-    } else {
-        if (tree.parent !== parent) console.error("Parent mismatch:", tree, parent);
-    }
-    if (!tree.graphicID) console.error("Tree missing ID:", tree);
-    if (tree.left) this.validateTree(tree.left, tree);
-    if (tree.right) this.validateTree(tree.right, tree);
-}
+            if (cmp == 0) {
+                if (tree.left == null && tree.right == null) {
+                    this.cmd("SetText", this.messageID, "Node to delete is a leaf: Delete it");
+                    this.cmd("Delete", tree.graphicID);
+                    if (leftchild && tree.parent != null) {
+                        tree.parent.left = null;
+                    }
+                    else if (tree.parent != null) {
+                        tree.parent.right = null;
+                    }
+                    else {
+                        this.treeRoot = null;
+                    }
+                    this.resizeTree();
+                    this.cmd("Step");
+                }
+                else if (tree.left == null) {
+                    this.cmd("SetText", this.messageID, "Node to delete has no left child: \nSet parent of deleted node to right child of deleted node");
+                    if (tree.parent != null) {
+                        this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
+                        this.cmd("Connect", tree.parent.graphicID, tree.right.graphicID, TreeBST.LINK_COLOR);
+                        this.cmd("Step");
+                        this.cmd("Delete", tree.graphicID);
+                        if (leftchild) {
+                            tree.parent.left = tree.right;
+                        }
+                        else {
+                            tree.parent.right = tree.right;
+                        }
+                        tree.right.parent = tree.parent;
+                    }
+                    else {
+                        this.cmd("Delete", tree.graphicID);
+                        this.treeRoot = tree.right;
+                        this.treeRoot.parent = null;
+                    }
+                    this.resizeTree();
+                }
+                else if (tree.right == null) {
+                    this.cmd("SetText", this.messageID, "Node to delete has no right child: \nSet parent of deleted node to left child of deleted node");
+                    if (tree.parent != null) {
+                        this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
+                        this.cmd("Connect", tree.parent.graphicID, tree.left.graphicID, TreeBST.LINK_COLOR);
+                        this.cmd("Step");
+                        this.cmd("Delete", tree.graphicID);
+                        if (leftchild) {
+                            tree.parent.left = tree.left;
+                        }
+                        else {
+                            tree.parent.right = tree.left;
+                        }
+                        tree.left.parent = tree.parent;
+                    }
+                    else {
+                        this.cmd("Delete", tree.graphicID);
+                        this.treeRoot = tree.left;
+                        this.treeRoot.parent = null;
+                    }
+                    this.resizeTree();
+                }
+                else { // tree.left != null && tree.right != null
+                    this.cmd("SetText", this.messageID, "Node to delete has two children: \nFind largest node in left subtree");
+                    this.highlightID = this.nextIndex++;
+                    this.cmd("CreateHighlightCircle", this.highlightID, TreeBST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+                    var tmp = tree;
+                    tmp = tree.left;
+                    this.cmd("Move", this.highlightID, tmp.x, tmp.y);
+                    this.cmd("Step");
+                    while (tmp.right != null) {
+                        tmp = tmp.right;
+                        this.cmd("Move", this.highlightID, tmp.x, tmp.y);
+                        this.cmd("Step");
+                    }
+                    this.cmd("SetText", tree.graphicID, " ");
+                    var labelID = this.nextIndex++;
+                    this.cmd("CreateLabel", labelID, tmp.data, tmp.x, tmp.y);
+                    tree.data = tmp.data;
+                    this.cmd("Move", labelID, tree.x, tree.y);
+                    this.cmd("SetText", this.messageID, "Copy largest value of left subtree into node to delete");
 
+                    this.cmd("Step");
+                    this.cmd("SetHighlight", tree.graphicID, 0);
+                    this.cmd("Delete", labelID);
+                    this.cmd("SetText", tree.graphicID, tree.data);
+                    this.cmd("Delete", this.highlightID);
+                    this.cmd("SetText", this.messageID, "Remove node whose value we copied");
 
-TreeBST.prototype.resizeTree = function()
-{
-    var startingPoint = this.startingX;
-    this.resizeWidths(this.treeRoot);
-    if (this.treeRoot != null) {
-        if (this.treeRoot.leftWidth > startingPoint) {
-            startingPoint = this.treeRoot.leftWidth;
+                    if (tmp.left == null) {
+                        if (tmp.parent != tree) {
+                            tmp.parent.right = null;
+                        }
+                        else {
+                            tree.left = null;
+                        }
+                        this.cmd("Delete", tmp.graphicID);
+                        this.resizeTree();
+                    }
+                    else {
+                        this.cmd("Disconnect", tmp.parent.graphicID, tmp.graphicID);
+                        this.cmd("Connect", tmp.parent.graphicID, tmp.left.graphicID, TreeBST.LINK_COLOR);
+                        this.cmd("Step");
+                        this.cmd("Delete", tmp.graphicID);
+                        if (tmp.parent != tree) {
+                            tmp.parent.right = tmp.left;
+                            tmp.left.parent = tmp.parent;
+                        }
+                        else {
+                            tree.left = tmp.left;
+                            tmp.left.parent = tree;
+                        }
+                        this.resizeTree();
+                    }
+                }
+            }
+            else if (cmp < 0) {
+                if (tree.left != null) {
+                    this.cmd("CreateHighlightCircle", this.highlightID, TreeBST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+                    this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
+                    this.cmd("Step");
+                    this.cmd("Delete", this.highlightID);
+                }
+                this.treeDelete(tree.left, valueToDelete);
+            }
+            else {
+                if (tree.right != null) {
+                    this.cmd("CreateHighlightCircle", this.highlightID, TreeBST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+                    this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
+                    this.cmd("Step");
+                    this.cmd("Delete", this.highlightID);
+                }
+                this.treeDelete(tree.right, valueToDelete);
+            }
         }
-        else if (this.treeRoot.rightWidth > startingPoint) {
-            startingPoint = Math.max(this.treeRoot.leftWidth, 2 * startingPoint - this.treeRoot.rightWidth);
+        else {
+            this.cmd("SetText", this.messageID, `Element ${valueToDelete} not found, could not delete`);
+            this.cmd("Step");
         }
-        this.setNewPositions(this.treeRoot, startingPoint, TreeBST.STARTING_Y, 0);
-        this.animateNewPositions(this.treeRoot);
-        this.cmd("Step");
     }
-}
 
-
-TreeBST.prototype.setNewPositions = function(tree, xPosition, yPosition, side)
-{
-    if (tree != null) {
-        tree.y = yPosition;
-        if (side < 0) {
-            xPosition = xPosition - tree.rightWidth;
+    validateTree(tree, parent) {
+        if (!tree) {
+            tree = this.treeRoot;
+            if (!tree) return;
+            // console.log("Validating tree", tree);
+        } else {
+            if (tree.parent !== parent) console.error("Parent mismatch:", tree, parent);
         }
-        else if (side > 0) {
-            xPosition = xPosition + tree.leftWidth;
+        if (!tree.graphicID) console.error("Tree missing ID:", tree);
+        if (tree.left) this.validateTree(tree.left, tree);
+        if (tree.right) this.validateTree(tree.right, tree);
+    }
+
+    resizeTree() {
+        var startingPoint = this.startingX;
+        this.resizeWidths(this.treeRoot);
+        if (this.treeRoot != null) {
+            if (this.treeRoot.leftWidth > startingPoint) {
+                startingPoint = this.treeRoot.leftWidth;
+            }
+            else if (this.treeRoot.rightWidth > startingPoint) {
+                startingPoint = Math.max(this.treeRoot.leftWidth, 2 * startingPoint - this.treeRoot.rightWidth);
+            }
+            this.setNewPositions(this.treeRoot, startingPoint, TreeBST.STARTING_Y, 0);
+            this.animateNewPositions(this.treeRoot);
+            this.cmd("Step");
         }
-        tree.x = xPosition;
-        this.setNewPositions(tree.left, xPosition, yPosition + TreeBST.HEIGHT_DELTA, -1);
-        this.setNewPositions(tree.right, xPosition, yPosition + TreeBST.HEIGHT_DELTA, 1);
     }
-}
 
-
-TreeBST.prototype.animateNewPositions = function(tree)
-{
-    if (tree != null) {
-        this.cmd("Move", tree.graphicID, tree.x, tree.y);
-        this.animateNewPositions(tree.left);
-        this.animateNewPositions(tree.right);
+    setNewPositions(tree, xPosition, yPosition, side) {
+        if (tree != null) {
+            tree.y = yPosition;
+            if (side < 0) {
+                xPosition = xPosition - tree.rightWidth;
+            }
+            else if (side > 0) {
+                xPosition = xPosition + tree.leftWidth;
+            }
+            tree.x = xPosition;
+            this.setNewPositions(tree.left, xPosition, yPosition + TreeBST.HEIGHT_DELTA, -1);
+            this.setNewPositions(tree.right, xPosition, yPosition + TreeBST.HEIGHT_DELTA, 1);
+        }
     }
-}
 
-
-TreeBST.prototype.resizeWidths = function(tree)
-{
-    if (tree == null) {
-        return 0;
+    animateNewPositions(tree) {
+        if (tree != null) {
+            this.cmd("Move", tree.graphicID, tree.x, tree.y);
+            this.animateNewPositions(tree.left);
+            this.animateNewPositions(tree.right);
+        }
     }
-    tree.leftWidth = Math.max(this.resizeWidths(tree.left), TreeBST.WIDTH_DELTA / 2);
-    tree.rightWidth = Math.max(this.resizeWidths(tree.right), TreeBST.WIDTH_DELTA / 2);
-    return tree.leftWidth + tree.rightWidth;
-}
 
+    resizeWidths(tree) {
+        if (tree == null) {
+            return 0;
+        }
+        tree.leftWidth = Math.max(this.resizeWidths(tree.left), TreeBST.WIDTH_DELTA / 2);
+        tree.rightWidth = Math.max(this.resizeWidths(tree.right), TreeBST.WIDTH_DELTA / 2);
+        return tree.leftWidth + tree.rightWidth;
+    }
 
-///////////////////////////////////////////////////////////////////////////////
-// BST nodes
-
-function BSTNode(val, id, initialX, initialY)
-{
-    this.data = val;
-    this.x = initialX;
-    this.y = initialY;
-    this.graphicID = id;
-    this.left = null;
-    this.right = null;
-    this.parent = null;
-    this.leftWidth = 0;
-    this.rightWidth = 0;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-// Initialization
-
-var currentAlg;
-
-function init()
-{
-    var animManag = initCanvas();
-    currentAlg = new TreeBST(animManag);
 }
