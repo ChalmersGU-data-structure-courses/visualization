@@ -155,8 +155,8 @@ class ObjectManager {
                 for (var j = 0; j < this.Edges[i].length; j++) {
                     if (this.Edges[i][j] != null) {
                         this.Edges[i][j].addedToScene =
-                            this.activeLayers[this.Edges[i][j].Node1.layer] &&
-                            this.activeLayers[this.Edges[i][j].Node2.layer];
+                            this.activeLayers[this.Edges[i][j].node1.layer] &&
+                            this.activeLayers[this.Edges[i][j].node2.layer];
                     }
                 }
             }
@@ -171,7 +171,7 @@ class ObjectManager {
                 for (var i = 0; i < this.Edges[objectID].length; i++) {
                     var nextEdge = this.Edges[objectID][i];
                     if (nextEdge != null) {
-                        nextEdge.addedToScene = nextEdge.Node1.addedToScene && nextEdge.Node2.addedToScene;
+                        nextEdge.addedToScene = nextEdge.node1.addedToScene && nextEdge.node2.addedToScene;
                     }
                 }
             }
@@ -179,7 +179,7 @@ class ObjectManager {
                 for (var i = 0; i < this.BackEdges[objectID].length; i++) {
                     var nextEdge = this.BackEdges[objectID][i];
                     if (nextEdge != null) {
-                        nextEdge.addedToScene = nextEdge.Node1.addedToScene && nextEdge.Node2.addedToScene;
+                        nextEdge.addedToScene = nextEdge.node1.addedToScene && nextEdge.node2.addedToScene;
                     }
                 }
             }
@@ -341,7 +341,7 @@ class ObjectManager {
         if (this.Edges[objectIDfrom] != null) {
             var len = this.Edges[objectIDfrom].length;
             for (var i = len - 1; i >= 0; i--) {
-                if (this.Edges[objectIDfrom][i] != null && this.Edges[objectIDfrom][i].Node2 == this.Nodes[objectIDto]) {
+                if (this.Edges[objectIDfrom][i] != null && this.Edges[objectIDfrom][i].node2 == this.Nodes[objectIDto]) {
                     var deleted = this.Edges[objectIDfrom][i];
                     undo = deleted.createUndoDisconnect();
                     this.Edges[objectIDfrom][i] = this.Edges[objectIDfrom][len - 1];
@@ -353,7 +353,7 @@ class ObjectManager {
         if (this.BackEdges[objectIDto] != null) {
             len = this.BackEdges[objectIDto].length;
             for (var i = len - 1; i >= 0; i--) {
-                if (this.BackEdges[objectIDto][i] != null && this.BackEdges[objectIDto][i].Node1 == this.Nodes[objectIDfrom]) {
+                if (this.BackEdges[objectIDto][i] != null && this.BackEdges[objectIDto][i].node1 == this.Nodes[objectIDfrom]) {
                     deleted = this.BackEdges[objectIDto][i];
                     // Note:  Don't need to remove this child, did it above on the regular edge
                     this.BackEdges[objectIDto][i] = this.BackEdges[objectIDto][len - 1];
@@ -371,7 +371,7 @@ class ObjectManager {
             var len = this.Edges[objectID].length;
             for (var i = len - 1; i >= 0; i--) {
                 var deleted = this.Edges[objectID][i];
-                var node2ID = deleted.Node2.identifier();
+                var node2ID = deleted.node2.identifier();
                 undoStack.push(deleted.createUndoDisconnect());
 
                 var len2 = this.BackEdges[node2ID].length;
@@ -389,7 +389,8 @@ class ObjectManager {
             len = this.BackEdges[objectID].length;
             for (i = len - 1; i >= 0; i--) {
                 deleted = this.BackEdges[objectID][i];
-                var node1ID = deleted.Node1.identifier();
+                console.log(objectID, i, deleted)
+                var node1ID = deleted.node1.identifier();
                 undoStack.push(deleted.createUndoDisconnect());
 
                 len2 = this.Edges[node1ID].length;
@@ -415,7 +416,7 @@ class ObjectManager {
         if (this.Edges[fromID] != null) {
             var len = this.Edges[fromID].length;
             for (var i = len - 1; i >= 0; i--) {
-                if (this.Edges[fromID][i] != null && this.Edges[fromID][i].Node2 == this.Nodes[toID]) {
+                if (this.Edges[fromID][i] != null && this.Edges[fromID][i].node2 == this.Nodes[toID]) {
                     oldAlpha = this.Edges[fromID][i].alpha;
                     this.Edges[fromID][i].alpha = alphaVal;
                 }
@@ -429,7 +430,7 @@ class ObjectManager {
         if (this.Edges[fromID] != null) {
             var len = this.Edges[fromID].length;
             for (var i = len - 1; i >= 0; i--) {
-                if (this.Edges[fromID][i] != null && this.Edges[fromID][i].Node2 == this.Nodes[toID]) {
+                if (this.Edges[fromID][i] != null && this.Edges[fromID][i].node2 == this.Nodes[toID]) {
                     oldColor = this.Edges[fromID][i].color();
                     this.Edges[fromID][i].setColor(color);
                 }
@@ -443,7 +444,7 @@ class ObjectManager {
         if (this.Edges[fromID] != null) {
             var len = this.Edges[fromID].length;
             for (var i = len - 1; i >= 0; i--) {
-                if (this.Edges[fromID][i] != null && this.Edges[fromID][i].Node2 == this.Nodes[toID]) {
+                if (this.Edges[fromID][i] != null && this.Edges[fromID][i].node2 == this.Nodes[toID]) {
                     oldHighlight = this.Edges[fromID][i].highlighted;
                     this.Edges[fromID][i].setHighlight(val);
                 }
