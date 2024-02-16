@@ -150,12 +150,12 @@ class AnimatedObject {
 
     alignLeft(other) {
         this.y = other.centerY();
-        this.x = other.right() + this.getWidth() / 2;
+        this.x = other.left() - this.getWidth() / 2;
     }
 
     alignRight(other) {
         this.y = other.centerY();
-        this.x = other.left() - this.getWidth() / 2;
+        this.x = other.right() + this.getWidth() / 2;
     }
 
     alignTop(other) {
