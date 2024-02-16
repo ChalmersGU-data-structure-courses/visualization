@@ -27,13 +27,12 @@
 
 class HighlightCircle extends AnimatedObject {
     radius;
-    thickness;
+    thickness = 4;
 
-    constructor(objectID, color, radius = 20, thickness = 4) {
+    constructor(objectID, color, radius = 20) {
         super(null, color);
         this.objectID = objectID;
         this.radius = radius;
-        this.thickness = thickness;
     }
 
     draw(ctx) {
@@ -48,26 +47,29 @@ class HighlightCircle extends AnimatedObject {
     }
 
     createUndoDelete() {
-        return new UndoDeleteHighlightCircle(this.objectID, this.x, this.y, this.foregroundColor, this.radius, this.layer, this.alpha);
+        return new UndoDeleteHighlightCircle(
+            this.objectID, this.x, this.y, this.foregroundColor, 
+            this.radius, this.layer, this.alpha
+        );
     }
 }
 
 
 
 class UndoDeleteHighlightCircle extends UndoBlock {
-    constructor(objectID, x, y, circleColor, r, layer, alpha) {
+    constructor(objectID, x, y, foregroundColor, radius, layer, alpha) {
         super();
         this.objectID = objectID;
         this.x = x;
         this.y = y;
-        this.color = circleColor;
-        this.r = r;
+        this.foregroundColor = foregroundColor;
+        this.radius = radius;
         this.layer = layer;
         this.alpha = alpha;
     }
 
     undoInitialStep(world) {
-        world.addHighlightCircleObject(this.objectID, this.color, this.r);
+        world.addHighlightCircleObject(this.objectID, this.foregroundColor, this.radius);
         world.setLayer(this.objectID, this.layer);
         world.setNodePosition(this.objectID, this.x, this.y);
         world.setAlpha(this.objectID, this.alpha);

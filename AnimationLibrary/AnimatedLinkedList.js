@@ -28,36 +28,31 @@
 class AnimatedLinkedList extends AnimatedObject {
     w;
     h;
-    val;
+    linkPercent;
     vertical;
     linkPositionEnd;
-    linkPercent;
     numLabels;
 
     nullPointer = false;
     labels = [];
     labelColors = [];
-    currentHeightDif = 6;
-    maxHeightDiff = 5;
-    minHeightDiff = 3;
 
-    constructor(id, val, wth, hgt, linkPercent, verticalOrientation, linkPositionEnd, 
-                numLabels, fillColor, edgeColor, highlightColor, labelColor) {
-        super(fillColor, edgeColor, highlightColor, labelColor);
-        this.w = wth;
-        this.h = hgt;
-        this.val = val;
-        this.vertical = verticalOrientation;
-        this.linkPositionEnd = linkPositionEnd;
+    constructor(objectID, initalLabel, w, h, linkPercent, vertical, linkPositionEnd, 
+                numLabels, backgroundColor, foregroundColor, highlightColor, labelColor) {
+        super(backgroundColor, foregroundColor, highlightColor, labelColor);
+        this.objectID = objectID;
+        this.w = w;
+        this.h = h;
         this.linkPercent = linkPercent;
+        this.vertical = vertical;
+        this.linkPositionEnd = linkPositionEnd;
         this.numLabels = numLabels;
-        this.objectID = id;
 
         for (var i = 0; i < this.numLabels; i++) {
             this.labels[i] = "";
             this.labelColors[i] = this.labelColor;
         }
-        this.labels[0] = this.val;
+        this.labels[0] = initalLabel;
     }
 
     setNull(np) {
@@ -266,37 +261,43 @@ class AnimatedLinkedList extends AnimatedObject {
     }
 
     createUndoDelete() {
-        return new UndoDeleteLinkedList(this.objectID, this.numLabels, this.labels, this.x, this.y, this.w, this.h, this.linkPercent,
-            this.linkPositionEnd, this.vertical, this.labelColors, this.backgroundColor, this.foregroundColor,
-            this.layer, this.nullPointer);
+        return new UndoDeleteLinkedList(
+            this.objectID, this.numLabels, this.labels, this.x, this.y, this.w, this.h, 
+            this.linkPercent, this.linkPositionEnd, this.vertical, this.labelColors, 
+            this.backgroundColor, this.foregroundColor, this.layer, this.nullPointer
+        );
     }
 }
 
 
 
 class UndoDeleteLinkedList extends UndoBlock {
-    constructor(id, numlab, lab, x, y, w, h, linkper, posEnd, vert, labColors, bgColor, fgColor, l, np) {
+    constructor(objectID, numLabels, labels, x, y, w, h, linkPercent, linkPositionEnd, 
+                vertical, labelColors, backgroundColor, foregroundColor, layer, nullPointer) {
         super();
-        this.objectID = id;
-        this.posX = x;
-        this.posY = y;
-        this.width = w;
-        this.height = h;
-        this.backgroundColor = bgColor;
-        this.foregroundColor = fgColor;
-        this.labels = lab;
-        this.linkPercent = linkper;
-        this.verticalOrentation = vert;
-        this.linkAtEnd = posEnd;
-        this.labelColors = labColors;
-        this.layer = l;
-        this.numLabels = numlab;
-        this.nullPointer = np;
+        this.objectID = objectID;
+        this.numLabels = numLabels;
+        this.labels = labels;
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+        this.linkPercent = linkPercent;
+        this.linkPositionEnd = linkPositionEnd;
+        this.vertical = vertical;
+        this.labelColors = labelColors;
+        this.backgroundColor = backgroundColor;
+        this.foregroundColor = foregroundColor;
+        this.layer = layer;
+        this.nullPointer = nullPointer;
     }
 
     undoInitialStep(world) {
-        world.addLinkedListObject(this.objectID, this.labels[0], this.width, this.height, this.linkPercent, this.verticalOrentation, this.linkAtEnd, this.numLabels, this.backgroundColor, this.foregroundColor);
-        world.setNodePosition(this.objectID, this.posX, this.posY);
+        world.addLinkedListObject(
+            this.objectID, this.labels[0], this.w, this.h, this.linkPercent, this.vertical, 
+            this.linkPositionEnd, this.numLabels, this.backgroundColor, this.foregroundColor
+        );
+        world.setNodePosition(this.objectID, this.x, this.y);
         world.setLayer(this.objectID, this.layer);
         world.setNull(this.objectID, this.nullPointer);
         for (var i = 0; i < this.numLabels; i++) {

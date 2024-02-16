@@ -36,12 +36,12 @@ class AnimatedBTreeNode extends AnimatedObject {
     labels;
     labelColors;
 
-    constructor(id, widthPerElem, h, numElems, fillColor, edgeColor, highlightColor, labelColor) {
-        super(fillColor, edgeColor, highlightColor, labelColor);
-        this.objectID = id;
-        this.widthPerElement = widthPerElem;
-        this.nodeHeight = h;
-        this.numLabels = numElems;
+    constructor(objectID, widthPerElement, nodeHeight, numLabels, backgroundColor, foregroundColor, highlightColor, labelColor) {
+        super(backgroundColor, foregroundColor, highlightColor, labelColor);
+        this.objectID = objectID;
+        this.widthPerElement = widthPerElement;
+        this.nodeHeight = nodeHeight;
+        this.numLabels = numLabels;
         this.labels = new Array(this.numLabels);
         this.labelColors = new Array(this.numLabels);
         for (var i = 0; i < this.numLabels; i++) {
@@ -169,33 +169,37 @@ class AnimatedBTreeNode extends AnimatedObject {
     }
 
     createUndoDelete() {
-        return new UndoDeleteBTreeNode(this.objectID, this.numLabels, this.labels, this.x, this.y, this.widthPerElement, this.nodeHeight, this.labelColors, this.backgroundColor, this.foregroundColor, this.layer, this.highlighted);
+        return new UndoDeleteBTreeNode(
+            this.objectID, this.numLabels, this.labels, this.x, this.y, this.widthPerElement, this.nodeHeight, 
+            this.labelColors, this.backgroundColor, this.foregroundColor, this.layer, this.highlighted
+        );
     }
 }
 
 
 
 class UndoDeleteBTreeNode extends UndoBlock {
-    constructor(id, numLab, labelText, x, y, wPerElement, nHeight, lColors, bgColor, fgColor, l, highlighted) {
+    constructor(objectID, numLabels, labels, x, y, widthPerElement, nodeHeight, 
+                labelColors, backgroundColor, foregroundColor, layer, highlighted) {
         super();
-        this.objectID = id;
-        this.posX = x;
-        this.posY = y;
-        this.widthPerElem = wPerElement;
-        this.nodeHeight = nHeight;
-        this.backgroundColor = bgColor;
-        this.foregroundColor = fgColor;
-        this.numElems = numLab;
-        this.labels = labelText;
-        this.labelColors = lColors;
-        this.layer = l;
+        this.objectID = objectID;
+        this.numLabels = numLabels;
+        this.labels = labels;
+        this.x = x;
+        this.y = y;
+        this.widthPerElement = widthPerElement;
+        this.nodeHeight = nodeHeight;
+        this.labelColors = labelColors;
+        this.backgroundColor = backgroundColor;
+        this.foregroundColor = foregroundColor;
+        this.layer = layer;
         this.highlighted = highlighted;
     }
 
     undoInitialStep(world) {
-        world.addBTreeNode(this.objectID, this.widthPerElem, this.nodeHeight, this.numElems, this.backgroundColor, this.foregroundColor);
-        world.setNodePosition(this.objectID, this.posX, this.posY);
-        for (var i = 0; i < this.numElems; i++) {
+        world.addBTreeNode(this.objectID, this.widthPerElement, this.nodeHeight, this.numLabels, this.backgroundColor, this.foregroundColor);
+        world.setNodePosition(this.objectID, this.x, this.y);
+        for (var i = 0; i < this.numLabels; i++) {
             world.setText(this.objectID, this.labels[i], i);
             world.setTextColor(this.objectID, this.labelColors[i], i);
         }
@@ -203,6 +207,3 @@ class UndoDeleteBTreeNode extends UndoBlock {
         world.setLayer(this.objectID, this.layer);
     }
 }
-
-
-

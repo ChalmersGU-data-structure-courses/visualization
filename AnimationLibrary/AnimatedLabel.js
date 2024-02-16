@@ -27,19 +27,19 @@
 
 class AnimatedLabel extends AnimatedObject {
     centering;
-    drawingContext;
     textWidth;
     leftWidth;
     centerWidth;
+    drawingContext;
     alwaysOnTop = true;
 
-    constructor(id, val, center, initialWidth, drawingContext, labelColor, highlightColor) {
+    constructor(objectID, label, centering, textWidth, drawingContext, labelColor, highlightColor) {
         super(null, labelColor, highlightColor);
-        this.objectID = id;
-        this.label = val;
-        this.centering = center;
-        this.drawingContext = drawingContext;
-        this.textWidth = initialWidth || this.getTextWidth();
+        this.objectID = objectID;
+        this.label = label;
+        this.centering = centering;
+        this.drawingContext = drawingContext; // Must set this before calling getTextWidth
+        this.textWidth = textWidth || this.getTextWidth();
         this.leftWidth = -1;
         this.centerWidth = -1;
     }
@@ -248,28 +248,31 @@ class AnimatedLabel extends AnimatedObject {
     }
 
     createUndoDelete() {
-        return new UndoDeleteLabel(this.objectID, this.label, this.x, this.y, this.centering, this.labelColor, this.layer, this.highlightIndex);
+        return new UndoDeleteLabel(
+            this.objectID, this.label, this.x, this.y, this.centering, 
+            this.labelColor, this.layer, this.highlightIndex
+        );
     }
 }
 
 
 
 class UndoDeleteLabel extends UndoBlock {
-    constructor(id, lab, x, y, centered, color, l, hli) {
+    constructor(objectID, label, x, y, centering, labelColor, layer, highlightIndex) {
         super();
-        this.objectID = id;
-        this.posX = x;
-        this.posY = y;
-        this.nodeLabel = lab;
-        this.labCentered = centered;
-        this.labelColor = color;
-        this.layer = l;
-        this.highlightIndex = hli;
+        this.objectID = objectID;
+        this.x = x;
+        this.y = y;
+        this.nodeLabel = label;
+        this.centering = centering;
+        this.labelColor = labelColor;
+        this.layer = layer;
+        this.highlightIndex = highlightIndex;
     }
 
     undoInitialStep(world) {
-        world.addLabelObject(this.objectID, this.nodeLabel, this.labCentered);
-        world.setNodePosition(this.objectID, this.posX, this.posY);
+        world.addLabelObject(this.objectID, this.nodeLabel, this.centering);
+        world.setNodePosition(this.objectID, this.x, this.y);
         world.setForegroundColor(this.objectID, this.labelColor);
         world.setLayer(this.objectID, this.layer);
     }

@@ -38,7 +38,7 @@ class AnimatedObject {
     alpha = 1.0;
     x = 0;
     y = 0;
-    minHeightDiff = 3;
+    heightDiff = 3;
     range = 5;
     highlightIndex = -1;
     alwaysOnTop = false;
@@ -212,7 +212,7 @@ class AnimatedObject {
         if (this.highlighted) {
             const frameMod = frameNum / 7.0;
             const delta = Math.abs((frameMod) % (2 * this.range - 2) - this.range + 1);
-            this.highlightDiff = delta + this.minHeightDiff;
+            this.highlightDiff = delta + this.heightDiff;
         }
     }
 
@@ -260,4 +260,3 @@ class AnimatedObject {
         console.error("draw: Must be overridden!");
     }
 }
-

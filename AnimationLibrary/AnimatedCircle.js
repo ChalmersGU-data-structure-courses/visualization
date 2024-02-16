@@ -27,12 +27,11 @@
 
 class AnimatedCircle extends AnimatedObject {
     radius = 20;
-    thickness = 3;
 
-    constructor(objectID, objectLabel, backgroundColor, foregroundColor, highlightColor, labelColor) {
+    constructor(objectID, label, backgroundColor, foregroundColor, highlightColor, labelColor) {
         super(backgroundColor, foregroundColor, highlightColor, labelColor);
         this.objectID = objectID;
-        this.label = objectLabel;
+        this.label = label;
     }
 
     getWidth() {
@@ -112,32 +111,34 @@ class AnimatedCircle extends AnimatedObject {
     }
 
     createUndoDelete() {
-        return new UndoDeleteCircle(this.objectID, this.label, this.x, this.y, this.foregroundColor, this.backgroundColor, this.layer, this.radius);
+        return new UndoDeleteCircle(
+            this.objectID, this.label, this.x, this.y, 
+            this.foregroundColor, this.backgroundColor, this.layer, this.radius
+        );
     }
 }
 
 
 
 class UndoDeleteCircle extends UndoBlock {
-    constructor(id, lab, x, y, foregroundColor, backgroundColor, l, radius) {
+    constructor(objectID, label, x, y, foregroundColor, backgroundColor, layer, radius) {
         super();
-        this.objectID = id;
-        this.posX = x;
-        this.posY = y;
-        this.nodeLabel = lab;
-        this.fgColor = foregroundColor;
-        this.bgColor = backgroundColor;
-        this.layer = l;
+        this.objectID = objectID;
+        this.x = x;
+        this.y = y;
+        this.label = label;
+        this.foregroundColor = foregroundColor;
+        this.backgroundColor = backgroundColor;
+        this.layer = layer;
         this.radius = radius;
     }
 
     undoInitialStep(world) {
-        world.addCircleObject(this.objectID, this.nodeLabel);
+        world.addCircleObject(this.objectID, this.label);
         world.setWidth(this.objectID, this.radius * 2);
-        world.setNodePosition(this.objectID, this.posX, this.posY);
-        world.setForegroundColor(this.objectID, this.fgColor);
-        world.setBackgroundColor(this.objectID, this.bgColor);
+        world.setNodePosition(this.objectID, this.x, this.y);
+        world.setForegroundColor(this.objectID, this.foregroundColor);
+        world.setBackgroundColor(this.objectID, this.backgroundColor);
         world.setLayer(this.objectID, this.layer);
     }
 }
-

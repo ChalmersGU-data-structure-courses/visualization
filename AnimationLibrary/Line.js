@@ -52,10 +52,10 @@ class Line extends AnimatedObject {
         this.node1 = n1;
         this.node2 = n2;
         this.color = color || this.foregroundColor;
+        this.curve = curve;
         this.directed = directed;
         this.label = label;
         this.anchorPoint = anchorPoint;
-        this.curve = curve;
     }
 
     color() {
@@ -91,8 +91,8 @@ class Line extends AnimatedObject {
 
         var deltaX = toPos[0] - fromPos[0];
         var deltaY = toPos[1] - fromPos[1];
-        var midX = (deltaX) / 2.0 + fromPos[0];
-        var midY = (deltaY) / 2.0 + fromPos[1];
+        var midX = deltaX / 2 + fromPos[0];
+        var midY = deltaY / 2 + fromPos[1];
         var controlX = midX - deltaY * this.curve;
         var controlY = midY + deltaX * this.curve;
 
@@ -117,8 +117,8 @@ class Line extends AnimatedObject {
             }
 
             ctx.textAlign = 'center';
-            ctx.font = this.textHeight + 'px sans-serif';
             ctx.textBaseline = 'middle';
+            ctx.font = this.textHeight + 'px sans-serif';
             ctx.fillText(this.label, labelPosX, labelPosY);
         }
 
@@ -149,16 +149,16 @@ class Line extends AnimatedObject {
 
 
 class UndoConnect extends UndoBlock {
-    constructor(from, to, createConnection, edgeColor, isDirected, cv, lab, anch) {
+    constructor(node1, node2, connect, color, directed, curve, label, anchorPoint) {
         super();
-        this.fromID = from;
-        this.toID = to;
-        this.connect = createConnection;
-        this.color = edgeColor;
-        this.directed = isDirected;
-        this.curve = cv;
-        this.label = lab;
-        this.anchorPoint = anch;
+        this.fromID = node1;
+        this.toID = node2;
+        this.connect = connect;
+        this.color = color;
+        this.directed = directed;
+        this.curve = curve;
+        this.label = label;
+        this.anchorPoint = anchorPoint;
     }
 
     undoInitialStep(world) {

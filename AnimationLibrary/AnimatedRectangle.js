@@ -32,12 +32,13 @@ class AnimatedRectangle extends AnimatedObject {
     yJustify;  // "center", "top", "bottom"
     nullPointer = false;
 
-    constructor(id, label, wth, hgt, xJustify = "center", yJustify = "center", fillColor, edgeColor, highlightColor, labelColor) {
-        super(fillColor, edgeColor, highlightColor, labelColor);
-        this.objectID = id;
+    constructor(objectID, label, w, h, xJustify = "center", yJustify = "center", 
+                backgroundColor, foregroundColor, highlightColor, labelColor) {
+        super(backgroundColor, foregroundColor, highlightColor, labelColor);
+        this.objectID = objectID;
         this.label = label;
-        this.w = wth;
-        this.h = hgt;
+        this.w = w;
+        this.h = h;
         this.xJustify = xJustify;
         this.yJustify = yJustify;
     }
@@ -158,33 +159,38 @@ class AnimatedRectangle extends AnimatedObject {
     }
 
     createUndoDelete() {
-        // TODO: Add color?
-        return new UndoDeleteRectangle(this.objectID, this.label, this.x, this.y, this.w, this.h, this.xJustify, this.yJustify, this.backgroundColor, this.foregroundColor, this.highlighted, this.layer);
+        return new UndoDeleteRectangle(
+            this.objectID, this.label, this.x, this.y, this.w, this.h, this.xJustify, this.yJustify, 
+            this.backgroundColor, this.foregroundColor, this.highlighted, this.layer
+        );
     }
 }
 
 
 
 class UndoDeleteRectangle extends UndoBlock {
-    constructor(id, lab, x, y, w, h, xJust, yJust, bgColor, fgColor, highlight, lay) {
+    constructor(objectID, label, x, y, w, h, xJustify, yJustify, backgroundColor, foregroundColor, highlighted, layer) {
         super();
-        this.objectID = id;
-        this.posX = x;
-        this.posY = y;
-        this.width = w;
-        this.height = h;
-        this.xJustify = xJust;
-        this.yJustify = yJust;
-        this.backgroundColor = bgColor;
-        this.foregroundColor = fgColor;
-        this.nodeLabel = lab;
-        this.layer = lay;
-        this.highlighted = highlight;
+        this.objectID = objectID;
+        this.label = label;
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+        this.xJustify = xJustify;
+        this.yJustify = yJustify;
+        this.backgroundColor = backgroundColor;
+        this.foregroundColor = foregroundColor;
+        this.highlighted = highlighted;
+        this.layer = layer;
     }
 
     undoInitialStep(world) {
-        world.addRectangleObject(this.objectID, this.nodeLabel, this.width, this.height, this.xJustify, this.yJustify, this.backgroundColor, this.foregroundColor);
-        world.setNodePosition(this.objectID, this.posX, this.posY);
+        world.addRectangleObject(
+            this.objectID, this.label, this.w, this.h, this.xJustify, this.yJustify, 
+            this.backgroundColor, this.foregroundColor
+        );
+        world.setNodePosition(this.objectID, this.x, this.y);
         world.setLayer(this.objectID, this.layer);
         world.setHighlight(this.objectID, this.highlighted);
     }
