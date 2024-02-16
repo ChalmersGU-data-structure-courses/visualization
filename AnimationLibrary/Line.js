@@ -86,9 +86,6 @@ class Line extends AnimatedObject {
         var fromPos = this.node1.getTailPointerAttachPos(this.node2.x, this.node2.y, this.anchorPoint);
         var toPos = this.node2.getHeadPointerAttachPos(this.node1.x, this.node1.y);
 
-        var fromPos = this.node1.getTailPointerAttachPos(this.node2.x, this.node2.y, this.anchorPoint);
-        var toPos = this.node2.getHeadPointerAttachPos(this.node1.x, this.node1.y);
-
         var deltaX = toPos[0] - fromPos[0];
         var deltaY = toPos[1] - fromPos[1];
         var midX = deltaX / 2 + fromPos[0];
@@ -112,8 +109,9 @@ class Line extends AnimatedObject {
             // is only a few characters, that is)
             var midLen = Math.sqrt(deltaY * deltaY + deltaX * deltaX);
             if (midLen != 0) {
-                labelPosX += (-deltaY * Math.sign(this.curve)) / midLen * 10;
-                labelPosY += (deltaX * Math.sign(this.curve)) / midLen * 10;
+                var sign = Math.sign(this.curve) || 1;
+                labelPosX += (-deltaY * sign) / midLen * 10;
+                labelPosY += (deltaX * sign) / midLen * 10;
             }
 
             ctx.textAlign = 'center';
