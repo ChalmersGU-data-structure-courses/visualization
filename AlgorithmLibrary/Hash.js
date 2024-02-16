@@ -37,7 +37,8 @@ Hash.inheritFrom(Algorithm);
 // Various constants
 
 Hash.MAX_HASH_LENGTH = 6;
-Hash.HIGHLIGHT_COLOR = "#0000FF";
+Hash.HIGHLIGHT_COLOR = "red";
+Hash.INDEX_COLOR = "blue";
 
 Hash.HASH_INTEGER = "int";
 Hash.HASH_STRING = "ALPHANUM";
@@ -60,6 +61,10 @@ Hash.HASH_INPUT_START_Y = Hash.MESSAGE_Y + 24;
 Hash.HASH_ADD_LINE_Y = Hash.HASH_ADD_START_Y + 18;
 Hash.HASH_RESULT_Y = Hash.HASH_ADD_LINE_Y + 2;
 Hash.HASH_MOD_X = Hash.HASH_NUMBER_START_X + Hash.HASH_BITS * Hash.HASH_X_DIFF;
+
+Hash.FIRST_PRINT_POS_X = 50;
+Hash.PRINT_VERTICAL_GAP = 20;
+Hash.PRINT_HORIZONTAL_GAP = 50;
 
 
 Hash.prototype.init = function(am)
@@ -93,6 +98,14 @@ Hash.prototype.addControls = function()
     this.findButton.onclick = this.findCallback.bind(this);
     this.addBreakToAlgorithmBar();
 
+    this.printButton = this.addControlToAlgorithmBar("Button", "Print");
+    this.printButton.onclick = this.printCallback.bind(this);
+    this.addBreakToAlgorithmBar();
+
+    this.clearButton = this.addControlToAlgorithmBar("Button", "Clear");
+    this.clearButton.onclick = this.clearCallback.bind(this);
+    this.addBreakToAlgorithmBar();
+
     this.hashSelect = this.addSelectToAlgorithmBar(
         [Hash.HASH_INTEGER, Hash.HASH_STRING],
         ["Hash integers", "Hash strings"],
@@ -105,12 +118,26 @@ Hash.prototype.addControls = function()
 Hash.prototype.resetAll = function()
 {
     this.animationManager.resetAll();
+    this.commands = [];
     this.nextIndex = 0;
 
     var hashtype = this.hashSelect.value;
     this.addReturnSubmit(this.insertField, hashtype, this.insertCallback.bind(this));
     this.addReturnSubmit(this.deleteField, hashtype, this.deleteCallback.bind(this));
     this.addReturnSubmit(this.findField, hashtype, this.findCallback.bind(this));
+
+    this.messageID = this.nextIndex++;
+    this.cmd("CreateLabel", this.messageID, "", Hash.MESSAGE_X, Hash.MESSAGE_Y, 0);
+
+    this.tableCellIDs = new Array(this.tableSize);
+    for (var i = 0; i < this.tableSize; i++) {
+        this.tableCellIDs[i] = this.nextIndex++;
+        this.cmd("CreateRectangle", this.tableCellIDs[i], "", 
+            this.getCellWidth(), this.getCellHeight(), this.getCellPosX(i), this.getCellPosY(i));
+        var indexID = this.nextIndex++;
+        this.cmd("CreateLabel", indexID, i, this.getCellPosX(i), this.getCellIndexPosY(i));
+        this.cmd("SetForegroundColor", indexID, Hash.INDEX_COLOR);
+    }
 }
 
 
@@ -148,17 +175,52 @@ Hash.prototype.findCallback = function(event)
 }
 
 
+Hash.prototype.clearCallback = function(event) {
+    this.implementAction(this.clearTable.bind(this), "");
+}
+
+
+Hash.prototype.printCallback = function(event) {
+    this.implementAction(this.printTable.bind(this), "");
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // Functions that do the actual work
 
 Hash.prototype.doHash = function(input)
 {
+    var hash;
     var hashtype = this.hashSelect.value;
     if (hashtype == Hash.HASH_INTEGER) {
-        return parseInt(input);
+        hash = parseInt(input);
     } else {
-        return this.hashString(input);
+        hash = this.hashString(input);
     }
+    var index = hash % this.tableSize;
+
+    var labelID = this.nextIndex++;
+    var labelID2 = this.nextIndex++;
+    var highlightID = this.nextIndex++;
+
+    var lblText = `    ${hash} % ${this.tableSize}  =  `;
+    this.cmd("CreateLabel", labelID, lblText, Hash.HASH_MOD_X, Hash.HASH_NUMBER_START_Y, 0);
+    this.cmd("CreateLabel", labelID2, "", 0, 0);
+    this.cmd("AlignRight", labelID2, labelID);
+    this.cmd("Settext", labelID, lblText + index);
+    this.cmd("Step");
+
+    this.cmd("CreateHighlightCircle", highlightID, Hash.HIGHLIGHT_COLOR, 0, 0);
+    this.cmd("SetWidth", highlightID, this.getCellHeight());
+    this.cmd("AlignMiddle", highlightID, labelID2);
+    this.cmd("Move", highlightID, this.getCellPosX(index), this.getCellIndexPosY(index));
+    this.cmd("Step");
+
+    this.cmd("Delete", labelID);
+    this.cmd("Delete", labelID2);
+    this.cmd("Delete", highlightID);
+    this.nextIndex -= 3;
+    return index;
 }
 
 
