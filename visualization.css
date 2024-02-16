@@ -147,7 +147,10 @@ canvas {
 	vertical-align: middle;
 }
 
+.toolbar *[disabled], .toolbar[disabled] *,
 .toolbar input[type="checkbox"][disabled] + label,
-.toolbar input[type="radio"][disabled] + label {
-	color: gray;
+.toolbar input[type="radio"][disabled] + label 
+{
+	color: silver;
 }
+
