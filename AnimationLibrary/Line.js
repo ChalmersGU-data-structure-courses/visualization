@@ -30,11 +30,6 @@
 
 
 class Line extends AnimatedObject {
-    static MAX_HEIGHT_DIFF = 5;
-    static MIN_HEIGHT_DIFF = 3;
-    static RANGE = Line.MAX_HEIGHT_DIFF - Line.MIN_HEIGHT_DIFF + 1;
-    static HIGHLIGHT_DIFF = 3;
-
     node1;
     node2;
     color;
