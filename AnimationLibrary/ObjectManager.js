@@ -336,14 +336,11 @@ class ObjectManager {
         this.BackEdges[objectIDto].push(l);
     }
 
-    disconnect(objectIDfrom, objectIDto) {
-        var undo = null;
+    disconnectEdge(objectIDfrom, objectIDto) {
         if (this.Edges[objectIDfrom] != null) {
             var len = this.Edges[objectIDfrom].length;
             for (var i = len - 1; i >= 0; i--) {
                 if (this.Edges[objectIDfrom][i] != null && this.Edges[objectIDfrom][i].node2 == this.Nodes[objectIDto]) {
-                    var deleted = this.Edges[objectIDfrom][i];
-                    undo = deleted.createUndoDisconnect();
                     this.Edges[objectIDfrom][i] = this.Edges[objectIDfrom][len - 1];
                     len--;
                     this.Edges[objectIDfrom].pop();
@@ -354,26 +351,20 @@ class ObjectManager {
             len = this.BackEdges[objectIDto].length;
             for (var i = len - 1; i >= 0; i--) {
                 if (this.BackEdges[objectIDto][i] != null && this.BackEdges[objectIDto][i].node1 == this.Nodes[objectIDfrom]) {
-                    deleted = this.BackEdges[objectIDto][i];
-                    // Note:  Don't need to remove this child, did it above on the regular edge
                     this.BackEdges[objectIDto][i] = this.BackEdges[objectIDto][len - 1];
                     len--;
                     this.BackEdges[objectIDto].pop();
                 }
             }
         }
-        return undo;
     }
 
-    deleteIncident(objectID) {
-        var undoStack = [];
+    disconnectIncidentEdges(objectID) {
         if (this.Edges[objectID] != null) {
             var len = this.Edges[objectID].length;
             for (var i = len - 1; i >= 0; i--) {
                 var deleted = this.Edges[objectID][i];
                 var node2ID = deleted.node2.identifier();
-                undoStack.push(deleted.createUndoDisconnect());
-
                 var len2 = this.BackEdges[node2ID].length;
                 for (var j = len2 - 1; j >= 0; j--) {
                     if (this.BackEdges[node2ID][j] == deleted) {
@@ -389,10 +380,7 @@ class ObjectManager {
             len = this.BackEdges[objectID].length;
             for (i = len - 1; i >= 0; i--) {
                 deleted = this.BackEdges[objectID][i];
-                console.log(objectID, i, deleted)
                 var node1ID = deleted.node1.identifier();
-                undoStack.push(deleted.createUndoDisconnect());
-
                 len2 = this.Edges[node1ID].length;
                 for (j = len2 - 1; j >= 0; j--) {
                     if (this.Edges[node1ID][j] == deleted) {
@@ -404,53 +392,60 @@ class ObjectManager {
             }
             this.BackEdges[objectID] = null;
         }
-        return undoStack;
     }
 
 
     ///////////////////////////////////////////////////////////////////////////
-    // Setting edge properties
+    // Finding edges
 
-    setEdgeAlpha(fromID, toID, alphaVal) {
-        var oldAlpha = 1.0;
-        if (this.Edges[fromID] != null) {
-            var len = this.Edges[fromID].length;
-            for (var i = len - 1; i >= 0; i--) {
-                if (this.Edges[fromID][i] != null && this.Edges[fromID][i].node2 == this.Nodes[toID]) {
-                    oldAlpha = this.Edges[fromID][i].alpha;
-                    this.Edges[fromID][i].alpha = alphaVal;
-                }
+    findEdge(fromID, toID) {
+        var edges = this.Edges[fromID];
+        if (edges == null) return;
+        for (var i = edges.length-1; i >= 0; i--) {
+            if (edges[i] != null && edges[i].node2 == this.Nodes[toID]) {
+                return edges[i]
             }
         }
-        return oldAlpha;
+    }
+
+    findIncidentEdges(objectID) {
+        var edges = this.Edges[objectID] || [];
+        var backEdges = this.BackEdges[objectID] || [];
+        return edges.concat(backEdges);
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Getting and setting edge properties
+
+    getEdgeAlpha(fromID, toID) {
+        var edge = this.findEdge(fromID, toID);
+        return edge?.getAlpha();
+    }
+
+    setEdgeAlpha(fromID, toID, alphaVal) {
+        var edge = this.findEdge(fromID, toID);
+        if (edge) edge.setAlpha(alphaVal);
+    }
+
+    getEdgeColor(fromID, toID) {
+        var edge = this.findEdge(fromID, toID);
+        return edge?.color();
     }
 
     setEdgeColor(fromID, toID, color) {
-        var oldColor = "black";
-        if (this.Edges[fromID] != null) {
-            var len = this.Edges[fromID].length;
-            for (var i = len - 1; i >= 0; i--) {
-                if (this.Edges[fromID][i] != null && this.Edges[fromID][i].node2 == this.Nodes[toID]) {
-                    oldColor = this.Edges[fromID][i].color();
-                    this.Edges[fromID][i].setColor(color);
-                }
-            }
-        }
-        return oldColor;
+        var edge = this.findEdge(fromID, toID);
+        if (edge) edge.setColor(color);
+    }
+
+    getEdgeHighlight(fromID, toID) {
+        var edge = this.findEdge(fromID, toID);
+        return edge?.getHighlight();
     }
 
     setEdgeHighlight(fromID, toID, val) {
-        var oldHighlight = false;
-        if (this.Edges[fromID] != null) {
-            var len = this.Edges[fromID].length;
-            for (var i = len - 1; i >= 0; i--) {
-                if (this.Edges[fromID][i] != null && this.Edges[fromID][i].node2 == this.Nodes[toID]) {
-                    oldHighlight = this.Edges[fromID][i].highlighted;
-                    this.Edges[fromID][i].setHighlight(val);
-                }
-            }
-        }
-        return oldHighlight;
+        var edge = this.findEdge(fromID, toID);
+        if (edge) edge.setHighlight(val);
     }
 
 

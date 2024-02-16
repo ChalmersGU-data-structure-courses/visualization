@@ -166,7 +166,7 @@ class UndoConnect extends UndoBlock {
             world.connectEdge(this.fromID, this.toID, this.color, this.curve, this.directed, this.label, this.anchorPoint);
         }
         else {
-            world.disconnect(this.fromID, this.toID);
+            world.disconnectEdge(this.fromID, this.toID);
         }
     }
 }
