@@ -94,6 +94,8 @@
 <script type="text/javascript" src="AlgorithmLibrary/DisjointSet.js"> </script>
 
 <script>
+var currentAlgorithm; // For debugging purposes
+
 function initializeAlgorithm() {
     var aniManager = initCanvas();
     var algoName = new URL(window.location).searchParams.get("algorithm");
@@ -102,7 +104,7 @@ function initializeAlgorithm() {
     if (algoSelect.value && /^[A-Z]\w+$/.test(algoName)) {
         var algoClass = eval(algoName);
         if (algoClass.prototype instanceof Algorithm) {
-            new algoClass(aniManager);
+            currentAlgorithm = new algoClass(aniManager);
         }
     } else {
         algoSelect.value = "";
