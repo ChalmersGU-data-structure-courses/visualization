@@ -169,9 +169,5 @@ class UndoConnect extends UndoBlock {
             world.disconnect(this.fromID, this.toID);
         }
     }
-
-    addUndoAnimation(animationList) {
-        return false;
-    }
 }
 
