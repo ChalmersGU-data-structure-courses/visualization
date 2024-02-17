@@ -45,6 +45,7 @@ Hash.HASH_STRING = "ALPHANUM";
 
 Hash.MESSAGE_X = 20;
 Hash.MESSAGE_Y = 20;
+Hash.SND_MESSAGE_Y = 20 + Hash.MESSAGE_Y;
 
 Hash.HASH_BITS = 16;
 Hash.BYTE_BITS = 8;
@@ -129,6 +130,9 @@ Hash.prototype.resetAll = function()
     this.messageID = this.nextIndex++;
     this.cmd("CreateLabel", this.messageID, "", Hash.MESSAGE_X, Hash.MESSAGE_Y, 0);
 
+    this.sndMessageID = this.nextIndex++;
+    this.cmd("CreateLabel", this.sndMessageID, "", Hash.MESSAGE_X, Hash.SND_MESSAGE_Y, 0);
+
     this.tableCellIDs = new Array(this.tableSize);
     for (var i = 0; i < this.tableSize; i++) {
         this.tableCellIDs[i] = this.nextIndex++;
@@ -188,15 +192,19 @@ Hash.prototype.printCallback = function(event) {
 ///////////////////////////////////////////////////////////////////////////////
 // Functions that do the actual work
 
-Hash.prototype.doHash = function(input)
+Hash.prototype.getHashCode = function(input)
 {
-    var hash;
     var hashtype = this.hashSelect.value;
     if (hashtype == Hash.HASH_INTEGER) {
-        hash = parseInt(input);
+        return parseInt(input);
     } else {
-        hash = this.hashString(input);
+        return this.hashString(input);
     }
+}
+
+
+Hash.prototype.getStartIndex = function(hash)
+{
     var index = hash % this.tableSize;
 
     var labelID = this.nextIndex++;

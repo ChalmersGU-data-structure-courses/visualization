@@ -181,11 +181,12 @@ HashSeparateChaining.prototype.clearTable = function()
 HashSeparateChaining.prototype.insertElement = function(elem)
 {
     this.commands = [];
-    this.cmd("SetText", this.messageID, `Inserting: ${elem}`);
+    this.cmd("SetText", this.messageID, `Inserting ${elem}`);
 
-    var index = this.doHash(elem);
+    var hash = this.getHashCode(elem);
+    var index = this.getStartIndex(hash)
+
     var node = new LinkedListNode(elem, this.nextIndex++, 0, 0);
-
     this.cmd("CreateLinkedList", node.graphicID, elem, this.getCellWidth() * 0.8, this.getCellHeight(), 0, 0);
     this.cmd("AlignRight", node.graphicID, this.messageID);
 
@@ -203,7 +204,7 @@ HashSeparateChaining.prototype.insertElement = function(elem)
 
     this.repositionList(index);
     this.cmd("Step");
-    this.cmd("SetText", this.messageID, "");
+    this.cmd("SetText", this.messageID, `Inserted ${elem}.`);
     return this.commands;
 }
 
@@ -211,11 +212,13 @@ HashSeparateChaining.prototype.insertElement = function(elem)
 HashSeparateChaining.prototype.deleteElement = function(elem)
 {
     this.commands = [];
-    this.cmd("SetText", this.messageID, `Deleting: ${elem}`);
+    this.cmd("SetText", this.messageID, `Deleting ${elem}`);
 
-    var index = this.doHash(elem);
+    var hash = this.getHashCode(elem);
+    var index = this.getStartIndex(hash)
+
     if (this.tableCells[index] == null) {
-        this.cmd("SetText", this.messageID, `Deleting: ${elem}.  Element not found!`);
+        this.cmd("SetText", this.messageID, `Deleting ${elem}: Element not found!`);
         return this.commands;
     }
 
@@ -231,7 +234,7 @@ HashSeparateChaining.prototype.deleteElement = function(elem)
         this.cmd("Delete", this.tableCells[index].graphicID);
         this.tableCells[index] = this.tableCells[index].next;
         this.repositionList(index);
-        this.cmd("SetText", this.messageID, `Deleting: ${elem}.  Element deleted!`);
+        this.cmd("SetText", this.messageID, `Deleted ${elem}.`);
         return this.commands;
     }
 
@@ -250,7 +253,7 @@ HashSeparateChaining.prototype.deleteElement = function(elem)
             prevNode.next = prevNode.next.next;
             this.cmd("Delete", node.graphicID);
             this.repositionList(index);
-            this.cmd("SetText", this.messageID, `Deleting: ${elem}.  Element deleted!`);
+            this.cmd("SetText", this.messageID, `Deleted ${elem}.`);
             return this.commands;
         }
         else {
@@ -259,7 +262,7 @@ HashSeparateChaining.prototype.deleteElement = function(elem)
         }
     }
 
-    this.cmd("SetText", this.messageID, `Deleting: ${elem}.  Element not found!`);
+    this.cmd("SetText", this.messageID, `Deleting ${elem}: Element not found!`);
     return this.commands;
 }
 
@@ -267,35 +270,32 @@ HashSeparateChaining.prototype.deleteElement = function(elem)
 HashSeparateChaining.prototype.findElement = function(elem)
 {
     this.commands = [];
-    this.cmd("SetText", this.messageID, `Finding: ${elem}`);
+    this.cmd("SetText", this.messageID, `Finding ${elem}`);
 
-    var compareLabelID = this.nextIndex++;
-    this.cmd("CreateLabel", compareLabelID, "", 10, 40, 0);
+    var hash = this.getHashCode(elem);
+    var index = this.getStartIndex(hash)
 
-    var index = this.doHash(elem);
     var node = this.tableCells[index];
     var found = false;
     while (node != null && !found) {
         this.cmd("SetHighlight", node.graphicID, 1);
         if (node.data == elem) {
-            this.cmd("SetText", compareLabelID, `${node.data} == ${elem}`)
+            this.cmd("SetText", this.sndMessageID, `${node.data} == ${elem}`)
             found = true;
         } else {
-            this.cmd("SetText", compareLabelID, `${node.data} != ${elem}`)
+            this.cmd("SetText", this.sndMessageID, `${node.data} != ${elem}`)
         }
         this.cmd("Step");
         this.cmd("SetHighlight", node.graphicID, 0);
         node = node.next;
     }
-    this.cmd("Delete", compareLabelID);
-    this.nextIndex--;
+    this.cmd("SetText", this.sndMessageID, "");
 
     if (found) {
-        this.cmd("SetText", this.messageID, `Finding: ${elem}.  Element found!`);
+        this.cmd("SetText", this.messageID, `Found ${elem}.`);
     } else {
-        this.cmd("SetText", this.messageID, `Finding: ${elem}.  Element not found!`);
+        this.cmd("SetText", this.messageID, `Finding ${elem}: Element not found!`);
     }
-    this.cmd("Step");
     return this.commands;
 }
 
