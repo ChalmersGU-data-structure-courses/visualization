@@ -121,11 +121,19 @@ canvas {
 	border: none;
 }
 
+.toolbar {
+	white-space: nowrap;
+}
+
+.toolbar .break {
+	white-space: normal;
+}
+
 .toolbar[disabled] {
 	color: grey;
 }
 
-.toolbar > *, .toolbar > label > * {
+.toolbar > * {
 	margin: 3px 6px 3px 0;
 }
 

@@ -924,7 +924,7 @@ class Toolbar {
     }
 
     addBreak() {
-        return this.add(this.element("span", { class: "break" }));
+        return this.add(this.element("span", { class: "break" }, " "));
     }
 
     addLabel(...content) {
