@@ -251,7 +251,7 @@ class AnimatedLinkedList extends AnimatedObject {
                 x: this.x + this.w * (1 - this.linkPercent) / 2 * (1 / this.numLabels - 1),
             };
             for (var i = 1; i < this.numLabels; i++) {
-                labelPosY[i] = {
+                labelPos[i] = {
                     y: this.y,
                     x: labelPos[i-1].x + this.w * (1 - this.linkPercent) / this.numLabels,
                 };
