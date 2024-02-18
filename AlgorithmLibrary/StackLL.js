@@ -25,271 +25,228 @@
 // or implied, of the University of San Francisco
 
 
-function StackLL(am)
-{
-    this.init(am);
-}
-StackLL.inheritFrom(Algorithm);
+class StackLL extends Algorithm {
+    static SIZE = 32;
+    static ELEM_SPACING = 1.5;
 
+    constructor(am) {
+        super(am);
+        this.init(am);
+    }
 
-// Various constants
+    init(am) {
+        super.init(am);
+        this.addControls();
+        this.resetAll();
+    }
 
-StackLL.SIZE = 32;
-StackLL.ELEM_SPACING = 1.5;
+    sizeChanged() {
+        this.resetAll();
+    }
 
+    addControls() {
+        this.pushField = this.addControlToAlgorithmBar("Text", "", { maxlength: 4, size: 4 });
+        this.addReturnSubmit(this.pushField, "ALPHANUM", this.pushCallback.bind(this));
+        this.pushButton = this.addControlToAlgorithmBar("Button", "Push");
+        this.pushButton.onclick = this.pushCallback.bind(this);
+        this.addBreakToAlgorithmBar();
 
-StackLL.prototype.init = function(am)
-{
-    StackLL.superclass.init.call(this, am);
-    this.addControls();
-    this.resetAll();
-}
+        this.popButton = this.addControlToAlgorithmBar("Button", "Pop");
+        this.popButton.onclick = this.popCallback.bind(this);
+        this.addBreakToAlgorithmBar();
 
+        this.clearButton = this.addControlToAlgorithmBar("Button", "Clear");
+        this.clearButton.onclick = this.clearCallback.bind(this);
+    }
 
-StackLL.prototype.sizeChanged = function()
-{
-    this.resetAll();
-}
+    resetAll() {
+        this.animationManager.resetAll();
+        this.nextIndex = 0;
+        this.commands = [];
 
+        this.messageID = this.nextIndex++;
+        this.messageLabelID = this.nextIndex++;
+        this.messageLabelID2 = this.nextIndex++;
+        this.cmd("CreateLabel", this.messageID, "", this.getElemX(3), 2 * this.getElemHeight());
 
-StackLL.prototype.addControls = function()
-{
-    this.pushField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
-    this.addReturnSubmit(this.pushField, "ALPHANUM", this.pushCallback.bind(this));
-    this.pushButton = this.addControlToAlgorithmBar("Button", "Push");
-    this.pushButton.onclick = this.pushCallback.bind(this);
-    this.addBreakToAlgorithmBar();
+        this.stack = [];
 
-    this.popButton = this.addControlToAlgorithmBar("Button", "Pop");
-    this.popButton.onclick = this.popCallback.bind(this);
-    this.addBreakToAlgorithmBar();
+        this.topID = this.nextIndex++;
+        this.topLabelID = this.nextIndex++;
+        this.cmd("CreateRectangle", this.topID, "", this.getRectWidth(), this.getElemHeight(), this.getElemX(0), 2 * this.getElemHeight());
+        this.cmd("CreateLabel", this.topLabelID, "top:  ", 0, 0);
+        this.cmd("AlignLeft", this.topLabelID, this.topID);
+        this.cmd("SetNull", this.topID, 1);
 
-    this.clearButton = this.addControlToAlgorithmBar("Button", "Clear");
-    this.clearButton.onclick = this.clearCallback.bind(this);
-}
+        this.initialIndex = this.nextIndex;
+        this.animationManager.StartNewAnimation(this.commands);
+        this.animationManager.skipForward();
+        this.animationManager.clearHistory();
+    }
 
+    reset() {
+        this.stack = [];
+        this.nextIndex = this.initialIndex;
+    }
 
-StackLL.prototype.resetAll = function()
-{
-    this.animationManager.resetAll();
-    this.nextIndex = 0;
-    this.commands = [];
+    ///////////////////////////////////////////////////////////////////////////////
+    // Calculating canvas positions and sizes
 
-    this.messageID = this.nextIndex++;
-    this.messageLabelID = this.nextIndex++;
-    this.messageLabelID2 = this.nextIndex++;
-    this.cmd("CreateLabel", this.messageID, "", this.getElemX(3), 2 * this.getElemHeight());
+    getElemX(i) {
+        return this.getElemXY(i).x;
+    }
 
-    this.stack = [];
+    getElemY(i) {
+        return this.getElemXY(i).y;
+    }
 
-    this.topID = this.nextIndex++;
-    this.topLabelID = this.nextIndex++;
-    this.cmd("CreateRectangle", this.topID, "", this.getRectWidth(), this.getElemHeight(), this.getElemX(0), 2 * this.getElemHeight());
-    this.cmd("CreateLabel", this.topLabelID, "top:  ", 0, 0);
-    this.cmd("AlignLeft", this.topLabelID, this.topID);
-    this.cmd("SetNull", this.topID, 1);
+    getElemXY(i) {
+        var x = 1.5 * this.getElemWidth();
+        var y = 4.5 * this.getElemHeight();
+        for (var k = 0; k < i; k++) {
+            x += this.getElemWidth() * StackLL.ELEM_SPACING;
+            if (x + this.getElemWidth() > this.getCanvasWidth()) {
+                x = 1.5 * this.getElemWidth();
+                y += 2.5 * this.getElemHeight();
+            }
+        }
+        return { x: x, y: y };
+    }
 
-    this.initialIndex = this.nextIndex;
-    this.animationManager.StartNewAnimation(this.commands);
-    this.animationManager.skipForward();
-    this.animationManager.clearHistory();
-}
-
-
-StackLL.prototype.reset = function()
-{
-    this.stack = [];
-    this.nextIndex = this.initialIndex;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-// Calculating canvas positions and sizes
-
-StackLL.prototype.getElemX = function(i)
-{
-    return this.getElemXY(i).x;
-}
-
-StackLL.prototype.getElemY = function(i)
-{
-    return this.getElemXY(i).y;
-}
-
-StackLL.prototype.getElemXY = function(i)
-{
-    var x = 1.5 * this.getElemWidth();
-    var y = 4.5 * this.getElemHeight();
-    for (var k = 0; k < i; k++) {
-        x += this.getElemWidth() * StackLL.ELEM_SPACING;
-        if (x + this.getElemWidth() > this.getCanvasWidth()) {
-            x = 1.5 * this.getElemWidth();
-            y += 2.5 * this.getElemHeight();
+    getElemWidth() {
+        var nrows = 1;
+        while (true) {
+            var w = nrows * this.getCanvasWidth() / (StackLL.SIZE + 2 * nrows);
+            if (w >= 100) return w / StackLL.ELEM_SPACING;
+            nrows++;
         }
     }
-    return {x: x, y: y};
-}
 
-StackLL.prototype.getElemWidth = function() 
-{
-    var nrows = 1;
-    while (true) {
-        var w = nrows * this.getCanvasWidth() / (StackLL.SIZE + 2 * nrows);
-        if (w >= 100) return w / StackLL.ELEM_SPACING;
-        nrows++;
+    getRectWidth() {
+        return this.getElemWidth() - 30;
     }
-}
 
-StackLL.prototype.getRectWidth = function()
-{
-    return this.getElemWidth() - 30;
-}
-
-StackLL.prototype.getElemHeight = function() 
-{
-    return this.getRectWidth() * 0.8;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-// Callback functions for the algorithm control bar
-
-StackLL.prototype.pushCallback = function(event)
-{
-    var pushVal = this.pushField.value;
-    if (pushVal !== "") {
-        this.pushField.value = "";
-        this.implementAction(this.push.bind(this), pushVal);
+    getElemHeight() {
+        return this.getRectWidth() * 0.8;
     }
-}
 
-StackLL.prototype.popCallback = function(event)
-{
-    this.implementAction(this.pop.bind(this), "");
-}
+    ///////////////////////////////////////////////////////////////////////////////
+    // Callback functions for the algorithm control bar
 
-
-StackLL.prototype.clearCallback = function(event)
-{
-    this.implementAction(this.clearAll.bind(this), "");
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-// Functions that do the actual work
-
-StackLL.prototype.clearAll = function()
-{
-	this.commands = [];
-    this.cmd("SetText", this.messageID, "");
-    while (this.stack.length > 0) {
-        this.cmd("Delete", this.stack.pop().id);
-        this.nextIndex--;
+    pushCallback(event) {
+        var pushVal = this.pushField.value;
+        if (pushVal !== "") {
+            this.pushField.value = "";
+            this.implementAction(this.push.bind(this), pushVal);
+        }
     }
-	this.cmd("SetNull", this.topID, 1);
-	return this.commands;
-}
 
-
-StackLL.prototype.push = function(elem)
-{
-    this.commands = [];
-    var elemID = this.nextIndex++;
-
-    this.cmd("SetText", this.messageID, "Pushing value:  ");
-    this.cmd("CreateLabel", this.messageLabelID, elem, 0, 0);
-    this.cmd("CreateLabel", this.messageLabelID2, elem, 0, 0);
-    this.cmd("AlignRight", this.messageLabelID, this.messageID);
-    this.cmd("AlignRight", this.messageLabelID2, this.messageID);
-    this.cmd("Step");
-
-    var insertX = this.getElemX(1), insertY = 2 * this.getElemHeight();
-    this.cmd(
-        "CreateLinkedList", elemID, "",
-        this.getElemWidth(), this.getElemHeight(), insertX, insertY, 
-        0.25, 0, 1, 1
-    );
-    this.cmd("Move", this.messageLabelID, insertX, insertY);
-    this.cmd("Step");
-
-    this.cmd("SetText", elemID, elem);
-    this.cmd("Delete", this.messageLabelID);
-    if (this.stack.length == 0) {
-        this.cmd("SetNull", this.topID, 0);
-        this.cmd("SetNull", elemID, 1);
+    popCallback(event) {
+        this.implementAction(this.pop.bind(this), "");
     }
-    else {
-        var prevID = this.stack[this.stack.length-1].id;
-        this.cmd("Connect", elemID, prevID);
-        this.cmd("Step");
-        this.cmd("Disconnect", this.topID, prevID);
+
+    clearCallback(event) {
+        this.implementAction(this.clearAll.bind(this), "");
     }
-    this.cmd("Connect", this.topID, elemID);
-    this.cmd("Step");
 
-    this.stack.push({elem: elem, id: elemID});
-    this.resetLinkedListPositions();
-    this.cmd("SetText", this.messageID, "");
-    this.cmd("Delete", this.messageLabelID2);
+    ///////////////////////////////////////////////////////////////////////////////
+    // Functions that do the actual work
 
-    return this.commands;
-}
-
-
-StackLL.prototype.pop = function(ignored)
-{
-    this.commands = [];
-    if (this.stack.length == 0) {
-        this.cmd("SetText", this.messageID, "Stack empty!");
+    clearAll() {
+        this.commands = [];
+        this.cmd("SetText", this.messageID, "");
+        while (this.stack.length > 0) {
+            this.cmd("Delete", this.stack.pop().id);
+            this.nextIndex--;
+        }
+        this.cmd("SetNull", this.topID, 1);
         return this.commands;
     }
 
-    var {elem: elem, id: elemID} = this.stack.pop();
+    push(elem) {
+        this.commands = [];
+        var elemID = this.nextIndex++;
 
-    this.cmd("SetText", this.messageID, "Popping value:  ");
-    this.cmd("Step");
+        this.cmd("SetText", this.messageID, "Pushing value:  ");
+        this.cmd("CreateLabel", this.messageLabelID, elem, 0, 0);
+        this.cmd("CreateLabel", this.messageLabelID2, elem, 0, 0);
+        this.cmd("AlignRight", this.messageLabelID, this.messageID);
+        this.cmd("AlignRight", this.messageLabelID2, this.messageID);
+        this.cmd("Step");
 
-    this.cmd("CreateLabel", this.messageLabelID, elem, 0, 0);
-    this.cmd("AlignMiddle", this.messageLabelID, elemID);
-    this.cmd("MoveToAlignRight", this.messageLabelID, this.messageID);
-    this.cmd("Step");
+        var insertX = this.getElemX(1), insertY = 2 * this.getElemHeight();
+        this.cmd(
+            "CreateLinkedList", elemID, "",
+            this.getElemWidth(), this.getElemHeight(), insertX, insertY,
+            0.25, 0, 1, 1
+        );
+        this.cmd("Move", this.messageLabelID, insertX, insertY);
+        this.cmd("Step");
 
-    this.cmd("Disconnect", this.topID, elemID);
-    if (this.stack.length == 0) {
-        this.cmd("SetNull", this.topID, 1);
-    } else {
-        this.cmd("Connect", this.topID, this.stack[this.stack.length-1].id);
+        this.cmd("SetText", elemID, elem);
+        this.cmd("Delete", this.messageLabelID);
+        if (this.stack.length == 0) {
+            this.cmd("SetNull", this.topID, 0);
+            this.cmd("SetNull", elemID, 1);
+        }
+        else {
+            var prevID = this.stack[this.stack.length - 1].id;
+            this.cmd("Connect", elemID, prevID);
+            this.cmd("Step");
+            this.cmd("Disconnect", this.topID, prevID);
+        }
+        this.cmd("Connect", this.topID, elemID);
+        this.cmd("Step");
+
+        this.stack.push({ elem: elem, id: elemID });
+        this.resetLinkedListPositions();
+        this.cmd("SetText", this.messageID, "");
+        this.cmd("Delete", this.messageLabelID2);
+
+        return this.commands;
     }
-    this.cmd("Step");
 
-    this.cmd("Delete", elemID);
-    this.resetLinkedListPositions();
-    this.cmd("Step");
+    pop(ignored) {
+        this.commands = [];
+        if (this.stack.length == 0) {
+            this.cmd("SetText", this.messageID, "Stack empty!");
+            return this.commands;
+        }
 
-    this.cmd("Delete", this.messageLabelID);
-    this.cmd("SetText", this.messageID, "Popped value:  " + elem);
+        var { elem: elem, id: elemID } = this.stack.pop();
 
-    this.nextIndex--;
-    return this.commands;
-}
+        this.cmd("SetText", this.messageID, "Popping value:  ");
+        this.cmd("Step");
 
+        this.cmd("CreateLabel", this.messageLabelID, elem, 0, 0);
+        this.cmd("AlignMiddle", this.messageLabelID, elemID);
+        this.cmd("MoveToAlignRight", this.messageLabelID, this.messageID);
+        this.cmd("Step");
 
-StackLL.prototype.resetLinkedListPositions = function()
-{
-    for (var i = 0; i < this.stack.length; i++) {
-        var j = this.stack.length - i - 1;
-        this.cmd("Move", this.stack[j].id, this.getElemX(i), this.getElemY(i));
+        this.cmd("Disconnect", this.topID, elemID);
+        if (this.stack.length == 0) {
+            this.cmd("SetNull", this.topID, 1);
+        } else {
+            this.cmd("Connect", this.topID, this.stack[this.stack.length - 1].id);
+        }
+        this.cmd("Step");
+
+        this.cmd("Delete", elemID);
+        this.resetLinkedListPositions();
+        this.cmd("Step");
+
+        this.cmd("Delete", this.messageLabelID);
+        this.cmd("SetText", this.messageID, "Popped value:  " + elem);
+
+        this.nextIndex--;
+        return this.commands;
+    }
+
+    resetLinkedListPositions() {
+        for (var i = 0; i < this.stack.length; i++) {
+            var j = this.stack.length - i - 1;
+            this.cmd("Move", this.stack[j].id, this.getElemX(i), this.getElemY(i));
+        }
     }
 }
 
-
-///////////////////////////////////////////////////////////////////////////////
-// Initialization
-
-var currentAlg;
-
-function init()
-{
-    var animManag = initCanvas();
-    currentAlg = new StackLL(animManag);
-}

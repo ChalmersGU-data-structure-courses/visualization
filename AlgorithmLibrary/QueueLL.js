@@ -25,285 +25,241 @@
 // or implied, of the University of San Francisco
 
 
-function QueueLL(am)
-{
-    this.init(am);
-}
-QueueLL.inheritFrom(Algorithm);
+class QueueLL extends Algorithm {
+    static SIZE = 32;
+    static ELEM_SPACING = 1.5;
 
+    constructor(am) {
+        super();
+        this.init(am);
+    }
 
-// Various constants
+    init(am) {
+        super.init(am);
+        this.addControls();
+        this.resetAll();
+    }
 
-QueueLL.SIZE = 32;
-QueueLL.ELEM_SPACING = 1.5;
+    sizeChanged() {
+        this.resetAll();
+    }
 
+    addControls() {
+        this.enqueueField = this.addControlToAlgorithmBar("Text", "", { maxlength: 4, size: 4 });
+        this.addReturnSubmit(this.enqueueField, "ALPHANUM", this.enqueueCallback.bind(this));
+        this.enqueueButton = this.addControlToAlgorithmBar("Button", "Enqueue");
+        this.enqueueButton.onclick = this.enqueueCallback.bind(this);
+        this.addBreakToAlgorithmBar();
 
-QueueLL.prototype.init = function(am)
-{
-    QueueLL.superclass.init.call(this, am);
-    this.addControls();
-    this.resetAll();
-}
+        this.dequeueButton = this.addControlToAlgorithmBar("Button", "Dequeue");
+        this.dequeueButton.onclick = this.dequeueCallback.bind(this);
+        this.addBreakToAlgorithmBar();
 
+        this.clearButton = this.addControlToAlgorithmBar("Button", "Clear");
+        this.clearButton.onclick = this.clearCallback.bind(this);
+    }
 
-QueueLL.prototype.sizeChanged = function()
-{
-    this.resetAll();
-}
+    resetAll() {
+        this.animationManager.resetAll();
+        this.nextIndex = 0;
+        this.commands = [];
 
+        this.messageID = this.nextIndex++;
+        this.messageLabelID = this.nextIndex++;
+        this.messageLabelID2 = this.nextIndex++;
+        this.cmd("CreateLabel", this.messageID, "", this.getElemX(3), 2 * this.getElemHeight());
 
-QueueLL.prototype.addControls = function()
-{
-    this.enqueueField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
-    this.addReturnSubmit(this.enqueueField, "ALPHANUM", this.enqueueCallback.bind(this));
-    this.enqueueButton = this.addControlToAlgorithmBar("Button", "Enqueue");
-    this.enqueueButton.onclick = this.enqueueCallback.bind(this);
-    this.addBreakToAlgorithmBar();
+        this.queue = [];
 
-    this.dequeueButton = this.addControlToAlgorithmBar("Button", "Dequeue");
-    this.dequeueButton.onclick = this.dequeueCallback.bind(this);
-    this.addBreakToAlgorithmBar();
+        this.headID = this.nextIndex++;
+        this.headLabelID = this.nextIndex++;
+        this.cmd("CreateRectangle", this.headID, "", this.getRectWidth(), this.getElemHeight(), this.getElemX(0), 2 * this.getElemHeight());
+        this.cmd("CreateLabel", this.headLabelID, "head:  ", 0, 0);
+        this.cmd("AlignLeft", this.headLabelID, this.headID);
+        this.cmd("SetNull", this.headID, 1);
 
-    this.clearButton = this.addControlToAlgorithmBar("Button", "Clear");
-    this.clearButton.onclick = this.clearCallback.bind(this);
-}
+        this.tailID = this.nextIndex++;
+        this.tailLabelID = this.nextIndex++;
+        this.cmd("CreateRectangle", this.tailID, "", this.getRectWidth(), this.getElemHeight(), this.getElemX(0), this.getCanvasHeight() - 2 * this.getElemHeight());
+        this.cmd("CreateLabel", this.tailLabelID, "tail:  ", 0, 0);
+        this.cmd("AlignLeft", this.tailLabelID, this.tailID);
+        this.cmd("SetNull", this.tailID, 1);
 
+        this.initialIndex = this.nextIndex;
+        this.animationManager.StartNewAnimation(this.commands);
+        this.animationManager.skipForward();
+        this.animationManager.clearHistory();
+    }
 
-QueueLL.prototype.resetAll = function()
-{
-    this.animationManager.resetAll();
-    this.nextIndex = 0;
-    this.commands = [];
+    reset() {
+        this.queue = [];
+        this.nextIndex = this.initialIndex;
+    }
 
-    this.messageID = this.nextIndex++;
-    this.messageLabelID = this.nextIndex++;
-    this.messageLabelID2 = this.nextIndex++;
-    this.cmd("CreateLabel", this.messageID, "", this.getElemX(3), 2 * this.getElemHeight());
+    ///////////////////////////////////////////////////////////////////////////////
+    // Calculating canvas positions and sizes
 
-    this.queue = [];
+    getElemX(i) {
+        return this.getElemXY(i).x;
+    }
 
-    this.headID = this.nextIndex++;
-    this.headLabelID = this.nextIndex++;
-    this.cmd("CreateRectangle", this.headID, "", this.getRectWidth(), this.getElemHeight(), this.getElemX(0), 2 * this.getElemHeight());
-    this.cmd("CreateLabel", this.headLabelID, "head:  ", 0, 0);
-    this.cmd("AlignLeft", this.headLabelID, this.headID);
-    this.cmd("SetNull", this.headID, 1);
+    getElemY(i) {
+        return this.getElemXY(i).y;
+    }
 
-    this.tailID = this.nextIndex++;
-    this.tailLabelID = this.nextIndex++;
-    this.cmd("CreateRectangle", this.tailID, "", this.getRectWidth(), this.getElemHeight(), this.getElemX(0), this.getCanvasHeight() - 2 * this.getElemHeight());
-    this.cmd("CreateLabel", this.tailLabelID, "tail:  ", 0, 0);
-    this.cmd("AlignLeft", this.tailLabelID, this.tailID);
-    this.cmd("SetNull", this.tailID, 1);
+    getElemXY(i) {
+        var x = 1.5 * this.getElemWidth();
+        var y = 4.5 * this.getElemHeight();
+        for (var k = 0; k < i; k++) {
+            x += this.getElemWidth() * QueueLL.ELEM_SPACING;
+            if (x + this.getElemWidth() > this.getCanvasWidth()) {
+                x = 1.5 * this.getElemWidth();
+                y += 2.5 * this.getElemHeight();
+            }
+        }
+        return { x: x, y: y };
+    }
 
-    this.initialIndex = this.nextIndex;
-    this.animationManager.StartNewAnimation(this.commands);
-    this.animationManager.skipForward();
-    this.animationManager.clearHistory();
-}
-
-
-QueueLL.prototype.reset = function()
-{
-    this.queue = [];
-    this.nextIndex = this.initialIndex;
-
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-// Calculating canvas positions and sizes
-
-QueueLL.prototype.getElemX = function(i)
-{
-    return this.getElemXY(i).x;
-}
-
-QueueLL.prototype.getElemY = function(i)
-{
-    return this.getElemXY(i).y;
-}
-
-QueueLL.prototype.getElemXY = function(i)
-{
-    var x = 1.5 * this.getElemWidth();
-    var y = 4.5 * this.getElemHeight();
-    for (var k = 0; k < i; k++) {
-        x += this.getElemWidth() * QueueLL.ELEM_SPACING;
-        if (x + this.getElemWidth() > this.getCanvasWidth()) {
-            x = 1.5 * this.getElemWidth();
-            y += 2.5 * this.getElemHeight();
+    getElemWidth() {
+        var nrows = 1;
+        while (true) {
+            var w = nrows * this.getCanvasWidth() / (QueueLL.SIZE + 2 * nrows);
+            if (w >= 100) return w / QueueLL.ELEM_SPACING;
+            nrows++;
         }
     }
-    return {x: x, y: y};
-}
 
-QueueLL.prototype.getElemWidth = function() 
-{
-    var nrows = 1;
-    while (true) {
-        var w = nrows * this.getCanvasWidth() / (QueueLL.SIZE + 2 * nrows);
-        if (w >= 100) return w / QueueLL.ELEM_SPACING;
-        nrows++;
+    getRectWidth() {
+        return this.getElemWidth() - 30;
     }
-}
 
-QueueLL.prototype.getRectWidth = function()
-{
-    return this.getElemWidth() - 30;
-}
-
-QueueLL.prototype.getElemHeight = function() 
-{
-    return this.getRectWidth() * 0.8;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-// Callback functions for the algorithm control bar
-
-QueueLL.prototype.enqueueCallback = function(event)
-{
-    var enqueuedValue = this.enqueueField.value;
-    if (enqueuedValue !== "") {
-        this.enqueueField.value = "";
-        this.implementAction(this.enqueue.bind(this), enqueuedValue);
+    getElemHeight() {
+        return this.getRectWidth() * 0.8;
     }
-}
 
-QueueLL.prototype.dequeueCallback = function(event)
-{
-    this.implementAction(this.dequeue.bind(this), "");
-}
+    ///////////////////////////////////////////////////////////////////////////////
+    // Callback functions for the algorithm control bar
 
-QueueLL.prototype.clearCallback = function(event)
-{
-    this.implementAction(this.clearAll.bind(this), "");
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-// Functions that do the actual work
-
-QueueLL.prototype.clearAll = function()
-{
-	this.commands = [];
-    this.cmd("SetText", this.messageID, "");
-    while (this.queue.length > 0) {
-        this.cmd("Delete", this.queue.pop().id);
+    enqueueCallback(event) {
+        var enqueuedValue = this.enqueueField.value;
+        if (enqueuedValue !== "") {
+            this.enqueueField.value = "";
+            this.implementAction(this.enqueue.bind(this), enqueuedValue);
+        }
     }
-	this.cmd("SetNull", this.headID, 1);
-	this.cmd("SetNull", this.tailID, 1);
-    this.nextIndex = this.initialIndex;
-	return this.commands;
-}
 
-
-QueueLL.prototype.enqueue = function(elem)
-{
-    this.commands = [];
-    var elemID = this.nextIndex++;
-
-    this.cmd("SetText", this.messageID, "Enqueuing value:  ");
-    this.cmd("CreateLabel", this.messageLabelID, elem, 0, 0);
-    this.cmd("CreateLabel", this.messageLabelID2, elem, 0, 0);
-    this.cmd("AlignRight", this.messageLabelID, this.messageID);
-    this.cmd("AlignRight", this.messageLabelID2, this.messageID);
-    this.cmd("Step");
-
-    var insertX = this.getElemX(1), insertY = 2 * this.getElemHeight();
-    this.cmd(
-        "CreateLinkedList", elemID, "",
-        this.getElemWidth(), this.getElemHeight(), insertX, insertY, 
-        0.25, 0, 1, 1
-    );
-    this.cmd("Move", this.messageLabelID, insertX, insertY);
-    this.cmd("Step");
-
-    this.cmd("Settext", elemID, elem);
-    this.cmd("SetNull", elemID, 1);
-    this.cmd("Delete", this.messageLabelID);
-    if (this.queue.length == 0) {
-        this.cmd("SetNull", this.headID, 0);
-        this.cmd("SetNull", this.tailID, 0);
-        this.cmd("Connect", this.headID, elemID);
+    dequeueCallback(event) {
+        this.implementAction(this.dequeue.bind(this), "");
     }
-    else {
-        var prevID = this.queue[this.queue.length-1].id;
-        this.cmd("SetNull", prevID, 0);
-        this.cmd("Connect", prevID, elemID);
-        this.cmd("Step");
-        this.cmd("Disconnect", this.tailID, prevID);
+
+    clearCallback(event) {
+        this.implementAction(this.clearAll.bind(this), "");
     }
-    this.cmd("Connect", this.tailID, elemID);
-    this.cmd("Step");
 
-    this.queue.push({elem: elem, id: elemID});
-    this.resetLinkedListPositions();
-    this.cmd("SetText", this.messageID, "");
-    this.cmd("Delete", this.messageLabelID2);
+    ///////////////////////////////////////////////////////////////////////////////
+    // Functions that do the actual work
 
-    return this.commands;
-}
-
-
-QueueLL.prototype.dequeue = function(ignored)
-{
-    this.commands = [];
-    if (this.queue.length == 0) {
-        this.cmd("SetText", this.messageID, "Queue empty!");
+    clearAll() {
+        this.commands = [];
+        this.cmd("SetText", this.messageID, "");
+        while (this.queue.length > 0) {
+            this.cmd("Delete", this.queue.pop().id);
+        }
+        this.cmd("SetNull", this.headID, 1);
+        this.cmd("SetNull", this.tailID, 1);
+        this.nextIndex = this.initialIndex;
         return this.commands;
     }
 
-    var {elem: elem, id: elemID} = this.queue.shift();
+    enqueue(elem) {
+        this.commands = [];
+        var elemID = this.nextIndex++;
 
-    this.cmd("SetText", this.messageID, "Dequeing value:  ");
-    this.cmd("Step");
+        this.cmd("SetText", this.messageID, "Enqueuing value:  ");
+        this.cmd("CreateLabel", this.messageLabelID, elem, 0, 0);
+        this.cmd("CreateLabel", this.messageLabelID2, elem, 0, 0);
+        this.cmd("AlignRight", this.messageLabelID, this.messageID);
+        this.cmd("AlignRight", this.messageLabelID2, this.messageID);
+        this.cmd("Step");
 
-    this.cmd("CreateLabel", this.messageLabelID, elem, 0, 0);
-    this.cmd("AlignMiddle", this.messageLabelID, elemID);
-    this.cmd("MoveToAlignRight", this.messageLabelID, this.messageID);
-    this.cmd("Step");
+        var insertX = this.getElemX(1), insertY = 2 * this.getElemHeight();
+        this.cmd(
+            "CreateLinkedList", elemID, "",
+            this.getElemWidth(), this.getElemHeight(), insertX, insertY,
+            0.25, 0, 1, 1
+        );
+        this.cmd("Move", this.messageLabelID, insertX, insertY);
+        this.cmd("Step");
 
-    this.cmd("Disconnect", this.headID, elemID);
-    if (this.queue.length == 0) {
-        this.cmd("SetNull", this.headID, 1);
-        this.cmd("SetNull", this.tailID, 1);
-        this.cmd("Disconnect", this.tailID, elemID);
-    } else {
-        this.cmd("Connect", this.headID, this.queue[0].id);
+        this.cmd("Settext", elemID, elem);
+        this.cmd("SetNull", elemID, 1);
+        this.cmd("Delete", this.messageLabelID);
+        if (this.queue.length == 0) {
+            this.cmd("SetNull", this.headID, 0);
+            this.cmd("SetNull", this.tailID, 0);
+            this.cmd("Connect", this.headID, elemID);
+        }
+        else {
+            var prevID = this.queue[this.queue.length - 1].id;
+            this.cmd("SetNull", prevID, 0);
+            this.cmd("Connect", prevID, elemID);
+            this.cmd("Step");
+            this.cmd("Disconnect", this.tailID, prevID);
+        }
+        this.cmd("Connect", this.tailID, elemID);
+        this.cmd("Step");
+
+        this.queue.push({ elem: elem, id: elemID });
+        this.resetLinkedListPositions();
+        this.cmd("SetText", this.messageID, "");
+        this.cmd("Delete", this.messageLabelID2);
+
+        return this.commands;
     }
-    this.cmd("Step");
 
-    this.cmd("Delete", elemID);
-    this.resetLinkedListPositions();
-    this.cmd("Step");
+    dequeue(ignored) {
+        this.commands = [];
+        if (this.queue.length == 0) {
+            this.cmd("SetText", this.messageID, "Queue empty!");
+            return this.commands;
+        }
 
-    this.cmd("Delete", this.messageLabelID);
-    this.cmd("SetText", this.messageID, "Dequeued Value:  " + elem);
+        var { elem: elem, id: elemID } = this.queue.shift();
 
-    if (this.queue.length == 0) {
-        this.nextIndex = this.initialIndex;
+        this.cmd("SetText", this.messageID, "Dequeing value:  ");
+        this.cmd("Step");
+
+        this.cmd("CreateLabel", this.messageLabelID, elem, 0, 0);
+        this.cmd("AlignMiddle", this.messageLabelID, elemID);
+        this.cmd("MoveToAlignRight", this.messageLabelID, this.messageID);
+        this.cmd("Step");
+
+        this.cmd("Disconnect", this.headID, elemID);
+        if (this.queue.length == 0) {
+            this.cmd("SetNull", this.headID, 1);
+            this.cmd("SetNull", this.tailID, 1);
+            this.cmd("Disconnect", this.tailID, elemID);
+        } else {
+            this.cmd("Connect", this.headID, this.queue[0].id);
+        }
+        this.cmd("Step");
+
+        this.cmd("Delete", elemID);
+        this.resetLinkedListPositions();
+        this.cmd("Step");
+
+        this.cmd("Delete", this.messageLabelID);
+        this.cmd("SetText", this.messageID, "Dequeued Value:  " + elem);
+
+        if (this.queue.length == 0) {
+            this.nextIndex = this.initialIndex;
+        }
+        return this.commands;
     }
-    return this.commands;
-}
 
-
-QueueLL.prototype.resetLinkedListPositions = function()
-{
-    for (var i = 0; i < this.queue.length; i++) {
-        this.cmd("Move", this.queue[i].id, this.getElemX(i), this.getElemY(i));
+    resetLinkedListPositions() {
+        for (var i = 0; i < this.queue.length; i++) {
+            this.cmd("Move", this.queue[i].id, this.getElemX(i), this.getElemY(i));
+        }
     }
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-// Initialization
-
-var currentAlg;
-
-function init()
-{
-    var animManag = initCanvas();
-    currentAlg = new QueueLL(animManag);
 }
