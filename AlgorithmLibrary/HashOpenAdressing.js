@@ -40,8 +40,8 @@ class HashOpenAdressing extends Hash {
     static ARRAY_ELEM_START_Y = 100;
 
     constructor(am) {
-        // Call superclass' constructor, which calls init
         super(am);
+        this.init(am);
     }
 
     addControls() {

@@ -59,7 +59,6 @@ class Hash extends Algorithm {
 
     constructor(am) {
         super();
-        this.init(am);
     }
 
     init(am) {

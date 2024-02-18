@@ -37,8 +37,8 @@ class HashOpenAdrBuckets extends Hash {
     static ARRAY_ELEM_START_Y = 100;
 
     constructor(am) {
-        // call superclass' constructor, which calls init
         super(am);
+        this.init(am);
     }
 
     addControls() {

@@ -45,8 +45,8 @@ class HashSeparateChaining extends Hash {
     static NODE_INSERT_Y = 75;
     
     constructor(am) {
-        // call superclass' constructor, which calls init
         super(am);
+        this.init(am);
     }
 
     addControls() {
