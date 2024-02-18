@@ -430,7 +430,7 @@ class ObjectManager {
 
     getEdgeColor(fromID, toID) {
         var edge = this.findEdge(fromID, toID);
-        return edge?.color();
+        return edge?.getColor();
     }
 
     setEdgeColor(fromID, toID, color) {

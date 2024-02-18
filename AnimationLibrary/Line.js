@@ -53,7 +53,7 @@ class Line extends AnimatedObject {
         this.anchorPoint = anchorPoint;
     }
 
-    color() {
+    getColor() {
         return this.color;
     }
 
