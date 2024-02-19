@@ -25,13 +25,6 @@
 // or implied, of the University of San Francisco
 
 
-Function.prototype.inheritFrom = function(superConstructor) {
-    this.superclass = superConstructor.prototype;        // for calling superclass' constructor/methods
-    this.prototype = Object.create(this.superclass);    // create an object with the needed prototype, but without calling superConstructor
-    this.prototype.constructor = this;                    // for instanceof
-}
-
-
 class EventListener {
     events = {};
 
@@ -95,10 +88,3 @@ class EventListener {
         }
     }
 }
-
-
-
-
-
-
-
