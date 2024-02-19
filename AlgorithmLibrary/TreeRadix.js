@@ -64,7 +64,7 @@ class TreeRadix extends Algorithm {
     static PRINT_HORIZONTAL_GAP = 50;
 
     constructor(am) {
-        super(am);
+        super();
         this.init(am);
     }
 

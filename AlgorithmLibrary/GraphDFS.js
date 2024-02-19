@@ -37,7 +37,7 @@ class GraphDFS extends Graph {
     static DFS_TREE_COLOR = "#0000FF";    
 
     constructor(am, dir) {
-        super(am);
+        super();
         this.init(am, dir);
     }
 

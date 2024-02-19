@@ -45,7 +45,7 @@ class DisjointSet extends Algorithm {
 
 
     constructor(am) {
-        super(am);
+        super();
         this.init(am);
     }
 

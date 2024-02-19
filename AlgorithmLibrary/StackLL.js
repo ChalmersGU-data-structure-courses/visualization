@@ -30,7 +30,7 @@ class StackLL extends Algorithm {
     static ELEM_SPACING = 1.5;
 
     constructor(am) {
-        super(am);
+        super();
         this.init(am);
     }
 

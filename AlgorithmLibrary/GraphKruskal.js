@@ -54,7 +54,7 @@ class GraphKruskal extends Graph {
     static HIGHLIGHT_CIRCLE_COLOR_2 = "#FF0000";
 
     constructor(am) {
-        super(am);
+        super();
         this.init(am);
     }
 

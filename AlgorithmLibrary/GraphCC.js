@@ -69,7 +69,7 @@ class GraphCC extends Graph {
 
 
     constructor(am) {
-        super(am);
+        super();
         this.init(am);
     }
 

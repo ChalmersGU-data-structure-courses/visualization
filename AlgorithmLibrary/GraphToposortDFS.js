@@ -73,7 +73,7 @@ class GraphToposortDFS extends Graph {
     static DFS_TREE_COLOR = "#0000FF";
 
     constructor(am) {
-        super(am);
+        super();
         this.init(am);
     }
 

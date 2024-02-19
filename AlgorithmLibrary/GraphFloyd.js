@@ -71,7 +71,7 @@ class GraphFloyd extends Graph {
 
 
     constructor(am, dir) {
-        super(am);
+        super();
         this.init(am, dir);
     }
 

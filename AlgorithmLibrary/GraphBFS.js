@@ -42,7 +42,7 @@ class GraphBFS extends Graph {
     static QUEUE_SPACING = 30;
 
     constructor(am, dir) {
-        super(am);
+        super();
         this.init(am, dir);
     }
 

@@ -37,7 +37,7 @@ class GraphDijkstraPrim extends Graph {
     static HIGHLIGHT_CIRCLE_COLOR = "#000000";
 
     constructor(am, runningDijkstra, dir) {
-        super(am);
+        super();
         this.init(am, runningDijkstra, dir);
     }
 

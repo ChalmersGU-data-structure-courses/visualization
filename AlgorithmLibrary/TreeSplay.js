@@ -70,7 +70,7 @@ class TreeSplay extends Algorithm {
     static MESSAGE_Y = 10;
 
     constructor(am) {
-        super(am);
+        super();
         this.init(am);
     }
 
