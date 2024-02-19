@@ -25,189 +25,154 @@
 // or implied, of the University of San Francisco
 
 
+class RecFactorial extends Recursive {
+    static MAX_VALUE = 20;
 
-function RecFactorial(am)
-{
-    // call superclass' constructor, which calls init
-    RecFactorial.superclass.constructor.call(this, am);
-}
-RecFactorial.inheritFrom(Recursive);
+    static ACTIVATION_FIELDS = ["n ", "subValue ", "returnValue "];
+    static CODE = [["def ","factorial(n)",":"],
+                    ["     if ","(n <= 1): "],
+                    ["          return 1"],
+                    ["     else:"],
+                    ["          subSolution = ", "factorial(n - 1)"],
+                    ["          solution = ", "subSolution * n"],
+                    ["          return ", "solution"]];
 
+    static RECURSIVE_DELTA_Y = RecFactorial.ACTIVATION_FIELDS.length * Recursive.ACTIVATION_RECORD_HEIGHT;
 
-RecFactorial.MAX_VALUE = 20;
-
-RecFactorial.ACTIVATION_FIELDS = ["n ", "subValue ", "returnValue "];
-RecFactorial.CODE = [["def ","factorial(n)",":"],
-                ["     if ","(n <= 1): "],
-                ["          return 1"],
-                ["     else:"],
-                ["          subSolution = ", "factorial(n - 1)"],
-                ["          solution = ", "subSolution * n"],
-                ["          return ", "solution"]];
+    static ACTIVATION_RECORT_START_X = 330;
+    static ACTIVATION_RECORT_START_Y = 20;
 
 
-RecFactorial.RECURSIVE_DELTA_Y = RecFactorial.ACTIVATION_FIELDS.length * Recursive.ACTIVATION_RECORD_HEIGHT;
-
-RecFactorial.ACTIVATION_RECORT_START_X = 330;
-RecFactorial.ACTIVATION_RECORT_START_Y = 20;
-
-
-
-RecFactorial.prototype.init = function(am)
-{
-    RecFactorial.superclass.init.call(this, am);
-    this.nextIndex = 0;
-    this.addControls();
-    this.code = RecFactorial.CODE;
-
-
-    this.addCodeToCanvas(this.code);
-
-    this.animationManager.StartNewAnimation(this.commands);
-    this.animationManager.skipForward();
-    this.animationManager.clearHistory();
-    this.initialIndex = this.nextIndex;
-    this.oldIDs = [];
-    this.commands = [];
-}
-
-
-RecFactorial.prototype.addControls = function()
-{
-    this.controls = [];
-
-    this.factorialField = this.addControlToAlgorithmBar("Text", "", {maxlength: 2, size: 2});
-    this.addReturnSubmit(this.factorialField, "int", this.factorialCallback.bind(this));
-    this.controls.push(this.factorialField);
-
-    this.factorialButton = this.addControlToAlgorithmBar("Button", "Factorial");
-    this.factorialButton.onclick = this.factorialCallback.bind(this);
-    this.controls.push(this.factorialButton);
-
-}
-
-
-
-
-RecFactorial.prototype.factorialCallback = function(event)
-{
-    var factValue = this.normalizeNumber(this.factorialField.value);
-    if (factValue) {
-        factValue = Math.min(factValue, RecFactorial.MAX_VALUE);
-        this.factorialField.value = factValue;
-        this.implementAction(this.doFactorial.bind(this), factValue);
+    constructor(am) {
+        super(); 
+        this.init(am);
     }
-}
 
+    init(am) {
+        super.init(am);
+        this.nextIndex = 0;
+        this.addControls();
+        this.code = RecFactorial.CODE;
 
+        this.addCodeToCanvas(this.code);
 
+        this.animationManager.StartNewAnimation(this.commands);
+        this.animationManager.skipForward();
+        this.animationManager.clearHistory();
+        this.initialIndex = this.nextIndex;
+        this.oldIDs = [];
+        this.commands = [];
+    }
 
-RecFactorial.prototype.doFactorial = function(value)
-{
-    this.commands = [];
+    addControls() {
+        this.controls = [];
 
-    this.clearOldIDs();
+        this.factorialField = this.addControlToAlgorithmBar("Text", "", { maxlength: 2, size: 2 });
+        this.addReturnSubmit(this.factorialField, "int", this.factorialCallback.bind(this));
+        this.controls.push(this.factorialField);
 
-    this.currentY = RecFactorial.ACTIVATION_RECORT_START_Y;
-    this.currentX = RecFactorial.ACTIVATION_RECORT_START_X;
+        this.factorialButton = this.addControlToAlgorithmBar("Button", "Factorial");
+        this.factorialButton.onclick = this.factorialCallback.bind(this);
+        this.controls.push(this.factorialButton);
+    }
 
-    var final = this.factorial(value);
-    var resultID = this.nextIndex++;
-    this.oldIDs.push(resultID);
-    this.cmd("CreateLabel", resultID, "factorial(" + String(value) + ") = " + String(final),
-             Recursive.CODE_START_X, Recursive.CODE_START_Y + (this.code.length + 1) * Recursive.CODE_LINE_HEIGHT, 0);
-    //this.cmd("SetText", functionCallID, "factorial(" + String(value) + ") = " + String(final));
-    return this.commands;
-}
+    factorialCallback(event) {
+        var factValue = this.normalizeNumber(this.factorialField.value);
+        if (factValue) {
+            factValue = Math.min(factValue, RecFactorial.MAX_VALUE);
+            this.factorialField.value = factValue;
+            this.implementAction(this.doFactorial.bind(this), factValue);
+        }
+    }
 
+    doFactorial(value) {
+        this.commands = [];
 
-RecFactorial.prototype.factorial = function(value)
-{
-    var activationRec = this.createActivation("factorial     ", RecFactorial.ACTIVATION_FIELDS, this.currentX, this.currentY);
-    this.cmd("SetText", activationRec.fieldIDs[0], value);
-//    this.cmd("CreateLabel", ID, "", 10, this.currentY, 0);
-    var oldX = this.currentX;
-    var oldY = this.currentY;
-    this.currentY += RecFactorial.RECURSIVE_DELTA_Y;
-    if (this.currentY + Recursive.RECURSIVE_DELTA_Y > this.getCanvasHeight()) {
+        this.clearOldIDs();
+
         this.currentY = RecFactorial.ACTIVATION_RECORT_START_Y;
-        this.currentX += Recursive.ACTIVATION_RECORD_SPACING;
-    }
-    this.cmd("SetForegroundColor", this.codeID[0][1], Recursive.CODE_HIGHLIGHT_COLOR);
-    this.cmd("Step");
-    this.cmd("SetForegroundColor", this.codeID[0][1], Recursive.CODE_STANDARD_COLOR);
-    this.cmd("SetForegroundColor", this.codeID[1][1], Recursive.CODE_HIGHLIGHT_COLOR);
-    this.cmd("Step");
-    this.cmd("SetForegroundColor", this.codeID[1][1], Recursive.CODE_STANDARD_COLOR);
-    if (value > 1) {
-        this.cmd("SetForegroundColor", this.codeID[4][1], Recursive.CODE_HIGHLIGHT_COLOR);
-        this.cmd("Step");
-        this.cmd("SetForegroundColor", this.codeID[4][1], Recursive.CODE_STANDARD_COLOR);
+        this.currentX = RecFactorial.ACTIVATION_RECORT_START_X;
 
-        var firstValue = this.factorial(value-1);
-
-        this.cmd("SetForegroundColor", this.codeID[4][0], Recursive.CODE_HIGHLIGHT_COLOR);
-        this.cmd("SetForegroundColor", this.codeID[4][1], Recursive.CODE_HIGHLIGHT_COLOR);
-        this.cmd("SetText", activationRec.fieldIDs[1], firstValue);
-        this.cmd("Step");
-        this.cmd("SetForegroundColor", this.codeID[4][0], Recursive.CODE_STANDARD_COLOR);
-        this.cmd("SetForegroundColor", this.codeID[4][1], Recursive.CODE_STANDARD_COLOR);
-
-        this.cmd("SetForegroundColor", this.codeID[5][0], Recursive.CODE_HIGHLIGHT_COLOR);
-        this.cmd("SetForegroundColor", this.codeID[5][1], Recursive.CODE_HIGHLIGHT_COLOR);
-        this.cmd("SetText", activationRec.fieldIDs[2], firstValue * value);
-        this.cmd("Step");
-        this.cmd("SetForegroundColor", this.codeID[5][0], Recursive.CODE_STANDARD_COLOR);
-        this.cmd("SetForegroundColor", this.codeID[5][1], Recursive.CODE_STANDARD_COLOR);
-
-        this.cmd("SetForegroundColor", this.codeID[6][0], Recursive.CODE_HIGHLIGHT_COLOR);
-        this.cmd("SetForegroundColor", this.codeID[6][1], Recursive.CODE_HIGHLIGHT_COLOR);
-
-        this.cmd("Step");
-        this.deleteActivation(activationRec);
-        this.currentY = oldY;
-        this.currentX = oldX;
-        this.cmd("CreateLabel", this.nextIndex, "Return Value = " + String(firstValue * value), oldX, oldY);
-        this.cmd("SetForegroundColor", this.nextIndex, Recursive.CODE_HIGHLIGHT_COLOR);
-        this.cmd("Step");
-        this.cmd("SetForegroundColor", this.codeID[6][0], Recursive.CODE_STANDARD_COLOR);
-        this.cmd("SetForegroundColor", this.codeID[6][1], Recursive.CODE_STANDARD_COLOR);
-        this.cmd("Delete",this.nextIndex);
-
-
-
-//        this.cmd("SetForegroundColor", this.codeID[4][3], Recursive.CODE_HIGHLIGHT_COLOR);
-//        this.cmd("Step");
-
-        return firstValue *value;
-    }
-    else {
-        this.cmd("SetForegroundColor", this.codeID[2][0], Recursive.CODE_HIGHLIGHT_COLOR);
-        this.cmd("Step");
-        this.cmd("SetForegroundColor", this.codeID[2][0], Recursive.CODE_STANDARD_COLOR);
-
-
-        this.currentY = oldY;
-        this.currentX = oldX;
-        this.deleteActivation(activationRec);
-        this.cmd("CreateLabel", this.nextIndex, "Return Value = 1", oldX, oldY);
-        this.cmd("SetForegroundColor", this.nextIndex, Recursive.CODE_HIGHLIGHT_COLOR);
-        this.cmd("Step");
-        this.cmd("Delete",this.nextIndex);
-
-        return 1;
+        var final = this.factorial(value);
+        var resultID = this.nextIndex++;
+        this.oldIDs.push(resultID);
+        this.cmd("CreateLabel", resultID, "factorial(" + String(value) + ") = " + String(final),
+            Recursive.CODE_START_X, Recursive.CODE_START_Y + (this.code.length + 1) * Recursive.CODE_LINE_HEIGHT, 0);
+        //this.cmd("SetText", functionCallID, "factorial(" + String(value) + ") = " + String(final));
+        return this.commands;
     }
 
+    factorial(value) {
+        var activationRec = this.createActivation("factorial     ", RecFactorial.ACTIVATION_FIELDS, this.currentX, this.currentY);
+        this.cmd("SetText", activationRec.fieldIDs[0], value);
+        //    this.cmd("CreateLabel", ID, "", 10, this.currentY, 0);
+        var oldX = this.currentX;
+        var oldY = this.currentY;
+        this.currentY += RecFactorial.RECURSIVE_DELTA_Y;
+        if (this.currentY + Recursive.RECURSIVE_DELTA_Y > this.getCanvasHeight()) {
+            this.currentY = RecFactorial.ACTIVATION_RECORT_START_Y;
+            this.currentX += Recursive.ACTIVATION_RECORD_SPACING;
+        }
+        this.cmd("SetForegroundColor", this.codeID[0][1], Recursive.CODE_HIGHLIGHT_COLOR);
+        this.cmd("Step");
+        this.cmd("SetForegroundColor", this.codeID[0][1], Recursive.CODE_STANDARD_COLOR);
+        this.cmd("SetForegroundColor", this.codeID[1][1], Recursive.CODE_HIGHLIGHT_COLOR);
+        this.cmd("Step");
+        this.cmd("SetForegroundColor", this.codeID[1][1], Recursive.CODE_STANDARD_COLOR);
+        if (value > 1) {
+            this.cmd("SetForegroundColor", this.codeID[4][1], Recursive.CODE_HIGHLIGHT_COLOR);
+            this.cmd("Step");
+            this.cmd("SetForegroundColor", this.codeID[4][1], Recursive.CODE_STANDARD_COLOR);
 
+            var firstValue = this.factorial(value - 1);
 
+            this.cmd("SetForegroundColor", this.codeID[4][0], Recursive.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][1], Recursive.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetText", activationRec.fieldIDs[1], firstValue);
+            this.cmd("Step");
+            this.cmd("SetForegroundColor", this.codeID[4][0], Recursive.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][1], Recursive.CODE_STANDARD_COLOR);
+
+            this.cmd("SetForegroundColor", this.codeID[5][0], Recursive.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[5][1], Recursive.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetText", activationRec.fieldIDs[2], firstValue * value);
+            this.cmd("Step");
+            this.cmd("SetForegroundColor", this.codeID[5][0], Recursive.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[5][1], Recursive.CODE_STANDARD_COLOR);
+
+            this.cmd("SetForegroundColor", this.codeID[6][0], Recursive.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[6][1], Recursive.CODE_HIGHLIGHT_COLOR);
+
+            this.cmd("Step");
+            this.deleteActivation(activationRec);
+            this.currentY = oldY;
+            this.currentX = oldX;
+            this.cmd("CreateLabel", this.nextIndex, "Return Value = " + String(firstValue * value), oldX, oldY);
+            this.cmd("SetForegroundColor", this.nextIndex, Recursive.CODE_HIGHLIGHT_COLOR);
+            this.cmd("Step");
+            this.cmd("SetForegroundColor", this.codeID[6][0], Recursive.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[6][1], Recursive.CODE_STANDARD_COLOR);
+            this.cmd("Delete", this.nextIndex);
+
+            //        this.cmd("SetForegroundColor", this.codeID[4][3], Recursive.CODE_HIGHLIGHT_COLOR);
+            //        this.cmd("Step");
+            return firstValue * value;
+        }
+        else {
+            this.cmd("SetForegroundColor", this.codeID[2][0], Recursive.CODE_HIGHLIGHT_COLOR);
+            this.cmd("Step");
+            this.cmd("SetForegroundColor", this.codeID[2][0], Recursive.CODE_STANDARD_COLOR);
+
+            this.currentY = oldY;
+            this.currentX = oldX;
+            this.deleteActivation(activationRec);
+            this.cmd("CreateLabel", this.nextIndex, "Return Value = 1", oldX, oldY);
+            this.cmd("SetForegroundColor", this.nextIndex, Recursive.CODE_HIGHLIGHT_COLOR);
+            this.cmd("Step");
+            this.cmd("Delete", this.nextIndex);
+
+            return 1;
+        }
+    }
 }
-var currentAlg;
-
-function init()
-{
-    var animManag = initCanvas();
-    currentAlg = new RecFactorial(animManag);
-}
-
-
 
