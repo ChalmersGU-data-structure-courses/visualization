@@ -204,15 +204,8 @@ class AnimatedLabel extends AnimatedObject {
         ctx.textAlign = 'left';
         ctx.textBaseline = 'top';
         if (this.centering) {
-            if (this.highlightIndex < 0) {
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-            }
-            else {
-                x0 = this.x - this.textWidth / 2;
-                ctx.textAlign = 'left';
-                ctx.textBaseline = 'middle';
-            }
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
         }
 
         if (this.highlighted) {
@@ -233,10 +226,15 @@ class AnimatedLabel extends AnimatedObject {
                 var rightStr = this.label.substring(this.highlightIndex + 1);
                 var leftWidth = ctx.measureText(leftStr).width;
                 var centerWidth = ctx.measureText(highlightStr).width;
-                ctx.fillText(leftStr, x0, this.y);
-                ctx.fillText(rightStr, x0 + leftWidth + centerWidth, this.y);
+                var x = this.x;
+                if (this.centering) {
+                    x -= this.textWidth / 2;
+                    ctx.textAlign = 'left';
+                }
+                ctx.fillText(leftStr, x, this.y);
+                ctx.fillText(rightStr, x + leftWidth + centerWidth, this.y);
                 ctx.fillStyle = this.highlightColor;
-                ctx.fillText(highlightStr, x0 + leftWidth, this.y);
+                ctx.fillText(highlightStr, x + leftWidth, this.y);
             }
         }
         else {
