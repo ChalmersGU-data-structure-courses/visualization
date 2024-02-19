@@ -374,7 +374,7 @@ class HeapLeftist extends Algorithm {
     }
 
     resizeTrees() {
-        var firstTreeStart;
+        var startingPoint;
         var secondTreeStart;
         this.resizeWidths(this.treeRoot);
         this.resizeWidths(this.secondaryRoot);

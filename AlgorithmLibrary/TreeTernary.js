@@ -153,25 +153,24 @@ class TreeTernary extends Algorithm {
         }
         else if (tree.center != null) {
             this.cmd("SetHighlight", tree.graphicID, 1);
-            this.cmd("SetText", 2, "Clerning up after delete ...\nTree has center child, no more cleanup required");
-            this.cmd("step");
+            this.cmd("SetText", 2, "Cleaning up after delete ...\nTree has center child, no more cleanup required");
+            this.cmd("Step");
             this.cmd("SetText", 2, "");
             this.cmd("SetHighlight", tree.graphicID, 0);
             return;
         }
         else if (tree.center == null && tree.right == null && tree.left == null && tree.isword == true) {
             this.cmd("SetHighlight", tree.graphicID, 1);
-            this.cmd("SetText", 2, "Clerning up after delete ...\nLeaf at end of word, no more cleanup required");
-            this.cmd("step");
+            this.cmd("SetText", 2, "Cleaning up after delete ...\nLeaf at end of word, no more cleanup required");
+            this.cmd("Step");
             this.cmd("SetText", 2, "");
             this.cmd("SetHighlight", tree.graphicID, 0);
             return;
         }
         else if (tree.center == null && tree.left == null && tree.right == null) {
-            this.cmd("SetText", 2, "Clearning up after delete ...");
+            this.cmd("SetText", 2, "Cleaning up after delete ...");
             this.cmd("SetHighlight", tree.graphicID, 1);
-            this.cmd("step");
-            this.cmd("Delete", tree.graphicID);
+            this.cmd("Step");
             if (tree.parent == null) {
                 this.root = null;
             }
@@ -189,19 +188,21 @@ class TreeTernary extends Algorithm {
                 tree.parent.charAt = " ";
                 this.cmd("SetText", tree.parent.graphicID, " ");
             }
+            this.cmd("Delete", tree.graphicID);
             this.cleanupAfterDelete(tree.parent);
         }
         else if ((tree.left == null && tree.center == null) || (tree.right == null && tree.center == null)) {
             var child = null;
-            if (tree.left != null)
+            if (tree.left != null) {
                 child = tree.left;
-
-            else
+            } else {
                 child = tree.right;
+            }
             this.cmd("Disconnect", tree.graphicID, child.graphicID);
             if (tree.parent == null) {
                 this.cmd("Delete", tree.graphicID);
                 this.root = child;
+                child.parent = null;
             }
             else if (tree.parent.left == tree) {
                 this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
@@ -231,10 +232,8 @@ class TreeTernary extends Algorithm {
                 throw ("What??");
             }
         }
-        else if (tree.right != null && tree.center == null && tree.right != null) {
+        else if (tree.left != null && tree.center == null && tree.right != null) {
             var node = tree.left;
-
-            var parent = tree.parent;
             this.cmd("CreateHighlightCircle", this.highlightID, TreeTernary.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
             this.cmd("SetWidth", this.highlightID, TreeTernary.NODE_WIDTH);
             this.cmd("Move", this.highlightID, node.x, node.y);
@@ -309,7 +308,7 @@ class TreeTernary extends Algorithm {
         if (node != null) {
             this.cmd("SetHighlight", node.graphicID, 1);
             this.cmd("SetText", 2, "Found \"" + word + "\", setting value in tree to False");
-            this.cmd("step");
+            this.cmd("Step");
             this.cmd("SetBackgroundColor", node.graphicID, TreeTernary.FALSE_COLOR);
             node.isword = false;
             this.cmd("SetHighlight", node.graphicID, 0);
@@ -318,7 +317,7 @@ class TreeTernary extends Algorithm {
         }
         else {
             this.cmd("SetText", 2, "\"" + word + "\" not in tree, nothing to delete");
-            this.cmd("step");
+            this.cmd("Step");
             this.cmd("SetHighlightIndex", 1, -1);
         }
         this.cmd("SetText", 0, "");

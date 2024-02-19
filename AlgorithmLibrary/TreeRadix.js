@@ -238,7 +238,7 @@ class TreeRadix extends Algorithm {
     }
 
     findCallback(event) {
-        var findValue = this.insertField.value.toUpperCase();
+        var findValue = this.findField.value.toUpperCase();
         findValue = findValue.replace(/[^a-z]/gi, '');
         this.findField.value = "";
         this.implementAction(this.findElement.bind(this), findValue);
