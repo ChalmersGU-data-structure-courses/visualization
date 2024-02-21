@@ -1,0 +1,62 @@
+# Settings for the ESLint Javascript linter: https://eslint.org/
+
+# To install ESLint, run the following:
+# `npm install eslint @stylistic/eslint-plugin`
+# (You need NPM - the Node Package Manager)
+
+# To test a Javascript file, run `npx eslint <filename>`
+# To let ESLint auto-fix some minor problems, run `npx eslint --fix <filename>`
+
+
+root: true
+
+extends:
+    - eslint:recommended
+    - plugin:@stylistic/recommended-extends
+
+plugins:
+    - "@stylistic"
+
+env:
+    browser: true
+    es2022: true
+
+rules:
+    "@stylistic/semi": [error, always]
+    "@stylistic/indent": [error, 4, {flatTernaryExpressions: true}]
+    "@stylistic/quotes": [warn, double]
+    "@stylistic/no-multiple-empty-lines": [warn, {max: 2}]
+    "@stylistic/array-bracket-spacing": [warn, never]
+    "@stylistic/object-curly-spacing": [warn, never]
+    "@stylistic/brace-style": [warn, 1tbs]
+    "@stylistic/multiline-ternary": off
+    "@stylistic/operator-linebreak": off
+
+    eqeqeq: [error, smart]
+    no-constant-condition: [error, {checkLoops: false}]
+    no-var: [error]
+    no-bitwise: [error]
+    no-array-constructor: [error]
+    no-object-constructor: [error]
+    no-new-wrappers: [error]
+    no-constant-binary-expression: [error]
+    no-constructor-return: [error]
+    no-new-native-nonconstructor: [error]
+    no-self-compare: [error]
+    no-template-curly-in-string: [error]
+    no-unmodified-loop-condition: [error]
+    no-unreachable-loop: [error]
+    no-use-before-define: [error, {classes: false}]
+    block-scoped-var: [error]
+    consistent-return: [error]
+    prefer-rest-params: [error]
+    prefer-spread: [error]
+
+    no-unused-vars: [warn, {args: none}]
+    camelcase: [warn]
+    prefer-const: [warn]
+    default-param-last: [warn]
+    no-lonely-if: [warn]
+    no-shadow: [warn]
+    prefer-template: [warn]
+
