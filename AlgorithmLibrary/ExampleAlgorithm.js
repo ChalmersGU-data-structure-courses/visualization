@@ -24,6 +24,11 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Algorithm */
+/* exported SimpleStack */
+///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
 // This is an example data structure, a simple stack.
@@ -31,8 +36,8 @@
 
 // Note: remember to replace all references to SimpleStack with the name of your own data structure!
 
-class SimpleStack extends Algorithm {
 
+class SimpleStack extends Algorithm {
     // First some constants that are specific to the data structure.
     // We placed them in the function's namespace to avoid symbol clashes:
 
@@ -48,7 +53,6 @@ class SimpleStack extends Algorithm {
     static MESSAGE_X = 200;
     static MESSAGE_Y = SimpleStack.INSERT_Y;
 
-
     constructor(am) {
         super();
         this.init(am);
@@ -58,7 +62,7 @@ class SimpleStack extends Algorithm {
     // That way constructors of subclasses can effectively call the constructors of their superclasses.
     // For the init function in this simple example (the simple stack), we need to do very little work.
     // We do not have to add any elements to the canvas at load time.
-    // All we need to do is set up our own internal data structures. 
+    // All we need to do is set up our own internal data structures.
 
     // We keep track of two arrays and one variable:
     //  - an array that stores the objectIDs of the elements of the stack (stackID)
@@ -66,7 +70,7 @@ class SimpleStack extends Algorithm {
     //  - a variable that points to the top of the stack
 
     init(am) {
-        // Call the init function of our superclass, 
+        // Call the init function of our superclass,
         // which adds a couple of listeners, and sets up the undo stack.
         super.init(am);
 
@@ -78,18 +82,18 @@ class SimpleStack extends Algorithm {
 
     // Next up is the method to add algorithm controls and callbacks.
     // The tricky bit here is that we can't do something like:
-    // 
+    //
     //     this.popButton.onclick = this.popCallback;
-    // 
-    // to add our callbacks.  Why not?  
+    //
+    // to add our callbacks.  Why not?
     // This would pass in the proper function, but *not* the proper *context*.
     // Essentially, it would be passing a pointer to the code of the function,
-    // without saving the "this" pointer.  So we need to bind the "this" pointer 
+    // without saving the "this" pointer.  So we need to bind the "this" pointer
     // to our function before we store it, like this:
-    // 
+    //
     //     this.popButton.onclick = this.popCallback.bind(this);
 
-    // In the simple stack example we need three controls: 
+    // In the simple stack example we need three controls:
     //  - a text input where the user can enter new values
     //  - a button for pushing the new value onto the stack
     //  - a button for popping the topmost value from the stack
@@ -105,7 +109,7 @@ class SimpleStack extends Algorithm {
         this.addReturnSubmit(
             this.pushField,
             "ALPHANUM", // only allow alphanumeric characters, and convert to uppercase
-            this.pushCallback.bind(this) // callback to make when return is pressed
+            this.pushCallback.bind(this), // callback to make when return is pressed
         );
 
         // The button for pushing onto the stack:
@@ -130,14 +134,14 @@ class SimpleStack extends Algorithm {
 
     // Next up is the reset method.
     // All visualizations must implement the reset method.
-    // This method needs to restore *all* of our variables to 
+    // This method needs to restore *all* of our variables to
     // the state that they were in right after the call to init.
 
     // In our case, we have four variables - nextIndex, stackTop, stackID and stackValues.
 
     reset() {
         // Reset the (very simple) memory manager.
-        // NOTE: If we had added a number of objects to the scene *before* any user input, 
+        // NOTE: If we had added a number of objects to the scene *before* any user input,
         // then we would want to set this to the appropriate value based on
         // objects added to the scene before the first user input.
         this.nextIndex = 0;
@@ -150,10 +154,10 @@ class SimpleStack extends Algorithm {
     // Callbacks
     ///////////////////////////////////////////////////////////////////////////////
 
-    // Next up, the callbacks.  Note that we don't do any action directly on a callback: 
-    // instead, we use the method implementAction, which takes a bound function (using 
-    // the method bind) and a parameter, and then calls that function using that parameter.  
-    // implementAction also saves a list of all actions that have been performed, 
+    // Next up, the callbacks.  Note that we don't do any action directly on a callback:
+    // instead, we use the method implementAction, which takes a bound function (using
+    // the method bind) and a parameter, and then calls that function using that parameter.
+    // implementAction also saves a list of all actions that have been performed,
     // so that undo will work nicely.
 
     // Note: Your callbacks should *not* do any work directly, but instead should go through
@@ -162,7 +166,7 @@ class SimpleStack extends Algorithm {
     pushCallback() {
         // Get value to insert from textfield (created in addControls above).
         // Also normalize it by parsing numbers and removing blanks.
-        var pushedValue = this.normalizeNumber(this.pushField.value);
+        const pushedValue = this.normalizeNumber(this.pushField.value);
 
         // Only push the value if the text field is not empty.
         if (pushedValue !== "") {
@@ -196,10 +200,10 @@ class SimpleStack extends Algorithm {
         this.commands = [];
 
         // Get a new memory ID for the rectangle that we are going to create.
-        var objectID = this.nextIndex++;
+        const objectID = this.nextIndex++;
         this.stack.push({
             id: objectID,
-            value: value
+            value: value,
         });
 
         // Create a rectangle that contains the pushed value.
@@ -209,7 +213,7 @@ class SimpleStack extends Algorithm {
             SimpleStack.ELEMENT_WIDTH,
             SimpleStack.ELEMENT_HEIGHT,
             SimpleStack.INSERT_X,
-            SimpleStack.INSERT_Y
+            SimpleStack.INSERT_Y,
         );
         // Set the colors of the rectangle.
         this.cmd("SetForegroundColor", objectID, SimpleStack.FOREGROUND_COLOR);
@@ -218,9 +222,9 @@ class SimpleStack extends Algorithm {
         this.cmd("Step");
 
         // Calculate the coordinates of the rectangle.
-        var top = this.stack.length;
-        var nextXPos = SimpleStack.STARTING_X + top * SimpleStack.ELEMENT_WIDTH;
-        var nextYPos = SimpleStack.STARTING_Y;
+        const top = this.stack.length;
+        const nextXPos = SimpleStack.STARTING_X + top * SimpleStack.ELEMENT_WIDTH;
+        const nextYPos = SimpleStack.STARTING_Y;
         // Move it to its correct location.
         this.cmd("Move", objectID, nextXPos, nextYPos);
         // Next animation step done.
@@ -236,7 +240,7 @@ class SimpleStack extends Algorithm {
 
         // We can only pop values if the stack contains elements.
         if (this.stack.length > 0) {
-            var { id: objectID, value: value } = this.stack.pop();
+            const {id: objectID, value: value} = this.stack.pop();
 
             // First we move the rectangle to the "base" position.
             this.cmd("Move", objectID, SimpleStack.INSERT_X, SimpleStack.INSERT_Y);
@@ -246,16 +250,16 @@ class SimpleStack extends Algorithm {
             this.cmd("Delete", objectID);
             this.cmd("Step");
 
-            // Now we want to display the value. 
+            // Now we want to display the value.
             // Since we just removed the rectangle we can reuse the objectID.
-            var message = `Popped value: ${value}`;
+            const message = `Popped value: ${value}`;
             this.cmd("CreateLabel", objectID, message, SimpleStack.MESSAGE_X, SimpleStack.MESSAGE_Y, false);
             this.cmd("Step");
 
             // Finally we delete the message.
             this.cmd("Delete", objectID);
 
-            // OPTIONAL:  
+            // OPTIONAL:
             // We can do a little better with memory leaks in our own memory manager by
             // reclaiming this memory.  It is recommened that you *NOT* do this unless
             // you really know what you are doing (memory management leads to tricky bugs!)
@@ -268,4 +272,3 @@ class SimpleStack extends Algorithm {
         return this.commands;
     }
 }
-

@@ -24,10 +24,15 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
-
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Algorithm */
+/* exported TreeSplay */
+///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
 // Splay tree nodes are ordinary BST nodes
+
 
 class SplayNode {
     constructor(val, id, initialX, initialY) {
@@ -41,14 +46,14 @@ class SplayNode {
         this.leftWidth = 0;
         this.rightWidth = 0;
     }
+
     isLeftChild() {
-        return this.parent == null || this.parent.left == this;
+        return this.parent == null || this.parent.left === this;
     }
 }
 
 
 class TreeSplay extends Algorithm {
-
     static FOREGROUND_COLOR = "#007700";
     static BACKGROUND_COLOR = "#EEFFEE";
 
@@ -60,7 +65,6 @@ class TreeSplay extends Algorithm {
     static WIDTH_DELTA = TreeSplay.NODE_SIZE + 10;
     static HEIGHT_DELTA = TreeSplay.NODE_SIZE + 10;
     static STARTING_Y = 50;
-
 
     static FIRST_PRINT_POS_X = 50;
     static PRINT_VERTICAL_GAP = 20;
@@ -95,12 +99,12 @@ class TreeSplay extends Algorithm {
     }
 
     sizeChanged() {
-        var w = this.getCanvasWidth();
-        var h = this.getCanvasHeight();
+        const w = this.getCanvasWidth();
+        const h = this.getCanvasHeight();
 
         this.startingX = w / 2;
-        this.first_print_pos_y = h - 3 * TreeSplay.PRINT_VERTICAL_GAP;
-        this.print_max = w - TreeSplay.PRINT_HORIZONTAL_GAP;
+        this.firstPrintPosY = h - 3 * TreeSplay.PRINT_VERTICAL_GAP;
+        this.printMax = w - TreeSplay.PRINT_HORIZONTAL_GAP;
 
         this.implementAction(() => {
             this.commands = [];
@@ -110,19 +114,19 @@ class TreeSplay extends Algorithm {
     }
 
     addControls() {
-        this.insertField = this.addControlToAlgorithmBar("Text", "", { maxlength: 4, size: 4 });
+        this.insertField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
         this.addReturnSubmit(this.insertField, "ALPHANUM", this.insertCallback.bind(this));
         this.insertButton = this.addControlToAlgorithmBar("Button", "Insert");
         this.insertButton.onclick = this.insertCallback.bind(this);
         this.addBreakToAlgorithmBar();
 
-        this.deleteField = this.addControlToAlgorithmBar("Text", "", { maxlength: 4, size: 4 });
+        this.deleteField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
         this.addReturnSubmit(this.deleteField, "ALPHANUM", this.deleteCallback.bind(this));
         this.deleteButton = this.addControlToAlgorithmBar("Button", "Delete");
         this.deleteButton.onclick = this.deleteCallback.bind(this);
         this.addBreakToAlgorithmBar();
 
-        this.findField = this.addControlToAlgorithmBar("Text", "", { maxlength: 4, size: 4 });
+        this.findField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
         this.addReturnSubmit(this.findField, "ALPHANUM", this.findCallback.bind(this));
         this.findButton = this.addControlToAlgorithmBar("Button", "Find");
         this.findButton.onclick = this.findCallback.bind(this);
@@ -145,7 +149,7 @@ class TreeSplay extends Algorithm {
     // Callback functions for the algorithm control bar
 
     insertCallback(event) {
-        var insertedValue = this.normalizeNumber(this.insertField.value);
+        const insertedValue = this.normalizeNumber(this.insertField.value);
         if (insertedValue !== "") {
             this.insertField.value = "";
             this.implementAction(this.insertElement.bind(this), insertedValue);
@@ -153,7 +157,7 @@ class TreeSplay extends Algorithm {
     }
 
     deleteCallback(event) {
-        var deletedValue = this.normalizeNumber(this.deleteField.value);
+        const deletedValue = this.normalizeNumber(this.deleteField.value);
         if (deletedValue !== "") {
             this.deleteField.value = "";
             this.implementAction(this.deleteElement.bind(this), deletedValue);
@@ -161,7 +165,7 @@ class TreeSplay extends Algorithm {
     }
 
     findCallback(event) {
-        var findValue = this.normalizeNumber(this.findField.value);
+        const findValue = this.normalizeNumber(this.findField.value);
         if (findValue !== "") {
             this.findField.value = "";
             this.implementAction(this.findElement.bind(this), findValue);
@@ -185,15 +189,15 @@ class TreeSplay extends Algorithm {
         this.cmd("SetText", this.messageID, "Printing tree");
         this.highlightID = this.nextIndex++;
         this.cmd("CreateHighlightCircle", this.highlightID, TreeSplay.HIGHLIGHT_CIRCLE_COLOR, this.treeRoot.x, this.treeRoot.y);
-        var firstLabel = this.nextIndex;
+        const firstLabel = this.nextIndex;
 
         this.xPosOfNextLabel = TreeSplay.FIRST_PRINT_POS_X;
-        this.yPosOfNextLabel = this.first_print_pos_y;
+        this.yPosOfNextLabel = this.firstPrintPosY;
 
         this.printTreeRec(this.treeRoot);
         this.cmd("Delete", this.highlightID);
         this.cmd("Step");
-        for (var i = firstLabel; i < this.nextIndex; i++) {
+        for (let i = firstLabel; i < this.nextIndex; i++) {
             this.cmd("Delete", i);
         }
         this.nextIndex = this.highlightID; // Reuse objects. Not necessary.
@@ -209,14 +213,14 @@ class TreeSplay extends Algorithm {
             this.cmd("Move", this.highlightID, tree.x, tree.y);
             this.cmd("Step");
         }
-        var nextLabelID = this.nextIndex++;
+        const nextLabelID = this.nextIndex++;
         this.cmd("CreateLabel", nextLabelID, tree.data, tree.x, tree.y);
         this.cmd("SetForegroundColor", nextLabelID, TreeSplay.PRINT_COLOR);
         this.cmd("Move", nextLabelID, this.xPosOfNextLabel, this.yPosOfNextLabel);
         this.cmd("Step");
 
         this.xPosOfNextLabel += TreeSplay.PRINT_HORIZONTAL_GAP;
-        if (this.xPosOfNextLabel > this.print_max) {
+        if (this.xPosOfNextLabel > this.printMax) {
             this.xPosOfNextLabel = TreeSplay.FIRST_PRINT_POS_X;
             this.yPosOfNextLabel += TreeSplay.PRINT_VERTICAL_GAP;
         }
@@ -256,7 +260,7 @@ class TreeSplay extends Algorithm {
         this.commands = [];
         this.cmd("SetText", this.messageID, `Searching for ${findValue}`);
         this.highlightID = this.nextIndex++;
-        var found = this.doFind(this.treeRoot, findValue);
+        const found = this.doFind(this.treeRoot, findValue);
         this.cmd("SetText", this.messageID, `Element ${findValue} ${found ? "found" : "not found"}`);
         this.validateTree();
         return this.commands;
@@ -265,8 +269,8 @@ class TreeSplay extends Algorithm {
     doFind(tree, value) {
         if (tree != null) {
             this.cmd("SetHighlight", tree.graphicID, 1);
-            var cmp = this.compare(tree.data, value);
-            if (cmp == 0) {
+            const cmp = this.compare(tree.data, value);
+            if (cmp === 0) {
                 this.cmd("SetText", this.messageID, `Searching for ${value}: ${value} = ${tree.data} (element found!)`);
                 this.cmd("Step");
                 this.cmd("SetText", this.messageID, `Found ${value}`);
@@ -274,8 +278,7 @@ class TreeSplay extends Algorithm {
                 this.cmd("SetHighlight", tree.graphicID, 0);
                 this.splayUp(tree);
                 return true;
-            }
-            else if (cmp > 0) {
+            } else if (cmp > 0) {
                 this.cmd("SetText", this.messageID, `Searching for ${value}: ${value} < ${tree.data} (look to left subtree)`);
                 this.cmd("Step");
                 this.cmd("SetHighlight", tree.graphicID, 0);
@@ -285,15 +288,13 @@ class TreeSplay extends Algorithm {
                     this.cmd("Step");
                     this.cmd("Delete", this.highlightID);
                     return this.doFind(tree.left, value);
-                }
-                else {
+                } else {
                     this.cmd("SetText", this.messageID, `Searching for ${value}: Element not found`);
                     this.cmd("Step");
                     this.splayUp(tree);
                     return false;
                 }
-            }
-            else {
+            } else {
                 this.cmd("SetText", this.messageID, `Searching for ${value}: ${value} > ${tree.data} (look to right subtree)`);
                 this.cmd("Step");
                 this.cmd("SetHighlight", tree.graphicID, 0);
@@ -303,16 +304,14 @@ class TreeSplay extends Algorithm {
                     this.cmd("Step");
                     this.cmd("Delete", this.highlightID);
                     return this.doFind(tree.right, value);
-                }
-                else {
+                } else {
                     this.cmd("SetText", this.messageID, `Searching for ${value}: Element not found`);
                     this.cmd("Step");
                     this.splayUp(tree);
                     return false;
                 }
             }
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -321,23 +320,22 @@ class TreeSplay extends Algorithm {
         this.commands = [];
         this.cmd("SetText", this.messageID, `Inserting ${insertedValue}`);
         this.highlightID = this.nextIndex++;
-        var treeNodeID = this.nextIndex++;
+        const treeNodeID = this.nextIndex++;
 
         if (this.treeRoot == null) {
-            var x = this.startingX, y = TreeSplay.STARTING_Y;
+            const x = this.startingX, y = TreeSplay.STARTING_Y;
             this.cmd("CreateCircle", treeNodeID, insertedValue, x, y);
             this.cmd("SetForegroundColor", treeNodeID, TreeSplay.FOREGROUND_COLOR);
             this.cmd("SetBackgroundColor", treeNodeID, TreeSplay.BACKGROUND_COLOR);
             this.cmd("Step");
             this.treeRoot = new SplayNode(insertedValue, treeNodeID, x, y);
-        }
-        else {
-            var x = TreeSplay.STARTING_Y, y = 2 * TreeSplay.STARTING_Y;
+        } else {
+            const x = TreeSplay.STARTING_Y, y = 2 * TreeSplay.STARTING_Y;
             this.cmd("CreateCircle", treeNodeID, insertedValue, x, y);
             this.cmd("SetForegroundColor", treeNodeID, TreeSplay.FOREGROUND_COLOR);
             this.cmd("SetBackgroundColor", treeNodeID, TreeSplay.BACKGROUND_COLOR);
             this.cmd("Step");
-            var insertElem = new SplayNode(insertedValue, treeNodeID, x, y);
+            const insertElem = new SplayNode(insertedValue, treeNodeID, x, y);
             this.cmd("SetHighlight", insertElem.graphicID, 1);
             this.insert(insertElem, this.treeRoot);
             this.resizeTree();
@@ -349,15 +347,15 @@ class TreeSplay extends Algorithm {
         this.validateTree();
         return this.commands;
     }
+
     insert(elem, tree) {
         this.cmd("SetHighlight", tree.graphicID, 1);
         this.cmd("SetHighlight", elem.graphicID, 1);
 
-        var cmp = this.compare(elem.data, tree.data);
+        const cmp = this.compare(elem.data, tree.data);
         if (cmp < 0) {
             this.cmd("SetText", this.messageID, `${elem.data} < ${tree.data}: Looking at left subtree`);
-        }
-        else {
+        } else {
             this.cmd("SetText", this.messageID, `${elem.data} >= ${tree.data}: Looking at right subtree`);
         }
         this.cmd("Step");
@@ -371,33 +369,28 @@ class TreeSplay extends Algorithm {
                 tree.left = elem;
                 elem.parent = tree;
                 this.cmd("Connect", tree.graphicID, elem.graphicID, TreeSplay.LINK_COLOR);
-            }
-            else {
+            } else {
                 this.cmd("CreateHighlightCircle", this.highlightID, TreeSplay.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
                 this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
                 this.cmd("Step");
                 this.cmd("Delete", this.highlightID);
                 this.insert(elem, tree.left);
             }
-        }
-        else {
-            if (tree.right == null) {
-                this.cmd("SetText", this.messageID, "Found null tree, inserting element");
-                this.cmd("SetHighlight", elem.graphicID, 0);
-                tree.right = elem;
-                elem.parent = tree;
-                this.cmd("Connect", tree.graphicID, elem.graphicID, TreeSplay.LINK_COLOR);
-                elem.x = tree.x + TreeSplay.WIDTH_DELTA / 2;
-                elem.y = tree.y + TreeSplay.HEIGHT_DELTA;
-                this.cmd("Move", elem.graphicID, elem.x, elem.y);
-            }
-            else {
-                this.cmd("CreateHighlightCircle", this.highlightID, TreeSplay.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
-                this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
-                this.cmd("Step");
-                this.cmd("Delete", this.highlightID);
-                this.insert(elem, tree.right);
-            }
+        } else if (tree.right == null) {
+            this.cmd("SetText", this.messageID, "Found null tree, inserting element");
+            this.cmd("SetHighlight", elem.graphicID, 0);
+            tree.right = elem;
+            elem.parent = tree;
+            this.cmd("Connect", tree.graphicID, elem.graphicID, TreeSplay.LINK_COLOR);
+            elem.x = tree.x + TreeSplay.WIDTH_DELTA / 2;
+            elem.y = tree.y + TreeSplay.HEIGHT_DELTA;
+            this.cmd("Move", elem.graphicID, elem.x, elem.y);
+        } else {
+            this.cmd("CreateHighlightCircle", this.highlightID, TreeSplay.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+            this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
+            this.cmd("Step");
+            this.cmd("Delete", this.highlightID);
+            this.insert(elem, tree.right);
         }
     }
 
@@ -416,7 +409,7 @@ class TreeSplay extends Algorithm {
     treeDelete(tree, valueToDelete) {
         this.cmd("SetText", this.messageID, `Finding ${valueToDelete} and splaying to rooot`);
         this.cmd("Step");
-        var inTree = this.doFind(this.treeRoot, valueToDelete);
+        const inTree = this.doFind(this.treeRoot, valueToDelete);
 
         if (inTree) {
             this.cmd("SetText", this.messageID, "Removing root, leaving left and right trees");
@@ -428,19 +421,17 @@ class TreeSplay extends Algorithm {
                 this.treeRoot = this.treeRoot.left;
                 this.treeRoot.parent = null;
                 this.resizeTree();
-            }
-            else if (this.treeRoot.left == null) {
+            } else if (this.treeRoot.left == null) {
                 this.cmd("Delete", this.treeRoot.graphicID);
                 this.cmd("SetText", this.messageID, "No left tree, make right tree the root");
                 this.cmd("Step");
                 this.treeRoot = this.treeRoot.right;
                 this.treeRoot.parent = null;
                 this.resizeTree();
-            }
-            else {
-                var right = this.treeRoot.right;
-                var left = this.treeRoot.left;
-                var oldGraphicID = this.treeRoot.graphicID;
+            } else {
+                const right = this.treeRoot.right;
+                const left = this.treeRoot.left;
+                const oldGraphicID = this.treeRoot.graphicID;
                 this.cmd("Disconnect", this.treeRoot.graphicID, left.graphicID);
                 this.cmd("Disconnect", this.treeRoot.graphicID, right.graphicID);
                 this.cmd("SetAlpha", this.treeRoot.graphicID, 0);
@@ -448,7 +439,7 @@ class TreeSplay extends Algorithm {
                 this.cmd("Step");
 
                 left.parent = null;
-                var largestLeft = this.findMax(left);
+                const largestLeft = this.findMax(left);
                 this.splayUp(largestLeft);
                 this.cmd("SetText", this.messageID, "Left tree now has no right subtree, connect left and right trees");
                 this.cmd("Step");
@@ -479,11 +470,11 @@ class TreeSplay extends Algorithm {
     }
 
     singleRotateRight(tree) {
-        var A = tree.left;
-        var B = tree;
-        var t1 = A.left;
-        var t2 = A.right;
-        var t3 = B.right;
+        const A = tree.left;
+        const B = tree;
+        // const t1 = A.left;
+        const t2 = A.right;
+        // const t3 = B.right;
 
         this.cmd("SetText", this.messageID, "Zig Right");
         this.cmd("SetEdgeHighlight", B.graphicID, A.graphicID, 1);
@@ -499,14 +490,12 @@ class TreeSplay extends Algorithm {
         A.parent = B.parent;
         if (B.parent == null) {
             this.treeRoot = A;
-        }
-        else {
+        } else {
             this.cmd("Disconnect", B.parent.graphicID, B.graphicID, TreeSplay.LINK_COLOR);
             this.cmd("Connect", B.parent.graphicID, A.graphicID, TreeSplay.LINK_COLOR);
             if (B.isLeftChild()) {
                 B.parent.left = A;
-            }
-            else {
+            } else {
                 B.parent.right = A;
             }
         }
@@ -517,11 +506,11 @@ class TreeSplay extends Algorithm {
     }
 
     singleRotateLeft(tree) {
-        var A = tree;
-        var B = tree.right;
-        var t1 = A.left;
-        var t2 = B.left;
-        var t3 = B.right;
+        const A = tree;
+        const B = tree.right;
+        // const t1 = A.left;
+        const t2 = B.left;
+        // const t3 = B.right;
 
         this.cmd("SetText", this.messageID, "Zig Left");
         this.cmd("SetEdgeHighlight", A.graphicID, B.graphicID, 1);
@@ -537,8 +526,7 @@ class TreeSplay extends Algorithm {
         B.parent = A.parent;
         if (A.parent == null) {
             this.treeRoot = B;
-        }
-        else {
+        } else {
             this.cmd("Disconnect", A.parent.graphicID, A.graphicID, TreeSplay.LINK_COLOR);
             this.cmd("Connect", A.parent.graphicID, B.graphicID, TreeSplay.LINK_COLOR);
             if (A.isLeftChild()) {
@@ -554,13 +542,13 @@ class TreeSplay extends Algorithm {
     }
 
     doubleRotateRight(tree) {
-        var A = tree.left;
-        var B = tree.left.right;
-        var C = tree;
-        var t1 = A.left;
-        var t2 = B.left;
-        var t3 = B.right;
-        var t4 = C.right;
+        const A = tree.left;
+        const B = tree.left.right;
+        const C = tree;
+        // const t1 = A.left;
+        const t2 = B.left;
+        const t3 = B.right;
+        // const t4 = C.right;
 
         this.cmd("SetText", this.messageID, "Zig-Zag Right");
         this.cmd("SetEdgeHighlight", C.graphicID, A.graphicID, 1);
@@ -582,8 +570,7 @@ class TreeSplay extends Algorithm {
         if (C.parent == null) {
             B.parent = null;
             this.treeRoot = B;
-        }
-        else {
+        } else {
             this.cmd("Disconnect", C.parent.graphicID, C.graphicID);
             this.cmd("Connect", C.parent.graphicID, B.graphicID, TreeSplay.LINK_COLOR);
             if (C.isLeftChild()) {
@@ -609,13 +596,13 @@ class TreeSplay extends Algorithm {
     }
 
     doubleRotateLeft(tree) {
-        var A = tree;
-        var B = tree.right.left;
-        var C = tree.right;
-        var t1 = A.left;
-        var t2 = B.left;
-        var t3 = B.right;
-        var t4 = C.right;
+        const A = tree;
+        const B = tree.right.left;
+        const C = tree.right;
+        // const t1 = A.left;
+        const t2 = B.left;
+        const t3 = B.right;
+        // const t4 = C.right;
 
         this.cmd("SetText", this.messageID, "Zig-Zag Left");
         this.cmd("SetEdgeHighlight", A.graphicID, C.graphicID, 1);
@@ -638,8 +625,7 @@ class TreeSplay extends Algorithm {
         if (A.parent == null) {
             B.parent = null;
             this.treeRoot = B;
-        }
-        else {
+        } else {
             this.cmd("Disconnect", A.parent.graphicID, A.graphicID);
             this.cmd("Connect", A.parent.graphicID, B.graphicID, TreeSplay.LINK_COLOR);
             if (A.isLeftChild()) {
@@ -665,13 +651,13 @@ class TreeSplay extends Algorithm {
     }
 
     zigZigRight(tree) {
-        var A = tree.left.left;
-        var B = tree.left;
-        var C = tree;
-        var t1 = A.left;
-        var t2 = A.right;
-        var t3 = B.right;
-        var t4 = C.right;
+        const A = tree.left.left;
+        const B = tree.left;
+        const C = tree;
+        // const t1 = A.left;
+        const t2 = A.right;
+        const t3 = B.right;
+        // const t4 = C.right;
 
         this.cmd("SetText", this.messageID, "Zig-Zig Right");
         this.cmd("SetEdgeHighlight", C.graphicID, B.graphicID, 1);
@@ -688,8 +674,7 @@ class TreeSplay extends Algorithm {
             } else {
                 C.parent.right = A;
             }
-        }
-        else {
+        } else {
             this.treeRoot = A;
         }
 
@@ -719,13 +704,13 @@ class TreeSplay extends Algorithm {
     }
 
     zigZigLeft(tree) {
-        var A = tree;
-        var B = tree.right;
-        var C = tree.right.right;
-        var t1 = A.left;
-        var t2 = B.left;
-        var t3 = C.left;
-        var t4 = C.right;
+        const A = tree;
+        const B = tree.right;
+        const C = tree.right.right;
+        // const t1 = A.left;
+        const t2 = B.left;
+        const t3 = C.left;
+        // const t4 = C.right;
 
         this.cmd("SetText", this.messageID, "Zig-Zig Left");
         this.cmd("SetEdgeHighlight", A.graphicID, B.graphicID, 1);
@@ -733,7 +718,6 @@ class TreeSplay extends Algorithm {
         this.cmd("Step");
         this.cmd("SetEdgeHighlight", A.graphicID, B.graphicID, 0);
         this.cmd("SetEdgeHighlight", B.graphicID, C.graphicID, 0);
-
 
         if (A.parent != null) {
             this.cmd("Disconnect", A.parent.graphicID, A.graphicID);
@@ -743,8 +727,7 @@ class TreeSplay extends Algorithm {
             } else {
                 A.parent.right = C;
             }
-        }
-        else {
+        } else {
             this.treeRoot = C;
         }
 
@@ -777,27 +760,22 @@ class TreeSplay extends Algorithm {
     splayDown(value) {
         if (this.treeRoot == null) {
             return false;
-        }
-        else if (this.treeRoot.data == value) {
+        } else if (this.treeRoot.data === value) {
             return true;
-        }
-        else if (value < this.treeRoot.data) {
+        } else if (value < this.treeRoot.data) {
             if (this.treeRoot.left == null) {
                 return false;
-            }
-            else if (this.treeRoot.left.data == value) {
+            } else if (this.treeRoot.left.data === value) {
                 this.singleRotateRight(this.treeRoot);
                 return true;
-            }
-            else if (value < this.treeRoot.left.data) {
+            } else if (value < this.treeRoot.left.data) {
                 if (this.treeRoot.left.left == null) {
                     this.singleRotateRight(this.treeRoot);
                 } else {
                     this.zigZigRight(this.treeRoot);
                 }
                 return this.splayDown(value);
-            }
-            else {
+            } else {
                 if (this.treeRoot.left.right == null) {
                     this.singleRotateRight(this.treeRoot);
                 } else {
@@ -805,59 +783,47 @@ class TreeSplay extends Algorithm {
                 }
                 return this.splayDown(value);
             }
-        }
-        else {
-            if (this.treeRoot.right == null) {
-                return false;
-            }
-            else if (this.treeRoot.right.data == value) {
+        } else if (this.treeRoot.right == null) {
+            return false;
+        } else if (this.treeRoot.right.data === value) {
+            this.singleRotateLeft(this.treeRoot);
+            return true;
+        } else if (value > this.treeRoot.right.data) {
+            if (this.treeRoot.right.right == null) {
                 this.singleRotateLeft(this.treeRoot);
-                return true;
+            } else {
+                this.zigZigLeft(this.treeRoot);
             }
-            else if (value > this.treeRoot.right.data) {
-                if (this.treeRoot.right.right == null) {
-                    this.singleRotateLeft(this.treeRoot);
-                } else {
-                    this.zigZigLeft(this.treeRoot);
-                }
-                return this.splayDown(value);
+            return this.splayDown(value);
+        } else {
+            if (this.treeRoot.right.left == null) {
+                this.singleRotateLeft(this.treeRoot);
+            } else {
+                this.doubleRotateLeft(this.treeRot);
             }
-            else {
-                if (this.treeRoot.right.left == null) {
-                    this.singleRotateLeft(this.treeRoot);
-                }
-                else {
-                    this.doubleRotateLeft(this.treeRot);
-                }
-                return this.splayDown(value);
-            }
+            return this.splayDown(value);
         }
     }
 
     splayUp(tree) {
         if (tree.parent == null) {
             return;
-        }
-        else if (tree.parent.parent == null) {
+        } else if (tree.parent.parent == null) {
             if (tree.isLeftChild()) {
                 this.singleRotateRight(tree.parent);
             } else {
                 this.singleRotateLeft(tree.parent);
             }
-        }
-        else if (tree.isLeftChild() && !tree.parent.isLeftChild()) {
+        } else if (tree.isLeftChild() && !tree.parent.isLeftChild()) {
             this.doubleRotateLeft(tree.parent.parent);
             this.splayUp(tree);
-        }
-        else if (!tree.isLeftChild() && tree.parent.isLeftChild()) {
+        } else if (!tree.isLeftChild() && tree.parent.isLeftChild()) {
             this.doubleRotateRight(tree.parent.parent);
             this.splayUp(tree);
-        }
-        else if (tree.isLeftChild()) {
+        } else if (tree.isLeftChild()) {
             this.zigZigRight(tree.parent.parent);
             this.splayUp(tree);
-        }
-        else {
+        } else {
             this.zigZigLeft(tree.parent.parent);
             this.splayUp(tree);
         }
@@ -868,22 +834,19 @@ class TreeSplay extends Algorithm {
             tree = this.treeRoot;
             if (!tree) return;
             // console.log("Validating tree", tree);
-        } else {
-            if (tree.parent !== parent) console.error("Parent mismatch:", tree, parent);
-        }
+        } else if (tree.parent !== parent) console.error("Parent mismatch:", tree, parent);
         if (!tree.graphicID) console.error("Tree missing ID:", tree);
         if (tree.left) this.validateTree(tree.left, tree);
         if (tree.right) this.validateTree(tree.right, tree);
     }
 
     resizeTree() {
-        var startingPoint = this.startingX;
+        let startingPoint = this.startingX;
         this.resizeWidths(this.treeRoot);
         if (this.treeRoot != null) {
             if (this.treeRoot.leftWidth > startingPoint) {
                 startingPoint = this.treeRoot.leftWidth;
-            }
-            else if (this.treeRoot.rightWidth > startingPoint) {
+            } else if (this.treeRoot.rightWidth > startingPoint) {
                 startingPoint = Math.max(this.treeRoot.leftWidth, 2 * startingPoint - this.treeRoot.rightWidth);
             }
             this.setNewPositions(this.treeRoot, startingPoint, TreeSplay.STARTING_Y, 0);
@@ -897,8 +860,7 @@ class TreeSplay extends Algorithm {
             tree.y = yPosition;
             if (side < 0) {
                 xPosition = xPosition - tree.rightWidth;
-            }
-            else if (side > 0) {
+            } else if (side > 0) {
                 xPosition = xPosition + tree.leftWidth;
             }
             tree.x = xPosition;

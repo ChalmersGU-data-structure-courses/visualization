@@ -24,6 +24,12 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Geometric, Matrix */
+/* exported GeoChangeCoord3D */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class GeoChangeCoord3D extends Geometric {
     static XAxisYPos = 300;
@@ -40,10 +46,10 @@ class GeoChangeCoord3D extends Geometric {
     static ROBOT_MATRIX_START_Y = 30;
 
     static HAND_MATRIX_START_X = 10 + 3 * GeoChangeCoord3D.MATRIX_ELEM_WIDTH + GeoChangeCoord3D.MATRIX_MULTIPLY_SPACING;
-    static HAND_MATRIX_START_Y = 10 + 25 + 20 + 20 + 3*GeoChangeCoord3D.MATRIX_ELEM_HEIGHT;
+    static HAND_MATRIX_START_Y = 10 + 25 + 20 + 20 + 3 * GeoChangeCoord3D.MATRIX_ELEM_HEIGHT;
 
-    static ROBOT_POSITION_START_X = GeoChangeCoord3D.ROBOT_MATRIX_START_X + 5*GeoChangeCoord3D.MATRIX_ELEM_WIDTH + 100;
-    static HAND_POSITION_START_X = GeoChangeCoord3D.HAND_MATRIX_START_X + 5*GeoChangeCoord3D.MATRIX_ELEM_WIDTH + 100;
+    static ROBOT_POSITION_START_X = GeoChangeCoord3D.ROBOT_MATRIX_START_X + 5 * GeoChangeCoord3D.MATRIX_ELEM_WIDTH + 100;
+    static HAND_POSITION_START_X = GeoChangeCoord3D.HAND_MATRIX_START_X + 5 * GeoChangeCoord3D.MATRIX_ELEM_WIDTH + 100;
 
     static ROBOT_POSITION_START_Y = GeoChangeCoord3D.ROBOT_MATRIX_START_Y;
     static HAND_POSITION_START_Y = GeoChangeCoord3D.HAND_MATRIX_START_Y;
@@ -53,51 +59,51 @@ class GeoChangeCoord3D extends Geometric {
     static YAxisEnd = 500;
 
     static ROBOT_POINTS = [
-        [-15, 5, 100], [15, 5, 100], [15, 5, 80], [30, 5, 80], [30, 5, -10], 
+        [-15, 5, 100], [15, 5, 100], [15, 5, 80], [30, 5, 80], [30, 5, -10],
         [15, 5, -10], [15, 5, -100], [0, 5, -100], [0, 5, -30], [0, 5, -100], [-15, 5, -100],
         [-15, 5, -10], [-30, 5, -10], [-30, 5, 80], [-15, 5, 80], [-15, 5, 100],
-        [-15, -5, 100], [15, -5, 100], [15, -5, 80], [30, -5, 80], [30, -5, -10], 
+        [-15, -5, 100], [15, -5, 100], [15, -5, 80], [30, -5, 80], [30, -5, -10],
         [15, -5, -10], [15, -5, -100], [0, -5, -100], [0, -5, -30], [0, -5, -100], [-15, -5, -100],
         [-15, -5, -10], [-30, -5, -10], [-30, -5, 80], [-15, -5, 80], [-15, -5, 100],
     ];
 
     static ROBOT_EXTRA_CONNECTIONS = [
-        [0, 16], [1, 17], [2, 18], [3, 19], [4, 20], [5, 21], [6, 22], [7, 23], 
+        [0, 16], [1, 17], [2, 18], [3, 19], [4, 20], [5, 21], [6, 22], [7, 23],
         [8, 24], [9, 25], [10, 26], [11, 27], [12, 28], [13, 29], [14, 30], [15, 31],
     ];
 
     static HAND_POINTS = [
-        [0, 3, 0], [-10, 3, 0], [-10, 3, 10], [-6, 3, 10], [-6, 3, 6], 
+        [0, 3, 0], [-10, 3, 0], [-10, 3, 10], [-6, 3, 10], [-6, 3, 6],
         [6, 3, 6], [6, 3, 10], [10, 3, 10], [10, 3, 0], [0, 3, 0],
-        [0, -3, 0], [-10, -3, 0], [-10, -3, 10], [-6, -3, 10], [-6, -3, 6], 
+        [0, -3, 0], [-10, -3, 0], [-10, -3, 10], [-6, -3, 10], [-6, -3, 6],
         [6, -3, 6], [6, -3, 10], [10, -3, 10], [10, -3, 0], [0, -3, 0],
     ];
 
     static HAND_EXTRA_CONNECTIONS = [
-        [0,  10], [1, 11], [2, 12], [3, 13], [4, 14], [5, 15], [6, 16], [7, 17], [8, 18], [9, 19]
+        [0, 10], [1, 11], [2, 12], [3, 13], [4, 14], [5, 15], [6, 16], [7, 17], [8, 18], [9, 19],
     ];
 
     static ROBOT_HAND_ATTACH_POINT = [0, 0, 40];
 
-    static M1 = [[Math.cos(3*Math.PI/4), Math.sin(3*Math.PI/4), 0], [-Math.sin(3*Math.PI/4), Math.cos(3*Math.PI/4), 0], [0, 0, 1]];
-    static M2 = [[Math.cos(3*Math.PI/4), 0, Math.sin(3*Math.PI/4)], [0, 1, 0], [-Math.sin(3*Math.PI/4), 0, Math.cos(3*Math.PI/4)]];
-    static M3 = [[1, 0, 0], [0, Math.cos(3*Math.PI/4), Math.sin(3*Math.PI/4)], [0, -Math.sin(3*Math.PI/4), Math.cos(3*Math.PI/4)]];
+    static M1 = [[Math.cos(3 * Math.PI / 4), Math.sin(3 * Math.PI / 4), 0], [-Math.sin(3 * Math.PI / 4), Math.cos(3 * Math.PI / 4), 0], [0, 0, 1]];
+    static M2 = [[Math.cos(3 * Math.PI / 4), 0, Math.sin(3 * Math.PI / 4)], [0, 1, 0], [-Math.sin(3 * Math.PI / 4), 0, Math.cos(3 * Math.PI / 4)]];
+    static M3 = [[1, 0, 0], [0, Math.cos(3 * Math.PI / 4), Math.sin(3 * Math.PI / 4)], [0, -Math.sin(3 * Math.PI / 4), Math.cos(3 * Math.PI / 4)]];
 
     static ROBOT_MATRIX_VALUES = [
-        [[1, 0, 0], [0, Math.cos(Math.PI/6), Math.sin(Math.PI/6)], [0, -Math.sin(Math.PI/6), Math.cos(Math.PI/6)]],
-        [[Math.cos(Math.PI/4), Math.sin(Math.PI/4), 0], [-Math.sin(Math.PI/4), Math.cos(Math.PI/4), 0], [0, 0, 1]],
+        [[1, 0, 0], [0, Math.cos(Math.PI / 6), Math.sin(Math.PI / 6)], [0, -Math.sin(Math.PI / 6), Math.cos(Math.PI / 6)]],
+        [[Math.cos(Math.PI / 4), Math.sin(Math.PI / 4), 0], [-Math.sin(Math.PI / 4), Math.cos(Math.PI / 4), 0], [0, 0, 1]],
         [[Math.cos(0), Math.sin(0), 0], [-Math.sin(0), Math.cos(0), 0], [0, 0, 1]],
-        [[Math.cos(3*Math.PI/4), Math.sin(3*Math.PI/4), 0], [-Math.sin(3*Math.PI/4), Math.cos(3*Math.PI/4), 0], [0, 0, 1]],
+        [[Math.cos(3 * Math.PI / 4), Math.sin(3 * Math.PI / 4), 0], [-Math.sin(3 * Math.PI / 4), Math.cos(3 * Math.PI / 4), 0], [0, 0, 1]],
         Geometric.multiply(GeoChangeCoord3D.M2, GeoChangeCoord3D.M3),
     ];
 
     static ROBOT_POSITION_VALUES = [[75, 0, 40], [200, 100, 30], [100, 100, 0], [100, 200, 0], [40, 50, 50]];
 
     static HAND_MATRIX_VALUES = [
-        [[Math.cos(-Math.PI/4), 0, Math.sin(-Math.PI/4)], [0, 1, 0], [-Math.sin(-Math.PI/4), 0, Math.cos(-Math.PI/4)]],
-        [[Math.cos(Math.PI/4), Math.sin(Math.PI/4), 0], [-Math.sin(Math.PI/4), Math.cos(-Math.PI/4), 0], [0, 0, 1]],
+        [[Math.cos(-Math.PI / 4), 0, Math.sin(-Math.PI / 4)], [0, 1, 0], [-Math.sin(-Math.PI / 4), 0, Math.cos(-Math.PI / 4)]],
+        [[Math.cos(Math.PI / 4), Math.sin(Math.PI / 4), 0], [-Math.sin(Math.PI / 4), Math.cos(-Math.PI / 4), 0], [0, 0, 1]],
         [[Math.cos(0), Math.sin(0), 0], [-Math.sin(0), Math.cos(0), 0], [0, 0, 1]],
-        [[Math.cos(Math.PI/2), Math.sin(Math.PI/2), 0], [-Math.sin(Math.PI/2), Math.cos(Math.PI/2), 0], [0, 0, 1]],
+        [[Math.cos(Math.PI / 2), Math.sin(Math.PI / 2), 0], [-Math.sin(Math.PI / 2), Math.cos(Math.PI / 2), 0], [0, 0, 1]],
         Geometric.multiply(GeoChangeCoord3D.M1, GeoChangeCoord3D.M2),
     ];
 
@@ -198,11 +204,11 @@ class GeoChangeCoord3D extends Geometric {
         this.HandPointHandIDs = new Array(GeoChangeCoord3D.HAND_POINTS.length);
         this.RobotHandAttachRobotID = this.nextIndex++;
         this.RobotHandAttachWorldID = this.nextIndex++;
-        for (var i = 0; i < GeoChangeCoord3D.ROBOT_POINTS.length; i++) {
+        for (let i = 0; i < GeoChangeCoord3D.ROBOT_POINTS.length; i++) {
             this.RobotPointWorldIDs[i] = this.nextIndex++;
             this.RobotPointRobotIDs[i] = this.nextIndex++;
         }
-        for (var i = 0; i < GeoChangeCoord3D.HAND_POINTS.length; i++) {
+        for (let i = 0; i < GeoChangeCoord3D.HAND_POINTS.length; i++) {
             this.HandPointWorldIDs[i] = this.nextIndex++;
             this.HandPointRobotIDs[i] = this.nextIndex++;
             this.HandPointHandIDs[i] = this.nextIndex++;
@@ -222,13 +228,13 @@ class GeoChangeCoord3D extends Geometric {
     }
 
     addAxis(origin, x1, x2, y1, y2, z1, z2, color) {
-        var idArray = [];
-        var originID = this.nextIndex++;
+        const idArray = [];
+        const originID = this.nextIndex++;
         idArray.push(originID);
         this.cmd("CreateRectangle", originID, "", 0, 0, origin[0], origin[1]);
         this.cmd("SetAlpha", originID, 0);
 
-        var axisID = this.nextIndex++;
+        let axisID = this.nextIndex++;
         this.cmd("CreateRectangle", axisID, "", 0, 0, x1[0], x1[1]);
         this.cmd("SetAlpha", axisID, 0);
         this.cmd("Connect", originID, axisID, color, 0, 1, "");
@@ -264,7 +270,7 @@ class GeoChangeCoord3D extends Geometric {
         this.cmd("Connect", originID, axisID, color, 0, 1, "");
         idArray.push(axisID);
 
-        var labelID = this.nextIndex++;
+        let labelID = this.nextIndex++;
         this.cmd("CreateLabel", labelID, "+y", y2[0] - 10, y2[1] + 10);
         this.cmd("SetForegroundColor", labelID, color);
         idArray.push(labelID);
@@ -287,17 +293,17 @@ class GeoChangeCoord3D extends Geometric {
     }
 
     setupExtraAxes() {
-        var robotOrigin = this.RobotPositionValues;
-        var x1 = this.transformPoint([-150, 0, 0], this.RobotMatrixValues, this.RobotPositionValues);
-        var x2 = this.transformPoint([150, 0, 0], this.RobotMatrixValues, this.RobotPositionValues);
-        var y1 = this.transformPoint([0, -150, 0], this.RobotMatrixValues, this.RobotPositionValues);
-        var y2 = this.transformPoint([0, 150, 0], this.RobotMatrixValues, this.RobotPositionValues);
-        var z1 = this.transformPoint([0, 0, -150], this.RobotMatrixValues, this.RobotPositionValues);
-        var z2 = this.transformPoint([0, 0, 150], this.RobotMatrixValues, this.RobotPositionValues);
+        const robotOrigin = this.RobotPositionValues;
+        let x1 = this.transformPoint([-150, 0, 0], this.RobotMatrixValues, this.RobotPositionValues);
+        let x2 = this.transformPoint([150, 0, 0], this.RobotMatrixValues, this.RobotPositionValues);
+        let y1 = this.transformPoint([0, -150, 0], this.RobotMatrixValues, this.RobotPositionValues);
+        let y2 = this.transformPoint([0, 150, 0], this.RobotMatrixValues, this.RobotPositionValues);
+        let z1 = this.transformPoint([0, 0, -150], this.RobotMatrixValues, this.RobotPositionValues);
+        let z2 = this.transformPoint([0, 0, 150], this.RobotMatrixValues, this.RobotPositionValues);
 
         this.otherAxes = [];
 
-        var tmpAxis = this.addAxis(this.worldToScreenSpace(robotOrigin, 2),
+        let tmpAxis = this.addAxis(this.worldToScreenSpace(robotOrigin, 2),
             this.worldToScreenSpace(x1, 2),
             this.worldToScreenSpace(x2, 2),
             this.worldToScreenSpace(y1, 2),
@@ -308,12 +314,12 @@ class GeoChangeCoord3D extends Geometric {
 
         this.otherAxes.push(tmpAxis);
 
-        for (var i = 0; i < tmpAxis.length; i++) {
+        for (let i = 0; i < tmpAxis.length; i++) {
             this.cmd("SetLayer", tmpAxis[i], 1);
         }
         this.setAxisAlpha(tmpAxis, 0.5);
 
-        var handOrigin = this.HandPositionValues;
+        let handOrigin = this.HandPositionValues;
         x1 = this.transformPoint([-150, 0, 0], this.HandMatrixValues, this.HandPositionValues);
         x2 = this.transformPoint([150, 0, 0], this.HandMatrixValues, this.HandPositionValues);
         y1 = this.transformPoint([0, -150, 0], this.HandMatrixValues, this.HandPositionValues);
@@ -330,7 +336,7 @@ class GeoChangeCoord3D extends Geometric {
             this.worldToScreenSpace(z2, 1),
             GeoChangeCoord3D.AXIS_COLOR_0);
 
-        for (var i = 0; i < tmpAxis.length; i++) {
+        for (let i = 0; i < tmpAxis.length; i++) {
             this.cmd("SetLayer", tmpAxis[i], 1);
         }
         this.setAxisAlpha(tmpAxis, 0.5);
@@ -353,7 +359,7 @@ class GeoChangeCoord3D extends Geometric {
             this.worldToScreenSpace(z1, 2),
             this.worldToScreenSpace(z2, 2),
             GeoChangeCoord3D.AXIS_COLOR_0);
-        for (var i = 0; i < tmpAxis.length; i++) {
+        for (let i = 0; i < tmpAxis.length; i++) {
             this.cmd("SetLayer", tmpAxis[i], 1);
         }
 
@@ -397,7 +403,7 @@ class GeoChangeCoord3D extends Geometric {
     }
 
     setAxisAlpha(axisList, newAlpha) {
-        for (var i = 0; i < axisList.length; i++) {
+        for (let i = 0; i < axisList.length; i++) {
             this.cmd("SetAlpha", axisList[i], newAlpha);
             if (i > 0) {
                 this.cmd("SetEdgeAlpha", axisList[0], axisList[i], newAlpha);
@@ -406,9 +412,9 @@ class GeoChangeCoord3D extends Geometric {
     }
 
     setupObjects() {
-        var i;
-        for (i = 0; i < GeoChangeCoord3D.ROBOT_POINTS.length; i++) {
-            var point = this.worldToScreenSpace(GeoChangeCoord3D.ROBOT_POINTS[i], 1);
+        let point;
+        for (let i = 0; i < GeoChangeCoord3D.ROBOT_POINTS.length; i++) {
+            point = this.worldToScreenSpace(GeoChangeCoord3D.ROBOT_POINTS[i], 1);
             this.cmd("CreateRectangle", this.RobotPointRobotIDs[i], "", 0, 0, point[0], point[1]);
             if (i > 0) {
                 this.cmd("Connect", this.RobotPointRobotIDs[i - 1], this.RobotPointRobotIDs[i], "#000000", 0, 0);
@@ -423,20 +429,20 @@ class GeoChangeCoord3D extends Geometric {
             }
         }
 
-        for (var i = 0; i < GeoChangeCoord3D.ROBOT_EXTRA_CONNECTIONS.length; i++) {
+        for (let i = 0; i < GeoChangeCoord3D.ROBOT_EXTRA_CONNECTIONS.length; i++) {
             this.cmd("Connect", this.RobotPointRobotIDs[GeoChangeCoord3D.ROBOT_EXTRA_CONNECTIONS[i][0]], this.RobotPointRobotIDs[GeoChangeCoord3D.ROBOT_EXTRA_CONNECTIONS[i][1]], "#000000", 0, 0, "");
             this.cmd("Connect", this.RobotPointWorldIDs[GeoChangeCoord3D.ROBOT_EXTRA_CONNECTIONS[i][0]], this.RobotPointWorldIDs[GeoChangeCoord3D.ROBOT_EXTRA_CONNECTIONS[i][1]], "#000000", 0, 0, "");
         }
 
-        for (i = 0; i < GeoChangeCoord3D.HAND_POINTS.length; i++) {
-            var point = this.worldToScreenSpace(GeoChangeCoord3D.HAND_POINTS[i], 0);
+        for (let i = 0; i < GeoChangeCoord3D.HAND_POINTS.length; i++) {
+            point = this.worldToScreenSpace(GeoChangeCoord3D.HAND_POINTS[i], 0);
             this.cmd("CreateRectangle", this.HandPointHandIDs[i], "", 0, 0, point[0], point[1]);
             if (i > 0) {
                 this.cmd("Connect", this.HandPointHandIDs[i - 1], this.HandPointHandIDs[i], "#000000", 0, 0);
             }
 
             point = this.transformPoint(GeoChangeCoord3D.HAND_POINTS[i], this.HandMatrixValues, this.HandPositionValues);
-            var point2 = this.worldToScreenSpace(point, 1);
+            const point2 = this.worldToScreenSpace(point, 1);
 
             this.cmd("CreateRectangle", this.HandPointRobotIDs[i], "", 0, 0, point2[0], point2[1]);
             if (i > 0) {
@@ -451,7 +457,7 @@ class GeoChangeCoord3D extends Geometric {
                 this.cmd("Connect", this.HandPointWorldIDs[i - 1], this.HandPointWorldIDs[i], "#000000", 0, 0);
             }
         }
-        for (var i = 0; i < GeoChangeCoord3D.HAND_EXTRA_CONNECTIONS.length; i++) {
+        for (let i = 0; i < GeoChangeCoord3D.HAND_EXTRA_CONNECTIONS.length; i++) {
             this.cmd("Connect", this.HandPointHandIDs[GeoChangeCoord3D.HAND_EXTRA_CONNECTIONS[i][0]], this.HandPointHandIDs[GeoChangeCoord3D.HAND_EXTRA_CONNECTIONS[i][1]], "#000000", 0, 0, "");
             this.cmd("Connect", this.HandPointRobotIDs[GeoChangeCoord3D.HAND_EXTRA_CONNECTIONS[i][0]], this.HandPointRobotIDs[GeoChangeCoord3D.HAND_EXTRA_CONNECTIONS[i][1]], "#000000", 0, 0, "");
             this.cmd("Connect", this.HandPointWorldIDs[GeoChangeCoord3D.HAND_EXTRA_CONNECTIONS[i][0]], this.HandPointWorldIDs[GeoChangeCoord3D.HAND_EXTRA_CONNECTIONS[i][1]], "#000000", 0, 0, "");
@@ -468,8 +474,8 @@ class GeoChangeCoord3D extends Geometric {
     }
 
     worldToScreenSpace(point, space) {
-        var transformedPoint = Geometric.multiply([point], this.cameraTransform)[0];
-        var worldSpace = new Array(2);
+        const transformedPoint = Geometric.multiply([point], this.cameraTransform)[0];
+        const worldSpace = new Array(2);
         worldSpace[0] = transformedPoint[0] + GeoChangeCoord3D.AXIS_CENTER[space][0];
         worldSpace[1] = GeoChangeCoord3D.AXIS_CENTER[space][1] - transformedPoint[2];
 
@@ -477,57 +483,56 @@ class GeoChangeCoord3D extends Geometric {
     }
 
     removeOldIDs() {
-        var i;
-        for (i = 0; i < this.oldIDs.length; i++) {
+        for (let i = 0; i < this.oldIDs.length; i++) {
             this.cmd("Delete", this.oldIDs[i]);
         }
         this.oldIDs = [];
     }
 
     setupObjectGraphic() {
-        var i;
+
     }
 
     addControls() {
         this.addLabelToAlgorithmBar("x");
 
-        this.xField = this.addControlToAlgorithmBar("Text", "", { maxlength: 4, size: 4 });
+        this.xField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
         this.addReturnSubmit(this.xField, "float", this.transformPointCallback.bind(this));
 
         this.addLabelToAlgorithmBar("y");
 
-        this.yField = this.addControlToAlgorithmBar("Text", "", { maxlength: 4, size: 4 });
+        this.yField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
         this.addReturnSubmit(this.yField, "float", this.transformPointCallback.bind(this));
 
         this.addLabelToAlgorithmBar("z");
 
-        this.zField = this.addControlToAlgorithmBar("Text", "", { maxlength: 4, size: 4 });
+        this.zField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
         this.addReturnSubmit(this.zField, "float", this.transformPointCallback.bind(this));
 
-        var transformButton = this.addControlToAlgorithmBar("Button", "Transform Point");
+        const transformButton = this.addControlToAlgorithmBar("Button", "Transform Point");
         transformButton.onclick = this.transformPointCallback.bind(this);
 
-        var radioButtonList = this.addRadioButtonGroupToAlgorithmBar(
+        const transformTypeButtonList = this.addRadioButtonGroupToAlgorithmBar(
             ["Hand Space -> World Space", "World Space -> Hand Space"],
-            "Transform Type"
+            "Transform Type",
         );
-        this.handToWorldButton = radioButtonList[0];
+        this.handToWorldButton = transformTypeButtonList[0];
         this.handToWorldButton.onclick = this.transformTypeChangedCallback.bind(this, false);
 
-        this.worldToHandButton = radioButtonList[1];
+        this.worldToHandButton = transformTypeButtonList[1];
         this.worldToHandButton.onclick = this.transformTypeChangedCallback.bind(this, true);
 
         this.worldToHandButton.checked = this.lastLocalToGlobal;
         this.handToWorldButton.checked = !this.lastLocalToGlobal;
 
-        var radioButtonList = this.addRadioButtonGroupToAlgorithmBar(
+        const rankTypeButtonList = this.addRadioButtonGroupToAlgorithmBar(
             ["Row Major", "Column Major"],
-            "RankType"
+            "RankType",
         );
-        this.rowMajorButton = radioButtonList[0];
+        this.rowMajorButton = rankTypeButtonList[0];
         this.rowMajorButton.onclick = this.changeRowColMajorCallback.bind(this, true);
 
-        this.colMajorButton = radioButtonList[1];
+        this.colMajorButton = rankTypeButtonList[1];
         this.colMajorButton.onclick = this.changeRowColMajorCallback.bind(this, false);
 
         this.rowMajorButton.checked = this.rowMajor;
@@ -537,15 +542,14 @@ class GeoChangeCoord3D extends Geometric {
         this.showAxisBox.onclick = this.showAllAxesCallback.bind(this);
         this.showAxisBox.checked = true;
 
-        var moveObjectsButton = this.addControlToAlgorithmBar("Button", "Move Objects");
+        const moveObjectsButton = this.addControlToAlgorithmBar("Button", "Move Objects");
         moveObjectsButton.onclick = this.moveObjectsCallback.bind(this);
     }
 
     showAllAxesCallback() {
         if (this.showAxisBox.checked) {
             this.animationManager.setAllLayers([0, 1]);
-        }
-        else {
+        } else {
             this.animationManager.setAllLayers([0]);
         }
     }
@@ -557,28 +561,27 @@ class GeoChangeCoord3D extends Geometric {
     }
 
     transformTypeChangedCallback(globalToLocal) {
-        if (this.lastLocalToGlobal == globalToLocal) {
+        if (this.lastLocalToGlobal === globalToLocal) {
             this.implementAction(this.changeTransformType.bind(this, globalToLocal));
         }
     }
 
     changeRowColMajorCallback(rowMajor) {
-        if (this.rowMajor != rowMajor) {
+        if (this.rowMajor !== rowMajor) {
             this.implementAction(this.changeRowCol.bind(this), rowMajor);
         }
     }
 
     transposeVisual(matrix) {
-        if (matrix.data.length == matrix.data[0].length) {
-            var matrixSize = matrix.data.length;
-            var i, j, tmp, moveLabel1, moveLabel2;
-            var moveLabels = [];
-            for (i = 1; i < matrixSize; i++) {
-                for (j = 0; j <= i; j++) {
+        if (matrix.data.length === matrix.data[0].length) {
+            const matrixSize = matrix.data.length;
+            const moveLabels = [];
+            for (let i = 1; i < matrixSize; i++) {
+                for (let j = 0; j <= i; j++) {
                     this.cmd("SetText", matrix.dataID[i][j], "");
                     this.cmd("SetText", matrix.dataID[j][i], "");
-                    moveLabel1 = this.nextIndex++;
-                    moveLabel2 = this.nextIndex++;
+                    const moveLabel1 = this.nextIndex++;
+                    const moveLabel2 = this.nextIndex++;
                     moveLabels.push(moveLabel1);
                     moveLabels.push(moveLabel2);
                     this.cmd("CreateLabel", moveLabel1,
@@ -591,43 +594,41 @@ class GeoChangeCoord3D extends Geometric {
                         matrix.y + GeoChangeCoord3D.MATRIX_ELEM_HEIGHT / 2 + i * GeoChangeCoord3D.MATRIX_ELEM_HEIGHT);
                     this.cmd("Move", moveLabel2, matrix.x + GeoChangeCoord3D.MATRIX_ELEM_WIDTH / 2 + i * GeoChangeCoord3D.MATRIX_ELEM_WIDTH,
                         matrix.y + GeoChangeCoord3D.MATRIX_ELEM_HEIGHT / 2 + j * GeoChangeCoord3D.MATRIX_ELEM_HEIGHT);
-                    tmp = matrix.data[i][j];
+                    const tmp = matrix.data[i][j];
                     matrix.data[i][j] = matrix.data[j][i];
                     matrix.data[j][i] = tmp;
                 }
             }
             this.cmd("Step");
-            for (i = 0; i < moveLabels.length; i++) {
+            for (let i = 0; i < moveLabels.length; i++) {
                 this.cmd("Delete", moveLabels[i]);
             }
             this.resetMatrixLabels(matrix);
             return matrix;
-        }
-        else {
-            var savedData = matrix.data;
-            var newData = new Array(savedData[0].length);
-            var i, j;
-            for (i = 0; i < savedData[0].length; i++) {
+        } else {
+            const savedData = matrix.data;
+            const newData = new Array(savedData[0].length);
+            for (let i = 0; i < savedData[0].length; i++) {
                 newData[i] = [];
             }
-            for (i = 0; i < savedData.length; i++) {
-                for (j = 0; j < savedData[0].length; j++) {
+            for (let i = 0; i < savedData.length; i++) {
+                for (let j = 0; j < savedData[0].length; j++) {
                     newData[j][i] = savedData[i][j];
                 }
             }
-            var newMatrix = this.createMatrix(newData, matrix.x, matrix.y);
+            const newMatrix = this.createMatrix(newData, matrix.x, matrix.y);
             this.deleteMatrix(matrix);
             return newMatrix;
         }
     }
 
     changeRowCol(rowMajor) {
-        this.commands = new Array();
+        this.commands = [];
         this.rowMajor = rowMajor;
-        if (this.rowMajorButton.checked != this.rowMajor) {
+        if (this.rowMajorButton.checked !== this.rowMajor) {
             this.rowMajorButton.checked = this.rowMajor;
         }
-        if (this.colMajorButton.checked == this.rowMajor) {
+        if (this.colMajorButton.checked === this.rowMajor) {
             this.colMajorButton.checked = !this.rowMajor;
         }
         this.removeOldIDs();
@@ -649,50 +650,45 @@ class GeoChangeCoord3D extends Geometric {
         this.xField.value = this.fixNumber(this.xField.value, 0);
         this.yField.value = this.fixNumber(this.yField.value, 0);
         this.zField.value = this.fixNumber(this.zField.value, 0);
-        this.implementAction(this.doPointTransform.bind(this), this.xField.value + ";" + this.yField.value + ";" + this.zField.value);
+        this.implementAction(this.doPointTransform.bind(this), `${this.xField.value};${this.yField.value};${this.zField.value}`);
     }
 
     doPointTransform(params) {
         if (this.lastLocalToGlobal) {
             return this.localToGlobal(params);
-        }
-        else {
+        } else {
             return this.globalToLocal(params);
         }
     }
 
     rotatePoint(point, matrix, xPos, yPos, fromSpace, toSpace) {
-        var logicalPoint;
-        var descriptLabel = this.nextIndex++;
+        const descriptLabel = this.nextIndex++;
         // this.oldIDs.push(descriptLabel);
         if (this.rowMajor) {
             this.cmd("CreateLabel", descriptLabel, "", xPos + 3 * GeoChangeCoord3D.MATRIX_ELEM_WIDTH + GeoChangeCoord3D.EQUALS_SPACING,
                 yPos + 2 * GeoChangeCoord3D.MATRIX_ELEM_HEIGHT + 3, 0);
-        }
-        else {
+        } else {
             this.cmd("CreateLabel", descriptLabel, "", xPos + 3 * GeoChangeCoord3D.MATRIX_ELEM_WIDTH + GeoChangeCoord3D.EQUALS_SPACING,
                 yPos + 3 * GeoChangeCoord3D.MATRIX_ELEM_HEIGHT + 3, 0);
         }
 
-        var inertialPositionMatrix;
-
+        let inertialPositionMatrix;
         if (this.rowMajor) {
             inertialPositionMatrix = this.createMatrix([["", "", ""]], xPos + 3 * GeoChangeCoord3D.MATRIX_ELEM_WIDTH + GeoChangeCoord3D.EQUALS_SPACING,
                 yPos);
-        }
-        else {
+        } else {
             inertialPositionMatrix = this.createMatrix([[""], [""], [""]],
                 xPos + 4 * GeoChangeCoord3D.MATRIX_ELEM_WIDTH + GeoChangeCoord3D.EQUALS_SPACING + GeoChangeCoord3D.MATRIX_MULTIPLY_SPACING,
                 yPos);
         }
-        var equalLabel1 = this.nextIndex++;
+        const equalLabel1 = this.nextIndex++;
         this.oldIDs.push(equalLabel1);
-        var opX, opY;
+
+        let opX, opY;
         if (this.rowMajor) {
             opX = xPos + 3 * GeoChangeCoord3D.MATRIX_ELEM_WIDTH + GeoChangeCoord3D.EQUALS_SPACING / 2;
             opY = yPos + GeoChangeCoord3D.MATRIX_ELEM_HEIGHT / 2;
-        }
-        else {
+        } else {
             opX = xPos + 4 * GeoChangeCoord3D.MATRIX_ELEM_WIDTH + GeoChangeCoord3D.EQUALS_SPACING / 2 + GeoChangeCoord3D.MATRIX_MULTIPLY_SPACING;
             opY = yPos + GeoChangeCoord3D.MATRIX_ELEM_HEIGHT;
         }
@@ -700,27 +696,26 @@ class GeoChangeCoord3D extends Geometric {
         this.cmd("CreateLabel", equalLabel1, "=", opX, opY);
         if (this.rowMajor) {
             this.multiplyMatrix(point, matrix, inertialPositionMatrix, descriptLabel, 2);
-        }
-        else {
+        } else {
             this.multiplyMatrix(matrix, point, inertialPositionMatrix, descriptLabel, 2);
         }
         this.addMatrixIDsToList(inertialPositionMatrix, this.oldIDs);
         this.cmd("Delete", descriptLabel);
-        var inertialPositionID = this.nextIndex++;
+        const inertialPositionID = this.nextIndex++;
+        let logicalPoint;
         if (this.rowMajor) {
             logicalPoint = inertialPositionMatrix.data[0].slice(0);
-        }
-        else {
+        } else {
             logicalPoint = [inertialPositionMatrix.data[0][0], inertialPositionMatrix.data[1][0], inertialPositionMatrix.data[2][0]];
         }
 
-        var screenPoint = this.worldToScreenSpace(logicalPoint, fromSpace);
+        const screenPoint = this.worldToScreenSpace(logicalPoint, fromSpace);
         this.cmd("CreateCircle", inertialPositionID, "", screenPoint[0], screenPoint[1]);
         this.cmd("SetWidth", inertialPositionID, GeoChangeCoord3D.VERTEX_WIDTH);
 
-        var originID = this.nextIndex++;
+        const originID = this.nextIndex++;
         this.oldIDs.push(originID);
-        var origin = this.worldToScreenSpace([0, 0, 0], fromSpace);
+        const origin = this.worldToScreenSpace([0, 0, 0], fromSpace);
 
         this.cmd("CreateRectangle", originID, "", 0, 0, origin[0], origin[1]);
 
@@ -730,35 +725,33 @@ class GeoChangeCoord3D extends Geometric {
     }
 
     translatePoint(point, transVector, xPos, yPos, fromSpace, toSpace, pointID) {
-        var logicalPoint = new Array(2);
-        var robotPositionMatrix;
+        const logicalPoint = new Array(2);
+
+        let robotPositionMatrix;
         if (this.rowMajor) {
             logicalPoint[0] = point.data[0][0] + transVector.data[0][0];
             logicalPoint[1] = point.data[0][1] + transVector.data[0][1];
             logicalPoint[2] = point.data[0][2] + transVector.data[0][2];
-            robotPositionMatrix = this.createMatrix([["", "", ""]], xPos + 3 * GeoChangeCoord3D.MATRIX_ELEM_WIDTH + GeoChangeCoord3D.EQUALS_SPACING,
-                yPos);
-        }
-        else {
+            robotPositionMatrix = this.createMatrix([["", "", ""]], xPos + 3 * GeoChangeCoord3D.MATRIX_ELEM_WIDTH + GeoChangeCoord3D.EQUALS_SPACING, yPos);
+        } else {
             logicalPoint[0] = point.data[0][0] + transVector.data[0][0];
             logicalPoint[1] = point.data[1][0] + transVector.data[1][0];
             logicalPoint[2] = point.data[2][0] + transVector.data[2][0];
-            robotPositionMatrix = this.createMatrix([[""], [""], [""]], xPos + GeoChangeCoord3D.MATRIX_ELEM_WIDTH + GeoChangeCoord3D.EQUALS_SPACING,
-                yPos);
+            robotPositionMatrix = this.createMatrix([[""], [""], [""]], xPos + GeoChangeCoord3D.MATRIX_ELEM_WIDTH + GeoChangeCoord3D.EQUALS_SPACING, yPos);
         }
 
-        var addLabel1 = this.nextIndex++;
-        var equalLabel3 = this.nextIndex++;
+        const addLabel1 = this.nextIndex++;
+        const equalLabel3 = this.nextIndex++;
         this.oldIDs.push(addLabel1);
         this.oldIDs.push(equalLabel3);
-        var opX, opY, op2X, op2Y;
+
+        let opX, opY, op2X, op2Y;
         if (this.rowMajor) {
             opX = xPos + 3 * GeoChangeCoord3D.MATRIX_ELEM_WIDTH + GeoChangeCoord3D.EQUALS_SPACING / 2;
             opY = yPos + GeoChangeCoord3D.MATRIX_ELEM_HEIGHT / 2;
             op2X = xPos - GeoChangeCoord3D.EQUALS_SPACING / 2;
             op2Y = yPos + GeoChangeCoord3D.MATRIX_ELEM_HEIGHT / 2;
-        }
-        else {
+        } else {
             opX = xPos + GeoChangeCoord3D.MATRIX_ELEM_WIDTH + GeoChangeCoord3D.EQUALS_SPACING / 2;
             opY = yPos + GeoChangeCoord3D.MATRIX_ELEM_HEIGHT;
             op2X = xPos - GeoChangeCoord3D.EQUALS_SPACING / 2;
@@ -770,9 +763,9 @@ class GeoChangeCoord3D extends Geometric {
         this.addMatrix(point, transVector, robotPositionMatrix, 2);
         this.addMatrixIDsToList(robotPositionMatrix, this.oldIDs);
 
-        var screenPoint = this.worldToScreenSpace(logicalPoint, fromSpace);
+        const screenPoint = this.worldToScreenSpace(logicalPoint, fromSpace);
 
-        var robotPositionID = this.nextIndex++;
+        const robotPositionID = this.nextIndex++;
 
         this.cmd("CreateCircle", robotPositionID, "", screenPoint[0], screenPoint[1]);
         this.cmd("SetWidth", robotPositionID, GeoChangeCoord3D.VERTEX_WIDTH);
@@ -780,9 +773,9 @@ class GeoChangeCoord3D extends Geometric {
         this.cmd("Connect", pointID, robotPositionID, GeoChangeCoord3D.TRANSFORMED_POINT_COLORS[toSpace], 0, 1, "");
         this.cmd("Step");
 
-        var originID = this.nextIndex++;
+        const originID = this.nextIndex++;
         this.oldIDs.push(originID);
-        var origin = this.worldToScreenSpace([0, 0, 0], fromSpace);
+        const origin = this.worldToScreenSpace([0, 0, 0], fromSpace);
 
         this.cmd("CreateCircle", originID, "", origin[0], origin[1]);
         this.cmd("SetWidth", originID, 0);
@@ -794,10 +787,10 @@ class GeoChangeCoord3D extends Geometric {
     }
 
     addMultiply(position, transVector, rotMatrix, transX, transY, rotX, rotY, initialPointID, fromSpace, toSpace) {
-        var posMatrixAndPointID = this.translatePoint(position, transVector, transX, transY, fromSpace, toSpace, initialPointID);
-        var newPosition = posMatrixAndPointID[0];
-        var pointID = posMatrixAndPointID[1];
-        var originID = posMatrixAndPointID[2];
+        const translateMatrixAndPointID = this.translatePoint(position, transVector, transX, transY, fromSpace, toSpace, initialPointID);
+        const newPosition = translateMatrixAndPointID[0];
+        const pointID = translateMatrixAndPointID[1];
+        // const originID = translateMatrixAndPointID[2];
 
         this.cmd("Step");
 
@@ -805,31 +798,29 @@ class GeoChangeCoord3D extends Geometric {
 
         if (this.rowMajor) {
             this.moveMatrix(newPosition, rotX - 3 * GeoChangeCoord3D.MATRIX_ELEM_WIDTH - GeoChangeCoord3D.MATRIX_MULTIPLY_SPACING, transY);
-        }
-        else {
+        } else {
             this.moveMatrix(newPosition, rotX + 3 * GeoChangeCoord3D.MATRIX_ELEM_WIDTH + GeoChangeCoord3D.MATRIX_MULTIPLY_SPACING, transY);
         }
 
-        var posMatrixAndPointID = this.rotatePoint(newPosition, rotMatrix, rotX, rotY, fromSpace, toSpace);
+        const rotateMatrixAndPointID = this.rotatePoint(newPosition, rotMatrix, rotX, rotY, fromSpace, toSpace);
         this.cmd("Delete", pointID);
         this.cmd("Step");
 
-        var robotPositionMatrix = posMatrixAndPointID[0];
-        var robotPositionID = posMatrixAndPointID[1];
-        var movingOriginID = posMatrixAndPointID[2];
+        const robotPositionMatrix = rotateMatrixAndPointID[0];
+        const robotPositionID = rotateMatrixAndPointID[1];
+        const movingOriginID = rotateMatrixAndPointID[2];
 
-        var origin = this.worldToScreenSpace([0, 0, 0], toSpace);
+        const origin = this.worldToScreenSpace([0, 0, 0], toSpace);
         this.cmd("Move", movingOriginID, origin[0], origin[1]);
 
-        var logicalPoint;
+        let logicalPoint;
         if (this.rowMajor) {
             logicalPoint = robotPositionMatrix.data[0].slice(0);
-        }
-        else {
+        } else {
             logicalPoint = [robotPositionMatrix.data[0][0], robotPositionMatrix.data[1][0], robotPositionMatrix.data[2][0]];
         }
 
-        var screenPoint = this.worldToScreenSpace(logicalPoint, toSpace);
+        const screenPoint = this.worldToScreenSpace(logicalPoint, toSpace);
         this.cmd("Move", robotPositionID, screenPoint[0], screenPoint[1]);
 
         this.cmd("Step");
@@ -840,40 +831,38 @@ class GeoChangeCoord3D extends Geometric {
     }
 
     multiplyAdd(position, rotMatrix, transVector, rotX, rotY, transX, transY, fromSpace, toSpace) {
-        var posMatrixAndPointID = this.rotatePoint(position, rotMatrix, rotX, rotY, fromSpace, toSpace);
-        var inertialPositionMatrix = posMatrixAndPointID[0];
-        var inertialPositionID = posMatrixAndPointID[1];
+        const rotateMatrixAndPointID = this.rotatePoint(position, rotMatrix, rotX, rotY, fromSpace, toSpace);
+        const inertialPositionMatrix = rotateMatrixAndPointID[0];
+        const inertialPositionID = rotateMatrixAndPointID[1];
 
         this.cmd("Step");
 
         if (this.rowMajor) {
             this.moveMatrix(inertialPositionMatrix, transX - 3 * GeoChangeCoord3D.MATRIX_ELEM_WIDTH - GeoChangeCoord3D.EQUALS_SPACING, transY);
-        }
-        else {
+        } else {
             this.moveMatrix(inertialPositionMatrix, transX - GeoChangeCoord3D.MATRIX_ELEM_WIDTH - GeoChangeCoord3D.EQUALS_SPACING, transY);
         }
 
-        posMatrixAndPointID = this.translatePoint(inertialPositionMatrix, transVector, transX, transY, fromSpace, toSpace, inertialPositionID);
-        var robotPositionMatrix = posMatrixAndPointID[0];
-        var robotPositionID = posMatrixAndPointID[1];
-        var movingOriginID = posMatrixAndPointID[2];
+        const translateMatrixAndPointID = this.translatePoint(inertialPositionMatrix, transVector, transX, transY, fromSpace, toSpace, inertialPositionID);
+        const robotPositionMatrix = translateMatrixAndPointID[0];
+        const robotPositionID = translateMatrixAndPointID[1];
+        const movingOriginID = translateMatrixAndPointID[2];
 
         this.oldIDs.push(robotPositionID);
 
-        var logicalPoint;
+        let logicalPoint;
         if (this.rowMajor) {
             logicalPoint = robotPositionMatrix.data[0].slice(0);
-        }
-        else {
+        } else {
             logicalPoint = [robotPositionMatrix.data[0][0], robotPositionMatrix.data[1][0], robotPositionMatrix.data[2][0]];
         }
 
         this.cmd("Step");
 
         this.cmd("Delete", inertialPositionID);
-        origin = this.worldToScreenSpace([0, 0, 0], toSpace);
+        const origin = this.worldToScreenSpace([0, 0, 0], toSpace);
         this.cmd("Move", movingOriginID, origin[0], origin[1]);
-        var screenPoint = this.worldToScreenSpace(logicalPoint, toSpace);
+        const screenPoint = this.worldToScreenSpace(logicalPoint, toSpace);
         this.cmd("Move", robotPositionID, screenPoint[0], screenPoint[1]);
 
         this.cmd("Step");
@@ -884,17 +873,14 @@ class GeoChangeCoord3D extends Geometric {
         this.commands = [];
         this.removeOldIDs();
 
-        var paramList = params.split(";");
-        var x = parseFloat(paramList[0]);
-        var y = parseFloat(paramList[1]);
-        var z = parseFloat(paramList[2]);
+        const paramList = params.split(";");
+        const x = parseFloat(paramList[0]);
+        const y = parseFloat(paramList[1]);
+        const z = parseFloat(paramList[2]);
 
-        var opX, opY;
+        const screenPoint = this.worldToScreenSpace([x, y, z], 0);
 
-        var screenPoint = this.worldToScreenSpace([x, y, z], 0);
-        var logicalPoint;
-
-        var pointInHandSpaceID = this.nextIndex++;
+        const pointInHandSpaceID = this.nextIndex++;
         this.oldIDs.push(pointInHandSpaceID);
 
         this.cmd("CreateCircle", pointInHandSpaceID, "", screenPoint[0], screenPoint[1]);
@@ -902,19 +888,16 @@ class GeoChangeCoord3D extends Geometric {
 
         this.cmd("Connect", this.axisHand[0], pointInHandSpaceID, GeoChangeCoord3D.TRANSFORMED_POINT_COLORS[0], 0, 1, "");
 
-        var initialPointMatrix;
+        let initialPointMatrix;
         if (this.rowMajor) {
-            initialPointMatrix = this.createMatrix([[x, y, z]], GeoChangeCoord3D.HAND_MATRIX_START_X - 3 * GeoChangeCoord3D.MATRIX_ELEM_WIDTH - GeoChangeCoord3D.MATRIX_MULTIPLY_SPACING,
-                GeoChangeCoord3D.HAND_MATRIX_START_Y);
-        }
-        else {
-            initialPointMatrix = this.createMatrix([[x], [y], [z]], GeoChangeCoord3D.HAND_MATRIX_START_X + 3 * GeoChangeCoord3D.MATRIX_ELEM_WIDTH + GeoChangeCoord3D.MATRIX_MULTIPLY_SPACING,
-                GeoChangeCoord3D.HAND_MATRIX_START_Y);
+            initialPointMatrix = this.createMatrix([[x, y, z]], GeoChangeCoord3D.HAND_MATRIX_START_X - 3 * GeoChangeCoord3D.MATRIX_ELEM_WIDTH - GeoChangeCoord3D.MATRIX_MULTIPLY_SPACING, GeoChangeCoord3D.HAND_MATRIX_START_Y);
+        } else {
+            initialPointMatrix = this.createMatrix([[x], [y], [z]], GeoChangeCoord3D.HAND_MATRIX_START_X + 3 * GeoChangeCoord3D.MATRIX_ELEM_WIDTH + GeoChangeCoord3D.MATRIX_MULTIPLY_SPACING, GeoChangeCoord3D.HAND_MATRIX_START_Y);
         }
         this.addMatrixIDsToList(initialPointMatrix, this.oldIDs);
         this.cmd("Step");
 
-        var robotPositionMatrix = this.multiplyAdd(initialPointMatrix, this.HandMatrix, this.HandPosition,
+        const robotPositionMatrix = this.multiplyAdd(initialPointMatrix, this.HandMatrix, this.HandPosition,
             GeoChangeCoord3D.HAND_MATRIX_START_X, GeoChangeCoord3D.HAND_MATRIX_START_Y,
             GeoChangeCoord3D.HAND_POSITION_START_X, GeoChangeCoord3D.HAND_POSITION_START_Y,
             0, 1);
@@ -922,8 +905,7 @@ class GeoChangeCoord3D extends Geometric {
         if (this.rowMajor) {
             this.moveMatrix(robotPositionMatrix, GeoChangeCoord3D.ROBOT_MATRIX_START_X - 3 * GeoChangeCoord3D.MATRIX_ELEM_WIDTH - GeoChangeCoord3D.MATRIX_MULTIPLY_SPACING,
                 GeoChangeCoord3D.ROBOT_MATRIX_START_Y);
-        }
-        else {
+        } else {
             this.moveMatrix(robotPositionMatrix, GeoChangeCoord3D.ROBOT_MATRIX_START_X + 3 * GeoChangeCoord3D.MATRIX_ELEM_WIDTH + GeoChangeCoord3D.MATRIX_MULTIPLY_SPACING,
                 GeoChangeCoord3D.ROBOT_MATRIX_START_Y);
         }
@@ -942,8 +924,7 @@ class GeoChangeCoord3D extends Geometric {
         this.removeOldIDs();
         if (globalToLocal) {
             this.cmd("SetText", this.robotLabel1ID, "World Space to Robot Space\n(Orientation)");
-        }
-        else {
+        } else {
             this.cmd("SetText", this.robotLabel1ID, "Robot Space to World Space\n(Orientation)");
         }
         this.cmd("Step");
@@ -951,8 +932,7 @@ class GeoChangeCoord3D extends Geometric {
 
         if (globalToLocal) {
             this.cmd("SetText", this.robotLabel2ID, "World Space to Robot Space\n(Position)");
-        }
-        else {
+        } else {
             this.cmd("SetText", this.robotLabel2ID, "Robot Space to World Space\n(Position)");
         }
         this.cmd("Step");
@@ -961,8 +941,7 @@ class GeoChangeCoord3D extends Geometric {
 
         if (globalToLocal) {
             this.cmd("SetText", this.handLabel1ID, "Robot Space to Hand Space\n(Orientation)");
-        }
-        else {
+        } else {
             this.cmd("SetText", this.handLabel1ID, "Hand Space to Robot Space\n(Orientation)");
         }
 
@@ -971,8 +950,7 @@ class GeoChangeCoord3D extends Geometric {
 
         if (globalToLocal) {
             this.cmd("SetText", this.handLabel2ID, "Robot Space to Hand Space\n(Position)");
-        }
-        else {
+        } else {
             this.cmd("SetText", this.handLabel2ID, "Hand Space to Robot Space\n(Position)");
         }
         this.cmd("Step");
@@ -991,8 +969,7 @@ class GeoChangeCoord3D extends Geometric {
 
             this.cmd("Move", this.handLabel2ID, GeoChangeCoord3D.HAND_MATRIX_START_X + GeoChangeCoord3D.EQUALS_SPACING, GeoChangeCoord3D.HAND_MATRIX_START_Y - 25);
             this.moveMatrix(this.HandPosition, GeoChangeCoord3D.HAND_MATRIX_START_X + GeoChangeCoord3D.EQUALS_SPACING, GeoChangeCoord3D.HAND_MATRIX_START_Y);
-        }
-        else {
+        } else {
             this.cmd("Move", this.robotLabel1ID, GeoChangeCoord3D.ROBOT_MATRIX_START_X, GeoChangeCoord3D.ROBOT_MATRIX_START_Y - 25);
             this.moveMatrix(this.RobotMatrix, GeoChangeCoord3D.ROBOT_MATRIX_START_X, GeoChangeCoord3D.ROBOT_MATRIX_START_Y);
 
@@ -1009,9 +986,8 @@ class GeoChangeCoord3D extends Geometric {
     }
 
     negateMatrixVisual(matrix) {
-        var i, j;
-        for (i = 0; i < matrix.data.length; i++) {
-            for (j = 0; j < matrix.data[i].length; j++) {
+        for (let i = 0; i < matrix.data.length; i++) {
+            for (let j = 0; j < matrix.data[i].length; j++) {
                 matrix.data[i][j] = -matrix.data[i][j];
             }
         }
@@ -1022,48 +998,43 @@ class GeoChangeCoord3D extends Geometric {
         this.commands = [];
         this.removeOldIDs();
 
-        var paramList = params.split(";");
-        var x = parseFloat(paramList[0]);
-        var y = parseFloat(paramList[1]);
-        var z = parseFloat(paramList[2]);
+        const paramList = params.split(";");
+        const x = parseFloat(paramList[0]);
+        const y = parseFloat(paramList[1]);
+        const z = parseFloat(paramList[2]);
 
-        var opX, opY;
+        const screenPoint = this.worldToScreenSpace([x, y, z], 2);
 
-        var screenPoint = this.worldToScreenSpace([x, y, z], 2);
-        var logicalPoint;
-
-        var pointInWorldSpaceID = this.nextIndex++;
+        const pointInWorldSpaceID = this.nextIndex++;
         this.oldIDs.push(pointInWorldSpaceID);
         this.cmd("CreateCircle", pointInWorldSpaceID, "", screenPoint[0], screenPoint[1]);
         this.cmd("SetWidth", pointInWorldSpaceID, GeoChangeCoord3D.VERTEX_WIDTH);
         this.cmd("Connect", this.axisWorld[0], pointInWorldSpaceID, GeoChangeCoord3D.TRANSFORMED_POINT_COLORS[2], 0, 1, "");
 
-        var initialPointMatrix;
+        let initialPointMatrix;
         if (this.rowMajor) {
             initialPointMatrix = this.createMatrix([[x, y, z]], GeoChangeCoord3D.ROBOT_MATRIX_START_X - 3 * GeoChangeCoord3D.MATRIX_ELEM_WIDTH,
                 GeoChangeCoord3D.ROBOT_MATRIX_START_Y);
-        }
-        else {
+        } else {
             initialPointMatrix = this.createMatrix([[x], [y], [z]], GeoChangeCoord3D.ROBOT_MATRIX_START_X - GeoChangeCoord3D.MATRIX_ELEM_WIDTH,
                 GeoChangeCoord3D.ROBOT_MATRIX_START_Y);
         }
         this.addMatrixIDsToList(initialPointMatrix, this.oldIDs);
         this.cmd("Step");
 
-        var positionAndID = this.addMultiply(initialPointMatrix, this.RobotPosition, this.RobotMatrix,
+        const positionAndID = this.addMultiply(initialPointMatrix, this.RobotPosition, this.RobotMatrix,
             GeoChangeCoord3D.ROBOT_MATRIX_START_X + GeoChangeCoord3D.EQUALS_SPACING, GeoChangeCoord3D.ROBOT_MATRIX_START_Y,
             GeoChangeCoord3D.ROBOT_POSITION_START_X, GeoChangeCoord3D.ROBOT_POSITION_START_Y,
             pointInWorldSpaceID,
             2, 1);
 
-        var robotPositionMatrix = positionAndID[0];
-        var newPositionID = positionAndID[1];
+        const robotPositionMatrix = positionAndID[0];
+        const newPositionID = positionAndID[1];
 
         if (this.rowMajor) {
             this.moveMatrix(robotPositionMatrix, GeoChangeCoord3D.HAND_MATRIX_START_X - 3 * GeoChangeCoord3D.MATRIX_ELEM_WIDTH,
                 GeoChangeCoord3D.HAND_MATRIX_START_Y);
-        }
-        else {
+        } else {
             this.moveMatrix(robotPositionMatrix, GeoChangeCoord3D.HAND_MATRIX_START_X - GeoChangeCoord3D.MATRIX_ELEM_WIDTH,
                 GeoChangeCoord3D.HAND_MATRIX_START_Y);
         }
@@ -1084,20 +1055,18 @@ class GeoChangeCoord3D extends Geometric {
     moveObjects() {
         this.commands = [];
         this.removeOldIDs();
-        var i, j;
 
-        for (i = 0; i < this.otherAxes.length; i++) {
-            for (j = 0; j < this.otherAxes[i].length; j++) {
+        for (let i = 0; i < this.otherAxes.length; i++) {
+            for (let j = 0; j < this.otherAxes[i].length; j++) {
                 this.cmd("Delete", this.otherAxes[i][j]);
             }
         }
 
-        var i;
-        for (i = 0; i < GeoChangeCoord3D.ROBOT_POINTS.length; i++) {
+        for (let i = 0; i < GeoChangeCoord3D.ROBOT_POINTS.length; i++) {
             this.cmd("Delete", this.RobotPointRobotIDs[i]);
             this.cmd("Delete", this.RobotPointWorldIDs[i]);
         }
-        for (i = 0; i < GeoChangeCoord3D.HAND_POINTS.length; i++) {
+        for (let i = 0; i < GeoChangeCoord3D.HAND_POINTS.length; i++) {
             this.cmd("Delete", this.HandPointHandIDs[i]);
             this.cmd("Delete", this.HandPointRobotIDs[i]);
             this.cmd("Delete", this.HandPointWorldIDs[i]);
@@ -1136,8 +1105,8 @@ class GeoChangeCoord3D extends Geometric {
     }
 
     addMatrix(mat1, mat2, mat3, numDigits) {
-        for (var i = 0; i < mat1.data.length; i++) {
-            for (var j = 0; j < mat1.data[i].length; j++) {
+        for (let i = 0; i < mat1.data.length; i++) {
+            for (let j = 0; j < mat1.data[i].length; j++) {
                 this.cmd("SetHighlight", mat1.dataID[i][j], 1);
                 this.cmd("SetHighlight", mat2.dataID[i][j], 1);
                 this.cmd("Step");
@@ -1151,25 +1120,24 @@ class GeoChangeCoord3D extends Geometric {
     }
 
     multiplyMatrix(mat1, mat2, mat3, explainID, numDigits) {
-        var explainText = "";
-        for (var i = 0; i < mat1.data.length; i++) {
-            for (var j = 0; j < mat2.data[0].length; j++) {
-                var explainText = "";
-                var value = 0;
-                for (var k = 0; k < mat2.data.length; k++) {
+        for (let i = 0; i < mat1.data.length; i++) {
+            for (let j = 0; j < mat2.data[0].length; j++) {
+                let explainText = "";
+                let value = 0;
+                for (let k = 0; k < mat2.data.length; k++) {
                     this.cmd("SetHighlight", mat1.dataID[i][k], 1);
                     this.cmd("SetHighlight", mat2.dataID[k][j], 1);
-                    if (explainText != "") {
-                        explainText = explainText + " + ";
+                    if (explainText !== "") {
+                        explainText = `${explainText} + `;
                     }
                     value = value + mat1.data[i][k] * mat2.data[k][j];
-                    explainText = explainText + this.standardize(String(mat1.data[i][k]), numDigits) + " * " + this.standardize(String(mat2.data[k][j]), numDigits);
+                    explainText = `${explainText + this.standardize(String(mat1.data[i][k]), numDigits)} * ${this.standardize(String(mat2.data[k][j]), numDigits)}`;
                     this.cmd("SetText", explainID, explainText);
                     this.cmd("Step");
                     this.cmd("SetHighlight", mat1.dataID[i][k], 0);
                     this.cmd("SetHighlight", mat2.dataID[k][j], 0);
                 }
-                explainText += " = " + this.standardize(String(value), numDigits);
+                explainText += ` = ${this.standardize(String(value), numDigits)}`;
                 this.cmd("SetText", explainID, explainText);
                 mat3.data[i][j] = value;
                 this.cmd("SetText", mat3.dataID[i][j], this.standardize(value, numDigits));
@@ -1180,33 +1148,30 @@ class GeoChangeCoord3D extends Geometric {
     }
 
     standardize(lab, digits) {
-        digits = (digits == undefined) ? 3 : digits;
-        var shift = Math.pow(10, digits);
-        var newLab = Math.round(lab * shift) / shift;
+        digits = (digits == null) ? 3 : digits;
+        const shift = Math.pow(10, digits);
+        const newLab = Math.round(lab * shift) / shift;
         if (isNaN(newLab)) {
             return lab;
-        }
-        else {
+        } else {
             return newLab;
         }
     }
 
     resetMatrixLabels(mat, numDigits) {
-        var i, j, newLab;
-        for (i = 0; i < mat.data.length; i++) {
-            for (j = 0; j < mat.data[i].length; j++) {
-                newLab = this.standardize(mat.data[i][j], numDigits);
+        for (let i = 0; i < mat.data.length; i++) {
+            for (let j = 0; j < mat.data[i].length; j++) {
+                const newLab = this.standardize(mat.data[i][j], numDigits);
                 this.cmd("SetText", mat.dataID[i][j], newLab);
             }
         }
     }
 
     moveMatrix(mat, x, y) {
-        var height = mat.data.length;
-        var width = 0;
+        const height = mat.data.length;
+        let width = 0;
 
-        var i, j;
-        for (i = 0; i < mat.data.length; i++) {
+        for (let i = 0; i < mat.data.length; i++) {
             width = Math.max(width, mat.data[i].length);
         }
 
@@ -1218,8 +1183,8 @@ class GeoChangeCoord3D extends Geometric {
         this.cmd("Move", mat.rightBrack2, x + width * GeoChangeCoord3D.MATRIX_ELEM_WIDTH, y);
         this.cmd("Move", mat.rightBrack3, x + width * GeoChangeCoord3D.MATRIX_ELEM_WIDTH, y + height * GeoChangeCoord3D.MATRIX_ELEM_HEIGHT);
 
-        for (i = 0; i < mat.data.length; i++) {
-            for (j = 0; j < mat.data[i].length; j++) {
+        for (let i = 0; i < mat.data.length; i++) {
+            for (let j = 0; j < mat.data[i].length; j++) {
                 this.cmd("Move", mat.dataID[i][j],
                     x + j * GeoChangeCoord3D.MATRIX_ELEM_WIDTH + GeoChangeCoord3D.MATRIX_ELEM_WIDTH / 2,
                     y + i * GeoChangeCoord3D.MATRIX_ELEM_HEIGHT + GeoChangeCoord3D.MATRIX_ELEM_HEIGHT / 2);
@@ -1236,19 +1201,19 @@ class GeoChangeCoord3D extends Geometric {
         list.push(mat.rightBrack1);
         list.push(mat.rightBrack2);
         list.push(mat.rightBrack3);
-        var i, j;
-        for (i = 0; i < mat.data.length; i++) {
-            for (j = 0; j < mat.data[i].length; j++) {
+
+        for (let i = 0; i < mat.data.length; i++) {
+            for (let j = 0; j < mat.data[i].length; j++) {
                 list.push(mat.dataID[i][j]);
             }
         }
     }
 
     deleteMatrix(mat) {
-        var IDList = [];
+        const IDList = [];
         this.addMatrixIDsToList(mat, IDList);
-        var i;
-        for (i = 0; i < IDList.length; i++) {
+
+        for (let i = 0; i < IDList.length; i++) {
             this.cmd("Delete", IDList[i]);
         }
     }
@@ -1260,22 +1225,22 @@ class GeoChangeCoord3D extends Geometric {
         this.cmd(command, mat.rightBrack1, value);
         this.cmd(command, mat.rightBrack2, value);
         this.cmd(command, mat.rightBrack3, value);
-        var i, j;
-        for (i = 0; i < mat.data.length; i++) {
-            for (j = 0; j < mat.data[i].length; j++) {
+
+        for (let i = 0; i < mat.data.length; i++) {
+            for (let j = 0; j < mat.data[i].length; j++) {
                 this.cmd(command, mat.dataID[i][j], value);
             }
         }
     }
+
     // Add two (data only!) matrices (not complete matrix object with graphics, just
     // the data)
     add(lhs, rhs) {
-        var resultMat = new Array(lhs.length);
-        var i, j;
+        const resultMat = new Array(lhs.length);
 
-        for (i = 0; i < lhs.length; i++) {
+        for (let i = 0; i < lhs.length; i++) {
             resultMat[i] = new Array(lhs[i].length);
-            for (j = 0; j < lhs[i].length; j++) {
+            for (let j = 0; j < lhs[i].length; j++) {
                 resultMat[i][j] = lhs[i][j] + rhs[i][j];
             }
         }
@@ -1283,7 +1248,7 @@ class GeoChangeCoord3D extends Geometric {
     }
 
     createMatrix(contents, x, y) {
-        var mat = new Matrix(contents, x, y);
+        const mat = new Matrix(contents, x, y);
         mat.leftBrack1 = this.nextIndex++;
         mat.leftBrack2 = this.nextIndex++;
         mat.leftBrack3 = this.nextIndex++;
@@ -1291,15 +1256,14 @@ class GeoChangeCoord3D extends Geometric {
         mat.rightBrack2 = this.nextIndex++;
         mat.rightBrack3 = this.nextIndex++;
 
-        var height = mat.data.length;
-        var width = 0;
+        const height = mat.data.length;
+        let width = 0;
 
-        var i, j;
         mat.dataID = new Array(mat.data.length);
-        for (i = 0; i < mat.data.length; i++) {
+        for (let i = 0; i < mat.data.length; i++) {
             width = Math.max(width, mat.data[i].length);
             mat.dataID[i] = new Array(mat.data[i].length);
-            for (j = 0; j < mat.data[i].length; j++) {
+            for (let j = 0; j < mat.data[i].length; j++) {
                 mat.dataID[i][j] = this.nextIndex++;
             }
         }
@@ -1312,8 +1276,8 @@ class GeoChangeCoord3D extends Geometric {
         this.cmd("CreateRectangle", mat.rightBrack2, "", 1, height * GeoChangeCoord3D.MATRIX_ELEM_HEIGHT, x + width * GeoChangeCoord3D.MATRIX_ELEM_WIDTH, y, "center", "top");
         this.cmd("CreateRectangle", mat.rightBrack3, "", 5, 1, x + width * GeoChangeCoord3D.MATRIX_ELEM_WIDTH, y + height * GeoChangeCoord3D.MATRIX_ELEM_HEIGHT, "right", "center");
 
-        for (i = 0; i < mat.data.length; i++) {
-            for (j = 0; j < mat.data[i].length; j++) {
+        for (let i = 0; i < mat.data.length; i++) {
+            for (let j = 0; j < mat.data[i].length; j++) {
                 this.cmd("CreateLabel", mat.dataID[i][j], mat.data[i][j],
                     x + j * GeoChangeCoord3D.MATRIX_ELEM_WIDTH + GeoChangeCoord3D.MATRIX_ELEM_WIDTH / 2,
                     y + i * GeoChangeCoord3D.MATRIX_ELEM_HEIGHT + GeoChangeCoord3D.MATRIX_ELEM_HEIGHT / 2);

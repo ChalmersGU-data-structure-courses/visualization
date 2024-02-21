@@ -24,6 +24,13 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals AnimatedBTreeNode, AnimatedCircle, AnimatedLabel, AnimatedLinkedList,
+           AnimatedObject, AnimatedRectangle, HighlightCircle, Line
+*/
+/* exported ObjectManager */
+///////////////////////////////////////////////////////////////////////////////
 
 // Object Manager
 //
@@ -49,10 +56,10 @@ class ObjectManager {
     canvas;
     ctx;
     statusReport;
-    
+
     constructor(canvas) {
         this.canvas = canvas;
-        this.ctx = canvas.getContext('2d');
+        this.ctx = canvas.getContext("2d");
         this.statusReport = new AnimatedLabel(-1, "...", false, 30, this.ctx);
     }
 
@@ -65,9 +72,8 @@ class ObjectManager {
         this.BackEdges = [];
     }
 
-
     ///////////////////////////////////////////////////////////////////////////
-    // Drawing objects 
+    // Drawing objects
 
     draw() {
         this.framenum++;
@@ -75,29 +81,29 @@ class ObjectManager {
 
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); // clear canvas
 
-        for (var i = 0; i < this.Nodes.length; i++) {
+        for (let i = 0; i < this.Nodes.length; i++) {
             if (this.Nodes[i] != null && !this.Nodes[i].highlighted && this.Nodes[i].addedToScene && !this.Nodes[i].alwaysOnTop) {
                 this.Nodes[i].draw(this.ctx);
             }
         }
 
-        for (var i = 0; i < this.Nodes.length; i++) {
+        for (let i = 0; i < this.Nodes.length; i++) {
             if (this.Nodes[i] != null && (this.Nodes[i].highlighted && !this.Nodes[i].alwaysOnTop) && this.Nodes[i].addedToScene) {
                 this.Nodes[i].pulseHighlight(this.framenum);
                 this.Nodes[i].draw(this.ctx);
             }
         }
 
-        for (var i = 0; i < this.Nodes.length; i++) {
+        for (let i = 0; i < this.Nodes.length; i++) {
             if (this.Nodes[i] != null && this.Nodes[i].alwaysOnTop && this.Nodes[i].addedToScene) {
                 this.Nodes[i].pulseHighlight(this.framenum);
                 this.Nodes[i].draw(this.ctx);
             }
         }
 
-        for (var i = 0; i < this.Edges.length; i++) {
+        for (let i = 0; i < this.Edges.length; i++) {
             if (this.Edges[i] != null) {
-                for (var j = 0; j < this.Edges[i].length; j++) {
+                for (let j = 0; j < this.Edges[i].length; j++) {
                     if (this.Edges[i][j].addedToScene) {
                         this.Edges[i][j].pulseHighlight(this.framenum);
                         this.Edges[i][j].draw(this.ctx);
@@ -109,9 +115,8 @@ class ObjectManager {
         this.drawStatusReport();
     }
 
-
     ///////////////////////////////////////////////////////////////////////////
-    // Status report 
+    // Status report
 
     drawStatusReport() {
         this.statusReport.x = ObjectManager.STATUSREPORT_LEFT_MARGIN;
@@ -122,15 +127,14 @@ class ObjectManager {
     setStatus(text, color) {
         if (color) this.statusReport.setForegroundColor(color);
         this.statusReport.setText(text);
-        console.log("---- " + text + " ----");
+        console.log(`---- ${text} ----`);
     }
 
-
     ///////////////////////////////////////////////////////////////////////////
-    // Layers 
+    // Layers
 
     setLayers(shown, layers) {
-        for (var i = 0; i < layers.length; i++) {
+        for (let i = 0; i < layers.length; i++) {
             this.activeLayers[layers[i]] = shown;
         }
         this.resetLayers();
@@ -138,21 +142,21 @@ class ObjectManager {
 
     setAllLayers(layers) {
         this.activeLayers = [];
-        for (var i = 0; i < layers.length; i++) {
+        for (let i = 0; i < layers.length; i++) {
             this.activeLayers[layers[i]] = true;
         }
         this.resetLayers();
     }
 
     resetLayers() {
-        for (var i = 0; i < this.Nodes.length; i++) {
+        for (let i = 0; i < this.Nodes.length; i++) {
             if (this.Nodes[i] != null) {
                 this.Nodes[i].addedToScene = this.activeLayers[this.Nodes[i].layer];
             }
         }
-        for (var i = this.Edges.length - 1; i >= 0; i--) {
+        for (let i = this.Edges.length - 1; i >= 0; i--) {
             if (this.Edges[i] != null) {
-                for (var j = 0; j < this.Edges[i].length; j++) {
+                for (let j = 0; j < this.Edges[i].length; j++) {
                     if (this.Edges[i][j] != null) {
                         this.Edges[i][j].addedToScene =
                             this.activeLayers[this.Edges[i][j].node1.layer] &&
@@ -168,16 +172,16 @@ class ObjectManager {
             this.Nodes[objectID].layer = layer;
             this.Nodes[objectID].addedToScene = Boolean(this.activeLayers[layer]);
             if (this.Edges[objectID] != null) {
-                for (var i = 0; i < this.Edges[objectID].length; i++) {
-                    var nextEdge = this.Edges[objectID][i];
+                for (let i = 0; i < this.Edges[objectID].length; i++) {
+                    const nextEdge = this.Edges[objectID][i];
                     if (nextEdge != null) {
                         nextEdge.addedToScene = nextEdge.node1.addedToScene && nextEdge.node2.addedToScene;
                     }
                 }
             }
             if (this.BackEdges[objectID] != null) {
-                for (var i = 0; i < this.BackEdges[objectID].length; i++) {
-                    var nextEdge = this.BackEdges[objectID][i];
+                for (let i = 0; i < this.BackEdges[objectID].length; i++) {
+                    const nextEdge = this.BackEdges[objectID][i];
                     if (nextEdge != null) {
                         nextEdge.addedToScene = nextEdge.node1.addedToScene && nextEdge.node2.addedToScene;
                     }
@@ -186,15 +190,14 @@ class ObjectManager {
         }
     }
 
-
     ///////////////////////////////////////////////////////////////////////////
-    // Adding objects 
+    // Adding objects
 
     addLabelObject(objectID, objectLabel, centering) {
         if (this.Nodes[objectID] != null) {
             throw new Error(`addLabelObject: Object with same ID (${objectID}) already exists`);
         }
-        var newLabel = new AnimatedLabel(objectID, objectLabel, centering, this.getTextWidth(objectLabel), this.ctx);
+        const newLabel = new AnimatedLabel(objectID, objectLabel, centering, this.getTextWidth(objectLabel), this.ctx);
         this.Nodes[objectID] = newLabel;
     }
 
@@ -202,7 +205,7 @@ class ObjectManager {
         if (this.Nodes[objectID] != null) {
             throw new Error(`addLinkedListObject: Object with same ID (${objectID}) already exists`);
         }
-        var newNode = new AnimatedLinkedList(objectID, nodeLabel, width, height, linkPer, verticalOrientation, linkPosEnd, numLabels, backgroundColor, foregroundColor);
+        const newNode = new AnimatedLinkedList(objectID, nodeLabel, width, height, linkPer, verticalOrientation, linkPosEnd, numLabels, backgroundColor, foregroundColor);
         this.Nodes[objectID] = newNode;
     }
 
@@ -210,7 +213,7 @@ class ObjectManager {
         if (this.Nodes[objectID] != null) {
             throw new Error(`addHighlightCircleObject: Object with same ID (${objectID}) already exists`);
         }
-        var newNode = new HighlightCircle(objectID, objectColor, radius);
+        const newNode = new HighlightCircle(objectID, objectColor, radius);
         this.Nodes[objectID] = newNode;
     }
 
@@ -218,9 +221,7 @@ class ObjectManager {
         if (this.Nodes[objectID] != null) {
             throw new Error(`addBTreeNode: Object with same ID (${objectID}) already exists`);
         }
-        if (!backgroundColor) backgroundColor = "#FFFFFF";
-        if (!foregroundColor) foregroundColor = "#FFFFFF";
-        var newNode = new AnimatedBTreeNode(objectID, widthPerElem, height, numElems, backgroundColor, foregroundColor);
+        const newNode = new AnimatedBTreeNode(objectID, widthPerElem, height, numElems, backgroundColor, foregroundColor);
         this.Nodes[objectID] = newNode;
     }
 
@@ -228,7 +229,7 @@ class ObjectManager {
         if (this.Nodes[objectID] != null) {
             throw new Error(`addRectangleObject: Object with same ID (${objectID}) already exists`);
         }
-        var newNode = new AnimatedRectangle(objectID, nodeLabel, width, height, xJustify, yJustify, backgroundColor, foregroundColor);
+        const newNode = new AnimatedRectangle(objectID, nodeLabel, width, height, xJustify, yJustify, backgroundColor, foregroundColor);
         this.Nodes[objectID] = newNode;
     }
 
@@ -236,10 +237,9 @@ class ObjectManager {
         if (this.Nodes[objectID] != null) {
             throw new Error(`addCircleObject: Object with same ID (${objectID}) already exists`);
         }
-        var newNode = new AnimatedCircle(objectID, objectLabel);
+        const newNode = new AnimatedCircle(objectID, objectLabel);
         this.Nodes[objectID] = newNode;
     }
-
 
     ///////////////////////////////////////////////////////////////////////////
     // Finding and removing objects
@@ -252,15 +252,14 @@ class ObjectManager {
     }
 
     removeObject(objectID) {
-        var oldObject = this.Nodes[objectID];
-        if (objectID == this.Nodes.length - 1) {
+        const oldObject = this.Nodes[objectID];
+        if (objectID === this.Nodes.length - 1) {
             this.Nodes.pop();
         } else {
             this.Nodes[objectID] = null;
         }
         return oldObject;
     }
-
 
     ///////////////////////////////////////////////////////////////////////////
     // Aligning objects
@@ -314,17 +313,16 @@ class ObjectManager {
         return this.Nodes[id1].getAlignLeftPos(this.Nodes[id2]);
     }
 
-
     ///////////////////////////////////////////////////////////////////////////
     // Modifying edges
 
     connectEdge(objectIDfrom, objectIDto, color, curve, directed, lab, connectionPoint) {
-        var fromObj = this.Nodes[objectIDfrom];
-        var toObj = this.Nodes[objectIDto];
+        const fromObj = this.Nodes[objectIDfrom];
+        const toObj = this.Nodes[objectIDto];
         if (fromObj == null || toObj == null) {
             throw new Error(`connectEdge: One of the objects ${objectIDfrom} or ${objectIDto} do not exist`);
         }
-        var l = new Line(fromObj, toObj, color, curve, directed, lab, connectionPoint);
+        const l = new Line(fromObj, toObj, color, curve, directed, lab, connectionPoint);
         if (this.Edges[objectIDfrom] == null) {
             this.Edges[objectIDfrom] = [];
         }
@@ -338,9 +336,9 @@ class ObjectManager {
 
     disconnectEdge(objectIDfrom, objectIDto) {
         if (this.Edges[objectIDfrom] != null) {
-            var len = this.Edges[objectIDfrom].length;
-            for (var i = len - 1; i >= 0; i--) {
-                if (this.Edges[objectIDfrom][i] != null && this.Edges[objectIDfrom][i].node2 == this.Nodes[objectIDto]) {
+            let len = this.Edges[objectIDfrom].length;
+            for (let i = len - 1; i >= 0; i--) {
+                if (this.Edges[objectIDfrom][i] != null && this.Edges[objectIDfrom][i].node2 === this.Nodes[objectIDto]) {
                     this.Edges[objectIDfrom][i] = this.Edges[objectIDfrom][len - 1];
                     len--;
                     this.Edges[objectIDfrom].pop();
@@ -348,9 +346,9 @@ class ObjectManager {
             }
         }
         if (this.BackEdges[objectIDto] != null) {
-            len = this.BackEdges[objectIDto].length;
-            for (var i = len - 1; i >= 0; i--) {
-                if (this.BackEdges[objectIDto][i] != null && this.BackEdges[objectIDto][i].node1 == this.Nodes[objectIDfrom]) {
+            let len = this.BackEdges[objectIDto].length;
+            for (let i = len - 1; i >= 0; i--) {
+                if (this.BackEdges[objectIDto][i] != null && this.BackEdges[objectIDto][i].node1 === this.Nodes[objectIDfrom]) {
                     this.BackEdges[objectIDto][i] = this.BackEdges[objectIDto][len - 1];
                     len--;
                     this.BackEdges[objectIDto].pop();
@@ -361,13 +359,13 @@ class ObjectManager {
 
     disconnectIncidentEdges(objectID) {
         if (this.Edges[objectID] != null) {
-            var len = this.Edges[objectID].length;
-            for (var i = len - 1; i >= 0; i--) {
-                var deleted = this.Edges[objectID][i];
-                var node2ID = deleted.node2.identifier();
-                var len2 = this.BackEdges[node2ID].length;
-                for (var j = len2 - 1; j >= 0; j--) {
-                    if (this.BackEdges[node2ID][j] == deleted) {
+            const len = this.Edges[objectID].length;
+            for (let i = len - 1; i >= 0; i--) {
+                const deleted = this.Edges[objectID][i];
+                const node2ID = deleted.node2.identifier();
+                let len2 = this.BackEdges[node2ID].length;
+                for (let j = len2 - 1; j >= 0; j--) {
+                    if (this.BackEdges[node2ID][j] === deleted) {
                         this.BackEdges[node2ID][j] = this.BackEdges[node2ID][len2 - 1];
                         len2--;
                         this.BackEdges[node2ID].pop();
@@ -377,13 +375,13 @@ class ObjectManager {
             this.Edges[objectID] = null;
         }
         if (this.BackEdges[objectID] != null) {
-            len = this.BackEdges[objectID].length;
-            for (i = len - 1; i >= 0; i--) {
-                deleted = this.BackEdges[objectID][i];
-                var node1ID = deleted.node1.identifier();
-                len2 = this.Edges[node1ID].length;
-                for (j = len2 - 1; j >= 0; j--) {
-                    if (this.Edges[node1ID][j] == deleted) {
+            const len = this.BackEdges[objectID].length;
+            for (let i = len - 1; i >= 0; i--) {
+                const deleted = this.BackEdges[objectID][i];
+                const node1ID = deleted.node1.identifier();
+                let len2 = this.Edges[node1ID].length;
+                for (let j = len2 - 1; j >= 0; j--) {
+                    if (this.Edges[node1ID][j] === deleted) {
                         this.Edges[node1ID][j] = this.Edges[node1ID][len2 - 1];
                         len2--;
                         this.Edges[node1ID].pop();
@@ -394,60 +392,59 @@ class ObjectManager {
         }
     }
 
-
     ///////////////////////////////////////////////////////////////////////////
     // Finding edges
 
     findEdge(fromID, toID) {
-        var edges = this.Edges[fromID];
-        if (edges == null) return;
-        for (var i = edges.length-1; i >= 0; i--) {
-            if (edges[i] != null && edges[i].node2 == this.Nodes[toID]) {
-                return edges[i]
+        const edges = this.Edges[fromID];
+        if (edges != null) {
+            for (let i = edges.length - 1; i >= 0; i--) {
+                if (edges[i] != null && edges[i].node2 === this.Nodes[toID]) {
+                    return edges[i];
+                }
             }
         }
+        return null;
     }
 
     findIncidentEdges(objectID) {
-        var edges = this.Edges[objectID] || [];
-        var backEdges = this.BackEdges[objectID] || [];
+        const edges = this.Edges[objectID] || [];
+        const backEdges = this.BackEdges[objectID] || [];
         return edges.concat(backEdges);
     }
-
 
     ///////////////////////////////////////////////////////////////////////////
     // Getting and setting edge properties
 
     getEdgeAlpha(fromID, toID) {
-        var edge = this.findEdge(fromID, toID);
+        const edge = this.findEdge(fromID, toID);
         return edge?.getAlpha();
     }
 
     setEdgeAlpha(fromID, toID, alphaVal) {
-        var edge = this.findEdge(fromID, toID);
+        const edge = this.findEdge(fromID, toID);
         if (edge) edge.setAlpha(alphaVal);
     }
 
     getEdgeColor(fromID, toID) {
-        var edge = this.findEdge(fromID, toID);
+        const edge = this.findEdge(fromID, toID);
         return edge?.getColor();
     }
 
     setEdgeColor(fromID, toID, color) {
-        var edge = this.findEdge(fromID, toID);
+        const edge = this.findEdge(fromID, toID);
         if (edge) edge.setColor(color);
     }
 
     getEdgeHighlight(fromID, toID) {
-        var edge = this.findEdge(fromID, toID);
+        const edge = this.findEdge(fromID, toID);
         return edge?.getHighlight();
     }
 
     setEdgeHighlight(fromID, toID, val) {
-        var edge = this.findEdge(fromID, toID);
+        const edge = this.findEdge(fromID, toID);
         if (edge) edge.setHighlight(val);
     }
-
 
     ///////////////////////////////////////////////////////////////////////////
     // Getting and setting object properties
@@ -580,7 +577,6 @@ class ObjectManager {
         this.Nodes[objectID].setNumElements(numElems);
     }
 
-
     ///////////////////////////////////////////////////////////////////////////
     // Helper methods
 
@@ -589,19 +585,16 @@ class ObjectManager {
         if (text == null) {
             return 3;
         }
-        this.ctx.font = AnimatedObject.DEFAULT_TEXT_HEIGHT + 'px sans-serif';
-        var strList = text.split("\n");
-        var width = 0;
-        if (strList.length == 1) {
+        this.ctx.font = `${AnimatedObject.DEFAULT_TEXT_HEIGHT}px sans-serif`;
+        const strList = text.split("\n");
+        let width = 0;
+        if (strList.length === 1) {
             width = this.ctx.measureText(text).width;
         } else {
-            for (var i = 0; i < strList.length; i++) {
+            for (let i = 0; i < strList.length; i++) {
                 width = Math.max(width, this.ctx.measureText(strList[i]).width);
             }
         }
         return width;
     }
-
-
 }
-

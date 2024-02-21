@@ -24,10 +24,17 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals SingleAnimation */
+/* exported UndoCreate, UndoHighlight, UndoHighlightEdge, UndoMove, UndoSetAlpha,
+            UndoSetBackgroundColor, UndoSetEdgeAlpha, UndoSetEdgeColor,
+            UndoSetForegroundColor, UndoSetHeight, UndoSetHighlightIndex,
+            UndoSetNull, UndoSetNumElements, UndoSetPosition, UndoSetText,
+            UndoSetTextColor, UndoSetWidth
+*/
+///////////////////////////////////////////////////////////////////////////////
 
-////////////////////////////////////////////////////////////
-// Base class: UndoBlock
-////////////////////////////////////////////////////////////
 
 class UndoBlock {
     objectID;
@@ -41,10 +48,6 @@ class UndoBlock {
 }
 
 
-////////////////////////////////////////////////////////////
-// UndoMove
-////////////////////////////////////////////////////////////
-
 class UndoMove extends UndoBlock {
     constructor(id, fmX, fmy, tx, ty) {
         super();
@@ -56,16 +59,12 @@ class UndoMove extends UndoBlock {
     }
 
     addUndoAnimation(animationList) {
-        var nextAnim = new SingleAnimation(this.objectID, this.fromX, this.fromY, this.toX, this.toY);
+        const nextAnim = new SingleAnimation(this.objectID, this.fromX, this.fromY, this.toX, this.toY);
         animationList.push(nextAnim);
         return true;
     }
 }
 
-
-////////////////////////////////////////////////////////////
-// UndoCreate
-////////////////////////////////////////////////////////////
 
 class UndoCreate extends UndoBlock {
     constructor(id) {
@@ -78,10 +77,6 @@ class UndoCreate extends UndoBlock {
     }
 }
 
-
-////////////////////////////////////////////////////////////
-// UndoHighlight
-////////////////////////////////////////////////////////////
 
 class UndoHighlight extends UndoBlock {
     constructor(id, val) {
@@ -96,10 +91,6 @@ class UndoHighlight extends UndoBlock {
 }
 
 
-////////////////////////////////////////////////////////////
-// UndoSetHeight
-////////////////////////////////////////////////////////////
-
 class UndoSetHeight extends UndoBlock {
     constructor(id, val) {
         super();
@@ -112,10 +103,6 @@ class UndoSetHeight extends UndoBlock {
     }
 }
 
-
-////////////////////////////////////////////////////////////
-// UndoSetWidth
-////////////////////////////////////////////////////////////
 
 class UndoSetWidth extends UndoBlock {
     constructor(id, val) {
@@ -130,10 +117,6 @@ class UndoSetWidth extends UndoBlock {
 }
 
 
-////////////////////////////////////////////////////////////
-// UndoSetNumElements
-////////////////////////////////////////////////////////////
-
 class UndoSetNumElements extends UndoBlock {
     constructor(obj, oldNumElems, newNumElems) {
         super();
@@ -143,7 +126,7 @@ class UndoSetNumElements extends UndoBlock {
         if (this.sizeBeforeChange > this.sizeAfterChange) {
             this.labels = [];
             this.colors = [];
-            for (var i = 0; i < this.sizeBeforeChange - this.sizeAfterChange; i++) {
+            for (let i = 0; i < this.sizeBeforeChange - this.sizeAfterChange; i++) {
                 this.labels[i] = obj.getText(i + this.sizeAfterChange);
                 this.colors[i] = obj.getTextColor(i + this.sizeAfterChange);
             }
@@ -153,7 +136,7 @@ class UndoSetNumElements extends UndoBlock {
     undoInitialStep(world) {
         world.setNumElements(this.objectID, this.sizeBeforeChange);
         if (this.sizeBeforeChange > this.sizeAfterChange) {
-            for (var i = 0; i < this.sizeBeforeChange - this.sizeAfterChange; i++) {
+            for (let i = 0; i < this.sizeBeforeChange - this.sizeAfterChange; i++) {
                 world.setText(this.objectID, this.labels[i], i + this.sizeAfterChange);
                 world.setTextColor(this.objectID, this.colors[i], i + this.sizeAfterChange);
             }
@@ -161,10 +144,6 @@ class UndoSetNumElements extends UndoBlock {
     }
 }
 
-
-////////////////////////////////////////////////////////////
-// UndoSetAlpha
-////////////////////////////////////////////////////////////
 
 class UndoSetAlpha extends UndoBlock {
     constructor(id, alph) {
@@ -179,10 +158,6 @@ class UndoSetAlpha extends UndoBlock {
 }
 
 
-////////////////////////////////////////////////////////////
-// UndoSetNull
-////////////////////////////////////////////////////////////
-
 class UndoSetNull extends UndoBlock {
     constructor(id, nv) {
         super();
@@ -195,10 +170,6 @@ class UndoSetNull extends UndoBlock {
     }
 }
 
-
-////////////////////////////////////////////////////////////
-// UndoSetForegroundColor
-////////////////////////////////////////////////////////////
 
 class UndoSetForegroundColor extends UndoBlock {
     constructor(id, color) {
@@ -213,10 +184,6 @@ class UndoSetForegroundColor extends UndoBlock {
 }
 
 
-////////////////////////////////////////////////////////////
-// UndoSetBackgroundColor
-////////////////////////////////////////////////////////////
-
 class UndoSetBackgroundColor extends UndoBlock {
     constructor(id, color) {
         super();
@@ -230,10 +197,6 @@ class UndoSetBackgroundColor extends UndoBlock {
 }
 
 
-////////////////////////////////////////////////////////////
-// UndoSetHighlightIndex
-////////////////////////////////////////////////////////////
-
 class UndoSetHighlightIndex extends UndoBlock {
     constructor(id, index) {
         super();
@@ -246,10 +209,6 @@ class UndoSetHighlightIndex extends UndoBlock {
     }
 }
 
-
-////////////////////////////////////////////////////////////
-// UndoSetText
-////////////////////////////////////////////////////////////
 
 class UndoSetText extends UndoBlock {
     constructor(id, str, index) {
@@ -265,10 +224,6 @@ class UndoSetText extends UndoBlock {
 }
 
 
-////////////////////////////////////////////////////////////
-// UndoSetTextColor
-////////////////////////////////////////////////////////////
-
 class UndoSetTextColor extends UndoBlock {
     constructor(id, color, index) {
         super();
@@ -282,10 +237,6 @@ class UndoSetTextColor extends UndoBlock {
     }
 }
 
-
-////////////////////////////////////////////////////////////
-// UndoHighlightEdge
-////////////////////////////////////////////////////////////
 
 class UndoHighlightEdge extends UndoBlock {
     constructor(from, to, val) {
@@ -301,10 +252,6 @@ class UndoHighlightEdge extends UndoBlock {
 }
 
 
-////////////////////////////////////////////////////////////
-// UndoSetEdgeColor
-////////////////////////////////////////////////////////////
-
 class UndoSetEdgeColor extends UndoBlock {
     constructor(from, to, oldColor) {
         super();
@@ -319,10 +266,6 @@ class UndoSetEdgeColor extends UndoBlock {
 }
 
 
-////////////////////////////////////////////////////////////
-// UndoSetEdgeAlpha
-////////////////////////////////////////////////////////////
-
 class UndoSetEdgeAlpha extends UndoBlock {
     constructor(from, to, oldAplha) {
         super();
@@ -336,10 +279,6 @@ class UndoSetEdgeAlpha extends UndoBlock {
     }
 }
 
-
-////////////////////////////////////////////////////////////
-// UndoSetPosition
-////////////////////////////////////////////////////////////
 
 class UndoSetPosition extends UndoBlock {
     constructor(id, x, y) {

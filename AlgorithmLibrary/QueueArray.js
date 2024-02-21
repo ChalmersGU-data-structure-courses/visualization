@@ -24,9 +24,14 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Algorithm */
+/* exported QueueArray */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class QueueArray extends Algorithm {
-
     static SIZE = 15;
     static INDEX_COLOR = "#0000FF";
 
@@ -55,7 +60,6 @@ class QueueArray extends Algorithm {
     constructor(am) {
         super();
         this.init(am);
-
     }
 
     init(am) {
@@ -69,7 +73,7 @@ class QueueArray extends Algorithm {
     }
 
     addControls() {
-        this.enqueueField = this.addControlToAlgorithmBar("Text", "", { maxlength: 4, size: 4 });
+        this.enqueueField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
         this.addReturnSubmit(this.enqueueField, "ALPHANUM", this.enqueueCallback.bind(this));
         this.enqueueButton = this.addControlToAlgorithmBar("Button", "Enqueue");
         this.enqueueButton.onclick = this.enqueueCallback.bind(this);
@@ -108,7 +112,7 @@ class QueueArray extends Algorithm {
         this.arrayData = [];
         this.arrayID = [];
         this.arrayLabelID = [];
-        for (var i = 0; i < QueueArray.SIZE; i++) {
+        for (let i = 0; i < QueueArray.SIZE; i++) {
             this.arrayID[i] = this.nextIndex++;
             this.arrayLabelID[i] = this.nextIndex++;
             this.cmd("CreateRectangle", this.arrayID[i], "", this.getArrayElemWidth(), this.getArrayElemHeight(), this.getArrayX(i), this.getArrayY(i));
@@ -137,7 +141,6 @@ class QueueArray extends Algorithm {
         return this.getArrayXY(i).x;
     }
 
-
     getArrayY(i) {
         return this.getArrayXY(i).y;
     }
@@ -147,22 +150,22 @@ class QueueArray extends Algorithm {
     }
 
     getArrayXY(i) {
-        var x = 1.5 * this.getArrayElemWidth();
-        var y = 4.5 * this.getArrayElemHeight();
-        for (var k = 0; k < i; k++) {
+        let x = 1.5 * this.getArrayElemWidth();
+        let y = 4.5 * this.getArrayElemHeight();
+        for (let k = 0; k < i; k++) {
             x += this.getArrayElemWidth();
             if (x + this.getArrayElemWidth() > this.getCanvasWidth()) {
                 x = 1.5 * this.getArrayElemWidth();
                 y += 2.5 * this.getArrayElemHeight();
             }
         }
-        return { x: x, y: y };
+        return {x: x, y: y};
     }
 
     getArrayElemWidth() {
-        var nrows = 1;
+        let nrows = 1;
         while (true) {
-            var w = nrows * this.getCanvasWidth() / (QueueArray.SIZE + 2 * nrows);
+            const w = nrows * this.getCanvasWidth() / (QueueArray.SIZE + 2 * nrows);
             if (w >= 25) return w;
             nrows++;
         }
@@ -176,7 +179,7 @@ class QueueArray extends Algorithm {
     // Callback functions for the algorithm control bar
 
     enqueueCallback(event) {
-        var enqueuedValue = this.enqueueField.value;
+        const enqueuedValue = this.enqueueField.value;
         if (enqueuedValue !== "") {
             this.enqueueField.value = "";
             this.implementAction(this.enqueue.bind(this), enqueuedValue);
@@ -197,7 +200,7 @@ class QueueArray extends Algorithm {
     clearAll() {
         this.commands = [];
         this.cmd("SetText", this.leftoverLabelID, "");
-        for (var i = 0; i < QueueArray.SIZE; i++) {
+        for (let i = 0; i < QueueArray.SIZE; i++) {
             this.arrayData[i] = null;
             this.cmd("SetText", this.arrayID[i], "");
         }
@@ -210,13 +213,13 @@ class QueueArray extends Algorithm {
 
     enqueue(elemToEnqueue) {
         this.commands = [];
-        if ((this.tail + 1) % QueueArray.SIZE == this.head) {
+        if ((this.tail + 1) % QueueArray.SIZE === this.head) {
             this.cmd("SetText", this.leftoverLabelID, "Queue full!");
             return this.commands;
         }
 
-        var labEnqueueValID1 = this.nextIndex++;
-        var labEnqueueValID2 = this.nextIndex++;
+        const labEnqueueValID1 = this.nextIndex++;
+        const labEnqueueValID2 = this.nextIndex++;
         this.arrayData[this.tail] = elemToEnqueue;
 
         this.cmd("SetText", this.leftoverLabelID, "Enqueuing value:  ");
@@ -256,12 +259,12 @@ class QueueArray extends Algorithm {
 
     dequeue(ignored) {
         this.commands = [];
-        if (this.tail == this.head) {
+        if (this.tail === this.head) {
             this.cmd("SetText", this.leftoverLabelID, "Queue empty!");
             return this.commands;
         }
 
-        var labDequeueValID = this.nextIndex++;
+        const labDequeueValID = this.nextIndex++;
 
         this.cmd("SetText", this.leftoverLabelID, "Dequeing value:  ");
         this.cmd("Step");
@@ -274,7 +277,7 @@ class QueueArray extends Algorithm {
         this.cmd("Move", this.highlightID, this.getArrayX(this.head), this.getArrayLabelY(this.head));
         this.cmd("Step");
 
-        var dequeuedVal = this.arrayData[this.head];
+        const dequeuedVal = this.arrayData[this.head];
         this.cmd("CreateLabel", labDequeueValID, dequeuedVal, 0, 0);
         this.cmd("AlignMiddle", labDequeueValID, this.arrayID[this.head]);
         this.cmd("Settext", this.arrayID[this.head], "");
@@ -291,7 +294,7 @@ class QueueArray extends Algorithm {
 
         this.cmd("SetHighlight", this.headID, 0);
         this.cmd("Delete", labDequeueValID);
-        this.cmd("SetText", this.leftoverLabelID, "Dequeued Value:  " + dequeuedVal);
+        this.cmd("SetText", this.leftoverLabelID, `Dequeued Value:  ${dequeuedVal}`);
 
         return this.commands;
     }

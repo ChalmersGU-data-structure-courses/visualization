@@ -24,6 +24,12 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Algorithm */
+/* exported SortHeap */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class SortHeap extends Algorithm {
     static ARRAY_SIZE = 32;
@@ -46,12 +52,12 @@ class SortHeap extends Algorithm {
         this.HeapXPositions = [
             0, 450, 250, 650, 150, 350, 550, 750, 100, 200, 300, 400, 500, 600,
             700, 800, 75, 125, 175, 225, 275, 325, 375, 425, 475, 525, 575,
-            625, 675, 725, 775, 825
+            625, 675, 725, 775, 825,
         ];
         this.HeapYPositions = [
             0, 100, 170, 170, 240, 240, 240, 240, 310, 310, 310, 310, 310, 310,
             310, 310, 380, 380, 380, 380, 380, 380, 380, 380, 380, 380, 380,
-            380, 380, 380, 380, 380
+            380, 380, 380, 380, 380,
         ];
         this.commands = [];
         this.createArray();
@@ -73,7 +79,7 @@ class SortHeap extends Algorithm {
         this.oldData = new Array(SortHeap.ARRAY_SIZE);
         this.currentHeapSize = 0;
 
-        for (var i = 1; i < SortHeap.ARRAY_SIZE; i++) {
+        for (let i = 1; i < SortHeap.ARRAY_SIZE; i++) {
             this.arrayData[i] = Math.floor(1 + Math.random() * 999);
             this.oldData[i] = this.arrayData[i];
 
@@ -92,7 +98,7 @@ class SortHeap extends Algorithm {
         this.descriptLabel1 = this.nextIndex++;
         this.descriptLabel2 = this.nextIndex++;
         this.cmd("CreateLabel", this.descriptLabel1, "", 20, 40, 0);
-        //this.cmd("CreateLabel", this.descriptLabel2, "", this.nextIndex, 40, 120, 0);
+        // this.cmd("CreateLabel", this.descriptLabel2, "", this.nextIndex, 40, 120, 0);
         this.animationManager.StartNewAnimation(this.commands);
         this.animationManager.skipForward();
         this.animationManager.clearHistory();
@@ -100,14 +106,14 @@ class SortHeap extends Algorithm {
 
     heapsortCallback(event) {
         this.commands = this.buildHeap("");
-        for (var i = SortHeap.ARRAY_SIZE - 1; i > 1; i--) {
+        for (let i = SortHeap.ARRAY_SIZE - 1; i > 1; i--) {
             this.swap(i, 1);
             this.cmd("SetAlpha", this.arrayRects[i], 0.2);
             this.cmd("Delete", this.circleObjs[i]);
             this.currentHeapSize = i - 1;
             this.pushDown(1);
         }
-        for (i = 1; i < SortHeap.ARRAY_SIZE; i++) {
+        for (let i = 1; i < SortHeap.ARRAY_SIZE; i++) {
             this.cmd("SetAlpha", this.arrayRects[i], 1);
         }
         this.cmd("Delete", this.circleObjs[1]);
@@ -119,8 +125,8 @@ class SortHeap extends Algorithm {
     }
 
     randomizeArray() {
-        this.commands = new Array();
-        for (var i = 1; i < SortHeap.ARRAY_SIZE; i++) {
+        this.commands = [];
+        for (let i = 1; i < SortHeap.ARRAY_SIZE; i++) {
             this.arrayData[i] = Math.floor(1 + Math.random() * 999);
             this.cmd("SetText", this.arrayRects[i], this.arrayData[i]);
             this.oldData[i] = this.arrayData[i];
@@ -131,12 +137,11 @@ class SortHeap extends Algorithm {
     }
 
     reset() {
-        for (var i = 1; i < SortHeap.ARRAY_SIZE; i++) {
-
+        for (let i = 1; i < SortHeap.ARRAY_SIZE; i++) {
             this.arrayData[i] = this.oldData[i];
             this.cmd("SetText", this.arrayRects[i], this.arrayData[i]);
         }
-        this.commands = new Array();
+        this.commands = [];
     }
 
     swap(index1, index2) {
@@ -152,7 +157,7 @@ class SortHeap extends Algorithm {
         this.cmd("Move", this.swapLabel2, this.ArrayXPositions[index1], SortHeap.ARRAY_Y_POS);
         this.cmd("Move", this.swapLabel3, this.HeapXPositions[index2], this.HeapYPositions[index2]);
         this.cmd("Move", this.swapLabel4, this.HeapXPositions[index1], this.HeapYPositions[index1]);
-        var tmp = this.arrayData[index1];
+        const tmp = this.arrayData[index1];
         this.arrayData[index1] = this.arrayData[index2];
         this.arrayData[index2] = tmp;
         this.cmd("Step");
@@ -172,14 +177,12 @@ class SortHeap extends Algorithm {
     }
 
     pushDown(index) {
-        var smallestIndex;
-
         while (true) {
             if (index * 2 > this.currentHeapSize) {
                 return;
             }
 
-            smallestIndex = 2 * index;
+            let smallestIndex = 2 * index;
 
             if (index * 2 + 1 <= this.currentHeapSize) {
                 this.setIndexHighlight(2 * index, 1);
@@ -200,26 +203,24 @@ class SortHeap extends Algorithm {
             if (this.compare(this.arrayData[smallestIndex], this.arrayData[index]) > 0) {
                 this.swap(smallestIndex, index);
                 index = smallestIndex;
-            }
-            else {
+            } else {
                 return;
             }
         }
     }
 
     buildHeap(ignored) {
-        this.commands = new Array();
-        for (var i = 1; i < SortHeap.ARRAY_SIZE; i++) {
+        this.commands = [];
+        for (let i = 1; i < SortHeap.ARRAY_SIZE; i++) {
             this.cmd("CreateCircle", this.circleObjs[i], this.arrayData[i], this.HeapXPositions[i], this.HeapYPositions[i]);
             this.cmd("SetText", this.arrayRects[i], this.arrayData[i]);
             if (i > 1) {
                 this.cmd("Connect", this.circleObjs[Math.floor(i / 2)], this.circleObjs[i]);
             }
-
         }
         this.cmd("Step");
         this.currentHeapSize = SortHeap.ARRAY_SIZE - 1;
-        var nextElem = this.currentHeapSize;
+        let nextElem = this.currentHeapSize;
         while (nextElem > 0) {
             this.pushDown(nextElem);
             nextElem = nextElem - 1;
@@ -227,25 +228,3 @@ class SortHeap extends Algorithm {
         return this.commands;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

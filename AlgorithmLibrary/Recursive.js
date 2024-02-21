@@ -24,12 +24,18 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Algorithm */
+/* exported Recursive */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class ActivationRecord {
     constructor(fields) {
         this.fields = fields;
         this.values = new Array(this.fields.length);
-        for (var i = 0; i < this.fields.length; i++) {
+        for (let i = 0; i < this.fields.length; i++) {
             this.values[i] = "";
         }
         this.fieldIDs = new Array(this.fields.length);
@@ -50,7 +56,7 @@ class Recursive extends Algorithm {
     static CODE_HIGHLIGHT_COLOR = "#FF0000";
     static CODE_STANDARD_COLOR = "#000000";
 
-    static TABLE_INDEX_COLOR = "#0000FF"
+    static TABLE_INDEX_COLOR = "#0000FF";
     static CODE_RECURSIVE_1_COLOR = "#339933";
     static CODE_RECURSIVE_2_COLOR = "#0099FF";
 
@@ -59,8 +65,7 @@ class Recursive extends Algorithm {
 
     static ACTIVATION_RECORD_SPACING = 2 * Recursive.ACTIVATION_RECORD_WIDTH + 10;
 
-    static SEPARATING_LINE_COLOR = "#0000FF"
-
+    static SEPARATING_LINE_COLOR = "#0000FF";
 
     init(am) {
         super.init(am);
@@ -68,11 +73,11 @@ class Recursive extends Algorithm {
 
     addCodeToCanvas(code) {
         this.codeID = this.addCodeToCanvasBase(code, Recursive.CODE_START_X, Recursive.CODE_START_Y, Recursive.CODE_LINE_HEIGHT, Recursive.CODE_STANDARD_COLOR);
-        /*    this.codeID = Array(this.code.length);
+        /*  this.codeID = new Array(this.code.length);
             var i, j;
-            for (i = 0; i < code.length; i++) {
+            for (let i = 0; i < code.length; i++) {
                 this.codeID[i] = new Array(code[i].length);
-                for (j = 0; j < code[i].length; j++) {
+                for (let j = 0; j < code[i].length; j++) {
                     this.codeID[i][j] = this.nextIndex++;
                     this.cmd("CreateLabel", this.codeID[i][j], code[i][j], Recursive.CODE_START_X, Recursive.CODE_START_Y + i * Recursive.CODE_LINE_HEIGHT, 0);
                     this.cmd("SetForegroundColor", this.codeID[i][j], Recursive.CODE_STANDARD_COLOR);
@@ -84,7 +89,7 @@ class Recursive extends Algorithm {
     }
 
     clearOldIDs() {
-        for (var i = 0; i < this.oldIDs.length; i++) {
+        for (let i = 0; i < this.oldIDs.length; i++) {
             this.cmd("Delete", this.oldIDs[i]);
         }
         this.oldIDs = [];
@@ -97,8 +102,7 @@ class Recursive extends Algorithm {
     }
 
     deleteActivation(activationRec) {
-        var i;
-        for (i = 0; i < activationRec.labelIDs.length; i++) {
+        for (let i = 0; i < activationRec.labelIDs.length; i++) {
             this.cmd("Delete", activationRec.labelIDs[i]);
             this.cmd("Delete", activationRec.fieldIDs[i]);
         }
@@ -107,12 +111,12 @@ class Recursive extends Algorithm {
     }
 
     createActivation(functionName, argList, x, y, labelsOnLeft) {
-        var activationRec = new ActivationRecord(argList);
-        var i;
+        const activationRec = new ActivationRecord(argList);
+
         activationRec.nameID = this.nextIndex++;
-        labelsOnLeft = (labelsOnLeft == undefined) ? true : labelsOnLeft;
-        for (i = 0; i < argList.length; i++) {
-            var valueID = this.nextIndex++;
+        labelsOnLeft = (labelsOnLeft == null) ? true : labelsOnLeft;
+        for (let i = 0; i < argList.length; i++) {
+            const valueID = this.nextIndex++;
             activationRec.fieldIDs[i] = valueID;
 
             this.cmd("CreateRectangle", valueID,
@@ -122,7 +126,7 @@ class Recursive extends Algorithm {
                 x,
                 y + i * Recursive.ACTIVATION_RECORD_HEIGHT);
 
-            var labelID = this.nextIndex++;
+            const labelID = this.nextIndex++;
             activationRec.labelIDs[i] = labelID;
             this.cmd("CreateLabel", labelID, argList[i]);
             if (labelsOnLeft)
@@ -132,7 +136,7 @@ class Recursive extends Algorithm {
                 this.cmd("AlignRight", labelID, valueID);
         }
         activationRec.separatingLineID = this.nextIndex++;
-        this.cmd("CreateLabel", activationRec.nameID, "   " + functionName + "   ");
+        this.cmd("CreateLabel", activationRec.nameID, `   ${functionName}   `);
         this.cmd("SetForegroundColor", activationRec.nameID, Recursive.SEPARATING_LINE_COLOR);
 
         if (labelsOnLeft) {
@@ -143,8 +147,7 @@ class Recursive extends Algorithm {
                 x - Recursive.ACTIVATION_RECORD_WIDTH / 2,
                 y - Recursive.ACTIVATION_RECORD_HEIGHT / 2);
             this.cmd("AlignLeft", activationRec.nameID, activationRec.labelIDs[0]);
-        }
-        else {
+        } else {
             this.cmd("CreateRectangle", activationRec.separatingLineID,
                 "",
                 Recursive.ACTIVATION_RECORD_WIDTH * 2,

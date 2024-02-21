@@ -24,9 +24,14 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Graph */
+/* exported GraphToposortDFS */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class GraphToposortDFS extends Graph {
-
     static ORDERING_INITIAL_X = 300;
     static ORDERING_INITIAL_Y = 70;
     static ORDERING_DELTA_Y = 20;
@@ -53,16 +58,16 @@ class GraphToposortDFS extends Graph {
         560, 660, 760, 860,
     ];
 
-    static D_Y_POS_LARGE = [ 
-        37,  37,  37, 37,
+    static D_Y_POS_LARGE = [
+        37, 37, 37, 37,
         137, 137, 137,
         237, 237, 237, 237,
         337, 337, 337,
         437, 437, 437, 437,
     ];
 
-    static F_Y_POS_LARGE = [ 
-        62,  62,  62,  62,
+    static F_Y_POS_LARGE = [
+        62, 62, 62, 62,
         162, 162, 162,
         262, 262, 262, 262,
         362, 362, 362,
@@ -90,7 +95,7 @@ class GraphToposortDFS extends Graph {
 
     setup() {
         super.setup();
-        this.messageID = new Array();
+        this.messageID = [];
         this.animationManager.setAllLayers([0, this.currentLayer]);
 
         this.highlightCircleL = this.nextIndex++;
@@ -98,19 +103,19 @@ class GraphToposortDFS extends Graph {
         this.highlightCircleAM = this.nextIndex++;
         this.initialIndex = this.nextIndex;
 
-        this.old_adj_matrix = new Array(this.size);
-        this.old_adj_list_list = new Array(this.size);
-        this.old_adj_list_index = new Array(this.size);
-        this.old_adj_list_edges = new Array(this.size);
-        for (var i = 0; i < this.size; i++) {
-            this.old_adj_matrix[i] = new Array(this.size);
-            this.old_adj_list_index[i] = this.adj_list_index[i];
-            this.old_adj_list_list[i] = this.adj_list_list[i];
-            this.old_adj_list_edges[i] = new Array(this.size);
-            for (var j = 0; j < this.size; j++) {
-                this.old_adj_matrix[i][j] = this.adj_matrix[i][j];
-                if (this.adj_matrix[i][j] > 0) {
-                    this.old_adj_list_edges[i][j] = this.adj_list_edges[i][j];
+        this.oldAdjMatrix = new Array(this.size);
+        this.oldAdjListList = new Array(this.size);
+        this.oldAdjListIndex = new Array(this.size);
+        this.oldAdjListEdges = new Array(this.size);
+        for (let i = 0; i < this.size; i++) {
+            this.oldAdjMatrix[i] = new Array(this.size);
+            this.oldAdjListIndex[i] = this.adjListIndex[i];
+            this.oldAdjListList[i] = this.adjListList[i];
+            this.oldAdjListEdges[i] = new Array(this.size);
+            for (let j = 0; j < this.size; j++) {
+                this.oldAdjMatrix[i][j] = this.adjMatrix[i][j];
+                if (this.adjMatrix[i][j] > 0) {
+                    this.oldAdjListEdges[i][j] = this.adjListEdges[i][j];
                 }
             }
         }
@@ -122,20 +127,20 @@ class GraphToposortDFS extends Graph {
 
     doTopoSort(ignored) {
         this.visited = new Array(this.size);
-        this.commands = new Array();
-        this.topoOrderArrayL = new Array();
-        this.topoOrderArrayAL = new Array();
-        this.topoOrderArrayAM = new Array();
-        var i;
+        this.commands = [];
+        this.topoOrderArrayL = [];
+        this.topoOrderArrayAL = [];
+        this.topoOrderArrayAM = [];
+
         if (this.messageID != null) {
-            for (i = 0; i < this.messageID.length; i++) {
+            for (let i = 0; i < this.messageID.length; i++) {
                 this.cmd("Delete", this.messageID[i], 1);
             }
         }
         this.rebuildEdges(); // HMMM.. do I want this?
-        this.messageID = new Array();
+        this.messageID = [];
 
-        var headerID = this.nextIndex++;
+        let headerID = this.nextIndex++;
         this.messageID.push(headerID);
         this.cmd("CreateLabel", headerID, "Topological Order", GraphToposortDFS.ORDERING_INITIAL_X, GraphToposortDFS.ORDERING_INITIAL_Y - 1.5 * GraphToposortDFS.ORDERING_DELTA_Y);
 
@@ -143,34 +148,34 @@ class GraphToposortDFS extends Graph {
         this.messageID.push(headerID);
         this.cmd("CreateRectangle", headerID, "", 100, 0, GraphToposortDFS.ORDERING_INITIAL_X, GraphToposortDFS.ORDERING_INITIAL_Y - GraphToposortDFS.ORDERING_DELTA_Y, "center", "center");
 
-        this.d_timesID_L = new Array(this.size);
-        this.f_timesID_L = new Array(this.size);
-        this.d_timesID_AL = new Array(this.size);
-        this.f_timesID_AL = new Array(this.size);
-        this.d_times = new Array(this.size);
-        this.f_times = new Array(this.size);
+        this.dTimesIDL = new Array(this.size);
+        this.fTimesIDL = new Array(this.size);
+        this.dTimesIDAL = new Array(this.size);
+        this.fTimesIDAL = new Array(this.size);
+        this.dTimes = new Array(this.size);
+        this.fTimes = new Array(this.size);
         this.currentTime = 1;
-        for (i = 0; i < this.size; i++) {
-            this.d_timesID_L[i] = this.nextIndex++;
-            this.f_timesID_L[i] = this.nextIndex++;
-            this.d_timesID_AL[i] = this.nextIndex++;
-            this.f_timesID_AL[i] = this.nextIndex++;
+        for (let i = 0; i < this.size; i++) {
+            this.dTimesIDL[i] = this.nextIndex++;
+            this.fTimesIDL[i] = this.nextIndex++;
+            this.dTimesIDAL[i] = this.nextIndex++;
+            this.fTimesIDAL[i] = this.nextIndex++;
         }
 
         this.messageY = 30;
-        var vertex;
-        for (vertex = 0; vertex < this.size; vertex++) {
+
+        for (let vertex = 0; vertex < this.size; vertex++) {
             if (!this.visited[vertex]) {
-                this.cmd("CreateHighlightCircle", this.highlightCircleL, GraphToposortDFS.HIGHLIGHT_CIRCLE_COLOR, this.x_pos_logical[vertex], this.y_pos_logical[vertex]);
+                this.cmd("CreateHighlightCircle", this.highlightCircleL, GraphToposortDFS.HIGHLIGHT_CIRCLE_COLOR, this.xPosLogical[vertex], this.yPosLogical[vertex]);
                 this.cmd("SetLayer", this.highlightCircleL, 1);
-                this.cmd("CreateHighlightCircle", this.highlightCircleAL, GraphToposortDFS.HIGHLIGHT_CIRCLE_COLOR, this.adj_list_x_start - this.adj_list_width, this.adj_list_y_start + vertex * this.adj_list_height);
+                this.cmd("CreateHighlightCircle", this.highlightCircleAL, GraphToposortDFS.HIGHLIGHT_CIRCLE_COLOR, this.adjListXStart - this.adjListWidth, this.adjListYStart + vertex * this.adjListHeight);
                 this.cmd("SetLayer", this.highlightCircleAL, 2);
 
-                this.cmd("CreateHighlightCircle", this.highlightCircleAM, GraphToposortDFS.HIGHLIGHT_CIRCLE_COLOR, this.adj_matrix_x_start - this.adj_matrix_width, this.adj_matrix_y_start + vertex * this.adj_matrix_height);
+                this.cmd("CreateHighlightCircle", this.highlightCircleAM, GraphToposortDFS.HIGHLIGHT_CIRCLE_COLOR, this.adjMatrixXStart - this.adjMatrixWidth, this.adjMatrixYStart + vertex * this.adjMatrixHeight);
                 this.cmd("SetLayer", this.highlightCircleAM, 3);
 
                 if (vertex > 0) {
-                    var breakID = this.nextIndex++;
+                    const breakID = this.nextIndex++;
                     this.messageID.push(breakID);
                     this.cmd("CreateRectangle", breakID, "", 200, 0, 10, this.messageY, "left", "bottom");
                     this.messageY = this.messageY + 20;
@@ -184,43 +189,43 @@ class GraphToposortDFS extends Graph {
         return this.commands;
     }
 
-    setup_large() {
-        this.d_x_pos = GraphToposortDFS.D_X_POS_LARGE;
-        this.d_y_pos = GraphToposortDFS.D_Y_POS_LARGE;
-        this.f_x_pos = GraphToposortDFS.F_X_POS_LARGE;
-        this.f_y_pos = GraphToposortDFS.F_Y_POS_LARGE;
-        super.setup_large();
+    setupLarge() {
+        this.dXPos = GraphToposortDFS.D_X_POS_LARGE;
+        this.dYPos = GraphToposortDFS.D_Y_POS_LARGE;
+        this.fXPos = GraphToposortDFS.F_X_POS_LARGE;
+        this.fYPos = GraphToposortDFS.F_Y_POS_LARGE;
+        super.setupLarge();
     }
 
-    setup_small() {
-        this.d_x_pos = GraphToposortDFS.D_X_POS_SMALL;
-        this.d_y_pos = GraphToposortDFS.D_Y_POS_SMALL;
-        this.f_x_pos = GraphToposortDFS.F_X_POS_SMALL;
-        this.f_y_pos = GraphToposortDFS.F_Y_POS_SMALL;
-        super.setup_small();
+    setupSmall() {
+        this.dXPos = GraphToposortDFS.D_X_POS_SMALL;
+        this.dYPos = GraphToposortDFS.D_Y_POS_SMALL;
+        this.fXPos = GraphToposortDFS.F_X_POS_SMALL;
+        this.fYPos = GraphToposortDFS.F_Y_POS_SMALL;
+        super.setupSmall();
     }
 
     dfsVisit(startVertex, messageX, printCCNum) {
-        var nextMessage = this.nextIndex++;
+        let nextMessage = this.nextIndex++;
         this.messageID.push(nextMessage);
-        this.cmd("CreateLabel", nextMessage, "DFS(" + String(startVertex) + ")", messageX, this.messageY, 0);
+        this.cmd("CreateLabel", nextMessage, `DFS(${String(startVertex)})`, messageX, this.messageY, 0);
 
         this.messageY = this.messageY + 20;
         if (!this.visited[startVertex]) {
-            this.d_times[startVertex] = this.currentTime++;
-            this.cmd("CreateLabel", this.d_timesID_L[startVertex], "d = " + String(this.d_times[startVertex]), this.d_x_pos[startVertex], this.d_y_pos[startVertex]);
-            this.cmd("CreateLabel", this.d_timesID_AL[startVertex], "d = " + String(this.d_times[startVertex]), this.adj_list_x_start - 2 * this.adj_list_width, this.adj_list_y_start + startVertex * this.adj_list_height - 1 / 4 * this.adj_list_height);
-            this.cmd("SetLayer", this.d_timesID_L[startVertex], 1);
-            this.cmd("SetLayer", this.d_timesID_AL[startVertex], 2);
+            this.dTimes[startVertex] = this.currentTime++;
+            this.cmd("CreateLabel", this.dTimesIDL[startVertex], `d = ${String(this.dTimes[startVertex])}`, this.dXPos[startVertex], this.dYPos[startVertex]);
+            this.cmd("CreateLabel", this.dTimesIDAL[startVertex], `d = ${String(this.dTimes[startVertex])}`, this.adjListXStart - 2 * this.adjListWidth, this.adjListYStart + startVertex * this.adjListHeight - 1 / 4 * this.adjListHeight);
+            this.cmd("SetLayer", this.dTimesIDL[startVertex], 1);
+            this.cmd("SetLayer", this.dTimesIDAL[startVertex], 2);
 
             this.visited[startVertex] = true;
             this.cmd("Step");
-            for (var neighbor = 0; neighbor < this.size; neighbor++) {
-                if (this.adj_matrix[startVertex][neighbor] > 0) {
+            for (let neighbor = 0; neighbor < this.size; neighbor++) {
+                if (this.adjMatrix[startVertex][neighbor] > 0) {
                     this.highlightEdge(startVertex, neighbor, 1);
                     if (this.visited[neighbor]) {
                         nextMessage = this.nextIndex;
-                        this.cmd("CreateLabel", nextMessage, "Vertex " + String(neighbor) + " already this.visited.", messageX, this.messageY, 0);
+                        this.cmd("CreateLabel", nextMessage, `Vertex ${String(neighbor)} already this.visited.`, messageX, this.messageY, 0);
                     }
                     this.cmd("Step");
                     this.highlightEdge(startVertex, neighbor, 0);
@@ -231,18 +236,18 @@ class GraphToposortDFS extends Graph {
                     if (!this.visited[neighbor]) {
                         this.cmd("Disconnect", this.circleID[startVertex], this.circleID[neighbor]);
                         this.cmd("Connect", this.circleID[startVertex], this.circleID[neighbor], GraphToposortDFS.DFS_TREE_COLOR, this.curve[startVertex][neighbor], 1, "");
-                        this.cmd("Move", this.highlightCircleL, this.x_pos_logical[neighbor], this.y_pos_logical[neighbor]);
-                        this.cmd("Move", this.highlightCircleAL, this.adj_list_x_start - this.adj_list_width, this.adj_list_y_start + neighbor * this.adj_list_height);
-                        this.cmd("Move", this.highlightCircleAM, this.adj_matrix_x_start - this.adj_matrix_width, this.adj_matrix_y_start + neighbor * this.adj_matrix_height);
+                        this.cmd("Move", this.highlightCircleL, this.xPosLogical[neighbor], this.yPosLogical[neighbor]);
+                        this.cmd("Move", this.highlightCircleAL, this.adjListXStart - this.adjListWidth, this.adjListYStart + neighbor * this.adjListHeight);
+                        this.cmd("Move", this.highlightCircleAM, this.adjMatrixXStart - this.adjMatrixWidth, this.adjMatrixYStart + neighbor * this.adjMatrixHeight);
 
                         this.cmd("Step");
                         this.dfsVisit(neighbor, messageX + 10, printCCNum);
                         nextMessage = this.nextIndex;
-                        this.cmd("CreateLabel", nextMessage, "Returning from recursive call: DFS(" + String(neighbor) + ")", messageX + 20, this.messageY, 0);
+                        this.cmd("CreateLabel", nextMessage, `Returning from recursive call: DFS(${String(neighbor)})`, messageX + 20, this.messageY, 0);
 
-                        this.cmd("Move", this.highlightCircleAL, this.adj_list_x_start - this.adj_list_width, this.adj_list_y_start + startVertex * this.adj_list_height);
-                        this.cmd("Move", this.highlightCircleL, this.x_pos_logical[startVertex], this.y_pos_logical[startVertex]);
-                        this.cmd("Move", this.highlightCircleAM, this.adj_matrix_x_start - this.adj_matrix_width, this.adj_matrix_y_start + startVertex * this.adj_matrix_height);
+                        this.cmd("Move", this.highlightCircleAL, this.adjListXStart - this.adjListWidth, this.adjListYStart + startVertex * this.adjListHeight);
+                        this.cmd("Move", this.highlightCircleL, this.xPosLogical[startVertex], this.yPosLogical[startVertex]);
+                        this.cmd("Move", this.highlightCircleAM, this.adjMatrixXStart - this.adjMatrixWidth, this.adjMatrixYStart + startVertex * this.adjMatrixHeight);
                         this.cmd("Step");
                         this.cmd("Delete", nextMessage, 18);
                     }
@@ -250,41 +255,40 @@ class GraphToposortDFS extends Graph {
                 }
             }
 
-            this.f_times[startVertex] = this.currentTime++;
-            this.cmd("CreateLabel", this.f_timesID_L[startVertex], "f = " + String(this.f_times[startVertex]), this.f_x_pos[startVertex], this.f_y_pos[startVertex]);
-            this.cmd("CreateLabel", this.f_timesID_AL[startVertex], "f = " + String(this.f_times[startVertex]), this.adj_list_x_start - 2 * this.adj_list_width, this.adj_list_y_start + startVertex * this.adj_list_height + 1 / 4 * this.adj_list_height);
+            this.fTimes[startVertex] = this.currentTime++;
+            this.cmd("CreateLabel", this.fTimesIDL[startVertex], `f = ${String(this.fTimes[startVertex])}`, this.fXPos[startVertex], this.fYPos[startVertex]);
+            this.cmd("CreateLabel", this.fTimesIDAL[startVertex], `f = ${String(this.fTimes[startVertex])}`, this.adjListXStart - 2 * this.adjListWidth, this.adjListYStart + startVertex * this.adjListHeight + 1 / 4 * this.adjListHeight);
 
-            this.cmd("SetLayer", this.f_timesID_L[startVertex], 1);
-            this.cmd("SetLayer", this.f_timesID_AL[startVertex], 2);
+            this.cmd("SetLayer", this.fTimesIDL[startVertex], 1);
+            this.cmd("SetLayer", this.fTimesIDAL[startVertex], 2);
 
             this.cmd("Step");
 
-            var i;
-            for (i = this.topoOrderArrayL.length; i > 0; i--) {
+            for (let i = this.topoOrderArrayL.length; i > 0; i--) {
                 this.topoOrderArrayL[i] = this.topoOrderArrayL[i - 1];
                 this.topoOrderArrayAL[i] = this.topoOrderArrayAL[i - 1];
                 this.topoOrderArrayAM[i] = this.topoOrderArrayAM[i - 1];
             }
 
-            var nextVertexLabel = this.nextIndex++;
+            let nextVertexLabel = this.nextIndex++;
             this.messageID.push(nextVertexLabel);
-            this.cmd("CreateLabel", nextVertexLabel, startVertex, this.x_pos_logical[startVertex], this.y_pos_logical[startVertex]);
+            this.cmd("CreateLabel", nextVertexLabel, startVertex, this.xPosLogical[startVertex], this.yPosLogical[startVertex]);
             this.cmd("SetLayer", nextVertexLabel, 1);
             this.topoOrderArrayL[0] = nextVertexLabel;
 
             nextVertexLabel = this.nextIndex++;
             this.messageID.push(nextVertexLabel);
-            this.cmd("CreateLabel", nextVertexLabel, startVertex, this.adj_list_x_start - this.adj_list_width, this.adj_list_y_start + startVertex * this.adj_list_height);
+            this.cmd("CreateLabel", nextVertexLabel, startVertex, this.adjListXStart - this.adjListWidth, this.adjListYStart + startVertex * this.adjListHeight);
             this.cmd("SetLayer", nextVertexLabel, 2);
             this.topoOrderArrayAL[0] = nextVertexLabel;
 
             nextVertexLabel = this.nextIndex++;
             this.messageID.push(nextVertexLabel);
-            this.cmd("CreateLabel", nextVertexLabel, startVertex, this.adj_matrix_x_start - this.adj_matrix_width, this.adj_matrix_y_start + startVertex * this.adj_matrix_height);
+            this.cmd("CreateLabel", nextVertexLabel, startVertex, this.adjMatrixXStart - this.adjMatrixWidth, this.adjMatrixYStart + startVertex * this.adjMatrixHeight);
             this.cmd("SetLayer", nextVertexLabel, 3);
             this.topoOrderArrayAM[0] = nextVertexLabel;
 
-            for (i = 0; i < this.topoOrderArrayL.length; i++) {
+            for (let i = 0; i < this.topoOrderArrayL.length; i++) {
                 this.cmd("Move", this.topoOrderArrayL[i], GraphToposortDFS.ORDERING_INITIAL_X,
                     GraphToposortDFS.ORDERING_INITIAL_Y + i * GraphToposortDFS.ORDERING_DELTA_Y);
                 this.cmd("Move", this.topoOrderArrayAL[i], GraphToposortDFS.ORDERING_INITIAL_X,
@@ -298,19 +302,18 @@ class GraphToposortDFS extends Graph {
 
     reset() {
         // TODO:  Fix undo messing with setup vars.
-        this.messageID = new Array();
+        this.messageID = [];
         this.nextIndex = this.initialIndex;
-        for (var i = 0; i < this.size; i++) {
-            this.adj_list_list[i] = this.old_adj_list_list[i];
-            this.adj_list_index[i] = this.old_adj_list_index[i];
+        for (let i = 0; i < this.size; i++) {
+            this.adjListList[i] = this.oldAdjListList[i];
+            this.adjListIndex[i] = this.oldAdjListIndex[i];
 
-            for (var j = 0; j < this.size; j++) {
-                this.adj_matrix[i][j] = this.old_adj_matrix[i][j];
-                if (this.adj_matrix[i][j] > 0) {
-                    this.adj_list_edges[i][j] = this.old_adj_list_edges[i][j];
+            for (let j = 0; j < this.size; j++) {
+                this.adjMatrix[i][j] = this.oldAdjMatrix[i][j];
+                if (this.adjMatrix[i][j] > 0) {
+                    this.adjListEdges[i][j] = this.oldAdjListEdges[i][j];
                 }
             }
         }
     }
-
 }

@@ -24,9 +24,14 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Algorithm */
+/* exported SortRadix */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class SortRadix extends Algorithm {
-
     static ARRAY_ELEM_WIDTH = 30;
     static ARRAY_ELEM_HEIGHT = 30;
     static ARRAY_ELEM_START_X = 20;
@@ -36,8 +41,8 @@ class SortRadix extends Algorithm {
 
     static COUNTER_ARRAY_ELEM_WIDTH = 30;
     static COUNTER_ARRAY_ELEM_HEIGHT = 30;
-    //RadixSort.COUNTER_ARRAY_ELEM_START_X = 20;
-    static COUNTER_ARRAY_ELEM_START_X = (SortRadix.ARRAY_ELEM_WIDTH * SortRadix.ARRAY_SIZE- SortRadix.COUNTER_ARRAY_ELEM_WIDTH * SortRadix.COUNTER_ARRAY_SIZE) / 2 + SortRadix.ARRAY_ELEM_START_X;
+    // RadixSort.COUNTER_ARRAY_ELEM_START_X = 20;
+    static COUNTER_ARRAY_ELEM_START_X = (SortRadix.ARRAY_ELEM_WIDTH * SortRadix.ARRAY_SIZE - SortRadix.COUNTER_ARRAY_ELEM_WIDTH * SortRadix.COUNTER_ARRAY_SIZE) / 2 + SortRadix.ARRAY_ELEM_START_X;
     static NUM_DIGITS = 3;
 
     static MAX_DATA_VALUE = 999;
@@ -69,7 +74,7 @@ class SortRadix extends Algorithm {
         this.animationManager.resetAll();
         this.nextIndex = 0;
 
-        var h = this.getCanvasHeight();
+        const h = this.getCanvasHeight();
         this.ARRAY_ELEM_Y = 3 * SortRadix.COUNTER_ARRAY_ELEM_HEIGHT;
         this.COUNTER_ARRAY_ELEM_Y = Math.floor(h / 2);
         this.SWAP_ARRAY_ELEM_Y = h - 3 * SortRadix.COUNTER_ARRAY_ELEM_HEIGHT;
@@ -77,7 +82,6 @@ class SortRadix extends Algorithm {
         this.arrayData = new Array(SortRadix.ARRAY_SIZE);
         this.arrayRects = new Array(SortRadix.ARRAY_SIZE);
         this.arrayIndices = new Array(SortRadix.ARRAY_SIZE);
-
 
         this.counterData = new Array(SortRadix.COUNTER_ARRAY_SIZE);
         this.counterRects = new Array(SortRadix.COUNTER_ARRAY_SIZE);
@@ -87,13 +91,14 @@ class SortRadix extends Algorithm {
         this.swapRects = new Array(SortRadix.ARRAY_SIZE);
         this.swapIndices = new Array(SortRadix.ARRAY_SIZE);
 
-        this.commands = new Array();
+        this.commands = [];
 
-        for (var i = 0; i < SortRadix.ARRAY_SIZE; i++) {
-            var nextID = this.nextIndex++;
+        for (let i = 0; i < SortRadix.ARRAY_SIZE; i++) {
+            let nextID = this.nextIndex++;
             this.arrayData[i] = Math.floor(Math.random() * SortRadix.MAX_DATA_VALUE);
             this.cmd("CreateRectangle", nextID, this.arrayData[i], SortRadix.ARRAY_ELEM_WIDTH, SortRadix.ARRAY_ELEM_HEIGHT, SortRadix.ARRAY_ELEM_START_X + i * SortRadix.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
             this.arrayRects[i] = nextID;
+
             nextID = this.nextIndex++;
             this.arrayIndices[i] = nextID;
             this.cmd("CreateLabel", nextID, i, SortRadix.ARRAY_ELEM_START_X + i * SortRadix.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y + SortRadix.ARRAY_ELEM_HEIGHT);
@@ -102,16 +107,17 @@ class SortRadix extends Algorithm {
             nextID = this.nextIndex++;
             this.cmd("CreateRectangle", nextID, "", SortRadix.ARRAY_ELEM_WIDTH, SortRadix.ARRAY_ELEM_HEIGHT, SortRadix.ARRAY_ELEM_START_X + i * SortRadix.ARRAY_ELEM_WIDTH, this.SWAP_ARRAY_ELEM_Y);
             this.swapRects[i] = nextID;
+
             nextID = this.nextIndex++;
             this.swapIndices[i] = nextID;
             this.cmd("CreateLabel", nextID, i, SortRadix.ARRAY_ELEM_START_X + i * SortRadix.ARRAY_ELEM_WIDTH, this.SWAP_ARRAY_ELEM_Y + SortRadix.ARRAY_ELEM_HEIGHT);
             this.cmd("SetForegroundColor", nextID, "#0000FF");
-
         }
-        for (i = SortRadix.COUNTER_ARRAY_SIZE - 1; i >= 0; i--) {
-            nextID = this.nextIndex++;
+        for (let i = SortRadix.COUNTER_ARRAY_SIZE - 1; i >= 0; i--) {
+            let nextID = this.nextIndex++;
             this.cmd("CreateRectangle", nextID, "", SortRadix.COUNTER_ARRAY_ELEM_WIDTH, SortRadix.COUNTER_ARRAY_ELEM_HEIGHT, SortRadix.COUNTER_ARRAY_ELEM_START_X + i * SortRadix.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y);
             this.counterRects[i] = nextID;
+
             nextID = this.nextIndex++;
             this.counterIndices[i] = nextID;
             this.cmd("CreateLabel", nextID, i, SortRadix.COUNTER_ARRAY_ELEM_START_X + i * SortRadix.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y + SortRadix.COUNTER_ARRAY_ELEM_HEIGHT);
@@ -129,34 +135,33 @@ class SortRadix extends Algorithm {
     }
 
     radixSortCallback(event) {
-        this.commands = new Array();
-        var animatedCircleID = this.nextIndex++;
-        var animatedCircleID2 = this.nextIndex++;
-        var animatedCircleID3 = this.nextIndex++;
-        var animatedCircleID4 = this.nextIndex++;
+        this.commands = [];
+        const animatedCircleID = this.nextIndex++;
+        const animatedCircleID2 = this.nextIndex++;
+        const animatedCircleID3 = this.nextIndex++;
+        const animatedCircleID4 = this.nextIndex++;
 
-        var digits = new Array(SortRadix.NUM_DIGITS);
-        for (var k = 0; k < SortRadix.NUM_DIGITS; k++) {
+        const digits = new Array(SortRadix.NUM_DIGITS);
+        for (let k = 0; k < SortRadix.NUM_DIGITS; k++) {
             digits[k] = this.nextIndex++;
         }
 
-        for (var radix = 0; radix < SortRadix.NUM_DIGITS; radix++) {
-            for (var i = 0; i < SortRadix.COUNTER_ARRAY_SIZE; i++) {
+        for (let radix = 0; radix < SortRadix.NUM_DIGITS; radix++) {
+            for (let i = 0; i < SortRadix.COUNTER_ARRAY_SIZE; i++) {
                 this.counterData[i] = 0;
                 this.cmd("SetText", this.counterRects[i], 0);
             }
-            for (i = 0; i < SortRadix.ARRAY_SIZE; i++) {
+            for (let i = 0; i < SortRadix.ARRAY_SIZE; i++) {
                 this.cmd("CreateHighlightCircle", animatedCircleID, "#0000FF", SortRadix.ARRAY_ELEM_START_X + i * SortRadix.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
                 this.cmd("CreateHighlightCircle", animatedCircleID2, "#0000FF", SortRadix.ARRAY_ELEM_START_X + i * SortRadix.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
 
-
                 this.cmd("SetText", this.arrayRects[i], "");
 
-                for (k = 0; k < SortRadix.NUM_DIGITS; k++) {
-                    var digitXPos = SortRadix.ARRAY_ELEM_START_X + i * SortRadix.ARRAY_ELEM_WIDTH - SortRadix.ARRAY_ELEM_WIDTH / 2 + (SortRadix.NUM_DIGITS - k) * (SortRadix.ARRAY_ELEM_WIDTH / SortRadix.NUM_DIGITS - 3);
-                    var digitYPos = this.ARRAY_ELEM_Y;
+                for (let k = 0; k < SortRadix.NUM_DIGITS; k++) {
+                    const digitXPos = SortRadix.ARRAY_ELEM_START_X + i * SortRadix.ARRAY_ELEM_WIDTH - SortRadix.ARRAY_ELEM_WIDTH / 2 + (SortRadix.NUM_DIGITS - k) * (SortRadix.ARRAY_ELEM_WIDTH / SortRadix.NUM_DIGITS - 3);
+                    const digitYPos = this.ARRAY_ELEM_Y;
                     this.cmd("CreateLabel", digits[k], Math.floor(this.arrayData[i] / Math.pow(10, k)) % 10, digitXPos, digitYPos);
-                    if (k != radix) {
+                    if (k !== radix) {
                         this.cmd("SetAlpha", digits[k], 0.2);
                     }
                     //                        else
@@ -165,7 +170,7 @@ class SortRadix extends Algorithm {
                     //                        }
                 }
 
-                var index = Math.floor(this.arrayData[i] / Math.pow(10, radix)) % 10;
+                const index = Math.floor(this.arrayData[i] / Math.pow(10, radix)) % 10;
                 this.cmd("Move", animatedCircleID, SortRadix.COUNTER_ARRAY_ELEM_START_X + index * SortRadix.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y + SortRadix.COUNTER_ARRAY_ELEM_HEIGHT);
                 this.cmd("Step");
                 this.counterData[index]++;
@@ -175,11 +180,11 @@ class SortRadix extends Algorithm {
                 this.cmd("Delete", animatedCircleID);
                 this.cmd("Delete", animatedCircleID2);
                 this.cmd("SetText", this.arrayRects[i], this.arrayData[i]);
-                for (k = 0; k < SortRadix.NUM_DIGITS; k++) {
+                for (let k = 0; k < SortRadix.NUM_DIGITS; k++) {
                     this.cmd("Delete", digits[k]);
                 }
             }
-            for (i = 1; i < SortRadix.COUNTER_ARRAY_SIZE; i++) {
+            for (let i = 1; i < SortRadix.COUNTER_ARRAY_SIZE; i++) {
                 this.cmd("SetHighlight", this.counterRects[i - 1], 1);
                 this.cmd("SetHighlight", this.counterRects[i], 1);
                 this.cmd("Step");
@@ -193,27 +198,27 @@ class SortRadix extends Algorithm {
             //                {
             //                    this.cmd("SetAlpha", this.arrayRects[i], 1.0);
             //                }
-            for (i = SortRadix.ARRAY_SIZE - 1; i >= 0; i--) {
+            for (let i = SortRadix.ARRAY_SIZE - 1; i >= 0; i--) {
                 this.cmd("CreateHighlightCircle", animatedCircleID, "#0000FF", SortRadix.ARRAY_ELEM_START_X + i * SortRadix.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
                 this.cmd("CreateHighlightCircle", animatedCircleID2, "#0000FF", SortRadix.ARRAY_ELEM_START_X + i * SortRadix.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
 
                 this.cmd("SetText", this.arrayRects[i], "");
 
-                for (k = 0; k < SortRadix.NUM_DIGITS; k++) {
+                for (let k = 0; k < SortRadix.NUM_DIGITS; k++) {
                     digits[k] = this.nextIndex++;
-                    digitXPos = SortRadix.ARRAY_ELEM_START_X + i * SortRadix.ARRAY_ELEM_WIDTH - SortRadix.ARRAY_ELEM_WIDTH / 2 + (SortRadix.NUM_DIGITS - k) * (SortRadix.ARRAY_ELEM_WIDTH / SortRadix.NUM_DIGITS - 3);
-                    digitYPos = this.ARRAY_ELEM_Y;
+                    const digitXPos = SortRadix.ARRAY_ELEM_START_X + i * SortRadix.ARRAY_ELEM_WIDTH - SortRadix.ARRAY_ELEM_WIDTH / 2 + (SortRadix.NUM_DIGITS - k) * (SortRadix.ARRAY_ELEM_WIDTH / SortRadix.NUM_DIGITS - 3);
+                    const digitYPos = this.ARRAY_ELEM_Y;
                     this.cmd("CreateLabel", digits[k], Math.floor(this.arrayData[i] / Math.pow(10, k)) % 10, digitXPos, digitYPos);
-                    if (k != radix) {
+                    if (k !== radix) {
                         this.cmd("SetAlpha", digits[k], 0.2);
                     }
                 }
 
-                index = Math.floor(this.arrayData[i] / Math.pow(10, radix)) % 10;
+                const index = Math.floor(this.arrayData[i] / Math.pow(10, radix)) % 10;
                 this.cmd("Move", animatedCircleID2, SortRadix.COUNTER_ARRAY_ELEM_START_X + index * SortRadix.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y + SortRadix.COUNTER_ARRAY_ELEM_HEIGHT);
                 this.cmd("Step");
 
-                var insertIndex = --this.counterData[index];
+                const insertIndex = --this.counterData[index];
                 this.cmd("SetText", this.counterRects[index], this.counterData[index]);
                 this.cmd("Step");
 
@@ -223,13 +228,13 @@ class SortRadix extends Algorithm {
                 this.cmd("Move", animatedCircleID4, SortRadix.ARRAY_ELEM_START_X + insertIndex * SortRadix.ARRAY_ELEM_WIDTH, this.SWAP_ARRAY_ELEM_Y + SortRadix.COUNTER_ARRAY_ELEM_HEIGHT);
                 this.cmd("Step");
 
-                var moveLabel = this.nextIndex++;
+                const moveLabel = this.nextIndex++;
                 this.cmd("SetText", this.arrayRects[i], "");
                 this.cmd("CreateLabel", moveLabel, this.arrayData[i], SortRadix.ARRAY_ELEM_START_X + i * SortRadix.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
                 this.cmd("Move", moveLabel, SortRadix.ARRAY_ELEM_START_X + insertIndex * SortRadix.ARRAY_ELEM_WIDTH, this.SWAP_ARRAY_ELEM_Y);
                 this.swapData[insertIndex] = this.arrayData[i];
 
-                for (k = 0; k < SortRadix.NUM_DIGITS; k++) {
+                for (let k = 0; k < SortRadix.NUM_DIGITS; k++) {
                     this.cmd("Delete", digits[k]);
                 }
                 this.cmd("Step");
@@ -242,29 +247,29 @@ class SortRadix extends Algorithm {
                 this.cmd("Delete", animatedCircleID4);
             }
 
-            for (i = 0; i < SortRadix.ARRAY_SIZE; i++) {
+            for (let i = 0; i < SortRadix.ARRAY_SIZE; i++) {
                 this.cmd("SetText", this.arrayRects[i], "");
             }
 
-            for (i = 0; i < SortRadix.COUNTER_ARRAY_SIZE; i++) {
+            for (let i = 0; i < SortRadix.COUNTER_ARRAY_SIZE; i++) {
                 this.cmd("SetAlpha", this.counterRects[i], 0.05);
                 this.cmd("SetAlpha", this.counterIndices[i], 0.05);
             }
 
             this.cmd("Step");
-            var startLab = this.nextIndex;
-            for (i = 0; i < SortRadix.ARRAY_SIZE; i++) {
+            const startLab = this.nextIndex;
+            for (let i = 0; i < SortRadix.ARRAY_SIZE; i++) {
                 this.cmd("CreateLabel", startLab + i, this.swapData[i], SortRadix.ARRAY_ELEM_START_X + i * SortRadix.ARRAY_ELEM_WIDTH, this.SWAP_ARRAY_ELEM_Y);
                 this.cmd("Move", startLab + i, SortRadix.ARRAY_ELEM_START_X + i * SortRadix.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
                 this.cmd("SetText", this.swapRects[i], "");
             }
             this.cmd("Step");
-            for (i = 0; i < SortRadix.ARRAY_SIZE; i++) {
+            for (let i = 0; i < SortRadix.ARRAY_SIZE; i++) {
                 this.arrayData[i] = this.swapData[i];
                 this.cmd("SetText", this.arrayRects[i], this.arrayData[i]);
                 this.cmd("Delete", startLab + i);
             }
-            for (i = 0; i < SortRadix.COUNTER_ARRAY_SIZE; i++) {
+            for (let i = 0; i < SortRadix.COUNTER_ARRAY_SIZE; i++) {
                 this.cmd("SetAlpha", this.counterRects[i], 1);
                 this.cmd("SetAlpha", this.counterIndices[i], 1);
             }
@@ -273,13 +278,13 @@ class SortRadix extends Algorithm {
     }
 
     randomizeArray() {
-        this.commands = new Array();
-        for (var i = 0; i < SortRadix.ARRAY_SIZE; i++) {
+        this.commands = [];
+        for (let i = 0; i < SortRadix.ARRAY_SIZE; i++) {
             this.arrayData[i] = Math.floor(1 + Math.random() * SortRadix.MAX_DATA_VALUE);
             this.cmd("SetText", this.arrayRects[i], this.arrayData[i]);
         }
 
-        for (i = 0; i < SortRadix.COUNTER_ARRAY_SIZE; i++) {
+        for (let i = 0; i < SortRadix.COUNTER_ARRAY_SIZE; i++) {
             this.cmd("SetText", this.counterRects[i], "");
         }
 
@@ -290,28 +295,10 @@ class SortRadix extends Algorithm {
 
     // We want to (mostly) ignore resets, since we are disallowing undoing
     reset() {
-        this.commands = new Array();
+        this.commands = [];
     }
 
     resetCallback(event) {
         this.randomizeArray();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

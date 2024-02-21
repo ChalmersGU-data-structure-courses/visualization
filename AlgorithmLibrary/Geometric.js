@@ -1,4 +1,4 @@
-    // Copyright 2011 David Galles, University of San Francisco. All rights reserved.
+// Copyright 2011 David Galles, University of San Francisco. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification, are
 // permitted provided that the following conditions are met:
@@ -24,6 +24,12 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Algorithm */
+/* exported Geometric, Matrix */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class Matrix {
     constructor(contents, x, y) {
@@ -33,13 +39,13 @@ class Matrix {
     }
 
     transpose() {
-        var newData = new Array(this.data[0].length);
-        var i, j;
-        for (i = 0; i < this.data[0].length; i++) {
+        const newData = new Array(this.data[0].length);
+
+        for (let i = 0; i < this.data[0].length; i++) {
             newData[i] = new Array(this.data.length);
         }
-        for (i = 0; i < this.data.length; i++) {
-            for (j = 0; j < this.data[i].length; j++) {
+        for (let i = 0; i < this.data.length; i++) {
+            for (let j = 0; j < this.data[i].length; j++) {
                 newData[j][i] = this.data[i][j];
             }
         }
@@ -51,14 +57,14 @@ class Matrix {
 class Geometric extends Algorithm {
     // Multiply two (data only!) matrices (not complete matrix object with graphics, just the data
     static multiply(lhs, rhs) {
-        var resultMat = new Array(lhs.length);
-        for (var i = 0; i < lhs.length; i++) {
+        const resultMat = new Array(lhs.length);
+        for (let i = 0; i < lhs.length; i++) {
             resultMat[i] = new Array(rhs[0].length);
         }
-        for (var i = 0; i < lhs.length; i++) {
-            for (var j = 0; j < rhs[0].length; j++) {
-                var value = 0;
-                for (var k = 0; k < rhs.length; k++) {
+        for (let i = 0; i < lhs.length; i++) {
+            for (let j = 0; j < rhs[0].length; j++) {
+                let value = 0;
+                for (let k = 0; k < rhs.length; k++) {
                     value = value + lhs[i][k] * rhs[k][j];
                 }
                 resultMat[i][j] = value;
@@ -69,10 +75,10 @@ class Geometric extends Algorithm {
 
     // Add two (data only!) matrices (not complete matrix object with graphics, just the data)
     static add(lhs, rhs) {
-        var resultMat = new Array(lhs.length);
-        for (var i = 0; i < lhs.length; i++) {
+        const resultMat = new Array(lhs.length);
+        for (let i = 0; i < lhs.length; i++) {
             resultMat[i] = new Array(lhs[i].length);
-            for (var j = 0; j < lhs[i].length; j++) {
+            for (let j = 0; j < lhs[i].length; j++) {
                 resultMat[i][j] = lhs[i][j] + rhs[i][j];
             }
         }

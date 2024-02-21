@@ -24,9 +24,13 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* exported Algorithm */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class Algorithm {
-
     init(am) {
         this.animationManager = am;
         am.addListener("AnimationStarted", this, this.disableUI);
@@ -40,23 +44,21 @@ class Algorithm {
     }
 
     setCodeAlpha(code, newAlpha) {
-        var i, j;
-        for (i = 0; i < code.length; i++)
-            for (j = 0; j < code[i].length; j++) {
+        for (let i = 0; i < code.length; i++)
+            for (let j = 0; j < code[i].length; j++) {
                 this.cmd("SetAlpha", code[i][j], newAlpha);
             }
     }
 
-    addCodeToCanvasBase(code, start_x, start_y, line_height, standard_color, layer) {
-        layer = typeof layer !== 'undefined' ? layer : 0;
-        var codeID = Array(code.length);
-        var i, j;
-        for (i = 0; i < code.length; i++) {
+    addCodeToCanvasBase(code, startX, startY, lineHeight, standardColor, layer = 0) {
+        const codeID = new Array(code.length);
+
+        for (let i = 0; i < code.length; i++) {
             codeID[i] = new Array(code[i].length);
-            for (j = 0; j < code[i].length; j++) {
+            for (let j = 0; j < code[i].length; j++) {
                 codeID[i][j] = this.nextIndex++;
-                this.cmd("CreateLabel", codeID[i][j], code[i][j], start_x, start_y + i * line_height, 0);
-                this.cmd("SetForegroundColor", codeID[i][j], standard_color);
+                this.cmd("CreateLabel", codeID[i][j], code[i][j], startX, startY + i * lineHeight, 0);
+                this.cmd("SetForegroundColor", codeID[i][j], standardColor);
                 this.cmd("SetLayer", codeID[i][j], layer);
                 if (j > 0) {
                     this.cmd("AlignRight", codeID[i][j], codeID[i][j - 1]);
@@ -79,21 +81,21 @@ class Algorithm {
     }
 
     implementAction(funct, val) {
-        var nxt = [funct, val];
+        const nxt = [funct, val];
         this.actionHistory.push(nxt);
-        var retVal = funct(val);
+        const retVal = funct(val);
         this.animationManager.StartNewAnimation(retVal);
     }
 
     compare(a, b) {
-        if (isNaN(a) == isNaN(b)) {
+        if (isNaN(a) === isNaN(b)) {
             // a and b are (1) both numbers or (2) both non-numbers
             if (!isNaN(a)) {
                 // a and b are both numbers
                 a = Number(a);
                 b = Number(b);
             }
-            return a == b ? 0 : a < b ? -1 : 1;
+            return a === b ? 0 : a < b ? -1 : 1;
         } else {
             // a and b are of different types
             // let's say that numbers are smaller than non-numbers
@@ -103,7 +105,7 @@ class Algorithm {
 
     normalizeNumber(input) {
         input = input.trim();
-        return input == "" || isNaN(input) ? input : Number(input);
+        return input === "" || isNaN(input) ? input : Number(input);
     }
 
     disableUI(event) {
@@ -116,25 +118,25 @@ class Algorithm {
 
     addReturnSubmit(field, allowed, action) {
         allowed = (
-            allowed == "int"      ? "0-9"       :
-            allowed == "float"    ? "0-9.-"     :
-            allowed == "alpha"    ? "a-zA-Z"    :
-            allowed == "ALPHA"    ? "A-Z"       :
-            allowed == "alphanum" ? "a-zA-Z0-9" :
-            allowed == "ALPHANUM" ? "A-Z0-9"    : allowed
+            allowed === "int" ? "0-9" :
+            allowed === "float" ? "0-9.-" :
+            allowed === "alpha" ? "a-zA-Z" :
+            allowed === "ALPHA" ? "A-Z" :
+            allowed === "alphanum" ? "a-zA-Z0-9" :
+            allowed === "ALPHANUM" ? "A-Z0-9" : allowed
         );
 
-        var regex = new RegExp("[^" + allowed + "]", "g");
+        const regex = new RegExp(`[^${allowed}]`, "g");
 
-        var transform = (
-            allowed == allowed.toUpperCase() ? (s) => s.toUpperCase() :
-                allowed == allowed.toLowerCase() ? (s) => s.toLowerCase() : (s) => s
+        const transform = (
+            allowed === allowed.toUpperCase() ? s => s.toUpperCase() :
+            allowed === allowed.toLowerCase() ? s => s.toLowerCase() : s => s
         );
 
         // Idea taken from here: https://stackoverflow.com/a/14719818
         field.oninput = (event) => {
-            var pos = field.selectionStart;
-            var value = transform(field.value);
+            let pos = field.selectionStart;
+            let value = transform(field.value);
             if (regex.test(value)) {
                 value = value.replace(regex, "");
                 pos--;
@@ -171,9 +173,9 @@ class Algorithm {
         //
         // If this seems horribly inefficient -- it is! However, it seems to work well
         // in practice, and you get undo for free for all algorithms, which is a non-trivial gain.
-        var len = this.actionHistory.length;
+        const len = this.actionHistory.length;
         this.recordAnimation = false;
-        for (var i = 0; i < len; i++) {
+        for (let i = 0; i < len; i++) {
             this.actionHistory[i][0](this.actionHistory[i][1]);
         }
         this.recordAnimation = true;
@@ -186,7 +188,7 @@ class Algorithm {
     // Helper method to create a command string from a bunch of arguments
     cmd(...args) {
         if (this.recordAnimation) {
-            if (args[0].toUpperCase() == "SETTEXT" && args[1] == this.messageID && args[2]) {
+            if (args[0].toUpperCase() === "SETTEXT" && args[1] === this.messageID && args[2]) {
                 console.log(args[2]);
             }
             this.commands.push(args.join("<;>"));
@@ -220,4 +222,3 @@ class Algorithm {
         return this.animationManager.algorithmControlBar.addBreak();
     }
 }
-

@@ -24,6 +24,12 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Algorithm */
+/* exported HeapBinomial */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class BinomialNode {
     constructor(val, id, initialX, initialY) {
@@ -54,13 +60,13 @@ class HeapBinomial extends Algorithm {
     static DELETE_LAB_Y = 50;
 
     static NODE_WIDTH = 60;
-    static NODE_HEIGHT = 70
+    static NODE_HEIGHT = 70;
 
     static STARTING_X = 70;
     static STARTING_Y = 80;
 
     static INSERT_X = 30;
-    static INSERT_Y = 25
+    static INSERT_Y = 25;
 
     constructor(am) {
         super();
@@ -77,7 +83,7 @@ class HeapBinomial extends Algorithm {
     }
 
     addControls() {
-        this.insertField = this.addControlToAlgorithmBar("Text", "", { maxlength: 4, size: 4 });
+        this.insertField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
         this.addReturnSubmit(this.insertField, "int", this.insertCallback.bind(this));
 
         this.insertButton = this.addControlToAlgorithmBar("Button", "Insert");
@@ -89,9 +95,9 @@ class HeapBinomial extends Algorithm {
         this.clearHeapButton = this.addControlToAlgorithmBar("Button", "Clear Heap");
         this.clearHeapButton.onclick = this.clearCallback.bind(this);
 
-        var radioButtonList = this.addRadioButtonGroupToAlgorithmBar(
+        const radioButtonList = this.addRadioButtonGroupToAlgorithmBar(
             ["Logical Representation", "Internal Representation"],
-            "BQueueRep"
+            "BQueueRep",
         );
         radioButtonList[0].onclick = this.representationChangedHandler.bind(this, true);
         radioButtonList[1].onclick = this.representationChangedHandler.bind(this, false);
@@ -102,8 +108,7 @@ class HeapBinomial extends Algorithm {
         if (logicalRep) {
             this.animationManager.setAllLayers([0, 1]);
             this.currentLayer = 1;
-        }
-        else {
+        } else {
             this.animationManager.setAllLayers([0, 2]);
             this.currentLayer = 2;
         }
@@ -111,19 +116,17 @@ class HeapBinomial extends Algorithm {
 
     setPositions(tree, xPosition, yPosition) {
         if (tree != null) {
-            if (tree.degree == 0) {
+            if (tree.degree === 0) {
                 tree.x = xPosition;
                 tree.y = yPosition;
                 return this.setPositions(tree.rightSib, xPosition + HeapBinomial.NODE_WIDTH, yPosition);
-            }
-            else if (tree.degree == 1) {
+            } else if (tree.degree === 1) {
                 tree.x = xPosition;
                 tree.y = yPosition;
                 this.setPositions(tree.leftChild, xPosition, yPosition + HeapBinomial.NODE_HEIGHT);
                 return this.setPositions(tree.rightSib, xPosition + HeapBinomial.NODE_WIDTH, yPosition);
-            }
-            else {
-                var treeWidth = Math.pow(2, tree.degree - 1);
+            } else {
+                const treeWidth = Math.pow(2, tree.degree - 1);
                 tree.x = xPosition + (treeWidth - 1) * HeapBinomial.NODE_WIDTH;
                 tree.y = yPosition;
                 this.setPositions(tree.leftChild, xPosition, yPosition + HeapBinomial.NODE_HEIGHT);
@@ -145,7 +148,7 @@ class HeapBinomial extends Algorithm {
     }
 
     insertCallback(event) {
-        var insertedValue = this.normalizeNumber(this.insertField.value);
+        const insertedValue = this.normalizeNumber(this.insertField.value);
         if (insertedValue !== "") {
             this.insertField.value = "";
             this.implementAction(this.insertElement.bind(this), insertedValue);
@@ -157,12 +160,12 @@ class HeapBinomial extends Algorithm {
     }
 
     clear() {
-        this.commands = new Array();
+        this.commands = [];
 
         this.animationManager.StartNewAnimation(this.commands);
         this.animationManager.skipForward();
         this.animationManager.clearHistory();
-        this.actionHistory = new Array();
+        this.actionHistory = [];
     }
 
     reset() {
@@ -175,17 +178,15 @@ class HeapBinomial extends Algorithm {
     }
 
     removeSmallest(dummy) {
-        this.commands = new Array();
+        this.commands = [];
 
         if (this.treeRoot != null) {
-            var tmp;
-            var prev;
-            var smallest = this.treeRoot;
+            let smallest = this.treeRoot;
 
             this.cmd("SetHighlight", smallest.graphicID, 1);
             this.cmd("SetHighlight", smallest.internalGraphicID, 1);
 
-            for (tmp = this.treeRoot.rightSib; tmp != null; tmp = tmp.rightSib) {
+            for (let tmp = this.treeRoot.rightSib; tmp != null; tmp = tmp.rightSib) {
                 this.cmd("SetHighlight", tmp.graphicID, 1);
                 this.cmd("SetHighlight", tmp.internalGraphicID, 1);
                 this.cmd("Step");
@@ -193,23 +194,24 @@ class HeapBinomial extends Algorithm {
                     this.cmd("SetHighlight", smallest.graphicID, 0);
                     this.cmd("SetHighlight", smallest.internalGraphicID, 0);
                     smallest = tmp;
-                }
-                else {
+                } else {
                     this.cmd("SetHighlight", tmp.graphicID, 0);
                     this.cmd("SetHighlight", tmp.internalGraphicID, 0);
                 }
             }
 
-            if (smallest == this.treeRoot) {
+            let prev;
+            if (smallest === this.treeRoot) {
                 this.treeRoot = this.treeRoot.rightSib;
                 prev = null;
-            }
-            else {
-                for (prev = this.treeRoot; prev.rightSib != smallest; prev = prev.rightSib);
+            } else {
+                prev = this.treeRoot;
+                while (prev.rightSib !== smallest) {
+                    prev = prev.rightSib;
+                }
                 prev.rightSib = prev.rightSib.rightSib;
-
             }
-            var moveLabel = this.nextIndex++;
+            const moveLabel = this.nextIndex++;
             this.cmd("SetText", smallest.graphicID, "");
             this.cmd("SetText", smallest.internalGraphicID, "");
             this.cmd("CreateLabel", moveLabel, smallest.data, smallest.x, smallest.y);
@@ -222,14 +224,13 @@ class HeapBinomial extends Algorithm {
                     0, // Curve
                     1, // Directed
                     ""); // Label
-
             }
             this.cmd("Delete", smallest.graphicID);
             this.cmd("Delete", smallest.internalGraphicID);
             this.cmd("Delete", smallest.degreeID);
 
             this.secondaryTreeRoot = this.reverse(smallest.leftChild);
-            for (tmp = this.secondaryTreeRoot; tmp != null; tmp = tmp.rightSib)
+            for (let tmp = this.secondaryTreeRoot; tmp != null; tmp = tmp.rightSib)
                 tmp.parent = null;
             this.merge();
             this.cmd("Delete", moveLabel);
@@ -238,8 +239,8 @@ class HeapBinomial extends Algorithm {
     }
 
     reverse(tree) {
-        var newTree = null;
-        var tmp;
+        let newTree = null;
+
         while (tree != null) {
             if (tree.rightSib != null) {
                 this.cmd("Disconnect", tree.internalGraphicID, tree.rightSib.internalGraphicID);
@@ -250,7 +251,7 @@ class HeapBinomial extends Algorithm {
                     1, // Directed
                     ""); // Label
             }
-            tmp = tree;
+            const tmp = tree;
             tree = tree.rightSib;
             tmp.rightSib = newTree;
             tmp.parent = null;
@@ -260,9 +261,9 @@ class HeapBinomial extends Algorithm {
     }
 
     insertElement(insertedValue) {
-        this.commands = new Array();
+        this.commands = [];
 
-        var insertNode = new BinomialNode(insertedValue, this.nextIndex++, HeapBinomial.INSERT_X, HeapBinomial.INSERT_Y);
+        const insertNode = new BinomialNode(insertedValue, this.nextIndex++, HeapBinomial.INSERT_X, HeapBinomial.INSERT_Y);
         insertNode.internalGraphicID = this.nextIndex++;
         insertNode.degreeID = this.nextIndex++;
         this.cmd("CreateCircle", insertNode.graphicID, insertedValue, HeapBinomial.INSERT_X, HeapBinomial.INSERT_Y);
@@ -282,8 +283,7 @@ class HeapBinomial extends Algorithm {
             this.treeRoot = insertNode;
             this.setPositions(this.treeRoot, HeapBinomial.STARTING_X, HeapBinomial.STARTING_Y);
             this.moveTree(this.treeRoot);
-        }
-        else {
+        } else {
             this.secondaryTreeRoot = insertNode;
             this.merge();
         }
@@ -292,26 +292,25 @@ class HeapBinomial extends Algorithm {
     }
 
     merge() {
-        if (this.treeRoot != null) {
-            var leftSize = this.setPositions(this.treeRoot, HeapBinomial.STARTING_X, HeapBinomial.STARTING_Y);
-            this.setPositions(this.secondaryTreeRoot, leftSize + HeapBinomial.NODE_WIDTH, HeapBinomial.STARTING_Y);
-            this.moveTree(this.secondaryTreeRoot);
-            this.moveTree(this.treeRoot);
-            var lineID = this.nextIndex++;
-            this.cmd("CreateRectangle", lineID, "", 0, 200, leftSize, 50, "left", "top");
-            this.cmd("SetForegroundColor", lineID, HeapBinomial.MERGE_SEPARATING_LINE_COLOR);
-            this.cmd("SetLayer", lineID, 0);
-            this.cmd("Step");
-        }
-        else {
+        if (this.treeRoot == null) {
             this.treeRoot = this.secondaryTreeRoot;
             this.secondaryTreeRoot = null;
             this.setPositions(this.treeRoot, HeapBinomial.NODE_WIDTH, HeapBinomial.STARTING_Y);
             this.moveTree(this.treeRoot);
             return;
         }
+        let leftSize = this.setPositions(this.treeRoot, HeapBinomial.STARTING_X, HeapBinomial.STARTING_Y);
+        this.setPositions(this.secondaryTreeRoot, leftSize + HeapBinomial.NODE_WIDTH, HeapBinomial.STARTING_Y);
+        this.moveTree(this.secondaryTreeRoot);
+        this.moveTree(this.treeRoot);
+        const lineID = this.nextIndex++;
+        this.cmd("CreateRectangle", lineID, "", 0, 200, leftSize, 50, "left", "top");
+        this.cmd("SetForegroundColor", lineID, HeapBinomial.MERGE_SEPARATING_LINE_COLOR);
+        this.cmd("SetLayer", lineID, 0);
+        this.cmd("Step");
+
         while (this.secondaryTreeRoot != null) {
-            var tmp = this.secondaryTreeRoot;
+            const tmp = this.secondaryTreeRoot;
             this.secondaryTreeRoot = this.secondaryTreeRoot.rightSib;
             if (this.secondaryTreeRoot != null) {
                 this.cmd("Disconnect", tmp.internalGraphicID, this.secondaryTreeRoot.internalGraphicID);
@@ -325,9 +324,8 @@ class HeapBinomial extends Algorithm {
                     0, // Curve
                     1, // Directed
                     ""); // Label
-            }
-            else {
-                var tmp2 = this.treeRoot;
+            } else {
+                let tmp2 = this.treeRoot;
                 while (tmp2.rightSib != null && tmp2.rightSib.degree < tmp.degree) {
                     tmp2 = tmp2.rightSib;
                 }
@@ -361,23 +359,20 @@ class HeapBinomial extends Algorithm {
     }
 
     combineNodes() {
-        var tmp;
-        var tmp2;
-        while ((this.treeRoot != null && this.treeRoot.rightSib != null && this.treeRoot.degree == this.treeRoot.rightSib.degree) &&
-            (this.treeRoot.rightSib.rightSib == null || this.treeRoot.rightSib.degree != this.treeRoot.rightSib.rightSib.degree)) {
+        while ((this.treeRoot != null && this.treeRoot.rightSib != null && this.treeRoot.degree === this.treeRoot.rightSib.degree) &&
+          (this.treeRoot.rightSib.rightSib == null || this.treeRoot.rightSib.degree !== this.treeRoot.rightSib.rightSib.degree)) {
             this.cmd("Disconnect", this.treeRoot.internalGraphicID, this.treeRoot.rightSib.internalGraphicID);
             if (this.treeRoot.rightSib.rightSib != null) {
                 this.cmd("Disconnect", this.treeRoot.rightSib.internalGraphicID, this.treeRoot.rightSib.rightSib.internalGraphicID);
             }
             if (this.compare(this.treeRoot.data, this.treeRoot.rightSib.data) < 0) {
-                tmp = this.treeRoot.rightSib;
+                const tmp = this.treeRoot.rightSib;
                 this.treeRoot.rightSib = tmp.rightSib;
                 tmp.rightSib = this.treeRoot.leftChild;
                 this.treeRoot.leftChild = tmp;
                 tmp.parent = this.treeRoot;
-            }
-            else {
-                tmp = this.treeRoot;
+            } else {
+                const tmp = this.treeRoot;
                 this.treeRoot = this.treeRoot.rightSib;
                 tmp.rightSib = this.treeRoot.leftChild;
                 this.treeRoot.leftChild = tmp;
@@ -389,7 +384,6 @@ class HeapBinomial extends Algorithm {
                 0, // Curve
                 0, // Directed
                 ""); // Label
-
 
             this.cmd("Connect", this.treeRoot.internalGraphicID,
                 this.treeRoot.leftChild.internalGraphicID,
@@ -426,30 +420,28 @@ class HeapBinomial extends Algorithm {
 
             this.cmd("SetText", this.treeRoot.degreeID, this.treeRoot.degree);
 
-
             this.setPositions(this.treeRoot, HeapBinomial.STARTING_X, HeapBinomial.STARTING_Y);
             this.moveTree(this.treeRoot);
             this.cmd("Step");
         }
 
-        tmp2 = this.treeRoot;
+        let tmp2 = this.treeRoot;
         while (tmp2 != null && tmp2.rightSib != null && tmp2.rightSib.rightSib != null) {
-            if (tmp2.rightSib.degree != tmp2.rightSib.rightSib.degree) {
+            if (tmp2.rightSib.degree !== tmp2.rightSib.rightSib.degree) {
                 tmp2 = tmp2.rightSib;
             } else if ((tmp2.rightSib.rightSib.rightSib != null) &&
-                (tmp2.rightSib.rightSib.degree == tmp2.rightSib.rightSib.rightSib.degree)) {
+            (tmp2.rightSib.rightSib.degree === tmp2.rightSib.rightSib.rightSib.degree)) {
                 tmp2 = tmp2.rightSib;
-            }
-            else {
+            } else {
                 this.cmd("Disconnect", tmp2.rightSib.internalGraphicID, tmp2.rightSib.rightSib.internalGraphicID);
                 this.cmd("Disconnect", tmp2.internalGraphicID, tmp2.rightSib.internalGraphicID);
                 if (tmp2.rightSib.rightSib.rightSib != null) {
                     this.cmd("Disconnect", tmp2.rightSib.rightSib.internalGraphicID, tmp2.rightSib.rightSib.rightSib.internalGraphicID);
                 }
 
-                var tempRoot;
+                let tempRoot;
                 if (this.compare(tmp2.rightSib.data, tmp2.rightSib.rightSib.data) < 0) {
-                    tmp = tmp2.rightSib.rightSib;
+                    const tmp = tmp2.rightSib.rightSib;
                     tmp2.rightSib.rightSib = tmp.rightSib;
 
                     tmp.rightSib = tmp2.rightSib.leftChild;
@@ -458,10 +450,8 @@ class HeapBinomial extends Algorithm {
                     tmp2.rightSib.degree++;
                     this.cmd("SetText", tmp2.rightSib.degreeID, tmp2.rightSib.degree);
                     tempRoot = tmp2.rightSib;
-
-                }
-                else {
-                    tmp = tmp2.rightSib;
+                } else {
+                    const tmp = tmp2.rightSib;
                     tmp2.rightSib = tmp2.rightSib.rightSib;
                     tmp.rightSib = tmp2.rightSib.leftChild;
                     tmp2.rightSib.leftChild = tmp;
@@ -523,4 +513,3 @@ class HeapBinomial extends Algorithm {
         }
     }
 }
-

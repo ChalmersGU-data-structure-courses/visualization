@@ -24,6 +24,12 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals AnimatedObject, UndoBlock */
+/* exported AnimatedCircle */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class AnimatedCircle extends AnimatedObject {
     radius = 20;
@@ -47,10 +53,10 @@ class AnimatedCircle extends AnimatedObject {
     }
 
     getHeadPointerAttachPos(fromX, fromY) {
-        var xVec = fromX - this.x;
-        var yVec = fromY - this.y;
-        var len = Math.sqrt(xVec * xVec + yVec * yVec);
-        if (len == 0) {
+        const xVec = fromX - this.x;
+        const yVec = fromY - this.y;
+        const len = Math.sqrt(xVec * xVec + yVec * yVec);
+        if (len === 0) {
             return [this.x, this.y];
         }
         return [this.x + (xVec / len) * (this.radius), this.y + (yVec / len) * (this.radius)];
@@ -63,38 +69,37 @@ class AnimatedCircle extends AnimatedObject {
 
         ctx.fillStyle = this.backgroundColor;
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
+        ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
         ctx.closePath();
         ctx.fill();
 
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.font = this.textHeight + 'px sans-serif';
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.font = `${this.textHeight}px sans-serif`;
         ctx.lineWidth = 2;
         ctx.fillStyle = this.labelColor;
 
-        var strList = this.label.split("\n");
-        if (strList.length == 1) {
+        const strList = this.label.split("\n");
+        if (strList.length === 1) {
             if (this.highlightIndex < 0 || this.highlightIndex >= this.label.length) {
                 ctx.fillText(this.label, this.x, this.y);
             } else {
-                var leftStr = this.label.substring(0, this.highlightIndex);
-                var highlightStr = this.label.substring(this.highlightIndex, this.highlightIndex + 1);
-                var rightStr = this.label.substring(this.highlightIndex + 1);
-                var leftWidth = ctx.measureText(leftStr).width;
-                var centerWidth = ctx.measureText(highlightStr).width;
-                var textWidth = ctx.measureText(this.label).width;
-                var x = this.x - textWidth / 2;
-                ctx.textAlign = 'left';
+                const leftStr = this.label.substring(0, this.highlightIndex);
+                const highlightStr = this.label.substring(this.highlightIndex, this.highlightIndex + 1);
+                const rightStr = this.label.substring(this.highlightIndex + 1);
+                const leftWidth = ctx.measureText(leftStr).width;
+                const centerWidth = ctx.measureText(highlightStr).width;
+                const textWidth = ctx.measureText(this.label).width;
+                const x = this.x - textWidth / 2;
+                ctx.textAlign = "left";
                 ctx.fillText(leftStr, x, this.y);
                 ctx.fillText(rightStr, x + leftWidth + centerWidth, this.y);
                 ctx.fillStyle = this.highlightColor;
                 ctx.fillText(highlightStr, x + leftWidth, this.y);
             }
-        }
-        else {
-            var offset = (1 - strList.length) / 2;
-            for (var i = 0; i < strList.length; i++) {
+        } else {
+            const offset = (1 - strList.length) / 2;
+            for (let i = 0; i < strList.length; i++) {
                 ctx.fillText(strList[i], this.x, this.y + (i + offset) * this.textHeight);
             }
         }
@@ -106,19 +111,18 @@ class AnimatedCircle extends AnimatedObject {
             ctx.lineWidth = this.highlightDiff;
         }
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
+        ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
         ctx.closePath();
         ctx.stroke();
     }
 
     createUndoDelete() {
         return new UndoDeleteCircle(
-            this.objectID, this.label, this.x, this.y, 
-            this.foregroundColor, this.backgroundColor, this.layer, this.radius
+            this.objectID, this.label, this.x, this.y,
+            this.foregroundColor, this.backgroundColor, this.layer, this.radius,
         );
     }
 }
-
 
 
 class UndoDeleteCircle extends UndoBlock {

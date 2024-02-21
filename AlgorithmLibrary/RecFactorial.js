@@ -24,27 +24,32 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Recursive */
+/* exported RecFactorial */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class RecFactorial extends Recursive {
     static MAX_VALUE = 20;
 
     static ACTIVATION_FIELDS = ["n ", "subValue ", "returnValue "];
-    static CODE = [["def ","factorial(n)",":"],
-                    ["     if ","(n <= 1): "],
-                    ["          return 1"],
-                    ["     else:"],
-                    ["          subSolution = ", "factorial(n - 1)"],
-                    ["          solution = ", "subSolution * n"],
-                    ["          return ", "solution"]];
+    static CODE = [["def ", "factorial(n)", ":"],
+        ["     if ", "(n <= 1): "],
+        ["          return 1"],
+        ["     else:"],
+        ["          subSolution = ", "factorial(n - 1)"],
+        ["          solution = ", "subSolution * n"],
+        ["          return ", "solution"]];
 
     static RECURSIVE_DELTA_Y = RecFactorial.ACTIVATION_FIELDS.length * Recursive.ACTIVATION_RECORD_HEIGHT;
 
     static ACTIVATION_RECORT_START_X = 330;
     static ACTIVATION_RECORT_START_Y = 20;
 
-
     constructor(am) {
-        super(); 
+        super();
         this.init(am);
     }
 
@@ -67,7 +72,7 @@ class RecFactorial extends Recursive {
     addControls() {
         this.controls = [];
 
-        this.factorialField = this.addControlToAlgorithmBar("Text", "", { maxlength: 2, size: 2 });
+        this.factorialField = this.addControlToAlgorithmBar("Text", "", {maxlength: 2, size: 2});
         this.addReturnSubmit(this.factorialField, "int", this.factorialCallback.bind(this));
         this.controls.push(this.factorialField);
 
@@ -77,7 +82,7 @@ class RecFactorial extends Recursive {
     }
 
     factorialCallback(event) {
-        var factValue = this.normalizeNumber(this.factorialField.value);
+        let factValue = this.normalizeNumber(this.factorialField.value);
         if (factValue) {
             factValue = Math.min(factValue, RecFactorial.MAX_VALUE);
             this.factorialField.value = factValue;
@@ -93,21 +98,21 @@ class RecFactorial extends Recursive {
         this.currentY = RecFactorial.ACTIVATION_RECORT_START_Y;
         this.currentX = RecFactorial.ACTIVATION_RECORT_START_X;
 
-        var final = this.factorial(value);
-        var resultID = this.nextIndex++;
+        const final = this.factorial(value);
+        const resultID = this.nextIndex++;
         this.oldIDs.push(resultID);
-        this.cmd("CreateLabel", resultID, "factorial(" + String(value) + ") = " + String(final),
+        this.cmd("CreateLabel", resultID, `factorial(${String(value)}) = ${String(final)}`,
             Recursive.CODE_START_X, Recursive.CODE_START_Y + (this.code.length + 1) * Recursive.CODE_LINE_HEIGHT, 0);
-        //this.cmd("SetText", functionCallID, "factorial(" + String(value) + ") = " + String(final));
+        // this.cmd("SetText", functionCallID, "factorial(" + String(value) + ") = " + String(final));
         return this.commands;
     }
 
     factorial(value) {
-        var activationRec = this.createActivation("factorial     ", RecFactorial.ACTIVATION_FIELDS, this.currentX, this.currentY);
+        const activationRec = this.createActivation("factorial     ", RecFactorial.ACTIVATION_FIELDS, this.currentX, this.currentY);
         this.cmd("SetText", activationRec.fieldIDs[0], value);
         //    this.cmd("CreateLabel", ID, "", 10, this.currentY, 0);
-        var oldX = this.currentX;
-        var oldY = this.currentY;
+        const oldX = this.currentX;
+        const oldY = this.currentY;
         this.currentY += RecFactorial.RECURSIVE_DELTA_Y;
         if (this.currentY + Recursive.RECURSIVE_DELTA_Y > this.getCanvasHeight()) {
             this.currentY = RecFactorial.ACTIVATION_RECORT_START_Y;
@@ -124,7 +129,7 @@ class RecFactorial extends Recursive {
             this.cmd("Step");
             this.cmd("SetForegroundColor", this.codeID[4][1], Recursive.CODE_STANDARD_COLOR);
 
-            var firstValue = this.factorial(value - 1);
+            const firstValue = this.factorial(value - 1);
 
             this.cmd("SetForegroundColor", this.codeID[4][0], Recursive.CODE_HIGHLIGHT_COLOR);
             this.cmd("SetForegroundColor", this.codeID[4][1], Recursive.CODE_HIGHLIGHT_COLOR);
@@ -147,7 +152,7 @@ class RecFactorial extends Recursive {
             this.deleteActivation(activationRec);
             this.currentY = oldY;
             this.currentX = oldX;
-            this.cmd("CreateLabel", this.nextIndex, "Return Value = " + String(firstValue * value), oldX, oldY);
+            this.cmd("CreateLabel", this.nextIndex, `Return Value = ${String(firstValue * value)}`, oldX, oldY);
             this.cmd("SetForegroundColor", this.nextIndex, Recursive.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
             this.cmd("SetForegroundColor", this.codeID[6][0], Recursive.CODE_STANDARD_COLOR);
@@ -157,8 +162,7 @@ class RecFactorial extends Recursive {
             //        this.cmd("SetForegroundColor", this.codeID[4][3], Recursive.CODE_HIGHLIGHT_COLOR);
             //        this.cmd("Step");
             return firstValue * value;
-        }
-        else {
+        } else {
             this.cmd("SetForegroundColor", this.codeID[2][0], Recursive.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
             this.cmd("SetForegroundColor", this.codeID[2][0], Recursive.CODE_STANDARD_COLOR);
@@ -175,4 +179,3 @@ class RecFactorial extends Recursive {
         }
     }
 }
-

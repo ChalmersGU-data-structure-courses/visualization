@@ -24,6 +24,12 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals AnimatedObject, UndoBlock */
+/* exported AnimatedLinkedList */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class AnimatedLinkedList extends AnimatedObject {
     w;
@@ -37,8 +43,8 @@ class AnimatedLinkedList extends AnimatedObject {
     labels = [];
     labelColors = [];
 
-    constructor(objectID, initalLabel, w, h, linkPercent, vertical, linkPositionEnd, 
-                numLabels, backgroundColor, foregroundColor, highlightColor, labelColor) {
+    constructor(objectID, initalLabel, w, h, linkPercent, vertical, linkPositionEnd,
+        numLabels, backgroundColor, foregroundColor, highlightColor, labelColor) {
         super(backgroundColor, foregroundColor, highlightColor, labelColor);
         this.objectID = objectID;
         this.w = w;
@@ -48,7 +54,7 @@ class AnimatedLinkedList extends AnimatedObject {
         this.linkPositionEnd = linkPositionEnd;
         this.numLabels = numLabels;
 
-        for (var i = 0; i < this.numLabels; i++) {
+        for (let i = 0; i < this.numLabels; i++) {
             this.labels[i] = "";
             this.labelColors[i] = this.labelColor;
         }
@@ -80,52 +86,49 @@ class AnimatedLinkedList extends AnimatedObject {
     }
 
     left() {
-        var w = (
-            this.vertical ?        this.w                          : 
-            this.linkPositionEnd ? this.w * (1 - this.linkPercent) : 
-            /* otherwise */        this.w * (1 + this.linkPercent)
+        const w = (
+            this.vertical ? this.w :
+            this.linkPositionEnd ? this.w * (1 - this.linkPercent) :
+            /* otherwise */ this.w * (1 + this.linkPercent)
         );
-        return this.x - w/2;
+        return this.x - w / 2;
     }
 
     right() {
-        var w = (
-            this.vertical ?        this.w                          : 
-            this.linkPositionEnd ? this.w * (1 + this.linkPercent) : 
-            /* otherwise */        this.w * (1 - this.linkPercent)
+        const w = (
+            this.vertical ? this.w :
+            this.linkPositionEnd ? this.w * (1 + this.linkPercent) :
+            /* otherwise */ this.w * (1 - this.linkPercent)
         );
-        return this.x + w/2;
+        return this.x + w / 2;
     }
 
     top() {
-        var h = (
-            !this.vertical ?       this.h                          : 
-            this.linkPositionEnd ? this.h * (1 - this.linkPercent) : 
-            /* otherwise */        this.h * (1 + this.linkPercent)
+        const h = (
+            !this.vertical ? this.h :
+            this.linkPositionEnd ? this.h * (1 - this.linkPercent) :
+            /* otherwise */ this.h * (1 + this.linkPercent)
         );
-        return this.y - h/2;
+        return this.y - h / 2;
     }
 
     bottom() {
-        var h = (
-            !this.vertical ?       this.h                          : 
-            this.linkPositionEnd ? this.h * (1 + this.linkPercent) : 
-            /* otherwise */        this.h * (1 - this.linkPercent)
+        const h = (
+            !this.vertical ? this.h :
+            this.linkPositionEnd ? this.h * (1 + this.linkPercent) :
+            /* otherwise */ this.h * (1 - this.linkPercent)
         );
-        return this.y + h/2;
+        return this.y + h / 2;
     }
 
     getTailPointerAttachPos(fromX, fromY, anchor) {
         if (this.vertical && this.linkPositionEnd) {
             return [this.x, this.y + this.h / 2.0];
-        }
-        else if (this.vertical && !this.linkPositionEnd) {
+        } else if (this.vertical && !this.linkPositionEnd) {
             return [this.x, this.y - this.h / 2.0];
-        }
-        else if (!this.vertical && this.linkPositionEnd) {
+        } else if (!this.vertical && this.linkPositionEnd) {
             return [this.x + this.w / 2.0, this.y];
-        }
-        else { // (!this.vertical && !this.linkPositionEnd)
+        } else { // (!this.vertical && !this.linkPositionEnd)
             return [this.x - this.w / 2.0, this.y];
         }
     }
@@ -153,10 +156,10 @@ class AnimatedLinkedList extends AnimatedObject {
     draw(ctx) {
         if (!this.addedToScene) return;
 
-        var x0 = this.left();
-        var x1 = this.right();
-        var y0 = this.top();
-        var y1 = this.bottom();
+        let x0 = this.left();
+        let x1 = this.right();
+        let y0 = this.top();
+        let y1 = this.bottom();
 
         ctx.globalAlpha = this.alpha;
 
@@ -164,12 +167,12 @@ class AnimatedLinkedList extends AnimatedObject {
         ctx.fillRect(x0, y0, x1 - x0, y1 - y0);
 
         ctx.fillStyle = this.labelColor;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.font = this.textHeight + 'px sans-serif';
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.font = `${this.textHeight}px sans-serif`;
 
-        var labelPos = this.resetTextPositions();
-        for (var i = 0; i < this.numLabels; i++) {
+        const labelPos = this.resetTextPositions();
+        for (let i = 0; i < this.numLabels; i++) {
             ctx.fillStyle = this.labelColors[i];
             ctx.fillText(this.labels[i], labelPos[i].x, labelPos[i].y);
         }
@@ -179,46 +182,43 @@ class AnimatedLinkedList extends AnimatedObject {
         ctx.beginPath();
         if (this.vertical) {
             if (this.linkPositionEnd) {
-                var y = y1 - this.h * this.linkPercent;
-                ctx.moveTo(x0, y); ctx.lineTo(x1, y);
+                const y = y1 - this.h * this.linkPercent;
+                ctx.moveTo(x0, y), ctx.lineTo(x1, y);
                 if (this.nullPointer) {
-                    ctx.moveTo(x0, y); ctx.lineTo(x1, y1);
+                    ctx.moveTo(x0, y), ctx.lineTo(x1, y1);
                 }
                 y1 = y;
-            }
-            else {
-                var y = y0 + this.h * this.linkPercent;
-                ctx.moveTo(x0, y); ctx.lineTo(x1, y);
+            } else {
+                const y = y0 + this.h * this.linkPercent;
+                ctx.moveTo(x0, y), ctx.lineTo(x1, y);
                 if (this.nullPointer) {
-                    ctx.moveTo(x0, y0); ctx.lineTo(x1, y);
+                    ctx.moveTo(x0, y0), ctx.lineTo(x1, y);
                 }
                 y0 = y;
             }
-            for (var i = 1; i < this.numLabels; i++) {
-                var y = y0 + (y1 - y0) * (i / this.numLabels - 1 / 2);
-                ctx.moveTo(x0, y); ctx.lineTo(x1, y);
+            for (let i = 1; i < this.numLabels; i++) {
+                const y = y0 + (y1 - y0) * (i / this.numLabels - 1 / 2);
+                ctx.moveTo(x0, y), ctx.lineTo(x1, y);
             }
-        }
-        else { // !vertical
+        } else { // !vertical
             if (this.linkPositionEnd) {
-                var x = x1 - this.w * this.linkPercent;
-                ctx.moveTo(x, y0); ctx.lineTo(x, y1);
+                const x = x1 - this.w * this.linkPercent;
+                ctx.moveTo(x, y0), ctx.lineTo(x, y1);
                 if (this.nullPointer) {
-                    ctx.moveTo(x, y0); ctx.lineTo(x1, y1);
+                    ctx.moveTo(x, y0), ctx.lineTo(x1, y1);
                 }
                 x1 = x;
-            }
-            else {
-                var x = x0 + this.w * this.linkPercent;
-                ctx.moveTo(x, y0); ctx.lineTo(x, y1);
+            } else {
+                const x = x0 + this.w * this.linkPercent;
+                ctx.moveTo(x, y0), ctx.lineTo(x, y1);
                 if (this.nullPointer) {
-                    ctx.moveTo(x0, y0); ctx.lineTo(x, y1);
+                    ctx.moveTo(x0, y0), ctx.lineTo(x, y1);
                 }
                 x0 = x;
             }
-            for (var i = 1; i < this.numLabels; i++) {
-                var x = x0 + (x1 - x0) * (i / this.numLabels - 1 / 2);
-                ctx.moveTo(x, y0); ctx.lineTo(x, y1);
+            for (let i = 1; i < this.numLabels; i++) {
+                const x = x0 + (x1 - x0) * (i / this.numLabels - 1 / 2);
+                ctx.moveTo(x, y0), ctx.lineTo(x, y1);
             }
         }
         ctx.stroke();
@@ -231,29 +231,28 @@ class AnimatedLinkedList extends AnimatedObject {
     }
 
     resetTextPositions() {
-        var labelPos = []
+        const labelPos = [];
         if (this.vertical) {
             labelPos[0] = {
                 x: this.x,
                 y: this.y + this.h * (1 - this.linkPercent) / 2 * (1 / this.numLabels - 1),
                 // -height * (1-linkPercent) / 2 + height*(1-linkPercent)/2*numLabels;
             };
-            for (var i = 1; i < this.numLabels; i++) {
+            for (let i = 1; i < this.numLabels; i++) {
                 labelPos[i] = {
                     x: this.x,
-                    y: labelPos[i-1].y + this.h * (1 - this.linkPercent) / this.numLabels,
+                    y: labelPos[i - 1].y + this.h * (1 - this.linkPercent) / this.numLabels,
                 };
             }
-        }
-        else { 
+        } else {
             labelPos[0] = {
                 y: this.y,
                 x: this.x + this.w * (1 - this.linkPercent) / 2 * (1 / this.numLabels - 1),
             };
-            for (var i = 1; i < this.numLabels; i++) {
+            for (let i = 1; i < this.numLabels; i++) {
                 labelPos[i] = {
                     y: this.y,
-                    x: labelPos[i-1].x + this.w * (1 - this.linkPercent) / this.numLabels,
+                    x: labelPos[i - 1].x + this.w * (1 - this.linkPercent) / this.numLabels,
                 };
             }
         }
@@ -262,18 +261,17 @@ class AnimatedLinkedList extends AnimatedObject {
 
     createUndoDelete() {
         return new UndoDeleteLinkedList(
-            this.objectID, this.numLabels, this.labels, this.x, this.y, this.w, this.h, 
-            this.linkPercent, this.linkPositionEnd, this.vertical, this.labelColors, 
-            this.backgroundColor, this.foregroundColor, this.layer, this.nullPointer
+            this.objectID, this.numLabels, this.labels, this.x, this.y, this.w, this.h,
+            this.linkPercent, this.linkPositionEnd, this.vertical, this.labelColors,
+            this.backgroundColor, this.foregroundColor, this.layer, this.nullPointer,
         );
     }
 }
 
 
-
 class UndoDeleteLinkedList extends UndoBlock {
-    constructor(objectID, numLabels, labels, x, y, w, h, linkPercent, linkPositionEnd, 
-                vertical, labelColors, backgroundColor, foregroundColor, layer, nullPointer) {
+    constructor(objectID, numLabels, labels, x, y, w, h, linkPercent, linkPositionEnd,
+        vertical, labelColors, backgroundColor, foregroundColor, layer, nullPointer) {
         super();
         this.objectID = objectID;
         this.numLabels = numLabels;
@@ -294,16 +292,15 @@ class UndoDeleteLinkedList extends UndoBlock {
 
     undoInitialStep(world) {
         world.addLinkedListObject(
-            this.objectID, this.labels[0], this.w, this.h, this.linkPercent, this.vertical, 
-            this.linkPositionEnd, this.numLabels, this.backgroundColor, this.foregroundColor
+            this.objectID, this.labels[0], this.w, this.h, this.linkPercent, this.vertical,
+            this.linkPositionEnd, this.numLabels, this.backgroundColor, this.foregroundColor,
         );
         world.setNodePosition(this.objectID, this.x, this.y);
         world.setLayer(this.objectID, this.layer);
         world.setNull(this.objectID, this.nullPointer);
-        for (var i = 0; i < this.numLabels; i++) {
+        for (let i = 0; i < this.numLabels; i++) {
             world.setText(this.objectID, this.labels[i], i);
             world.setTextColor(this.objectID, this.labelColors[i], i);
         }
     }
 }
-

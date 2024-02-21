@@ -24,6 +24,12 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Algorithm */
+/* exported StackLL */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class StackLL extends Algorithm {
     static SIZE = 32;
@@ -45,7 +51,7 @@ class StackLL extends Algorithm {
     }
 
     addControls() {
-        this.pushField = this.addControlToAlgorithmBar("Text", "", { maxlength: 4, size: 4 });
+        this.pushField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
         this.addReturnSubmit(this.pushField, "ALPHANUM", this.pushCallback.bind(this));
         this.pushButton = this.addControlToAlgorithmBar("Button", "Push");
         this.pushButton.onclick = this.pushCallback.bind(this);
@@ -101,22 +107,22 @@ class StackLL extends Algorithm {
     }
 
     getElemXY(i) {
-        var x = 1.5 * this.getElemWidth();
-        var y = 4.5 * this.getElemHeight();
-        for (var k = 0; k < i; k++) {
+        let x = 1.5 * this.getElemWidth();
+        let y = 4.5 * this.getElemHeight();
+        for (let k = 0; k < i; k++) {
             x += this.getElemWidth() * StackLL.ELEM_SPACING;
             if (x + this.getElemWidth() > this.getCanvasWidth()) {
                 x = 1.5 * this.getElemWidth();
                 y += 2.5 * this.getElemHeight();
             }
         }
-        return { x: x, y: y };
+        return {x: x, y: y};
     }
 
     getElemWidth() {
-        var nrows = 1;
+        let nrows = 1;
         while (true) {
-            var w = nrows * this.getCanvasWidth() / (StackLL.SIZE + 2 * nrows);
+            const w = nrows * this.getCanvasWidth() / (StackLL.SIZE + 2 * nrows);
             if (w >= 100) return w / StackLL.ELEM_SPACING;
             nrows++;
         }
@@ -134,7 +140,7 @@ class StackLL extends Algorithm {
     // Callback functions for the algorithm control bar
 
     pushCallback(event) {
-        var pushVal = this.pushField.value;
+        const pushVal = this.pushField.value;
         if (pushVal !== "") {
             this.pushField.value = "";
             this.implementAction(this.push.bind(this), pushVal);
@@ -165,7 +171,7 @@ class StackLL extends Algorithm {
 
     push(elem) {
         this.commands = [];
-        var elemID = this.nextIndex++;
+        const elemID = this.nextIndex++;
 
         this.cmd("SetText", this.messageID, "Pushing value:  ");
         this.cmd("CreateLabel", this.messageLabelID, elem, 0, 0);
@@ -174,23 +180,22 @@ class StackLL extends Algorithm {
         this.cmd("AlignRight", this.messageLabelID2, this.messageID);
         this.cmd("Step");
 
-        var insertX = this.getElemX(1), insertY = 2 * this.getElemHeight();
+        const insertX = this.getElemX(1), insertY = 2 * this.getElemHeight();
         this.cmd(
             "CreateLinkedList", elemID, "",
             this.getElemWidth(), this.getElemHeight(), insertX, insertY,
-            0.25, 0, 1, 1
+            0.25, 0, 1, 1,
         );
         this.cmd("Move", this.messageLabelID, insertX, insertY);
         this.cmd("Step");
 
         this.cmd("SetText", elemID, elem);
         this.cmd("Delete", this.messageLabelID);
-        if (this.stack.length == 0) {
+        if (this.stack.length === 0) {
             this.cmd("SetNull", this.topID, 0);
             this.cmd("SetNull", elemID, 1);
-        }
-        else {
-            var prevID = this.stack[this.stack.length - 1].id;
+        } else {
+            const prevID = this.stack[this.stack.length - 1].id;
             this.cmd("Connect", elemID, prevID);
             this.cmd("Step");
             this.cmd("Disconnect", this.topID, prevID);
@@ -198,7 +203,7 @@ class StackLL extends Algorithm {
         this.cmd("Connect", this.topID, elemID);
         this.cmd("Step");
 
-        this.stack.push({ elem: elem, id: elemID });
+        this.stack.push({elem: elem, id: elemID});
         this.resetLinkedListPositions();
         this.cmd("SetText", this.messageID, "");
         this.cmd("Delete", this.messageLabelID2);
@@ -208,12 +213,12 @@ class StackLL extends Algorithm {
 
     pop(ignored) {
         this.commands = [];
-        if (this.stack.length == 0) {
+        if (this.stack.length === 0) {
             this.cmd("SetText", this.messageID, "Stack empty!");
             return this.commands;
         }
 
-        var { elem: elem, id: elemID } = this.stack.pop();
+        const {elem: elem, id: elemID} = this.stack.pop();
 
         this.cmd("SetText", this.messageID, "Popping value:  ");
         this.cmd("Step");
@@ -224,7 +229,7 @@ class StackLL extends Algorithm {
         this.cmd("Step");
 
         this.cmd("Disconnect", this.topID, elemID);
-        if (this.stack.length == 0) {
+        if (this.stack.length === 0) {
             this.cmd("SetNull", this.topID, 1);
         } else {
             this.cmd("Connect", this.topID, this.stack[this.stack.length - 1].id);
@@ -236,17 +241,16 @@ class StackLL extends Algorithm {
         this.cmd("Step");
 
         this.cmd("Delete", this.messageLabelID);
-        this.cmd("SetText", this.messageID, "Popped value:  " + elem);
+        this.cmd("SetText", this.messageID, `Popped value:  ${elem}`);
 
         this.nextIndex--;
         return this.commands;
     }
 
     resetLinkedListPositions() {
-        for (var i = 0; i < this.stack.length; i++) {
-            var j = this.stack.length - i - 1;
+        for (let i = 0; i < this.stack.length; i++) {
+            const j = this.stack.length - i - 1;
             this.cmd("Move", this.stack[j].id, this.getElemX(i), this.getElemY(i));
         }
     }
 }
-

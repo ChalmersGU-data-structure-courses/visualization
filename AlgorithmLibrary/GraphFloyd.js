@@ -24,10 +24,14 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Graph */
+/* exported GraphFloyd */
+///////////////////////////////////////////////////////////////////////////////
 
 
 class GraphFloyd extends Graph {
-
     static SMALL_COST_TABLE_WIDTH = 30;
     static SMALL_COST_TABLE_HEIGHT = 30;
     static SMALL_COST_TABLE_START_X = 40;
@@ -37,7 +41,6 @@ class GraphFloyd extends Graph {
     static SMALL_PATH_TABLE_HEIGHT = 30;
     static SMALL_PATH_TABLE_START_X = 330;
     static SMALL_PATH_TABLE_START_Y = 70;
-
 
     static SMALL_NODE_1_X_POS = 50;
     static SMALL_NODE_1_Y_POS = 400;
@@ -69,7 +72,6 @@ class GraphFloyd extends Graph {
     static LARGE_MESSAGE_X = 300;
     static LARGE_MESSAGE_Y = 450;
 
-
     constructor(am, dir) {
         super();
         this.init(am, dir);
@@ -89,106 +91,101 @@ class GraphFloyd extends Graph {
     }
 
     reset() {
-        for (var i = 0; i < this.size; i++) {
-            for (var j = 0; j < this.size; j++) {
-                this.costTable[i][j] = this.adj_matrix[i][j];
+        for (let i = 0; i < this.size; i++) {
+            for (let j = 0; j < this.size; j++) {
+                this.costTable[i][j] = this.adjMatrix[i][j];
                 if (this.costTable[i][j] >= 0) {
                     this.pathTable[i][j] = i;
-                }
-                else {
+                } else {
                     this.pathTable[i][j] = -1;
                 }
-
             }
-
         }
     }
 
     smallGraphCallback(event) {
-        if (this.size != Graph.SMALL_SIZE) {
+        if (this.size !== Graph.SMALL_SIZE) {
             this.animationManager.resetAll();
             this.animationManager.setAllLayers([0, this.currentLayer]);
             this.logicalButton.disabled = false;
             this.adjacencyListButton.disabled = false;
             this.adjacencyMatrixButton.disabled = false;
-            this.setup_small();
+            this.setupSmall();
         }
     }
 
     largeGraphCallback(event) {
-        if (this.size != Graph.LARGE_SIZE) {
+        if (this.size !== Graph.LARGE_SIZE) {
             this.animationManager.resetAll();
-            //this.animationManager.setAllLayers([0]);
+            // this.animationManager.setAllLayers([0]);
             this.logicalButton.disabled = true;
             this.adjacencyListButton.disabled = true;
             this.adjacencyMatrixButton.disabled = true;
-            this.setup_large();
+            this.setupLarge();
         }
     }
 
     getCostLabel(value, alwaysUseINF) {
-        alwaysUseINF = alwaysUseINF == undefined ? false : alwaysUseINF;
+        alwaysUseINF = alwaysUseINF == null ? false : alwaysUseINF;
         if (value >= 0) {
             return String(value);
-        }
-        else if (this.size == Graph.SMALL_SIZE || alwaysUseINF) {
+        } else if (this.size === Graph.SMALL_SIZE || alwaysUseINF) {
             return "INF";
-        }
-        else {
+        } else {
             return "";
         }
     }
 
-    setup_small() {
-        this.cost_table_width = GraphFloyd.SMALL_COST_TABLE_WIDTH;
-        this.cost_table_height = GraphFloyd.SMALL_COST_TABLE_HEIGHT;
-        this.cost_table_start_x = GraphFloyd.SMALL_COST_TABLE_START_X;
-        this.cost_table_start_y = GraphFloyd.SMALL_COST_TABLE_START_Y;
+    setupSmall() {
+        this.costTableWidth = GraphFloyd.SMALL_COST_TABLE_WIDTH;
+        this.costTableHeight = GraphFloyd.SMALL_COST_TABLE_HEIGHT;
+        this.costTableStartX = GraphFloyd.SMALL_COST_TABLE_START_X;
+        this.costTableStartY = GraphFloyd.SMALL_COST_TABLE_START_Y;
 
-        this.path_table_width = GraphFloyd.SMALL_PATH_TABLE_WIDTH;
-        this.path_table_height = GraphFloyd.SMALL_PATH_TABLE_HEIGHT;
-        this.path_table_start_x = GraphFloyd.SMALL_PATH_TABLE_START_X;
-        this.path_table_start_y = GraphFloyd.SMALL_PATH_TABLE_START_Y;
+        this.pathTableWidth = GraphFloyd.SMALL_PATH_TABLE_WIDTH;
+        this.pathTableHeight = GraphFloyd.SMALL_PATH_TABLE_HEIGHT;
+        this.pathTableStartX = GraphFloyd.SMALL_PATH_TABLE_START_X;
+        this.pathTableStartY = GraphFloyd.SMALL_PATH_TABLE_START_Y;
 
-        this.node_1_x_pos = GraphFloyd.SMALL_NODE_1_X_POS;
-        this.node_1_y_pos = GraphFloyd.SMALL_NODE_1_Y_POS;
-        this.node_2_x_pos = GraphFloyd.SMALL_NODE_2_X_POS;
-        this.node_2_y_pos = GraphFloyd.SMALL_NODE_2_Y_POS;
-        this.node_3_x_pos = GraphFloyd.SMALL_NODE_3_X_POS;
-        this.node_3_y_pos = GraphFloyd.SMALL_NODE_3_Y_POS;
+        this.node1xPos = GraphFloyd.SMALL_NODE_1_X_POS;
+        this.node1yPos = GraphFloyd.SMALL_NODE_1_Y_POS;
+        this.node2xPos = GraphFloyd.SMALL_NODE_2_X_POS;
+        this.node2yPos = GraphFloyd.SMALL_NODE_2_Y_POS;
+        this.node3xPos = GraphFloyd.SMALL_NODE_3_X_POS;
+        this.node3yPos = GraphFloyd.SMALL_NODE_3_Y_POS;
 
-        this.message_x = GraphFloyd.SMALL_MESSAGE_X;
-        this.message_y = GraphFloyd.SMALL_MESSAGE_Y;
-        super.setup_small();
+        this.messageX = GraphFloyd.SMALL_MESSAGE_X;
+        this.messageY = GraphFloyd.SMALL_MESSAGE_Y;
+        super.setupSmall();
     }
 
-    setup_large() {
-        this.cost_table_width = GraphFloyd.LARGE_COST_TABLE_WIDTH;
-        this.cost_table_height = GraphFloyd.LARGE_COST_TABLE_HEIGHT;
-        this.cost_table_start_x = GraphFloyd.LARGE_COST_TABLE_START_X;
-        this.cost_table_start_y = GraphFloyd.LARGE_COST_TABLE_START_Y;
+    setupLarge() {
+        this.costTableWidth = GraphFloyd.LARGE_COST_TABLE_WIDTH;
+        this.costTableHeight = GraphFloyd.LARGE_COST_TABLE_HEIGHT;
+        this.costTableStartX = GraphFloyd.LARGE_COST_TABLE_START_X;
+        this.costTableStartY = GraphFloyd.LARGE_COST_TABLE_START_Y;
 
-        this.path_table_width = GraphFloyd.LARGE_PATH_TABLE_WIDTH;
-        this.path_table_height = GraphFloyd.LARGE_PATH_TABLE_HEIGHT;
-        this.path_table_start_x = GraphFloyd.LARGE_PATH_TABLE_START_X;
-        this.path_table_start_y = GraphFloyd.LARGE_PATH_TABLE_START_Y;
+        this.pathTableWidth = GraphFloyd.LARGE_PATH_TABLE_WIDTH;
+        this.pathTableHeight = GraphFloyd.LARGE_PATH_TABLE_HEIGHT;
+        this.pathTableStartX = GraphFloyd.LARGE_PATH_TABLE_START_X;
+        this.pathTableStartY = GraphFloyd.LARGE_PATH_TABLE_START_Y;
 
-        this.node_1_x_pos = GraphFloyd.LARGE_NODE_1_X_POS;
-        this.node_1_y_pos = GraphFloyd.LARGE_NODE_1_Y_POS;
-        this.node_2_x_pos = GraphFloyd.LARGE_NODE_2_X_POS;
-        this.node_2_y_pos = GraphFloyd.LARGE_NODE_2_Y_POS;
-        this.node_3_x_pos = GraphFloyd.LARGE_NODE_3_X_POS;
-        this.node_3_y_pos = GraphFloyd.LARGE_NODE_3_Y_POS;
+        this.node1xPos = GraphFloyd.LARGE_NODE_1_X_POS;
+        this.node1yPos = GraphFloyd.LARGE_NODE_1_Y_POS;
+        this.node2xPos = GraphFloyd.LARGE_NODE_2_X_POS;
+        this.node2yPos = GraphFloyd.LARGE_NODE_2_Y_POS;
+        this.node3xPos = GraphFloyd.LARGE_NODE_3_X_POS;
+        this.node3yPos = GraphFloyd.LARGE_NODE_3_Y_POS;
 
-        this.message_x = GraphFloyd.LARGE_MESSAGE_X;
-        this.message_y = GraphFloyd.LARGE_MESSAGE_Y;
+        this.messageX = GraphFloyd.LARGE_MESSAGE_X;
+        this.messageY = GraphFloyd.LARGE_MESSAGE_Y;
 
-        super.setup_large();
+        super.setupLarge();
     }
 
     setup() {
         super.setup();
-        this.commands = new Array();
+        this.commands = [];
 
         this.costTable = new Array(this.size);
         this.pathTable = new Array(this.size);
@@ -203,53 +200,50 @@ class GraphFloyd extends Graph {
         this.node2ID = this.nextIndex++;
         this.node3ID = this.nextIndex++;
 
-        var i;
-        for (i = 0; i < this.size; i++) {
+        for (let i = 0; i < this.size; i++) {
             this.costTable[i] = new Array(this.size);
             this.pathTable[i] = new Array(this.size);
             this.costTableID[i] = new Array(this.size);
             this.pathTableID[i] = new Array(this.size);
-
         }
 
-        var costTableHeader = this.nextIndex++;
-        var pathTableHeader = this.nextIndex++;
+        const costTableHeader = this.nextIndex++;
+        const pathTableHeader = this.nextIndex++;
 
-        this.cmd("CreateLabel", costTableHeader, "Cost Table", this.cost_table_start_x, this.cost_table_start_y - 2 * this.cost_table_height, 0);
-        this.cmd("CreateLabel", pathTableHeader, "Path Table", this.path_table_start_x, this.path_table_start_y - 2 * this.path_table_height, 0);
+        this.cmd("CreateLabel", costTableHeader, "Cost Table", this.costTableStartX, this.costTableStartY - 2 * this.costTableHeight, 0);
+        this.cmd("CreateLabel", pathTableHeader, "Path Table", this.pathTableStartX, this.pathTableStartY - 2 * this.pathTableHeight, 0);
 
-        for (i = 0; i < this.size; i++) {
+        for (let i = 0; i < this.size; i++) {
             this.pathIndexXID[i] = this.nextIndex++;
             this.pathIndexYID[i] = this.nextIndex++;
             this.costIndexXID[i] = this.nextIndex++;
             this.costIndexYID[i] = this.nextIndex++;
-            this.cmd("CreateLabel", this.pathIndexXID[i], i, this.path_table_start_x + i * this.path_table_width, this.path_table_start_y - this.path_table_height);
+            this.cmd("CreateLabel", this.pathIndexXID[i], i, this.pathTableStartX + i * this.pathTableWidth, this.pathTableStartY - this.pathTableHeight);
             this.cmd("SetTextColor", this.pathIndexXID[i], "#0000FF");
-            this.cmd("CreateLabel", this.pathIndexYID[i], i, this.path_table_start_x - this.path_table_width, this.path_table_start_y + i * this.path_table_height);
+            this.cmd("CreateLabel", this.pathIndexYID[i], i, this.pathTableStartX - this.pathTableWidth, this.pathTableStartY + i * this.pathTableHeight);
             this.cmd("SetTextColor", this.pathIndexYID[i], "#0000FF");
 
-            this.cmd("CreateLabel", this.costIndexXID[i], i, this.cost_table_start_x + i * this.cost_table_width, this.cost_table_start_y - this.cost_table_height);
+            this.cmd("CreateLabel", this.costIndexXID[i], i, this.costTableStartX + i * this.costTableWidth, this.costTableStartY - this.costTableHeight);
             this.cmd("SetTextColor", this.costIndexXID[i], "#0000FF");
-            this.cmd("CreateLabel", this.costIndexYID[i], i, this.cost_table_start_x - this.cost_table_width, this.cost_table_start_y + i * this.cost_table_height);
+            this.cmd("CreateLabel", this.costIndexYID[i], i, this.costTableStartX - this.costTableWidth, this.costTableStartY + i * this.costTableHeight);
             this.cmd("SetTextColor", this.costIndexYID[i], "#0000FF");
-            for (var j = 0; j < this.size; j++) {
-                this.costTable[i][j] = this.adj_matrix[i][j];
+            for (let j = 0; j < this.size; j++) {
+                this.costTable[i][j] = this.adjMatrix[i][j];
                 if (this.costTable[i][j] >= 0) {
                     this.pathTable[i][j] = i;
-                }
-                else {
+                } else {
                     this.pathTable[i][j] = -1;
                 }
                 this.costTableID[i][j] = this.nextIndex++;
                 this.pathTableID[i][j] = this.nextIndex++;
-                this.cmd("CreateRectangle", this.costTableID[i][j], this.getCostLabel(this.costTable[i][j], true), this.cost_table_width, this.cost_table_height, this.cost_table_start_x + j * this.cost_table_width, this.cost_table_start_y + i * this.cost_table_height);
-                this.cmd("CreateRectangle", this.pathTableID[i][j], this.pathTable[i][j], this.path_table_width, this.path_table_height, this.path_table_start_x + j * this.path_table_width, this.path_table_start_y + i * this.path_table_height);
+                this.cmd("CreateRectangle", this.costTableID[i][j], this.getCostLabel(this.costTable[i][j], true), this.costTableWidth, this.costTableHeight, this.costTableStartX + j * this.costTableWidth, this.costTableStartY + i * this.costTableHeight);
+                this.cmd("CreateRectangle", this.pathTableID[i][j], this.pathTable[i][j], this.pathTableWidth, this.pathTableHeight, this.pathTableStartX + j * this.pathTableWidth, this.pathTableStartY + i * this.pathTableHeight);
             }
         }
         this.animationManager.StartNewAnimation(this.commands);
         this.animationManager.skipForward();
         this.animationManager.clearHistory();
-        if (this.size == Graph.LARGE_SIZE) {
+        if (this.size === Graph.LARGE_SIZE) {
             this.animationManager.setAllLayers([0]);
         }
     }
@@ -259,22 +253,22 @@ class GraphFloyd extends Graph {
     }
 
     doFloydWarshall(ignored) {
-        this.commands = new Array();
+        this.commands = [];
 
-        var oldIndex = this.nextIndex;
-        var messageID = this.nextIndex++;
-        var moveLabel1ID = this.nextIndex++;
-        var moveLabel2ID = this.nextIndex++;
+        const oldIndex = this.nextIndex;
+        const messageID = this.nextIndex++;
+        const moveLabel1ID = this.nextIndex++;
+        const moveLabel2ID = this.nextIndex++;
 
-        this.cmd("CreateCircle", this.node1ID, "", this.node_1_x_pos, this.node_1_y_pos);
-        this.cmd("CreateCircle", this.node2ID, "", this.node_2_x_pos, this.node_2_y_pos);
-        this.cmd("CreateCircle", this.node3ID, "", this.node_3_x_pos, this.node_3_y_pos);
-        this.cmd("CreateLabel", messageID, "", this.message_x, this.message_y, 0);
+        this.cmd("CreateCircle", this.node1ID, "", this.node1xPos, this.node1yPos);
+        this.cmd("CreateCircle", this.node2ID, "", this.node2xPos, this.node2yPos);
+        this.cmd("CreateCircle", this.node3ID, "", this.node3xPos, this.node3yPos);
+        this.cmd("CreateLabel", messageID, "", this.messageX, this.messageY, 0);
 
-        for (var k = 0; k < this.size; k++) {
-            for (var i = 0; i < this.size; i++) {
-                for (var j = 0; j < this.size; j++) {
-                    if (i != j && j != k && i != k) {
+        for (let k = 0; k < this.size; k++) {
+            for (let i = 0; i < this.size; i++) {
+                for (let j = 0; j < this.size; j++) {
+                    if (i !== j && j !== k && i !== k) {
                         this.cmd("SetText", this.node1ID, i);
                         this.cmd("SetText", this.node2ID, k);
                         this.cmd("SetText", this.node3ID, j);
@@ -289,32 +283,28 @@ class GraphFloyd extends Graph {
                         this.cmd("SetTextColor", this.costTableID[i][j], "#CC0000");
                         if (this.costTable[i][k] >= 0 && this.costTable[k][j] >= 0) {
                             if (this.costTable[i][j] < 0 || this.costTable[i][k] + this.costTable[k][j] < this.costTable[i][j]) {
-                                this.cmd("SetText", messageID, this.getCostLabel(this.costTable[i][k], true) + " + " + this.getCostLabel(this.costTable[k][j], true) + " < " + this.getCostLabel(this.costTable[i][j], true));
+                                this.cmd("SetText", messageID, `${this.getCostLabel(this.costTable[i][k], true)} + ${this.getCostLabel(this.costTable[k][j], true)} < ${this.getCostLabel(this.costTable[i][j], true)}`);
                                 this.cmd("Step");
                                 this.costTable[i][j] = this.costTable[i][k] + this.costTable[k][j];
                                 this.cmd("SetText", this.pathTableID[i][j], "");
                                 this.cmd("SetText", this.costTableID[i][j], "");
-                                this.cmd("CreateLabel", moveLabel1ID, this.pathTable[k][j], this.path_table_start_x + j * this.path_table_width, this.path_table_start_y + k * this.path_table_height);
-                                this.cmd("Move", moveLabel1ID, this.path_table_start_x + j * this.path_table_width, this.path_table_start_y + i * this.path_table_height);
-                                this.cmd("CreateLabel", moveLabel2ID, this.costTable[i][j], this.message_x, this.message_y);
+                                this.cmd("CreateLabel", moveLabel1ID, this.pathTable[k][j], this.pathTableStartX + j * this.pathTableWidth, this.pathTableStartY + k * this.pathTableHeight);
+                                this.cmd("Move", moveLabel1ID, this.pathTableStartX + j * this.pathTableWidth, this.pathTableStartY + i * this.pathTableHeight);
+                                this.cmd("CreateLabel", moveLabel2ID, this.costTable[i][j], this.messageX, this.messageY);
                                 this.cmd("SetHighlight", moveLabel2ID, 1);
-                                this.cmd("Move", moveLabel2ID, this.cost_table_start_x + j * this.cost_table_width, this.cost_table_start_y + i * this.cost_table_height);
+                                this.cmd("Move", moveLabel2ID, this.costTableStartX + j * this.costTableWidth, this.costTableStartY + i * this.costTableHeight);
                                 this.pathTable[i][j] = this.pathTable[k][j];
                                 this.cmd("Step");
                                 this.cmd("SetText", this.costTableID[i][j], this.costTable[i][j]);
                                 this.cmd("SetText", this.pathTableID[i][j], this.pathTable[i][j]);
                                 this.cmd("Delete", moveLabel1ID);
                                 this.cmd("Delete", moveLabel2ID);
-                            }
-                            else {
-                                this.cmd("SetText", messageID, "!(" + this.getCostLabel(this.costTable[i][k], true) + " + " + this.getCostLabel(this.costTable[k][j], true) + " < " + this.getCostLabel(this.costTable[i][j], true) + ")");
+                            } else {
+                                this.cmd("SetText", messageID, `!(${this.getCostLabel(this.costTable[i][k], true)} + ${this.getCostLabel(this.costTable[k][j], true)} < ${this.getCostLabel(this.costTable[i][j], true)})`);
                                 this.cmd("Step");
-
                             }
-
-                        }
-                        else {
-                            this.cmd("SetText", messageID, "!(" + this.getCostLabel(this.costTable[i][k], true) + " + " + this.getCostLabel(this.costTable[k][j], true) + " < " + this.getCostLabel(this.costTable[i][j], true) + ")");
+                        } else {
+                            this.cmd("SetText", messageID, `!(${this.getCostLabel(this.costTable[i][k], true)} + ${this.getCostLabel(this.costTable[k][j], true)} < ${this.getCostLabel(this.costTable[i][j], true)})`);
                             this.cmd("Step");
                         }
                         this.cmd("SetTextColor", this.costTableID[i][k], "#000000");

@@ -24,6 +24,12 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals AnimatedObject, UndoBlock */
+/* exported HighlightCircle */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class HighlightCircle extends AnimatedObject {
     radius;
@@ -41,19 +47,18 @@ class HighlightCircle extends AnimatedObject {
         ctx.strokeStyle = this.foregroundColor;
         ctx.lineWidth = this.thickness;
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
+        ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
         ctx.closePath();
         ctx.stroke();
     }
 
     createUndoDelete() {
         return new UndoDeleteHighlightCircle(
-            this.objectID, this.x, this.y, this.foregroundColor, 
-            this.radius, this.layer, this.alpha
+            this.objectID, this.x, this.y, this.foregroundColor,
+            this.radius, this.layer, this.alpha,
         );
     }
 }
-
 
 
 class UndoDeleteHighlightCircle extends UndoBlock {
@@ -75,4 +80,3 @@ class UndoDeleteHighlightCircle extends UndoBlock {
         world.setAlpha(this.objectID, this.alpha);
     }
 }
-

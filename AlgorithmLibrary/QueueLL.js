@@ -24,6 +24,12 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Algorithm */
+/* exported QueueLL */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class QueueLL extends Algorithm {
     static SIZE = 32;
@@ -45,7 +51,7 @@ class QueueLL extends Algorithm {
     }
 
     addControls() {
-        this.enqueueField = this.addControlToAlgorithmBar("Text", "", { maxlength: 4, size: 4 });
+        this.enqueueField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
         this.addReturnSubmit(this.enqueueField, "ALPHANUM", this.enqueueCallback.bind(this));
         this.enqueueButton = this.addControlToAlgorithmBar("Button", "Enqueue");
         this.enqueueButton.onclick = this.enqueueCallback.bind(this);
@@ -108,22 +114,22 @@ class QueueLL extends Algorithm {
     }
 
     getElemXY(i) {
-        var x = 1.5 * this.getElemWidth();
-        var y = 4.5 * this.getElemHeight();
-        for (var k = 0; k < i; k++) {
+        let x = 1.5 * this.getElemWidth();
+        let y = 4.5 * this.getElemHeight();
+        for (let k = 0; k < i; k++) {
             x += this.getElemWidth() * QueueLL.ELEM_SPACING;
             if (x + this.getElemWidth() > this.getCanvasWidth()) {
                 x = 1.5 * this.getElemWidth();
                 y += 2.5 * this.getElemHeight();
             }
         }
-        return { x: x, y: y };
+        return {x: x, y: y};
     }
 
     getElemWidth() {
-        var nrows = 1;
+        let nrows = 1;
         while (true) {
-            var w = nrows * this.getCanvasWidth() / (QueueLL.SIZE + 2 * nrows);
+            const w = nrows * this.getCanvasWidth() / (QueueLL.SIZE + 2 * nrows);
             if (w >= 100) return w / QueueLL.ELEM_SPACING;
             nrows++;
         }
@@ -141,7 +147,7 @@ class QueueLL extends Algorithm {
     // Callback functions for the algorithm control bar
 
     enqueueCallback(event) {
-        var enqueuedValue = this.enqueueField.value;
+        const enqueuedValue = this.enqueueField.value;
         if (enqueuedValue !== "") {
             this.enqueueField.value = "";
             this.implementAction(this.enqueue.bind(this), enqueuedValue);
@@ -173,7 +179,7 @@ class QueueLL extends Algorithm {
 
     enqueue(elem) {
         this.commands = [];
-        var elemID = this.nextIndex++;
+        const elemID = this.nextIndex++;
 
         this.cmd("SetText", this.messageID, "Enqueuing value:  ");
         this.cmd("CreateLabel", this.messageLabelID, elem, 0, 0);
@@ -182,11 +188,11 @@ class QueueLL extends Algorithm {
         this.cmd("AlignRight", this.messageLabelID2, this.messageID);
         this.cmd("Step");
 
-        var insertX = this.getElemX(1), insertY = 2 * this.getElemHeight();
+        const insertX = this.getElemX(1), insertY = 2 * this.getElemHeight();
         this.cmd(
             "CreateLinkedList", elemID, "",
             this.getElemWidth(), this.getElemHeight(), insertX, insertY,
-            0.25, 0, 1, 1
+            0.25, 0, 1, 1,
         );
         this.cmd("Move", this.messageLabelID, insertX, insertY);
         this.cmd("Step");
@@ -194,13 +200,12 @@ class QueueLL extends Algorithm {
         this.cmd("Settext", elemID, elem);
         this.cmd("SetNull", elemID, 1);
         this.cmd("Delete", this.messageLabelID);
-        if (this.queue.length == 0) {
+        if (this.queue.length === 0) {
             this.cmd("SetNull", this.headID, 0);
             this.cmd("SetNull", this.tailID, 0);
             this.cmd("Connect", this.headID, elemID);
-        }
-        else {
-            var prevID = this.queue[this.queue.length - 1].id;
+        } else {
+            const prevID = this.queue[this.queue.length - 1].id;
             this.cmd("SetNull", prevID, 0);
             this.cmd("Connect", prevID, elemID);
             this.cmd("Step");
@@ -209,7 +214,7 @@ class QueueLL extends Algorithm {
         this.cmd("Connect", this.tailID, elemID);
         this.cmd("Step");
 
-        this.queue.push({ elem: elem, id: elemID });
+        this.queue.push({elem: elem, id: elemID});
         this.resetLinkedListPositions();
         this.cmd("SetText", this.messageID, "");
         this.cmd("Delete", this.messageLabelID2);
@@ -219,12 +224,12 @@ class QueueLL extends Algorithm {
 
     dequeue(ignored) {
         this.commands = [];
-        if (this.queue.length == 0) {
+        if (this.queue.length === 0) {
             this.cmd("SetText", this.messageID, "Queue empty!");
             return this.commands;
         }
 
-        var { elem: elem, id: elemID } = this.queue.shift();
+        const {elem: elem, id: elemID} = this.queue.shift();
 
         this.cmd("SetText", this.messageID, "Dequeing value:  ");
         this.cmd("Step");
@@ -235,7 +240,7 @@ class QueueLL extends Algorithm {
         this.cmd("Step");
 
         this.cmd("Disconnect", this.headID, elemID);
-        if (this.queue.length == 0) {
+        if (this.queue.length === 0) {
             this.cmd("SetNull", this.headID, 1);
             this.cmd("SetNull", this.tailID, 1);
             this.cmd("Disconnect", this.tailID, elemID);
@@ -249,16 +254,16 @@ class QueueLL extends Algorithm {
         this.cmd("Step");
 
         this.cmd("Delete", this.messageLabelID);
-        this.cmd("SetText", this.messageID, "Dequeued Value:  " + elem);
+        this.cmd("SetText", this.messageID, `Dequeued Value:  ${elem}`);
 
-        if (this.queue.length == 0) {
+        if (this.queue.length === 0) {
             this.nextIndex = this.initialIndex;
         }
         return this.commands;
     }
 
     resetLinkedListPositions() {
-        for (var i = 0; i < this.queue.length; i++) {
+        for (let i = 0; i < this.queue.length; i++) {
             this.cmd("Move", this.queue[i].id, this.getElemX(i), this.getElemY(i));
         }
     }

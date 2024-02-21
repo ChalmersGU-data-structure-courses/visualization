@@ -24,6 +24,12 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals AnimatedObject, UndoBlock */
+/* exported AnimatedLabel */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class AnimatedLabel extends AnimatedObject {
     centering;
@@ -49,14 +55,13 @@ class AnimatedLabel extends AnimatedObject {
     }
 
     getTextWidth() {
-        this.drawingContext.font = this.textHeight + 'px sans-serif';
-        var strList = this.label.split("\n");
-        var width = 0;
-        if (strList.length == 1) {
+        this.drawingContext.font = `${this.textHeight}px sans-serif`;
+        const strList = this.label.split("\n");
+        let width = 0;
+        if (strList.length === 1) {
             width = this.drawingContext.measureText(this.label).width;
-        }
-        else {
-            for (var i = 0; i < strList.length; i++) {
+        } else {
+            for (let i = 0; i < strList.length; i++) {
                 width = Math.max(width, this.drawingContext.measureText(strList[i]).width);
             }
         }
@@ -149,7 +154,7 @@ class AnimatedLabel extends AnimatedObject {
     }
 
     left() {
-        return this.centering ? this.x - this.textWidth/2 : this.x;
+        return this.centering ? this.x - this.textWidth / 2 : this.x;
     }
 
     centerX() {
@@ -157,27 +162,26 @@ class AnimatedLabel extends AnimatedObject {
     }
 
     right() {
-        return this.centering ? this.x + this.textWidth/2 : this.x + this.textWidth;
+        return this.centering ? this.x + this.textWidth / 2 : this.x + this.textWidth;
     }
 
     top() {
-        return this.centering ? this.y - this.textHeight/2 : this.y;
+        return this.centering ? this.y - this.textHeight / 2 : this.y;
     }
 
     centerY() {
-        return this.centering ? this.y : this.y + this.textHeight/2;
+        return this.centering ? this.y : this.y + this.textHeight / 2;
     }
 
     bottom() {
-        return this.centering ? this.y + this.textHeight/2 : this.y + this.textHeight;
+        return this.centering ? this.y + this.textHeight / 2 : this.y + this.textHeight;
     }
 
     setHighlightIndex(hlIndex) {
         // Only allow highlight index for labels that don't have End-Of-Line
         if (this.label.indexOf("\n") < 0 && this.label.length > hlIndex) {
             this.highlightIndex = hlIndex;
-        }
-        else {
+        } else {
             this.highlightIndex = -1;
         }
     }
@@ -199,13 +203,13 @@ class AnimatedLabel extends AnimatedObject {
         if (!this.addedToScene) return;
 
         ctx.globalAlpha = this.alpha;
-        ctx.font = this.textHeight + 'px sans-serif';
+        ctx.font = `${this.textHeight}px sans-serif`;
 
-        ctx.textAlign = 'left';
-        ctx.textBaseline = 'top';
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top";
         if (this.centering) {
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
         }
 
         if (this.highlighted) {
@@ -215,31 +219,29 @@ class AnimatedLabel extends AnimatedObject {
         }
 
         ctx.fillStyle = this.labelColor;
-        var strList = this.label.split("\n");
-        if (strList.length == 1) {
+        const strList = this.label.split("\n");
+        if (strList.length === 1) {
             if (this.highlightIndex < 0 || this.highlightIndex >= this.label.length) {
                 ctx.fillText(this.label, this.x, this.y);
-            }
-            else {
-                var leftStr = this.label.substring(0, this.highlightIndex);
-                var highlightStr = this.label.substring(this.highlightIndex, this.highlightIndex + 1);
-                var rightStr = this.label.substring(this.highlightIndex + 1);
-                var leftWidth = ctx.measureText(leftStr).width;
-                var centerWidth = ctx.measureText(highlightStr).width;
-                var x = this.x;
+            } else {
+                const leftStr = this.label.substring(0, this.highlightIndex);
+                const highlightStr = this.label.substring(this.highlightIndex, this.highlightIndex + 1);
+                const rightStr = this.label.substring(this.highlightIndex + 1);
+                const leftWidth = ctx.measureText(leftStr).width;
+                const centerWidth = ctx.measureText(highlightStr).width;
+                let x = this.x;
                 if (this.centering) {
                     x -= this.textWidth / 2;
-                    ctx.textAlign = 'left';
+                    ctx.textAlign = "left";
                 }
                 ctx.fillText(leftStr, x, this.y);
                 ctx.fillText(rightStr, x + leftWidth + centerWidth, this.y);
                 ctx.fillStyle = this.highlightColor;
                 ctx.fillText(highlightStr, x + leftWidth, this.y);
             }
-        }
-        else {
-            var offset = (this.centering) ? (1 - strList.length) / 2 : 0;
-            for (var i = 0; i < strList.length; i++) {
+        } else {
+            const offset = (this.centering) ? (1 - strList.length) / 2 : 0;
+            for (let i = 0; i < strList.length; i++) {
                 ctx.fillText(strList[i], this.x, this.y + (i + offset) * this.textHeight);
             }
         }
@@ -247,12 +249,11 @@ class AnimatedLabel extends AnimatedObject {
 
     createUndoDelete() {
         return new UndoDeleteLabel(
-            this.objectID, this.label, this.x, this.y, this.centering, 
-            this.labelColor, this.layer, this.highlightIndex
+            this.objectID, this.label, this.x, this.y, this.centering,
+            this.labelColor, this.layer, this.highlightIndex,
         );
     }
 }
-
 
 
 class UndoDeleteLabel extends UndoBlock {
@@ -275,5 +276,3 @@ class UndoDeleteLabel extends UndoBlock {
         world.setLayer(this.objectID, this.layer);
     }
 }
-
-

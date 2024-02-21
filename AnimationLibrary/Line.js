@@ -24,6 +24,11 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals AnimatedObject, UndoBlock */
+/* exported Line */
+///////////////////////////////////////////////////////////////////////////////
 
 // This class is somewhat poorly named -- it handles links between vertices in graphs,
 //  pointers in linked lists, and so on.
@@ -42,7 +47,7 @@ class Line extends AnimatedObject {
     arrowWidth = 4;
     highlightDiff = 0;
 
-    constructor(n1, n2, color, curve = 0, directed = false, label = "", anchorPoint = 0, highlightColor, labelColor) {
+    constructor(n1, n2, color, curve = 0, directed = false, label = "", anchorPoint = 0, highlightColor = undefined, labelColor = undefined) {
         super(color, color, highlightColor, labelColor);
         this.node1 = n1;
         this.node2 = n2;
@@ -62,7 +67,7 @@ class Line extends AnimatedObject {
     }
 
     hasNode(n) {
-        return this.node1 == n || this.node2 == n;
+        return this.node1 === n || this.node2 === n;
     }
 
     draw(ctx) {
@@ -78,15 +83,15 @@ class Line extends AnimatedObject {
             ctx.lineWidth = 2;
         }
 
-        var fromPos = this.node1.getTailPointerAttachPos(this.node2.x, this.node2.y, this.anchorPoint);
-        var toPos = this.node2.getHeadPointerAttachPos(this.node1.x, this.node1.y);
+        const fromPos = this.node1.getTailPointerAttachPos(this.node2.x, this.node2.y, this.anchorPoint);
+        const toPos = this.node2.getHeadPointerAttachPos(this.node1.x, this.node1.y);
 
-        var deltaX = toPos[0] - fromPos[0];
-        var deltaY = toPos[1] - fromPos[1];
-        var midX = deltaX / 2 + fromPos[0];
-        var midY = deltaY / 2 + fromPos[1];
-        var controlX = midX - deltaY * this.curve;
-        var controlY = midY + deltaX * this.curve;
+        const deltaX = toPos[0] - fromPos[0];
+        const deltaY = toPos[1] - fromPos[1];
+        const midX = deltaX / 2 + fromPos[0];
+        const midY = deltaY / 2 + fromPos[1];
+        const controlX = midX - deltaY * this.curve;
+        const controlY = midY + deltaX * this.curve;
 
         ctx.beginPath();
         ctx.moveTo(fromPos[0], fromPos[1]);
@@ -96,29 +101,29 @@ class Line extends AnimatedObject {
         if (this.label != null && this.label !== "") {
             // Position of the edge label:  First, we will place it right along the
             // middle of the curve (or the middle of the line, for curve == 0)
-            var labelPosX = 0.25 * fromPos[0] + 0.5 * controlX + 0.25 * toPos[0];
-            var labelPosY = 0.25 * fromPos[1] + 0.5 * controlY + 0.25 * toPos[1];
+            let labelPosX = 0.25 * fromPos[0] + 0.5 * controlX + 0.25 * toPos[0];
+            let labelPosY = 0.25 * fromPos[1] + 0.5 * controlY + 0.25 * toPos[1];
 
             // Next, we push the edge position label out just a little in the direction of
             // the curve, so that the label doesn't intersect the cuve (as long as the label
             // is only a few characters, that is)
-            var midLen = Math.sqrt(deltaY * deltaY + deltaX * deltaX);
-            if (midLen != 0) {
-                var sign = Math.sign(this.curve) || 1;
+            const midLen = Math.sqrt(deltaY * deltaY + deltaX * deltaX);
+            if (midLen !== 0) {
+                const sign = Math.sign(this.curve) || 1;
                 labelPosX += (-deltaY * sign) / midLen * 10;
                 labelPosY += (deltaX * sign) / midLen * 10;
             }
 
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.font = this.textHeight + 'px sans-serif';
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.font = `${this.textHeight}px sans-serif`;
             ctx.fillText(this.label, labelPosX, labelPosY);
         }
 
         if (this.directed) {
-            var xVec = controlX - toPos[0];
-            var yVec = controlY - toPos[1];
-            var len = Math.sqrt(xVec * xVec + yVec * yVec);
+            let xVec = controlX - toPos[0];
+            let yVec = controlY - toPos[1];
+            const len = Math.sqrt(xVec * xVec + yVec * yVec);
             if (len > 0) {
                 xVec = xVec / len;
                 yVec = yVec / len;
@@ -140,7 +145,6 @@ class Line extends AnimatedObject {
 }
 
 
-
 class UndoConnect extends UndoBlock {
     constructor(node1, node2, connect, color, directed, curve, label, anchorPoint) {
         super();
@@ -157,10 +161,8 @@ class UndoConnect extends UndoBlock {
     undoInitialStep(world) {
         if (this.connect) {
             world.connectEdge(this.fromID, this.toID, this.color, this.curve, this.directed, this.label, this.anchorPoint);
-        }
-        else {
+        } else {
             world.disconnectEdge(this.fromID, this.toID);
         }
     }
 }
-

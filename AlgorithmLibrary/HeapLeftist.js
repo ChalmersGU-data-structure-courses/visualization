@@ -24,13 +24,18 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Algorithm */
+/* exported HeapLeftist */
+///////////////////////////////////////////////////////////////////////////////
 
 
 class LeftistHeapNode {
     constructor(val, id, nplID, initialX, initialY) {
         this.data = val;
-        this.x = (initialX == undefined) ? 0 : initialX;
-        this.y = (initialY == undefined) ? 0 : initialY;
+        this.x = (initialX == null) ? 0 : initialX;
+        this.y = (initialY == null) ? 0 : initialY;
         this.npX = initialX - HeapLeftist.NPL_OFFSET_X;
         this.npY = initialY - HeapLeftist.NPL_OFFSET_Y;
 
@@ -43,12 +48,12 @@ class LeftistHeapNode {
         this.rightWidth = 0;
         this.parent = null;
     }
+
     disconnectFromParent() {
         if (this.parent != null) {
-            if (this.parent.right == this) {
+            if (this.parent.right === this) {
                 this.parent.right = null;
-            }
-            else if (this.parent.left === this) {
+            } else if (this.parent.left === this) {
                 this.parent.left == null;
             }
         }
@@ -100,7 +105,7 @@ class HeapLeftist extends Algorithm {
     }
 
     addControls() {
-        this.insertField = this.addControlToAlgorithmBar("Text", "", { maxlength: 4, size: 4 });
+        this.insertField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
         this.addReturnSubmit(this.insertField, "int", this.insertCallback.bind(this));
 
         this.insertButton = this.addControlToAlgorithmBar("Button", "Insert");
@@ -120,14 +125,13 @@ class HeapLeftist extends Algorithm {
     NPLChangedHandler(logicalRep, event) {
         if (this.showNPLBox.checked) {
             this.animationManager.setAllLayers([0, 1]);
-        }
-        else {
+        } else {
             this.animationManager.setAllLayers([0]);
         }
     }
 
     insertCallback(event) {
-        var insertedValue = this.normalizeNumber(this.insertField.value);
+        const insertedValue = this.normalizeNumber(this.insertField.value);
         if (insertedValue !== "") {
             this.insertField.value = "";
             this.implementAction(this.insertElement.bind(this), insertedValue);
@@ -139,7 +143,7 @@ class HeapLeftist extends Algorithm {
     }
 
     clear(ignored) {
-        this.commands = new Array();
+        this.commands = [];
         this.clearTree(this.treeRoot);
         this.treeRoot = null;
         this.nexIndex = 1;
@@ -166,7 +170,7 @@ class HeapLeftist extends Algorithm {
     }
 
     removeSmallest(dummy) {
-        this.commands = new Array();
+        this.commands = [];
 
         if (this.treeRoot != null) {
             this.highlightLeft = this.nextIndex++;
@@ -179,7 +183,7 @@ class HeapLeftist extends Algorithm {
             if (this.treeRoot.right != null) {
                 this.cmd("Disconnect", this.treeRoot.graphicID, this.treeRoot.right.graphicID);
             }
-            var oldElem = this.treeRoot.graphicID;
+            const oldElem = this.treeRoot.graphicID;
             this.cmd("Delete", this.treeRoot.nplID);
             this.cmd("Move", this.treeRoot.graphicID, HeapLeftist.INSERT_X, HeapLeftist.INSERT_Y);
             this.cmd("Step");
@@ -187,17 +191,15 @@ class HeapLeftist extends Algorithm {
 
             if (this.treeRoot.left == null) {
                 this.treeRoot = null;
-            }
-            else if (this.treeRoot.right == null) {
+            } else if (this.treeRoot.right == null) {
                 this.treeRoot = this.treeRoot.left;
                 this.resizeTrees();
-            }
-            else {
-                var secondTree = this.treeRoot.right;
+            } else {
+                const secondTree = this.treeRoot.right;
                 this.secondaryRoot = secondTree;
                 this.treeRoot = this.treeRoot.left;
                 this.resizeTrees();
-                //this.secondaryRoot = null;
+                // this.secondaryRoot = null;
                 this.cmd("CreateHighlightCircle", this.highlightLeft, HeapLeftist.HIGHLIGHT_CIRCLE_COLOR, this.treeRoot.x, this.treeRoot.y);
 
                 this.cmd("CreateHighlightCircle", this.highlightRight, HeapLeftist.HIGHLIGHT_CIRCLE_COLOR, secondTree.x, secondTree.y);
@@ -207,14 +209,13 @@ class HeapLeftist extends Algorithm {
             this.resizeTrees();
             this.cmd("Delete", oldElem);
             this.cmd("SetText", HeapLeftist.MESSAGE_ID, "");
-
         }
         // Clear for real
         return this.commands;
     }
 
     insertElement(insertedValue) {
-        this.commands = new Array();
+        this.commands = [];
         this.cmd("SetText", HeapLeftist.MESSAGE_ID, "Create a heap with one node, merge with existing heap.");
 
         this.secondaryRoot = new LeftistHeapNode(insertedValue, this.nextIndex++, this.nextIndex++, HeapLeftist.INSERT_X, HeapLeftist.INSERT_Y);
@@ -232,12 +233,11 @@ class HeapLeftist extends Algorithm {
             this.cmd("CreateHighlightCircle", this.highlightLeft, HeapLeftist.HIGHLIGHT_CIRCLE_COLOR, this.treeRoot.x, this.treeRoot.y);
             this.cmd("CreateHighlightCircle", this.highlightRight, HeapLeftist.HIGHLIGHT_CIRCLE_COLOR, this.secondaryRoot.x, this.secondaryRoot.y);
 
-            var rightTree = this.secondaryRoot;
+            const rightTree = this.secondaryRoot;
             this.secondaryRoot = null;
             this.treeRoot = this.merge(this.treeRoot, rightTree);
             this.resizeTrees();
-        }
-        else {
+        } else {
             this.treeRoot = this.secondaryRoot;
             this.secondaryRoot = null;
             this.resizeTrees();
@@ -261,19 +261,18 @@ class HeapLeftist extends Algorithm {
             this.cmd("Delete", this.highlightLeft);
             return tree1;
         }
-        var tmp;
+
         this.cmd("SetHighlight", tree1.graphicID, 1);
         this.cmd("SetHighlight", tree2.graphicID, 1);
         if (this.compare(tree2.data, tree1.data) < 0) {
             this.cmd("SetText", HeapLeftist.MESSAGE_ID, "Min element is in right heap.  Recursively merge right subtree of right heap with left heap");
-            tmp = tree1;
+            const tmp = tree1;
             tree1 = tree2;
             tree2 = tmp;
-            tmp = this.highlightRight;
+            const tmpR = this.highlightRight;
             this.highlightRight = this.highlightLeft;
-            this.highlightLeft = tmp;
-        }
-        else {
+            this.highlightLeft = tmpR;
+        } else {
             this.cmd("SetText", HeapLeftist.MESSAGE_ID, "Min element is in left heap.  Recursively merge right subtree of left heap with right heap");
         }
         this.cmd("Step");
@@ -281,15 +280,14 @@ class HeapLeftist extends Algorithm {
         this.cmd("SetHighlight", tree2.graphicID, 0);
         if (tree1.right == null) {
             this.cmd("Move", this.highlightLeft, tree1.x + HeapLeftist.WIDTH_DELTA / 2, tree1.y + HeapLeftist.HEIGHT_DELTA);
-        }
-        else {
+        } else {
             this.cmd("Move", this.highlightLeft, tree1.right.x, tree1.right.y);
         }
         this.cmd("Step");
         if (tree1.right != null) {
             this.cmd("Disconnect", tree1.graphicID, tree1.right.graphicID, HeapLeftist.LINK_COLOR);
         }
-        var next = tree1.right;
+        const next = tree1.right;
         this.cmd("SetAlpha", tree1.graphicID, HeapLeftist.BACKGROUND_ALPHA);
         this.cmd("SetAlpha", tree1.nplID, HeapLeftist.BACKGROUND_ALPHA);
         if (tree1.left != null) {
@@ -298,13 +296,13 @@ class HeapLeftist extends Algorithm {
         }
         this.cmd("Step");
         tree1.right = this.merge(next, tree2);
-        if (this.secondaryRoot == tree1.right) {
+        if (this.secondaryRoot === tree1.right) {
             this.secondaryRoot = null;
         }
-        if (this.treeRoot == tree1.right) {
+        if (this.treeRoot === tree1.right) {
             this.treeRoot = null;
         }
-        if (tree1.right.parent != tree1) {
+        if (tree1.right.parent !== tree1) {
             tree1.right.disconnectFromParent();
         }
         tree1.right.parent = tree1;
@@ -326,22 +324,19 @@ class HeapLeftist extends Algorithm {
             this.cmd("SetText", HeapLeftist.MESSAGE_ID, "Right subtree has larger Null Path Length than left subtree.  Swapping ...");
             this.cmd("Step");
             this.cmd("SetHighlight", tree1.graphicID, 0);
-            var tmp = tree1.left;
+            const tmp = tree1.left;
             tree1.left = tree1.right;
             tree1.right = tmp;
             this.resizeTrees();
-        }
-        else {
+        } else {
             this.cmd("SetHighlight", tree1.graphicID, 1);
             this.cmd("SetText", HeapLeftist.MESSAGE_ID, "Left subtree has Null Path Length at least as large as right subtree.  No swap required ...");
             this.cmd("Step");
             this.cmd("SetHighlight", tree1.graphicID, 0);
-
         }
         if (tree1.right == null) {
             tree1.npl = 0;
-        }
-        else {
+        } else {
             tree1.npl = Math.min(tree1.left.npl, tree1.right.npl) + 1;
         }
         this.cmd("SetText", tree1.nplID, tree1.npl);
@@ -374,44 +369,38 @@ class HeapLeftist extends Algorithm {
     }
 
     resizeTrees() {
-        var startingPoint;
-        var secondTreeStart;
         this.resizeWidths(this.treeRoot);
         this.resizeWidths(this.secondaryRoot);
 
         if (this.treeRoot != null) {
-            startingPoint = this.treeRoot.leftWidth;
+            const startingPoint = this.treeRoot.leftWidth;
             this.setNewPositions(this.treeRoot, startingPoint, HeapLeftist.STARTING_Y, 0);
             this.animateNewPositions(this.treeRoot);
             if (this.secondaryRoot != null) {
-                secondTreeStart = this.treeRoot.leftWidth + this.treeRoot.rightWidth + this.secondaryRoot.leftWidth + 50;
+                const secondTreeStart = this.treeRoot.leftWidth + this.treeRoot.rightWidth + this.secondaryRoot.leftWidth + 50;
                 this.setNewPositions(this.secondaryRoot, secondTreeStart, HeapLeftist.STARTING_Y, 0);
                 this.animateNewPositions(this.secondaryRoot);
             }
 
             this.cmd("Step");
-        }
-        else if (this.secondaryRoot != null) {
-            startingPoint = this.secondaryRoot.leftWidth;
+        } else if (this.secondaryRoot != null) {
+            const startingPoint = this.secondaryRoot.leftWidth;
             this.setNewPositions(this.secondaryRoot, startingPoint, HeapLeftist.STARTING_Y, 0);
             this.animateNewPositions(this.secondaryRoot);
         }
-
     }
 
     setNewPositions(tree, xPosition, yPosition, side) {
         if (tree != null) {
             tree.y = yPosition;
-            if (side == -1) {
+            if (side === -1) {
                 xPosition = xPosition - tree.rightWidth;
                 tree.npX = xPosition - HeapLeftist.NPL_OFFSET_X;
-            }
-            else if (side == 1) {
+            } else if (side === 1) {
                 xPosition = xPosition + tree.leftWidth;
                 tree.npX = xPosition + HeapLeftist.NPL_OFFSET_X;
-            }
-            else {
-                tree.heightLabelX = xPosition - HeapLeftist.NPL_OFFSET_Y;;
+            } else {
+                tree.heightLabelX = xPosition - HeapLeftist.NPL_OFFSET_Y;
                 tree.npX = xPosition + HeapLeftist.NPL_OFFSET_X;
             }
             tree.x = xPosition;
@@ -419,7 +408,6 @@ class HeapLeftist extends Algorithm {
             this.setNewPositions(tree.left, xPosition, yPosition + HeapLeftist.HEIGHT_DELTA, -1);
             this.setNewPositions(tree.right, xPosition, yPosition + HeapLeftist.HEIGHT_DELTA, 1);
         }
-
     }
 
     animateNewPositions(tree) {
@@ -431,4 +419,3 @@ class HeapLeftist extends Algorithm {
         }
     }
 }
-

@@ -24,23 +24,28 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals AnimatedObject, UndoBlock */
+/* exported AnimatedRectangle */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class AnimatedRectangle extends AnimatedObject {
     w;
     h;
-    xJustify;  // "center", "left", "right"
-    yJustify;  // "center", "top", "bottom"
+    xJustify; // "center", "left", "right"
+    yJustify; // "center", "top", "bottom"
     nullPointer = false;
 
-    constructor(objectID, label, w, h, xJustify = "center", yJustify = "center", 
-                backgroundColor, foregroundColor, highlightColor, labelColor) {
+    constructor(objectID, label, w, h, xJustify, yJustify, backgroundColor, foregroundColor, highlightColor, labelColor) {
         super(backgroundColor, foregroundColor, highlightColor, labelColor);
         this.objectID = objectID;
         this.label = label;
         this.w = w;
         this.h = h;
-        this.xJustify = xJustify;
-        this.yJustify = yJustify;
+        this.xJustify = xJustify || "center";
+        this.yJustify = yJustify || "center";
     }
 
     setNull(np) {
@@ -53,49 +58,49 @@ class AnimatedRectangle extends AnimatedObject {
 
     left() {
         return (
-            this.xJustify == "right"  ? this.x - this.w     :
-            this.xJustify == "center" ? this.x - this.w / 2 :
-            /*   xJustify == "left"  */ this.x
+            this.xJustify === "right" ? this.x - this.w :
+            this.xJustify === "center" ? this.x - this.w / 2 :
+            /*   xJustify === "left"  */ this.x
         );
     }
 
     centerX() {
         return (
-            this.xJustify == "right"  ? this.x - this.w / 2 :
-            this.xJustify == "center" ? this.x              :
-            /*   xJustify == "left"  */ this.x + this.w / 2
+            this.xJustify === "right" ? this.x - this.w / 2 :
+            this.xJustify === "center" ? this.x :
+            /*   xJustify === "left"  */ this.x + this.w / 2
         );
     }
 
     right() {
         return (
-            this.xJustify == "right"  ? this.x              :
-            this.xJustify == "center" ? this.x + this.w / 2 :
-            /*   xJustify == "left"  */ this.x + this.w
+            this.xJustify === "right" ? this.x :
+            this.xJustify === "center" ? this.x + this.w / 2 :
+            /*   xJustify === "left"  */ this.x + this.w
         );
     }
 
     top() {
         return (
-            this.yJustify == "bottom" ? this.y - this.h     :
-            this.yJustify == "center" ? this.y - this.h / 2 :
-            /*   yJustify == "top"   */ this.y
+            this.yJustify === "bottom" ? this.y - this.h :
+            this.yJustify === "center" ? this.y - this.h / 2 :
+            /*   yJustify === "top"   */ this.y
         );
     }
 
     centerY() {
         return (
-            this.yJustify == "bottom" ? this.y - this.h / 2 :
-            this.yJustify == "center" ? this.y              :
-            /*   yJustify == "top"   */ this.y + this.h / 2
+            this.yJustify === "bottom" ? this.y - this.h / 2 :
+            this.yJustify === "center" ? this.y :
+            /*   yJustify === "top"   */ this.y + this.h / 2
         );
     }
 
     bottom() {
         return (
-            this.yJustify == "bottom" ? this.y              :
-            this.yJustify == "center" ? this.y + this.h / 2 :
-            /*   yJustify == "top"   */ this.y + this.h
+            this.yJustify === "bottom" ? this.y :
+            this.yJustify === "center" ? this.y + this.h / 2 :
+            /*   yJustify === "top"   */ this.y + this.h
         );
     }
 
@@ -122,10 +127,10 @@ class AnimatedRectangle extends AnimatedObject {
     draw(ctx) {
         if (!this.addedToScene) return;
 
-        var x = this.left();
-        var y = this.top();
-        var w = this.getWidth();
-        var h = this.getHeight();
+        const x = this.left();
+        const y = this.top();
+        const w = this.getWidth();
+        const h = this.getHeight();
 
         ctx.globalAlpha = this.alpha;
 
@@ -133,9 +138,9 @@ class AnimatedRectangle extends AnimatedObject {
         ctx.fillRect(x, y, w, h);
 
         ctx.fillStyle = this.labelColor;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.font = this.textHeight + 'px sans-serif';
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.font = `${this.textHeight}px sans-serif`;
         ctx.fillText(this.label, this.centerX(), this.centerY());
 
         ctx.strokeStyle = this.foregroundColor;
@@ -160,12 +165,11 @@ class AnimatedRectangle extends AnimatedObject {
 
     createUndoDelete() {
         return new UndoDeleteRectangle(
-            this.objectID, this.label, this.x, this.y, this.w, this.h, this.xJustify, this.yJustify, 
-            this.backgroundColor, this.foregroundColor, this.highlighted, this.layer
+            this.objectID, this.label, this.x, this.y, this.w, this.h, this.xJustify, this.yJustify,
+            this.backgroundColor, this.foregroundColor, this.highlighted, this.layer,
         );
     }
 }
-
 
 
 class UndoDeleteRectangle extends UndoBlock {
@@ -187,12 +191,11 @@ class UndoDeleteRectangle extends UndoBlock {
 
     undoInitialStep(world) {
         world.addRectangleObject(
-            this.objectID, this.label, this.w, this.h, this.xJustify, this.yJustify, 
-            this.backgroundColor, this.foregroundColor
+            this.objectID, this.label, this.w, this.h, this.xJustify, this.yJustify,
+            this.backgroundColor, this.foregroundColor,
         );
         world.setNodePosition(this.objectID, this.x, this.y);
         world.setLayer(this.objectID, this.layer);
         world.setHighlight(this.objectID, this.highlighted);
     }
 }
-

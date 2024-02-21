@@ -24,6 +24,12 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Algorithm */
+/* exported SearchArray */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class SearchArray extends Algorithm {
     static LOW_CIRCLE_COLOR = "#1010FF";
@@ -78,12 +84,12 @@ class SearchArray extends Algorithm {
     static ARRAY_START_X = 50;
     static ARRAY_START_Y = 200;
 
-    static LINEAR_CODE = [ 
+    static LINEAR_CODE = [
         ["def ", "linearSearch(array, value)", ":"],
         ["    i = 0"],
         ["    while (", "i < len(array)", " and ", "array[i] < value", "):"],
         ["        i += 1"],
-        ["    if (", "i >= len(array)", " or ", "array[i] != value", "):"],
+        ["    if (", "i >= len(array)", " or ", "array[i] !== value", "):"],
         ["        return -1"],
         ["    return i"],
     ];
@@ -93,8 +99,8 @@ class SearchArray extends Algorithm {
         ["    low = 0"],
         ["    high = len(array) - 1"],
         ["    while (", "low <= high", "):"],
-        ["        mid = (low + high) / 2"] ,
-        ["        if (", "array[mid] == value", "):"],
+        ["        mid = (low + high) / 2"],
+        ["        if (", "array[mid] === value", "):"],
         ["            return mid"],
         ["        else if (", "array[mid] < value", "):"],
         ["            low = mid + 1"],
@@ -119,7 +125,7 @@ class SearchArray extends Algorithm {
     }
 
     addControls() {
-        this.searchField = this.addControlToAlgorithmBar("Text", "", { maxlength: 3, size: 3 });
+        this.searchField = this.addControlToAlgorithmBar("Text", "", {maxlength: 3, size: 3});
         this.addReturnSubmit(this.searchField, "int");
         this.linearSearchButton = this.addControlToAlgorithmBar("Button", "Linear search");
         this.linearSearchButton.onclick = this.linearSearchCallback.bind(this);
@@ -158,9 +164,9 @@ class SearchArray extends Algorithm {
     }
 
     getIndexXY(index) {
-        var xpos = SearchArray.ARRAY_START_X;
-        var ypos = SearchArray.ARRAY_START_Y + this.getArrayElemHeight();
-        for (var i = 0; i < index; i++) {
+        let xpos = SearchArray.ARRAY_START_X;
+        let ypos = SearchArray.ARRAY_START_Y + this.getArrayElemHeight();
+        for (let i = 0; i < index; i++) {
             xpos += this.getArrayElemWidth();
             if (xpos > this.getCanvasWidth() - this.getArrayElemWidth()) {
                 xpos = SearchArray.ARRAY_START_X;
@@ -186,24 +192,24 @@ class SearchArray extends Algorithm {
         this.animationManager.resetAll();
         this.nextIndex = 0;
         this.commands = [];
-        var size = this.getSize();
+        const size = this.getSize();
 
         // Initialise a sorted array with unique random numbers:
         this.arrayID = [];
         this.arrayLabelID = [];
         this.arrayData = [];
-        var value = 0;
-        for (var i = 0; i < size; i++) {
+        let value = 0;
+        for (let i = 0; i < size; i++) {
             value += Math.floor(1 + SearchArray.ARRAY_VALUE_MAX_INCREMENT * Math.random());
             this.arrayData[i] = value;
             this.arrayID[i] = this.nextIndex++;
             this.arrayLabelID[i] = this.nextIndex++;
         }
 
-        for (var i = 0; i < size; i++) {
-            var xPos = this.getIndexX(i);
-            var yPos = this.getIndexY(i);
-            var yLabelPos = this.getLabelY(i);
+        for (let i = 0; i < size; i++) {
+            const xPos = this.getIndexX(i);
+            const yPos = this.getIndexY(i);
+            const yLabelPos = this.getLabelY(i);
             this.cmd("CreateRectangle", this.arrayID[i], this.arrayData[i], this.getArrayElemWidth(), this.getArrayElemHeight(), xPos, yPos);
             this.cmd("CreateLabel", this.arrayLabelID[i], i, xPos, yLabelPos);
             this.cmd("SetForegroundColor", this.arrayLabelID[i], SearchArray.ARRAY_LABEL_FOREGROUND_COLOR);
@@ -309,14 +315,14 @@ class SearchArray extends Algorithm {
     // Callback functions for the algorithm control bar
 
     linearSearchCallback(event) {
-        var searchVal = this.normalizeNumber(this.searchField.value);
+        const searchVal = this.normalizeNumber(this.searchField.value);
         if (searchVal !== "") {
             this.implementAction(this.linearSearch.bind(this), searchVal);
         }
     }
 
     binarySearchCallback(event) {
-        var searchVal = this.normalizeNumber(this.searchField.value);
+        const searchVal = this.normalizeNumber(this.searchField.value);
         if (searchVal !== "") {
             this.implementAction(this.binarySearch.bind(this), searchVal);
         }
@@ -351,9 +357,9 @@ class SearchArray extends Algorithm {
         this.cmd("SetText", this.resultBoxID, "");
         this.cmd("SetText", this.movingLabelID, "");
 
-        var size = this.getSize();
-        var low = 0;
-        var high = size - 1;
+        const size = this.getSize();
+        let low = 0;
+        let high = size - 1;
         this.cmd("Move", this.lowCircleID, this.getIndexX(low), this.getLabelY(low));
         this.cmd("SetText", this.searchForBoxID, searchVal);
         this.cmd("SetForegroundColor", this.binaryCodeID[1][0], SearchArray.CODE_HIGHLIGHT_COLOR);
@@ -370,7 +376,8 @@ class SearchArray extends Algorithm {
         this.cmd("SetForegroundColor", this.binaryCodeID[2][0], SearchArray.CODE_STANDARD_COLOR);
         this.cmd("SetHighlight", this.highBoxID, 0);
 
-        var comparisons = 0;
+        let mid;
+        let comparisons = 0;
         while (true) {
             this.cmd("SetHighlight", this.highBoxID, 1);
             this.cmd("SetHighlight", this.lowBoxID, 1);
@@ -381,9 +388,8 @@ class SearchArray extends Algorithm {
             this.cmd("SetForegroundColor", this.binaryCodeID[3][1], SearchArray.CODE_STANDARD_COLOR);
             if (low > high) {
                 break;
-            }
-            else {
-                var mid = Math.floor((high + low) / 2);
+            } else {
+                mid = Math.floor((high + low) / 2);
                 this.cmd("SetForegroundColor", this.binaryCodeID[4][0], SearchArray.CODE_HIGHLIGHT_COLOR);
                 this.cmd("SetHighlight", this.highBoxID, 1);
                 this.cmd("SetHighlight", this.lowBoxID, 1);
@@ -402,13 +408,12 @@ class SearchArray extends Algorithm {
                 this.cmd("SetHighlight", this.searchForBoxID, 0);
                 this.cmd("SetHighlight", this.arrayID[mid], 0);
                 this.cmd("SetForegroundColor", this.binaryCodeID[5][1], SearchArray.CODE_STANDARD_COLOR);
-                var cmp = this.compare(this.arrayData[mid], searchVal);
+                const cmp = this.compare(this.arrayData[mid], searchVal);
                 comparisons++;
                 this.cmd("SetText", this.comparisonsBoxID, comparisons);
-                if (cmp == 0) {
+                if (cmp === 0) {
                     break;
-                }
-                else {
+                } else {
                     this.cmd("SetForegroundColor", this.binaryCodeID[7][1], SearchArray.CODE_HIGHLIGHT_COLOR);
                     this.cmd("SetHighlight", this.searchForBoxID, 1);
                     this.cmd("SetHighlight", this.arrayID[mid], 1);
@@ -422,20 +427,19 @@ class SearchArray extends Algorithm {
                         this.cmd("SetHighlight", this.lowID, 1);
                         this.cmd("SetText", this.lowBoxID, low);
                         this.cmd("Move", this.lowCircleID, this.getIndexX(low), this.getLabelY(low));
-                        for (var i = 0; i < low; i++) {
+                        for (let i = 0; i < low; i++) {
                             this.cmd("SetAlpha", this.arrayID[i], 0.2);
                         }
                         this.cmd("Step");
                         this.cmd("SetForegroundColor", this.binaryCodeID[8][0], SearchArray.CODE_STANDARD_COLOR);
                         this.cmd("SetHighlight", this.lowBoxID, 0);
-                    }
-                    else {
+                    } else {
                         high = mid - 1;
                         this.cmd("SetForegroundColor", this.binaryCodeID[10][0], SearchArray.CODE_HIGHLIGHT_COLOR);
                         this.cmd("SetHighlight", this.highBoxID, 1);
                         this.cmd("SetText", this.highBoxID, high);
                         this.cmd("Move", this.highCircleID, this.getIndexX(high), this.getLabelY(high));
-                        for (var i = high + 1; i < size; i++) {
+                        for (let i = high + 1; i < size; i++) {
                             this.cmd("SetAlpha", this.arrayID[i], 0.2);
                         }
                         this.cmd("Step");
@@ -453,8 +457,7 @@ class SearchArray extends Algorithm {
             this.cmd("SetForegroundColor", this.binaryCodeID[11][0], SearchArray.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
             this.cmd("SetForegroundColor", this.binaryCodeID[11][0], SearchArray.CODE_STANDARD_COLOR);
-        }
-        else {
+        } else {
             this.cmd("SetText", this.resultString, "   Element found!");
             this.cmd("SetText", this.movingLabelID, mid);
             this.cmd("SetPosition", this.movingLabelID, this.getIndexX(mid), this.getIndexY(mid));
@@ -465,7 +468,7 @@ class SearchArray extends Algorithm {
             this.cmd("SetForegroundColor", this.binaryCodeID[6][0], SearchArray.CODE_STANDARD_COLOR);
         }
 
-        for (var i = 0; i < size; i++) {
+        for (let i = 0; i < size; i++) {
             this.cmd("SetAlpha", this.arrayID[i], 1);
         }
         return this.commands;
@@ -505,11 +508,11 @@ class SearchArray extends Algorithm {
         this.cmd("SetForegroundColor", this.linearCodeID[1][0], SearchArray.CODE_STANDARD_COLOR);
         this.cmd("SetHighlight", this.indexBoxID, 0);
 
-        var size = this.getSize();
-        var comparisons = 0;
-        var foundIndex = 0;
+        const size = this.getSize();
+        let comparisons = 0;
+        let foundIndex = 0;
         while (true) {
-            if (foundIndex == size) {
+            if (foundIndex === size) {
                 this.cmd("SetForegroundColor", this.linearCodeID[2][1], SearchArray.CODE_HIGHLIGHT_COLOR);
                 this.cmd("Step");
                 this.cmd("SetForegroundColor", this.linearCodeID[2][1], SearchArray.CODE_STANDARD_COLOR);
@@ -540,7 +543,7 @@ class SearchArray extends Algorithm {
             this.cmd("SetHighlight", this.indexBoxID, 0);
         }
 
-        if (foundIndex < size && this.compare(this.arrayData[foundIndex], searchVal) == 0) {
+        if (foundIndex < size && this.compare(this.arrayData[foundIndex], searchVal) === 0) {
             this.cmd("SetForegroundColor", this.linearCodeID[4][1], SearchArray.CODE_HIGHLIGHT_COLOR);
             this.cmd("SetForegroundColor", this.linearCodeID[4][2], SearchArray.CODE_HIGHLIGHT_COLOR);
             this.cmd("SetForegroundColor", this.linearCodeID[4][3], SearchArray.CODE_HIGHLIGHT_COLOR);
@@ -562,14 +565,12 @@ class SearchArray extends Algorithm {
             this.cmd("AlignRight", this.resultString, this.resultBoxID);
             this.cmd("Step");
             this.cmd("SetForegroundColor", this.linearCodeID[6][0], SearchArray.CODE_STANDARD_COLOR);
-        }
-        else {
-            if (foundIndex == size) {
+        } else {
+            if (foundIndex === size) {
                 this.cmd("SetForegroundColor", this.linearCodeID[4][1], SearchArray.CODE_HIGHLIGHT_COLOR);
                 this.cmd("Step");
                 this.cmd("SetForegroundColor", this.linearCodeID[4][1], SearchArray.CODE_STANDARD_COLOR);
-            }
-            else {
+            } else {
                 this.cmd("SetHighlight", this.arrayID[foundIndex], 1);
                 this.cmd("SetHighlight", this.searchForBoxID, 1);
                 this.cmd("SetForegroundColor", this.linearCodeID[4][3], SearchArray.CODE_HIGHLIGHT_COLOR);
@@ -587,5 +588,4 @@ class SearchArray extends Algorithm {
         }
         return this.commands;
     }
-
 }

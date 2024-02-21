@@ -24,6 +24,11 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* exported AnimatedObject */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class AnimatedObject {
     backgroundColor;
@@ -44,7 +49,8 @@ class AnimatedObject {
     alwaysOnTop = false;
     addedToScene = true;
 
-    constructor(backgroundColor = "white", foregroundColor = "black", highlightColor = "red", labelColor = "black") {
+    constructor(backgroundColor = "white", foregroundColor = "black", highlightColor = "red", labelColor = null) {
+        if (!labelColor) labelColor = foregroundColor;
         this.backgroundColor = backgroundColor;
         this.foregroundColor = foregroundColor;
         this.highlightColor = highlightColor;

@@ -24,6 +24,12 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Algorithm */
+/* exported TreeRadix */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class RadixNode {
     constructor(val, id, initialX, initialY) {
@@ -33,7 +39,7 @@ class RadixNode {
         this.graphicID = id;
         this.children = new Array(26);
         this.childWidths = new Array(26);
-        for (var i = 0; i < 26; i++) {
+        for (let i = 0; i < 26; i++) {
             this.children[i] = null;
             this.childWidths[i] = 0;
         }
@@ -52,12 +58,12 @@ class TreeRadix extends Algorithm {
     static FOREGROUND_COLOR = "#007700";
     static BACKGROUND_COLOR = "#CCFFCC";
     static PRINT_COLOR = TreeRadix.FOREGROUND_COLOR;
-    static FALSE_COLOR = "#FFFFFF"
+    static FALSE_COLOR = "#FFFFFF";
     static WIDTH_DELTA = 50;
     static HEIGHT_DELTA = 80;
     static STARTING_Y = 80;
     static LeftMargin = 300;
-    static NEW_NODE_Y = 100
+    static NEW_NODE_Y = 100;
     static NEW_NODE_X = 50;
     static FIRST_PRINT_POS_X = 50;
     static PRINT_VERTICAL_GAP = 20;
@@ -86,12 +92,12 @@ class TreeRadix extends Algorithm {
     }
 
     sizeChanged() {
-        var w = this.getCanvasWidth();
-        var h = this.getCanvasHeight();
+        const w = this.getCanvasWidth();
+        const h = this.getCanvasHeight();
 
         this.startingX = w / 2;
-        this.first_print_pos_y = h - 2 * TreeRadix.PRINT_VERTICAL_GAP;
-        this.print_max = w - 10;
+        this.firstPrintPosY = h - 2 * TreeRadix.PRINT_VERTICAL_GAP;
+        this.printMax = w - 10;
 
         this.implementAction(() => {
             this.commands = [];
@@ -101,7 +107,7 @@ class TreeRadix extends Algorithm {
     }
 
     findIndexDifference(s1, s2, id, wordIndex) {
-        var index = 0;
+        let index = 0;
         this.cmd("SetText", 2, "Comparing next letter in search term \n to next letter in prefix of current node");
 
         while (index < s1.length && index < s2.length) {
@@ -111,10 +117,9 @@ class TreeRadix extends Algorithm {
             this.cmd("SetHighlightIndex", 1, -1);
             this.cmd("SetHighlightIndex", id, -1);
 
-            if (s1.charAt(index) == s2.charAt(index)) {
+            if (s1.charAt(index) === s2.charAt(index)) {
                 index++;
-            }
-            else {
+            } else {
                 break;
             }
         }
@@ -122,17 +127,17 @@ class TreeRadix extends Algorithm {
     }
 
     addControls() {
-        this.insertField = this.addControlToAlgorithmBar("Text", "", { maxlength: 12, size: 12 });
+        this.insertField = this.addControlToAlgorithmBar("Text", "", {maxlength: 12, size: 12});
         this.addReturnSubmit(this.insertField, "ALPHA", this.insertCallback.bind(this));
         this.insertButton = this.addControlToAlgorithmBar("Button", "Insert");
         this.insertButton.onclick = this.insertCallback.bind(this);
 
-        this.deleteField = this.addControlToAlgorithmBar("Text", "", { maxlength: 12, size: 12 });
+        this.deleteField = this.addControlToAlgorithmBar("Text", "", {maxlength: 12, size: 12});
         this.addReturnSubmit(this.deleteField, "ALPHA", this.deleteCallback.bind(this));
         this.deleteButton = this.addControlToAlgorithmBar("Button", "Delete");
         this.deleteButton.onclick = this.deleteCallback.bind(this);
 
-        this.findField = this.addControlToAlgorithmBar("Text", "", { maxlength: 12, size: 12 });
+        this.findField = this.addControlToAlgorithmBar("Text", "", {maxlength: 12, size: 12});
         this.addReturnSubmit(this.findField, "ALPHA", this.findCallback.bind(this));
         this.findButton = this.addControlToAlgorithmBar("Button", "Find");
         this.findButton.onclick = this.findCallback.bind(this);
@@ -147,7 +152,7 @@ class TreeRadix extends Algorithm {
     }
 
     insertCallback(event) {
-        var insertedValue = this.insertField.value;
+        const insertedValue = this.insertField.value;
         if (insertedValue !== "") {
             this.insertField.value = "";
             this.implementAction(this.add.bind(this), insertedValue);
@@ -155,9 +160,9 @@ class TreeRadix extends Algorithm {
     }
 
     deleteCallback(event) {
-        var deletedValue = this.deleteField.value.toUpperCase();
-        deletedValue = deletedValue.replace(/[^a-z]/gi, '');
-        if (deletedValue != "") {
+        let deletedValue = this.deleteField.value.toUpperCase();
+        deletedValue = deletedValue.replace(/[^a-z]/gi, "");
+        if (deletedValue !== "") {
             this.deleteField.value = "";
             this.implementAction(this.deleteElement.bind(this), deletedValue);
         }
@@ -174,15 +179,15 @@ class TreeRadix extends Algorithm {
             this.highlightID = this.nextIndex++;
             this.printLabel1 = this.nextIndex++;
             this.printLabel2 = this.nextIndex++;
-            var firstLabel = this.nextIndex++;
-            this.cmd("CreateLabel", firstLabel, "Output: ", TreeRadix.FIRST_PRINT_POS_X, this.first_print_pos_y);
+            const firstLabel = this.nextIndex++;
+            this.cmd("CreateLabel", firstLabel, "Output: ", TreeRadix.FIRST_PRINT_POS_X, this.firstPrintPosY);
             this.cmd("CreateHighlightCircle", this.highlightID, TreeRadix.HIGHLIGHT_CIRCLE_COLOR, this.root.x, this.root.y);
             this.cmd("SetWidth", this.highlightID, TreeRadix.NODE_WIDTH);
             this.cmd("CreateLabel", this.printLabel1, "Current String: ", 20, 10, 0);
             this.cmd("CreateLabel", this.printLabel2, "", 20, 10, 0);
             this.cmd("AlignRight", this.printLabel2, this.printLabel1);
             this.xPosOfNextLabel = TreeRadix.FIRST_PRINT_POS_X;
-            this.yPosOfNextLabel = this.first_print_pos_y;
+            this.yPosOfNextLabel = this.firstPrintPosY;
             this.printTreeRec(this.root, "");
 
             // this.cmd("SetText", this.printLabel1, "About to delete");
@@ -192,7 +197,7 @@ class TreeRadix extends Algorithm {
             this.cmd("Delete", this.printLabel2);
             this.cmd("Step");
 
-            for (var i = firstLabel; i < this.nextIndex; i++) {
+            for (let i = firstLabel; i < this.nextIndex; i++) {
                 this.cmd("Delete", i);
             }
             this.nextIndex = this.highlightID; /// Reuse objects.  Not necessary.
@@ -201,9 +206,9 @@ class TreeRadix extends Algorithm {
     }
 
     printTreeRec(tree, stringSoFar) {
-        if (tree.wordRemainder != "") {
+        if (tree.wordRemainder !== "") {
             stringSoFar = stringSoFar + tree.wordRemainder;
-            var nextLabelID = this.nextIndex++;
+            const nextLabelID = this.nextIndex++;
             this.cmd("CreateLabel", nextLabelID, tree.wordRemainder, tree.x, tree.y, 0);
             this.cmd("MoveToAlignRight", nextLabelID, this.printLabel2);
             this.cmd("Step");
@@ -212,20 +217,20 @@ class TreeRadix extends Algorithm {
             this.cmd("SetText", this.printLabel2, stringSoFar);
         }
         if (tree.isword) {
-            var nextLabelID = this.nextIndex++;
-            this.cmd("CreateLabel", nextLabelID, stringSoFar + "  ", 20, 10, 0);
+            const nextLabelID = this.nextIndex++;
+            this.cmd("CreateLabel", nextLabelID, `${stringSoFar}  `, 20, 10, 0);
             this.cmd("SetForegroundColor", nextLabelID, TreeRadix.PRINT_COLOR);
             this.cmd("AlignRight", nextLabelID, this.printLabel1, TreeRadix.PRINT_COLOR);
             this.cmd("MoveToAlignRight", nextLabelID, nextLabelID - 1);
             this.cmd("Step");
 
             this.xPosOfNextLabel += TreeRadix.PRINT_HORIZONTAL_GAP;
-            if (this.xPosOfNextLabel > this.print_max) {
+            if (this.xPosOfNextLabel > this.printMax) {
                 this.xPosOfNextLabel = TreeRadix.FIRST_PRINT_POS_X;
                 this.yPosOfNextLabel += TreeRadix.PRINT_VERTICAL_GAP;
             }
         }
-        for (var i = 0; i < 26; i++) {
+        for (let i = 0; i < 26; i++) {
             if (tree.children[i] != null) {
                 this.cmd("Move", this.highlightID, tree.children[i].x, tree.children[i].y);
                 this.cmd("Step");
@@ -238,8 +243,8 @@ class TreeRadix extends Algorithm {
     }
 
     findCallback(event) {
-        var findValue = this.findField.value.toUpperCase();
-        findValue = findValue.replace(/[^a-z]/gi, '');
+        let findValue = this.findField.value.toUpperCase();
+        findValue = findValue.replace(/[^a-z]/gi, "");
         this.findField.value = "";
         this.implementAction(this.findElement.bind(this), findValue);
     }
@@ -252,12 +257,11 @@ class TreeRadix extends Algorithm {
         this.cmd("Step");
         this.highlightID = this.nextIndex++;
 
-        var res = this.doFind(this.root, findValue);
+        const res = this.doFind(this.root, findValue);
         if (res) {
-            this.cmd("SetText", 0, "String " + findValue + " found");
-        }
-        else {
-            this.cmd("SetText", 0, "String " + findValue + " not found");
+            this.cmd("SetText", 0, `String ${findValue} found`);
+        } else {
+            this.cmd("SetText", 0, `String ${findValue} not found`);
         }
         this.cmd("SetText", 1, "");
         this.cmd("SetText", 2, "");
@@ -273,28 +277,27 @@ class TreeRadix extends Algorithm {
         }
         this.cmd("SetHighlight", tree.graphicID, 1);
 
-        var remain = tree.wordRemainder;
-        var indexDifference = this.findIndexDifference(value, remain, tree.graphicID, 0);
+        const remain = tree.wordRemainder;
+        const indexDifference = this.findIndexDifference(value, remain, tree.graphicID, 0);
 
-        if (indexDifference == remain.length) {
+        if (indexDifference === remain.length) {
             this.cmd("SetText", 2, "Reached the end of the prefix stored at this node");
             this.cmd("Step");
 
             if (value.length > indexDifference) {
-                this.cmd("SetText", 2, "Recusively search remaining string  \nin the '" + value.charAt(indexDifference) + "' child");
+                this.cmd("SetText", 2, `Recusively search remaining string  \nin the '${value.charAt(indexDifference)}' child`);
                 this.cmd("Step");
                 this.cmd("SetHighlight", tree.graphicID, 0);
                 this.cmd("SetText", 1, value.substring(indexDifference));
 
-                var index = value.charCodeAt(indexDifference) - "A".charCodeAt(0);
-                var noChild = tree.children[index] == null;
+                const index = value.charCodeAt(indexDifference) - "A".charCodeAt(0);
+                const noChild = tree.children[index] == null;
 
                 if (noChild) {
-                    this.cmd("SetText", 2, "Child '" + value.charAt(indexDifference) + "' does not exit.  \nString is not in the tree.");
+                    this.cmd("SetText", 2, `Child '${value.charAt(indexDifference)}' does not exit.  \nString is not in the tree.`);
                     this.cmd("Step");
                     return null;
-                }
-                else {
+                } else {
                     this.cmd("CreateHighlightCircle", this.highlightID, TreeRadix.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
                     this.cmd("SetWidth", this.highlightID, TreeRadix.NODE_WIDTH);
 
@@ -304,7 +307,6 @@ class TreeRadix extends Algorithm {
 
                     this.cmd("Delete", this.highlightID);
                 }
-
 
                 return this.doFind(tree.children[index], value.substring(indexDifference));
             }
@@ -319,18 +321,14 @@ class TreeRadix extends Algorithm {
                 this.cmd("SetText", 2, "");
                 this.cmd("SetHighlight", tree.graphicID, 0);
                 return tree;
-
-            }
-            else {
+            } else {
                 this.cmd("SetText", 2, "Node is \"False\", string is not in tree");
                 this.cmd("Step");
                 this.cmd("SetText", 2, "");
                 this.cmd("SetHighlight", tree.graphicID, 0);
                 return null;
-
             }
-        }
-        else {
+        } else {
             this.cmd("SetText", 2, "Reached end of search string, \nStill characters remaining at node\nString not in tree");
             this.cmd("Step");
             this.cmd("SetHighlight", tree.graphicID, 0);
@@ -345,7 +343,7 @@ class TreeRadix extends Algorithm {
         this.cmd("SetText", 1, deletedValue);
         this.cmd("AlignRight", 1, 0);
 
-        var node = this.doFind(this.root, deletedValue);
+        const node = this.doFind(this.root, deletedValue);
 
         if (node == null) {
             this.cmd("SetText", 2, "String not in the tree, nothing to delete");
@@ -353,8 +351,7 @@ class TreeRadix extends Algorithm {
             this.cmd("SetText", 0, "");
             this.cmd("SetText", 1, "");
             this.cmd("SetText", 2, "");
-        }
-        else {
+        } else {
             node.isword = false;
             this.cmd("SetText", 2, "Found string to delete, setting node to \"False\"");
             this.cmd("Step");
@@ -373,8 +370,8 @@ class TreeRadix extends Algorithm {
         if (tree == null) {
             return 0;
         }
-        var children = 0;
-        for (var i = 0; i < 26; i++) {
+        let children = 0;
+        for (let i = 0; i < 26; i++) {
             if (tree.children[i] != null) {
                 children++;
             }
@@ -386,7 +383,7 @@ class TreeRadix extends Algorithm {
         if (tree == null) {
             return false;
         }
-        for (var i = 0; i < 26; i++) {
+        for (let i = 0; i < 26; i++) {
             if (tree.children[i] != null) {
                 return false;
             }
@@ -398,9 +395,9 @@ class TreeRadix extends Algorithm {
         if (tree.parent == null) {
             return -1;
         }
-        var par = tree.parent;
-        for (var i = 0; i < 26; i++) {
-            if (par.children[i] == tree) {
+        const par = tree.parent;
+        for (let i = 0; i < 26; i++) {
+            if (par.children[i] === tree) {
                 return i;
             }
         }
@@ -408,31 +405,29 @@ class TreeRadix extends Algorithm {
     }
 
     cleanupAfterDelete(tree) {
-        var children = this.numChildren(tree);
+        const children = this.numChildren(tree);
 
-        if (children == 0 && !tree.isword) {
+        if (children === 0 && !tree.isword) {
             this.cmd("SetText", 2, "Deletion left us with a \"False\" leaf\nRemoving false leaf");
             this.cmd("SetHighlight", tree.graphicID, 1);
             this.cmd("Step");
             this.cmd("SetHighlight", tree.graphicID, 0);
             if (tree.parent != null) {
-                var index = 0;
-                while (tree.parent.children[index] != tree) {
+                let index = 0;
+                while (tree.parent.children[index] !== tree) {
                     index++;
                 }
                 this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
                 this.cmd("Delete", tree.graphicID, 0);
                 tree.parent.children[index] = null;
                 this.cleanupAfterDelete(tree.parent);
-            }
-            else {
+            } else {
                 this.cmd("Delete", tree.graphicID, 0);
                 this.root = null;
             }
-        }
-        else if (children == 1 && !tree.isword) {
-            var childIndex = -1;
-            for (var i = 0; i < 26; i++) {
+        } else if (children === 1 && !tree.isword) {
+            let childIndex = -1;
+            for (let i = 0; i < 26; i++) {
                 if (tree.children[i] != null) {
                     childIndex = i;
                     break;
@@ -443,7 +438,7 @@ class TreeRadix extends Algorithm {
             this.cmd("Step");
             this.cmd("SetHighlight", tree.graphicID, 0);
 
-            var child = tree.children[childIndex];
+            const child = tree.children[childIndex];
             child.wordRemainder = tree.wordRemainder + child.wordRemainder;
             this.cmd("SetText", child.graphicID, child.wordRemainder);
             this.cmd("Disconnect", tree.graphicID, child.graphicID);
@@ -452,9 +447,8 @@ class TreeRadix extends Algorithm {
                 child.parent = null;
                 this.root = child;
                 this.cmd("Delete", tree.graphicID);
-            }
-            else {
-                var parIndex = this.getParentIndex(tree);
+            } else {
+                const parIndex = this.getParentIndex(tree);
                 this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
                 tree.parent.children[parIndex] = child;
                 child.parent = tree.parent;
@@ -468,7 +462,7 @@ class TreeRadix extends Algorithm {
     resizeTree() {
         this.resizeWidths(this.root);
         if (this.root != null) {
-            var startingPoint = this.root.width / 2 + 1 + TreeRadix.LeftMargin;
+            const startingPoint = this.root.width / 2 + 1 + TreeRadix.LeftMargin;
             this.setNewPositions(this.root, startingPoint, TreeRadix.STARTING_Y);
             this.animateNewPositions(this.root);
             this.cmd("Step");
@@ -476,7 +470,7 @@ class TreeRadix extends Algorithm {
     }
 
     add(word) {
-        this.commands = new Array();
+        this.commands = [];
         this.cmd("SetText", 0, "Inserting; ");
         this.cmd("SetText", 1, word);
         this.cmd("AlignRight", 1, 0);
@@ -496,7 +490,7 @@ class TreeRadix extends Algorithm {
             this.cmd("SetForegroundColor", this.nextIndex, TreeRadix.FOREGROUND_COLOR);
             this.cmd("SetBackgroundColor", this.nextIndex, TreeRadix.BACKGROUND_COLOR);
             this.cmd("SetWidth", this.nextIndex, TreeRadix.NODE_WIDTH);
-            this.cmd("SetText", 2, "Reached an empty tree.  Creating a node containing " + s);
+            this.cmd("SetText", 2, `Reached an empty tree.  Creating a node containing ${s}`);
             this.cmd("Step");
             this.cmd("SetText", 2, "");
             rt = new RadixNode(s, this.nextIndex, startX, startY);
@@ -507,30 +501,29 @@ class TreeRadix extends Algorithm {
 
         this.cmd("SetHighlight", rt.graphicID, 1);
 
-        var indexDifference = this.findIndexDifference(s, rt.wordRemainder, rt.graphicID, wordIndex);
+        const indexDifference = this.findIndexDifference(s, rt.wordRemainder, rt.graphicID, wordIndex);
 
         // this.cmd("CreateHighlightCircle", this.highlightID, BST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
         // this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
         // this.cmd("Step");
-        if (indexDifference == rt.wordRemainder.length) {
+        if (indexDifference === rt.wordRemainder.length) {
             this.cmd("SetText", 2, "Reached the end of the prefix stored at this node");
             this.cmd("Step");
 
             if (s.length > indexDifference) {
-                this.cmd("SetText", 2, "Recusively insert remaining string  \ninto the '" + s.charAt(indexDifference) + "' child");
+                this.cmd("SetText", 2, `Recusively insert remaining string  \ninto the '${s.charAt(indexDifference)}' child`);
                 this.cmd("Step");
                 this.cmd("SetHighlight", rt.graphicID, 0);
                 this.cmd("SetText", 1, s.substring(indexDifference));
 
                 // TODO: HIGHLIGHT CIRCLE!
-                var index = s.charCodeAt(indexDifference) - "A".charCodeAt(0);
-                var noChild = rt.children[index] == null;
+                const index = s.charCodeAt(indexDifference) - "A".charCodeAt(0);
+                const noChild = rt.children[index] == null;
 
                 if (noChild) {
-                    this.cmd("SetText", 2, "Child '" + s.charAt(indexDifference) + "' does not exit.  Creating ...");
+                    this.cmd("SetText", 2, `Child '${s.charAt(indexDifference)}' does not exit.  Creating ...`);
                     this.cmd("Step");
-                }
-                else {
+                } else {
                     this.cmd("CreateHighlightCircle", this.highlightID, TreeRadix.HIGHLIGHT_CIRCLE_COLOR, rt.x, rt.y);
                     this.cmd("SetWidth", this.highlightID, TreeRadix.NODE_WIDTH);
 
@@ -542,7 +535,7 @@ class TreeRadix extends Algorithm {
                     // DO HIGHILIGHT CIRCLE THING HERE
                 }
 
-                var connect = rt.children[index] == null;
+                const connect = rt.children[index] == null;
                 rt.children[index] = this.addR(s.substring(indexDifference), rt.children[index], rt.x, rt.y, wordIndex + indexDifference);
                 rt.children[index].parent = rt;
                 if (connect) {
@@ -562,8 +555,8 @@ class TreeRadix extends Algorithm {
             return rt;
         }
 
-        var firstRemainder = rt.wordRemainder.substring(0, indexDifference);
-        var secondRemainder = rt.wordRemainder.substring(indexDifference);
+        const firstRemainder = rt.wordRemainder.substring(0, indexDifference);
+        const secondRemainder = rt.wordRemainder.substring(indexDifference);
 
         this.cmd("SetText", 2, "Reached a mismatch in prefix. \nCreate a new node with common prefix");
 
@@ -573,22 +566,21 @@ class TreeRadix extends Algorithm {
         this.cmd("SetWidth", this.nextIndex, TreeRadix.NODE_WIDTH);
         this.cmd("Step");
 
-        var newNode = new RadixNode(firstRemainder, this.nextIndex, 0, 0);
+        const newNode = new RadixNode(firstRemainder, this.nextIndex, 0, 0);
         this.nextIndex++;
 
         newNode.wordRemainder = firstRemainder;
 
-        var index = rt.wordRemainder.charCodeAt(indexDifference) - "A".charCodeAt(0);
+        let index = rt.wordRemainder.charCodeAt(indexDifference) - "A".charCodeAt(0);
         newNode.parent = rt.parent;
         newNode.children[index] = rt;
         if (rt.parent != null) {
             this.cmd("Disconnect", rt.parent.graphicID, rt.graphicID);
             this.cmd("Connect", rt.parent.graphicID, newNode.graphicID, TreeRadix.FOREGROUND_COLOR, 0, false, newNode.wordRemainder.charAt(0));
-            var childIndex = newNode.wordRemainder.charCodeAt(0) - 'A'.charCodeAt(0);
+            const childIndex = newNode.wordRemainder.charCodeAt(0) - "A".charCodeAt(0);
             rt.parent.children[childIndex] = newNode;
             rt.parent = newNode;
-        }
-        else {
+        } else {
             this.root = newNode;
         }
         this.cmd("SetHighlight", rt.graphicID, 0);
@@ -604,11 +596,10 @@ class TreeRadix extends Algorithm {
 
         this.resizeTree();
 
-        if (indexDifference == s.length) {
+        if (indexDifference === s.length) {
             newNode.isword = true;
             this.cmd("SetBackgroundColor", newNode.graphicID, TreeRadix.BACKGROUND_COLOR);
-        }
-        else {
+        } else {
             this.cmd("SetBackgroundColor", newNode.graphicID, TreeRadix.FALSE_COLOR);
             index = s.charCodeAt(indexDifference) - "A".charCodeAt(0);
             this.cmd("SetText", 1, s.substring(indexDifference));
@@ -624,9 +615,9 @@ class TreeRadix extends Algorithm {
         if (tree != null) {
             tree.x = xPosition;
             tree.y = yPosition;
-            var newX = xPosition - tree.width / 2;
-            var newY = yPosition + TreeRadix.HEIGHT_DELTA;
-            for (var i = 0; i < 26; i++) {
+            let newX = xPosition - tree.width / 2;
+            const newY = yPosition + TreeRadix.HEIGHT_DELTA;
+            for (let i = 0; i < 26; i++) {
                 if (tree.children[i] != null) {
                     this.setNewPositions(tree.children[i], newX + tree.children[i].width / 2, newY);
                     newX = newX + tree.children[i].width;
@@ -638,7 +629,7 @@ class TreeRadix extends Algorithm {
     animateNewPositions(tree) {
         if (tree != null) {
             this.cmd("Move", tree.graphicID, tree.x, tree.y);
-            for (var i = 0; i < 26; i++) {
+            for (let i = 0; i < 26; i++) {
                 this.animateNewPositions(tree.children[i]);
             }
         }
@@ -648,8 +639,8 @@ class TreeRadix extends Algorithm {
         if (tree == null) {
             return 0;
         }
-        var size = 0;
-        for (var i = 0; i < 26; i++) {
+        let size = 0;
+        for (let i = 0; i < 26; i++) {
             tree.childWidths[i] = this.resizeWidths(tree.children[i]);
             size += tree.childWidths[i];
         }

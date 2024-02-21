@@ -24,6 +24,12 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Algorithm */
+/* exported StackArray */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class StackArray extends Algorithm {
     static SIZE = 15;
@@ -45,7 +51,7 @@ class StackArray extends Algorithm {
     }
 
     addControls() {
-        this.pushField = this.addControlToAlgorithmBar("Text", "", { maxlength: 4, size: 4 });
+        this.pushField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
         this.addReturnSubmit(this.pushField, "ALPHANUM", this.pushCallback.bind(this));
         this.pushButton = this.addControlToAlgorithmBar("Button", "Push");
         this.pushButton.onclick = this.pushCallback.bind(this);
@@ -77,7 +83,7 @@ class StackArray extends Algorithm {
         this.arrayData = [];
         this.arrayID = [];
         this.arrayLabelID = [];
-        for (var i = 0; i < StackArray.SIZE; i++) {
+        for (let i = 0; i < StackArray.SIZE; i++) {
             this.arrayID[i] = this.nextIndex++;
             this.arrayLabelID[i] = this.nextIndex++;
             this.cmd("CreateRectangle", this.arrayID[i], "", this.getArrayElemWidth(), this.getArrayElemHeight(), this.getArrayX(i), this.getArrayY(i));
@@ -114,22 +120,22 @@ class StackArray extends Algorithm {
     }
 
     getArrayXY(i) {
-        var x = 1.5 * this.getArrayElemWidth();
-        var y = 4.5 * this.getArrayElemHeight();
-        for (var k = 0; k < i; k++) {
+        let x = 1.5 * this.getArrayElemWidth();
+        let y = 4.5 * this.getArrayElemHeight();
+        for (let k = 0; k < i; k++) {
             x += this.getArrayElemWidth();
             if (x + this.getArrayElemWidth() > this.getCanvasWidth()) {
                 x = 1.5 * this.getArrayElemWidth();
                 y += 2.5 * this.getArrayElemHeight();
             }
         }
-        return { x: x, y: y };
+        return {x: x, y: y};
     }
 
     getArrayElemWidth() {
-        var nrows = 1;
+        let nrows = 1;
         while (true) {
-            var w = nrows * this.getCanvasWidth() / (StackArray.SIZE + 2 * nrows);
+            const w = nrows * this.getCanvasWidth() / (StackArray.SIZE + 2 * nrows);
             if (w >= 25) return w;
             nrows++;
         }
@@ -143,7 +149,7 @@ class StackArray extends Algorithm {
     // Callback functions for the algorithm control bar
 
     pushCallback(event) {
-        var pushVal = this.pushField.value;
+        const pushVal = this.pushField.value;
         if (pushVal !== "") {
             this.pushField.value = "";
             this.implementAction(this.push.bind(this), pushVal);
@@ -164,7 +170,7 @@ class StackArray extends Algorithm {
     clearAll() {
         this.commands = [];
         this.cmd("SetText", this.leftoverLabelID, "");
-        for (var i = 0; i < StackArray.SIZE; i++) {
+        for (let i = 0; i < StackArray.SIZE; i++) {
             this.arrayData[i] = null;
             this.cmd("SetText", this.arrayID[i], "");
         }
@@ -172,6 +178,7 @@ class StackArray extends Algorithm {
         this.cmd("SetText", this.topID, this.top);
         return this.commands;
     }
+
     push(elemToPush) {
         this.commands = [];
         if (this.top >= StackArray.SIZE) {
@@ -179,8 +186,8 @@ class StackArray extends Algorithm {
             return this.commands;
         }
 
-        var labPushValID1 = this.nextIndex++;
-        var labPushValID2 = this.nextIndex++;
+        const labPushValID1 = this.nextIndex++;
+        const labPushValID2 = this.nextIndex++;
         this.arrayData[this.top] = elemToPush;
 
         this.cmd("SetText", this.leftoverLabelID, "Pushing value:  ");
@@ -220,12 +227,12 @@ class StackArray extends Algorithm {
 
     pop(ignored) {
         this.commands = [];
-        if (this.top == 0) {
+        if (this.top === 0) {
             this.cmd("SetText", this.leftoverLabelID, "Stack empty!");
             return this.commands;
         }
 
-        var labPopValID = this.nextIndex++;
+        const labPopValID = this.nextIndex++;
 
         this.cmd("SetText", this.leftoverLabelID, "Popping value:  ");
         this.cmd("SetHighlight", this.topID, 1);
@@ -252,9 +259,8 @@ class StackArray extends Algorithm {
 
         this.cmd("Delete", labPopValID);
         this.cmd("Delete", this.highlightID);
-        this.cmd("SetText", this.leftoverLabelID, "Popped value:  " + this.arrayData[this.top]);
+        this.cmd("SetText", this.leftoverLabelID, `Popped value:  ${this.arrayData[this.top]}`);
 
         return this.commands;
     }
 }
-

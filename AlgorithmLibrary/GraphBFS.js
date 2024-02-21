@@ -24,6 +24,12 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Graph */
+/* exported GraphBFS */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class GraphBFS extends Graph {
     static AUX_ARRAY_WIDTH = 25;
@@ -48,7 +54,7 @@ class GraphBFS extends Graph {
 
     addControls() {
         this.addLabelToAlgorithmBar("Start Vertex: ");
-        this.startField = this.addControlToAlgorithmBar("Text", "", { maxlength: 2, size: 2 });
+        this.startField = this.addControlToAlgorithmBar("Text", "", {maxlength: 2, size: 2});
         this.addReturnSubmit(this.startField, "int", this.startCallback.bind(this));
         this.startButton = this.addControlToAlgorithmBar("Button", "Run BFS");
         this.startButton.onclick = this.startCallback.bind(this);
@@ -62,14 +68,14 @@ class GraphBFS extends Graph {
 
     setup() {
         super.setup();
-        this.messageID = new Array();
-        this.commands = new Array();
+        this.messageID = [];
+        this.commands = [];
         this.visitedID = new Array(this.size);
         this.visitedIndexID = new Array(this.size);
         this.parentID = new Array(this.size);
         this.parentIndexID = new Array(this.size);
 
-        for (var i = 0; i < this.size; i++) {
+        for (let i = 0; i < this.size; i++) {
             this.visitedID[i] = this.nextIndex++;
             this.visitedIndexID[i] = this.nextIndex++;
             this.parentID[i] = this.nextIndex++;
@@ -94,7 +100,7 @@ class GraphBFS extends Graph {
     }
 
     startCallback(event) {
-        var startValue = this.normalizeNumber(this.startField.value);
+        const startValue = this.normalizeNumber(this.startField.value);
         if (startValue !== "" && startValue < this.size) {
             this.startField.value = "";
             this.implementAction(this.doBFS.bind(this), startValue);
@@ -103,28 +109,28 @@ class GraphBFS extends Graph {
 
     doBFS(startVetex) {
         this.visited = new Array(this.size);
-        this.commands = new Array();
+        this.commands = [];
         this.queue = new Array(this.size);
-        var head = 0;
-        var tail = 0;
-        var queueID = new Array(this.size);
-        var queueSize = 0;
+        let head = 0;
+        let tail = 0;
+        const queueID = new Array(this.size);
+        let queueSize = 0;
 
         if (this.messageID != null) {
-            for (var i = 0; i < this.messageID.length; i++) {
+            for (let i = 0; i < this.messageID.length; i++) {
                 this.cmd("Delete", this.messageID[i]);
             }
         }
 
         this.rebuildEdges();
-        this.messageID = new Array();
-        for (i = 0; i < this.size; i++) {
+        this.messageID = [];
+        for (let i = 0; i < this.size; i++) {
             this.cmd("SetText", this.visitedID[i], "f");
             this.cmd("SetText", this.parentID[i], "");
             this.visited[i] = false;
             queueID[i] = this.nextIndex++;
         }
-        var vertex = parseInt(startVetex);
+        let vertex = parseInt(startVetex);
         this.visited[vertex] = true;
         this.queue[tail] = vertex;
         this.cmd("CreateLabel", queueID[tail], vertex, GraphBFS.QUEUE_START_X + queueSize * GraphBFS.QUEUE_SPACING, GraphBFS.QUEUE_START_Y);
@@ -133,16 +139,16 @@ class GraphBFS extends Graph {
 
         while (queueSize > 0) {
             vertex = this.queue[head];
-            this.cmd("CreateHighlightCircle", this.highlightCircleL, GraphBFS.HIGHLIGHT_CIRCLE_COLOR, this.x_pos_logical[vertex], this.y_pos_logical[vertex]);
+            this.cmd("CreateHighlightCircle", this.highlightCircleL, GraphBFS.HIGHLIGHT_CIRCLE_COLOR, this.xPosLogical[vertex], this.yPosLogical[vertex]);
             this.cmd("SetLayer", this.highlightCircleL, 1);
-            this.cmd("CreateHighlightCircle", this.highlightCircleAL, GraphBFS.HIGHLIGHT_CIRCLE_COLOR, this.adj_list_x_start - this.adj_list_width, this.adj_list_y_start + vertex * this.adj_list_height);
+            this.cmd("CreateHighlightCircle", this.highlightCircleAL, GraphBFS.HIGHLIGHT_CIRCLE_COLOR, this.adjListXStart - this.adjListWidth, this.adjListYStart + vertex * this.adjListHeight);
             this.cmd("SetLayer", this.highlightCircleAL, 2);
-            this.cmd("CreateHighlightCircle", this.highlightCircleAM, GraphBFS.HIGHLIGHT_CIRCLE_COLOR, this.adj_matrix_x_start - this.adj_matrix_width, this.adj_matrix_y_start + vertex * this.adj_matrix_height);
+            this.cmd("CreateHighlightCircle", this.highlightCircleAM, GraphBFS.HIGHLIGHT_CIRCLE_COLOR, this.adjMatrixXStart - this.adjMatrixWidth, this.adjMatrixYStart + vertex * this.adjMatrixHeight);
             this.cmd("SetLayer", this.highlightCircleAM, 3);
             this.cmd("SetTextColor", queueID[head], GraphBFS.BFS_QUEUE_HEAD_COLOR);
 
-            for (var neighbor = 0; neighbor < this.size; neighbor++) {
-                if (this.adj_matrix[vertex][neighbor] > 0) {
+            for (let neighbor = 0; neighbor < this.size; neighbor++) {
+                if (this.adjMatrix[vertex][neighbor] > 0) {
                     this.highlightEdge(vertex, neighbor, 1);
                     this.cmd("SetHighlight", this.visitedID[neighbor], 1);
                     this.cmd("Step");
@@ -157,8 +163,7 @@ class GraphBFS extends Graph {
                         this.cmd("CreateLabel", queueID[tail], neighbor, GraphBFS.QUEUE_START_X + queueSize * GraphBFS.QUEUE_SPACING, GraphBFS.QUEUE_START_Y);
                         tail = (tail + 1) % (this.size);
                         queueSize = queueSize + 1;
-                    }
-                    else {
+                    } else {
                         this.highlightEdge(vertex, neighbor, 0);
                     }
                     this.cmd("SetHighlight", this.visitedID[neighbor], 0);
@@ -168,8 +173,8 @@ class GraphBFS extends Graph {
             this.cmd("Delete", queueID[head]);
             head = (head + 1) % (this.size);
             queueSize = queueSize - 1;
-            for (i = 0; i < queueSize; i++) {
-                var nextQueueIndex = (i + head) % this.size;
+            for (let i = 0; i < queueSize; i++) {
+                const nextQueueIndex = (i + head) % this.size;
                 this.cmd("Move", queueID[nextQueueIndex], GraphBFS.QUEUE_START_X + i * GraphBFS.QUEUE_SPACING, GraphBFS.QUEUE_START_Y);
             }
 
@@ -182,6 +187,6 @@ class GraphBFS extends Graph {
     }
 
     reset() {
-        this.messageID = new Array();
+        this.messageID = [];
     }
 }

@@ -24,6 +24,12 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals AnimatedObject, UndoBlock */
+/* exported AnimatedBTreeNode */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class AnimatedBTreeNode extends AnimatedObject {
     static MIN_WIDTH = 10;
@@ -44,7 +50,7 @@ class AnimatedBTreeNode extends AnimatedObject {
         this.numLabels = numLabels;
         this.labels = new Array(this.numLabels);
         this.labelColors = new Array(this.numLabels);
-        for (var i = 0; i < this.numLabels; i++) {
+        for (let i = 0; i < this.numLabels; i++) {
             this.labels[i] = "";
             this.labelColors[i] = this.labelColor;
         }
@@ -57,20 +63,18 @@ class AnimatedBTreeNode extends AnimatedObject {
     getWidth() {
         if (this.numLabels > 0) {
             return this.widthPerElement * this.numLabels;
-        }
-        else {
+        } else {
             return AnimatedBTreeNode.MIN_WIDTH;
         }
     }
 
     setNumElements(newNumElements) {
         if (this.numLabels < newNumElements) {
-            for (var i = this.numLabels; i < newNumElements; i++) {
+            for (let i = this.numLabels; i < newNumElements; i++) {
                 this.labels[i] = "";
                 this.labelColors[i] = this.labelColor;
             }
-        }
-        else if (this.numLabels > newNumElements) {
+        } else if (this.numLabels > newNumElements) {
             this.labels.length = newNumElements;
             this.labelColors.length = newNumElements;
         }
@@ -83,15 +87,15 @@ class AnimatedBTreeNode extends AnimatedObject {
 
     setForegroundColor(newColor) {
         this.foregroundColor = newColor;
-        for (var i = 0; i < numLabels; i++) {
-            labelColor[i] = newColor;
+        for (let i = 0; i < this.numLabels; i++) {
+            this.labelColors[i] = newColor;
         }
     }
 
     getTailPointerAttachPos(fromX, fromY, anchor) {
-        if (anchor == 0) {
+        if (anchor === 0) {
             return [this.left() + AnimatedBTreeNode.EDGE_POINTER_DISPLACEMENT, this.y];
-        } else if (anchor == this.numLabels) {
+        } else if (anchor === this.numLabels) {
             return [this.right() - AnimatedBTreeNode.EDGE_POINTER_DISPLACEMENT, this.y];
         } else {
             return [this.left() + anchor * this.widthPerElement, this.y];
@@ -105,8 +109,7 @@ class AnimatedBTreeNode extends AnimatedObject {
             return [this.x, this.y + this.nodeHeight / 2];
         } else if (fromX < this.x - this.getWidth() / 2) {
             return [this.x - this.getWidth() / 2, this.y];
-        }
-        else {
+        } else {
             return [this.x + this.getWidth() / 2, this.y];
         }
     }
@@ -114,6 +117,7 @@ class AnimatedBTreeNode extends AnimatedObject {
     getTextColor(textIndex) {
         return this.labelColors[textIndex || 0];
     }
+
     setTextColor(color, textIndex) {
         this.labelColors[textIndex || 0] = color;
     }
@@ -129,10 +133,10 @@ class AnimatedBTreeNode extends AnimatedObject {
     draw(ctx) {
         if (!this.addedToScene) return;
 
-        var x = this.left();
-        var y = this.top();
-        var w = this.getWidth();
-        var h = this.getHeight();
+        let x = this.left();
+        const y = this.top();
+        const w = this.getWidth();
+        const h = this.getHeight();
 
         ctx.globalAlpha = this.alpha;
 
@@ -141,10 +145,10 @@ class AnimatedBTreeNode extends AnimatedObject {
         ctx.roundRect(x, y, w, h, AnimatedBTreeNode.CORNER_RADIUS);
         ctx.fill();
 
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        for (var i = 0; i < this.numLabels; i++) {
-            var labelx = this.x - this.widthPerElement * this.numLabels / 2 + this.widthPerElement / 2 + i * this.widthPerElement;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        for (let i = 0; i < this.numLabels; i++) {
+            const labelx = this.x - this.widthPerElement * this.numLabels / 2 + this.widthPerElement / 2 + i * this.widthPerElement;
             ctx.fillStyle = this.labelColors[i];
             ctx.fillText(this.labels[i], labelx, this.y);
         }
@@ -152,7 +156,7 @@ class AnimatedBTreeNode extends AnimatedObject {
         ctx.strokeStyle = this.foregroundColor;
         ctx.lineWidth = 2;
         ctx.beginPath();
-        for (var i = 1; i < this.numLabels; i++) {
+        for (let i = 1; i < this.numLabels; i++) {
             x += this.widthPerElement;
             ctx.moveTo(x, y);
             ctx.lineTo(x, y + h);
@@ -170,17 +174,16 @@ class AnimatedBTreeNode extends AnimatedObject {
 
     createUndoDelete() {
         return new UndoDeleteBTreeNode(
-            this.objectID, this.numLabels, this.labels, this.x, this.y, this.widthPerElement, this.nodeHeight, 
-            this.labelColors, this.backgroundColor, this.foregroundColor, this.layer, this.highlighted
+            this.objectID, this.numLabels, this.labels, this.x, this.y, this.widthPerElement, this.nodeHeight,
+            this.labelColors, this.backgroundColor, this.foregroundColor, this.layer, this.highlighted,
         );
     }
 }
 
 
-
 class UndoDeleteBTreeNode extends UndoBlock {
-    constructor(objectID, numLabels, labels, x, y, widthPerElement, nodeHeight, 
-                labelColors, backgroundColor, foregroundColor, layer, highlighted) {
+    constructor(objectID, numLabels, labels, x, y, widthPerElement, nodeHeight,
+        labelColors, backgroundColor, foregroundColor, layer, highlighted) {
         super();
         this.objectID = objectID;
         this.numLabels = numLabels;
@@ -199,7 +202,7 @@ class UndoDeleteBTreeNode extends UndoBlock {
     undoInitialStep(world) {
         world.addBTreeNode(this.objectID, this.widthPerElement, this.nodeHeight, this.numLabels, this.backgroundColor, this.foregroundColor);
         world.setNodePosition(this.objectID, this.x, this.y);
-        for (var i = 0; i < this.numLabels; i++) {
+        for (let i = 0; i < this.numLabels; i++) {
             world.setText(this.objectID, this.labels[i], i);
             world.setTextColor(this.objectID, this.labelColors[i], i);
         }

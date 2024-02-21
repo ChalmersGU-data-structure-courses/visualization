@@ -24,22 +24,28 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Algorithm */
+/* exported Graph */
+///////////////////////////////////////////////////////////////////////////////
+
 // TODO:  UNDO (all the way) is BROKEN.  Redo reset ...
 
 
 class Graph extends Algorithm {
     static LARGE_ALLOWED = [
         [false, true, true, false, true, false, false, true, false, false, false, false, false, false, true, false, false, false],
-        [true, false, true, false, true, true,  false, false, false, false, false, false, false, false, false, false, false, false],
-        [true, true, false, true,  false, true, true,  false, false, false, false, false, false, false, false, false, false, false],
-        [false, false, true, false, false,false, true, false, false, false, true, false, false,  false, false, false, false, true],
-        [true, true, false, false,  false, true, false, true, true, false, false, false, false, false, false, false,  false,  false],
-        [false, true, true, false, true, false, true,   false, true, true, false, false, false, false, false, false,  false,  false],
-        [false, false, true, true, false, true, false, false, false, true, true, false, false, false, false, false,  false,  false],
+        [true, false, true, false, true, true, false, false, false, false, false, false, false, false, false, false, false, false],
+        [true, true, false, true, false, true, true, false, false, false, false, false, false, false, false, false, false, false],
+        [false, false, true, false, false, false, true, false, false, false, true, false, false, false, false, false, false, true],
+        [true, true, false, false, false, true, false, true, true, false, false, false, false, false, false, false, false, false],
+        [false, true, true, false, true, false, true, false, true, true, false, false, false, false, false, false, false, false],
+        [false, false, true, true, false, true, false, false, false, true, true, false, false, false, false, false, false, false],
         [true, false, false, false, true, false, false, false, true, false, false, true, false, false, true, false, false, false],
-        [false, false, false, false, true, true, false, true, false, true, false, true, true, false,   false, false, false, false],
-        [false, false, false, false, false, true, true, false, true, false, true, false, true, true,  false,  false, false, false],
-        [false, false, false, true, false,  false, true, false, false, true, false, false, false, true, false, false, false, true],
+        [false, false, false, false, true, true, false, true, false, true, false, true, true, false, false, false, false, false],
+        [false, false, false, false, false, true, true, false, true, false, true, false, true, true, false, false, false, false],
+        [false, false, false, true, false, false, true, false, false, true, false, false, false, true, false, false, false, true],
         [false, false, false, false, false, false, false, true, true, false, false, false, true, false, true, true, false, false],
         [false, false, false, false, false, false, false, false, true, true, false, true, false, true, false, true, true, false],
         [false, false, false, false, false, false, false, false, false, true, true, false, true, false, false, false, true, true],
@@ -49,7 +55,7 @@ class Graph extends Algorithm {
         [false, false, false, false, false, false, false, false, false, false, true, false, false, true, false, true, true, false],
     ];
 
-    static LARGE_CURVE  = [
+    static LARGE_CURVE = [
         [0, 0, -0.4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.25, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0.4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -83,18 +89,18 @@ class Graph extends Algorithm {
         150, 150, 150,
         250, 250, 250, 250,
         350, 350, 350,
-        450,  450, 450, 450,
+        450, 450, 450, 450,
     ];
 
     static SMALL_ALLLOWED = [
-        [false, true,  true,  true,  true,  false, false, false],
-        [true,  false, true,  true,  false, true,  true,  false],
-        [true,  true,  false, false, true,  true,  true,  false],
-        [true,  true,  false, false, false, true,  false, true],
-        [true,  false, true,  false, false,  false, true,  true],
-        [false, true,  true,  true,  false, false, true,  true],
-        [false, true,  true,  false, true,  true,  false, true],
-        [false, false, false, true,  true,  true,  true,  false],
+        [false, true, true, true, true, false, false, false],
+        [true, false, true, true, false, true, true, false],
+        [true, true, false, false, true, true, true, false],
+        [true, true, false, false, false, true, false, true],
+        [true, false, true, false, false, false, true, true],
+        [false, true, true, true, false, false, true, true],
+        [false, true, true, false, true, true, false, true],
+        [false, false, false, true, true, true, true, false],
     ];
 
     static SMALL_CURVE = [
@@ -110,7 +116,6 @@ class Graph extends Algorithm {
 
     static SMALL_X_POS_LOGICAL = [800, 725, 875, 650, 950, 725, 875, 800];
     static SMALL_Y_POS_LOGICAL = [25, 125, 125, 225, 225, 325, 325, 425];
-
 
     static SMALL_ADJ_MATRIX_X_START = 700;
     static SMALL_ADJ_MATRIX_Y_START = 40;
@@ -128,7 +133,6 @@ class Graph extends Algorithm {
 
     static SMALL_ADJ_LIST_SPACING = 10;
 
-
     static LARGE_ADJ_MATRIX_X_START = 575;
     static LARGE_ADJ_MATRIX_Y_START = 30;
     static LARGE_ADJ_MATRIX_WIDTH = 23;
@@ -145,15 +149,13 @@ class Graph extends Algorithm {
 
     static LARGE_ADJ_LIST_SPACING = 10;
 
-
-    static VERTEX_INDEX_COLOR ="#0000FF";
+    static VERTEX_INDEX_COLOR = "#0000FF";
     static EDGE_COLOR = "#000000";
 
     static SMALL_SIZE = 8;
     static LARGE_SIZE = 18;
 
     static HIGHLIGHT_COLOR = "#0000FF";
-
 
     init(am, directed = true, dag = false) {
         super.init(am);
@@ -166,7 +168,7 @@ class Graph extends Algorithm {
         this.addControls();
 
         this.nextIndex = 0;
-        this.setup_small();
+        this.setupSmall();
     }
 
     addControls(addDirection = true) {
@@ -174,7 +176,7 @@ class Graph extends Algorithm {
         this.newGraphButton.onclick = this.newGraphCallback.bind(this);
 
         if (addDirection) {
-            var radioButtonList = this.addRadioButtonGroupToAlgorithmBar(["Directed Graph", "Undirected Graph"], "GraphType");
+            const radioButtonList = this.addRadioButtonGroupToAlgorithmBar(["Directed Graph", "Undirected Graph"], "GraphType");
             this.directedGraphButton = radioButtonList[0];
             this.directedGraphButton.onclick = this.directedGraphCallback.bind(this, true);
             this.undirectedGraphButton = radioButtonList[1];
@@ -183,28 +185,28 @@ class Graph extends Algorithm {
             this.undirectedGraphButton.checked = !this.directed;
         }
 
-        var radioButtonList = this.addRadioButtonGroupToAlgorithmBar(["Small Graph", "Large Graph"], "GraphSize");
-        this.smallGraphButton = radioButtonList[0];
+        const graphSizeButtonList = this.addRadioButtonGroupToAlgorithmBar(["Small Graph", "Large Graph"], "GraphSize");
+        this.smallGraphButton = graphSizeButtonList[0];
         this.smallGraphButton.onclick = this.smallGraphCallback.bind(this);
-        this.largeGraphButton = radioButtonList[1];
+        this.largeGraphButton = graphSizeButtonList[1];
         this.largeGraphButton.onclick = this.largeGraphCallback.bind(this);
         this.smallGraphButton.checked = true;
 
-        var radioButtonList = this.addRadioButtonGroupToAlgorithmBar(
+        const graphReprButtonList = this.addRadioButtonGroupToAlgorithmBar(
             ["Logical Representation", "Adjacency List Representation", "Adjacency Matrix Representation"],
-            "GraphRepresentation"
+            "GraphRepresentation",
         );
-        this.logicalButton = radioButtonList[0];
+        this.logicalButton = graphReprButtonList[0];
         this.logicalButton.onclick = this.graphRepChangedCallback.bind(this, 1);
-        this.adjacencyListButton = radioButtonList[1];
+        this.adjacencyListButton = graphReprButtonList[1];
         this.adjacencyListButton.onclick = this.graphRepChangedCallback.bind(this, 2);
-        this.adjacencyMatrixButton = radioButtonList[2];
+        this.adjacencyMatrixButton = graphReprButtonList[2];
         this.adjacencyMatrixButton.onclick = this.graphRepChangedCallback.bind(this, 3);
         this.logicalButton.checked = true;
     }
 
     directedGraphCallback(newDirected, event) {
-        if (newDirected != this.directed) {
+        if (newDirected !== this.directed) {
             this.directed = newDirected;
             this.animationManager.resetAll();
             this.setup();
@@ -212,16 +214,16 @@ class Graph extends Algorithm {
     }
 
     smallGraphCallback(event) {
-        if (this.size != Graph.SMALL_SIZE) {
+        if (this.size !== Graph.SMALL_SIZE) {
             this.animationManager.resetAll();
-            this.setup_small();
+            this.setupSmall();
         }
     }
 
     largeGraphCallback(event) {
-        if (this.size != Graph.LARGE_SIZE) {
+        if (this.size !== Graph.LARGE_SIZE) {
             this.animationManager.resetAll();
-            this.setup_large();
+            this.setupLarge();
         }
     }
 
@@ -236,9 +238,9 @@ class Graph extends Algorithm {
     }
 
     recolorGraph() {
-        for (var i = 0; i < this.size; i++) {
-            for (var j = 0; j < this.size; j++) {
-                if (this.adj_matrix[i][j] >= 0) {
+        for (let i = 0; i < this.size; i++) {
+            for (let j = 0; j < this.size; j++) {
+                if (this.adjMatrix[i][j] >= 0) {
                     this.setEdgeColor(i, j, Graph.EDGE_COLOR);
                 }
             }
@@ -246,8 +248,8 @@ class Graph extends Algorithm {
     }
 
     highlightEdge(i, j, highlightVal) {
-        this.cmd("SetHighlight", this.adj_list_edges[i][j], highlightVal);
-        this.cmd("SetHighlight", this.adj_matrixID[i][j], highlightVal);
+        this.cmd("SetHighlight", this.adjListEdges[i][j], highlightVal);
+        this.cmd("SetHighlight", this.adjMatrixID[i][j], highlightVal);
         this.cmd("SetEdgeHighlight", this.circleID[i], this.circleID[j], highlightVal);
         if (!this.directed) {
             this.cmd("SetEdgeHighlight", this.circleID[j], this.circleID[i], highlightVal);
@@ -255,8 +257,8 @@ class Graph extends Algorithm {
     }
 
     setEdgeColor(i, j, color) {
-        this.cmd("SetForegroundColor", this.adj_list_edges[i][j], color);
-        this.cmd("SetTextColor", this.adj_matrixID[i][j], color);
+        this.cmd("SetForegroundColor", this.adjListEdges[i][j], color);
+        this.cmd("SetTextColor", this.adjMatrixID[i][j], color);
         this.cmd("SetEdgeColor", this.circleID[i], this.circleID[j], color);
         if (!this.directed) {
             this.cmd("SetEdgeColor", this.circleID[j], this.circleID[i], color);
@@ -264,9 +266,9 @@ class Graph extends Algorithm {
     }
 
     clearEdges() {
-        for (var i = 0; i < this.size; i++) {
-            for (var j = 0; j < this.size; j++) {
-                if (this.adj_matrix[i][j] >= 0) {
+        for (let i = 0; i < this.size; i++) {
+            for (let j = 0; j < this.size; j++) {
+                if (this.adjMatrix[i][j] >= 0) {
                     this.cmd("Disconnect", this.circleID[i], this.circleID[j]);
                 }
             }
@@ -279,20 +281,18 @@ class Graph extends Algorithm {
     }
 
     buildEdges() {
-        for (var i = 0; i < this.size; i++) {
-            for (var j = 0; j < this.size; j++) {
-                if (this.adj_matrix[i][j] >= 0) {
-                    var edgeLabel;
+        for (let i = 0; i < this.size; i++) {
+            for (let j = 0; j < this.size; j++) {
+                if (this.adjMatrix[i][j] >= 0) {
+                    let edgeLabel;
                     if (this.showEdgeCosts) {
-                        edgeLabel = String(this.adj_matrix[i][j]);
-                    }
-                    else {
+                        edgeLabel = String(this.adjMatrix[i][j]);
+                    } else {
                         edgeLabel = "";
                     }
                     if (this.directed) {
-                        this.cmd("Connect", this.circleID[i], this.circleID[j], Graph.EDGE_COLOR, this.adjustCurveForDirectedEdges(this.curve[i][j], this.adj_matrix[j][i] >= 0), 1, edgeLabel);
-                    }
-                    else if (i < j) {
+                        this.cmd("Connect", this.circleID[i], this.circleID[j], Graph.EDGE_COLOR, this.adjustCurveForDirectedEdges(this.curve[i][j], this.adjMatrix[j][i] >= 0), 1, edgeLabel);
+                    } else if (i < j) {
                         this.cmd("Connect", this.circleID[i], this.circleID[j], Graph.EDGE_COLOR, this.curve[i][j], 0, edgeLabel);
                     }
                 }
@@ -300,42 +300,42 @@ class Graph extends Algorithm {
         }
     }
 
-    setup_small() {
+    setupSmall() {
         this.allowed = Graph.SMALL_ALLLOWED;
         this.curve = Graph.SMALL_CURVE;
-        this.x_pos_logical = Graph.SMALL_X_POS_LOGICAL;
-        this.y_pos_logical = Graph.SMALL_Y_POS_LOGICAL;
-        this.adj_matrix_x_start = Graph.SMALL_ADJ_MATRIX_X_START;
-        this.adj_matrix_y_start = Graph.SMALL_ADJ_MATRIX_Y_START;
-        this.adj_matrix_width = Graph.SMALL_ADJ_MATRIX_WIDTH;
-        this.adj_matrix_height = Graph.SMALL_ADJ_MATRIX_HEIGHT;
-        this.adj_list_x_start = Graph.SMALL_ADJ_LIST_X_START;
-        this.adj_list_y_start = Graph.SMALL_ADJ_LIST_Y_START;
-        this.adj_list_elem_width = Graph.SMALL_ADJ_LIST_ELEM_WIDTH;
-        this.adj_list_elem_height = Graph.SMALL_ADJ_LIST_ELEM_HEIGHT;
-        this.adj_list_height = Graph.SMALL_ADJ_LIST_HEIGHT;
-        this.adj_list_width = Graph.SMALL_ADJ_LIST_WIDTH;
-        this.adj_list_spacing = Graph.SMALL_ADJ_LIST_SPACING;
+        this.xPosLogical = Graph.SMALL_X_POS_LOGICAL;
+        this.yPosLogical = Graph.SMALL_Y_POS_LOGICAL;
+        this.adjMatrixXStart = Graph.SMALL_ADJ_MATRIX_X_START;
+        this.adjMatrixYStart = Graph.SMALL_ADJ_MATRIX_Y_START;
+        this.adjMatrixWidth = Graph.SMALL_ADJ_MATRIX_WIDTH;
+        this.adjMatrixHeight = Graph.SMALL_ADJ_MATRIX_HEIGHT;
+        this.adjListXStart = Graph.SMALL_ADJ_LIST_X_START;
+        this.adjListYStart = Graph.SMALL_ADJ_LIST_Y_START;
+        this.adjListElemWidth = Graph.SMALL_ADJ_LIST_ELEM_WIDTH;
+        this.adjListElemHeight = Graph.SMALL_ADJ_LIST_ELEM_HEIGHT;
+        this.adjListHeight = Graph.SMALL_ADJ_LIST_HEIGHT;
+        this.adjListWidth = Graph.SMALL_ADJ_LIST_WIDTH;
+        this.adjListSpacing = Graph.SMALL_ADJ_LIST_SPACING;
         this.size = Graph.SMALL_SIZE;
         this.setup();
     }
 
-    setup_large() {
+    setupLarge() {
         this.allowed = Graph.LARGE_ALLOWED;
         this.curve = Graph.LARGE_CURVE;
-        this.x_pos_logical = Graph.LARGE_X_POS_LOGICAL;
-        this.y_pos_logical = Graph.LARGE_Y_POS_LOGICAL;
-        this.adj_matrix_x_start = Graph.LARGE_ADJ_MATRIX_X_START;
-        this.adj_matrix_y_start = Graph.LARGE_ADJ_MATRIX_Y_START;
-        this.adj_matrix_width = Graph.LARGE_ADJ_MATRIX_WIDTH;
-        this.adj_matrix_height = Graph.LARGE_ADJ_MATRIX_HEIGHT;
-        this.adj_list_x_start = Graph.LARGE_ADJ_LIST_X_START;
-        this.adj_list_y_start = Graph.LARGE_ADJ_LIST_Y_START;
-        this.adj_list_elem_width = Graph.LARGE_ADJ_LIST_ELEM_WIDTH;
-        this.adj_list_elem_height = Graph.LARGE_ADJ_LIST_ELEM_HEIGHT;
-        this.adj_list_height = Graph.LARGE_ADJ_LIST_HEIGHT;
-        this.adj_list_width = Graph.LARGE_ADJ_LIST_WIDTH;
-        this.adj_list_spacing = Graph.LARGE_ADJ_LIST_SPACING;
+        this.xPosLogical = Graph.LARGE_X_POS_LOGICAL;
+        this.yPosLogical = Graph.LARGE_Y_POS_LOGICAL;
+        this.adjMatrixXStart = Graph.LARGE_ADJ_MATRIX_X_START;
+        this.adjMatrixYStart = Graph.LARGE_ADJ_MATRIX_Y_START;
+        this.adjMatrixWidth = Graph.LARGE_ADJ_MATRIX_WIDTH;
+        this.adjMatrixHeight = Graph.LARGE_ADJ_MATRIX_HEIGHT;
+        this.adjListXStart = Graph.LARGE_ADJ_LIST_X_START;
+        this.adjListYStart = Graph.LARGE_ADJ_LIST_Y_START;
+        this.adjListElemWidth = Graph.LARGE_ADJ_LIST_ELEM_WIDTH;
+        this.adjListElemHeight = Graph.LARGE_ADJ_LIST_ELEM_HEIGHT;
+        this.adjListHeight = Graph.LARGE_ADJ_LIST_HEIGHT;
+        this.adjListWidth = Graph.LARGE_ADJ_LIST_WIDTH;
+        this.adjListSpacing = Graph.LARGE_ADJ_LIST_SPACING;
         this.size = Graph.LARGE_SIZE;
         this.setup();
     }
@@ -343,107 +343,89 @@ class Graph extends Algorithm {
     adjustCurveForDirectedEdges(curve, bidirectional) {
         if (!bidirectional || Math.abs(curve) > 0.01) {
             return curve;
-        }
-        else {
+        } else {
             return 0.1;
         }
     }
 
     setup() {
-        this.commands = new Array();
+        this.commands = [];
         this.circleID = new Array(this.size);
-        for (var i = 0; i < this.size; i++) {
+        for (let i = 0; i < this.size; i++) {
             this.circleID[i] = this.nextIndex++;
-            this.cmd("CreateCircle", this.circleID[i], i, this.x_pos_logical[i], this.y_pos_logical[i]);
+            this.cmd("CreateCircle", this.circleID[i], i, this.xPosLogical[i], this.yPosLogical[i]);
             this.cmd("SetTextColor", this.circleID[i], Graph.VERTEX_INDEX_COLOR, 0);
 
             this.cmd("SetLayer", this.circleID[i], 1);
         }
 
-        this.adj_matrix = new Array(this.size);
-        this.adj_matrixID = new Array(this.size);
-        for (i = 0; i < this.size; i++) {
-            this.adj_matrix[i] = new Array(this.size);
-            this.adj_matrixID[i] = new Array(this.size);
+        this.adjMatrix = new Array(this.size);
+        this.adjMatrixID = new Array(this.size);
+        for (let i = 0; i < this.size; i++) {
+            this.adjMatrix[i] = new Array(this.size);
+            this.adjMatrixID[i] = new Array(this.size);
         }
 
-        var edgePercent;
-        if (this.size == Graph.SMALL_SIZE) {
+        let edgePercent;
+        if (this.size === Graph.SMALL_SIZE) {
             if (this.directed) {
                 edgePercent = 0.4;
-            }
-            else {
+            } else {
                 edgePercent = 0.5;
             }
-
+        } else if (this.directed) {
+            edgePercent = 0.35;
+        } else {
+            edgePercent = 0.6;
         }
-        else {
-            if (this.directed) {
-                edgePercent = 0.35;
-            }
-            else {
-                edgePercent = 0.6;
-            }
-
-        }
-
-        var lowerBound = 0;
 
         if (this.directed) {
-            for (i = 0; i < this.size; i++) {
-                for (var j = 0; j < this.size; j++) {
-                    this.adj_matrixID[i][j] = this.nextIndex++;
-                    if ((this.allowed[i][j]) && Math.random() <= edgePercent && (i < j || Math.abs(this.curve[i][j]) < 0.01 || this.adj_matrixID[j][i] == -1) && (!this.isDAG || (i < j))) {
+            for (let i = 0; i < this.size; i++) {
+                for (let j = 0; j < this.size; j++) {
+                    this.adjMatrixID[i][j] = this.nextIndex++;
+                    if ((this.allowed[i][j]) && Math.random() <= edgePercent && (i < j || Math.abs(this.curve[i][j]) < 0.01 || this.adjMatrixID[j][i] === -1) && (!this.isDAG || (i < j))) {
                         if (this.showEdgeCosts) {
-                            this.adj_matrix[i][j] = Math.floor(Math.random() * 9) + 1;
+                            this.adjMatrix[i][j] = Math.floor(Math.random() * 9) + 1;
+                        } else {
+                            this.adjMatrix[i][j] = 1;
                         }
-                        else {
-                            this.adj_matrix[i][j] = 1;
-                        }
-
+                    } else {
+                        this.adjMatrix[i][j] = -1;
                     }
-                    else {
-                        this.adj_matrix[i][j] = -1;
-                    }
-
                 }
             }
             this.buildEdges();
-        }
-        else {
-            for (i = 0; i < this.size; i++) {
-                for (j = i + 1; j < this.size; j++) {
-                    this.adj_matrixID[i][j] = this.nextIndex++;
-                    this.adj_matrixID[j][i] = this.nextIndex++;
+        } else {
+            for (let i = 0; i < this.size; i++) {
+                for (let j = i + 1; j < this.size; j++) {
+                    this.adjMatrixID[i][j] = this.nextIndex++;
+                    this.adjMatrixID[j][i] = this.nextIndex++;
 
                     if ((this.allowed[i][j]) && Math.random() <= edgePercent) {
                         if (this.showEdgeCosts) {
-                            this.adj_matrix[i][j] = Math.floor(Math.random() * 9) + 1;
+                            this.adjMatrix[i][j] = Math.floor(Math.random() * 9) + 1;
+                        } else {
+                            this.adjMatrix[i][j] = 1;
                         }
-                        else {
-                            this.adj_matrix[i][j] = 1;
-                        }
-                        this.adj_matrix[j][i] = this.adj_matrix[i][j];
+                        this.adjMatrix[j][i] = this.adjMatrix[i][j];
+                        let edgeLabel;
                         if (this.showEdgeCosts) {
-                            var edgeLabel = String(this.adj_matrix[i][j]);
-                        }
-                        else {
+                            edgeLabel = String(this.adjMatrix[i][j]);
+                        } else {
                             edgeLabel = "";
                         }
                         this.cmd("Connect", this.circleID[i], this.circleID[j], Graph.EDGE_COLOR, this.curve[i][j], 0, edgeLabel);
+                    } else {
+                        this.adjMatrix[i][j] = -1;
+                        this.adjMatrix[j][i] = -1;
                     }
-                    else {
-                        this.adj_matrix[i][j] = -1;
-                        this.adj_matrix[j][i] = -1;
-                    }
-
                 }
             }
 
             this.buildEdges();
 
-            for (i = 0; i < this.size; i++) {
-                this.adj_matrix[i][i] = -1;
+            for (let i = 0; i < this.size; i++) {
+                this.adjMatrix[i][i] = -1;
             }
         }
 
@@ -461,83 +443,82 @@ class Graph extends Algorithm {
     }
 
     buildAdjMatrix() {
-        this.adj_matrix_index_x = new Array(this.size);
-        this.adj_matrix_index_y = new Array(this.size);
-        for (var i = 0; i < this.size; i++) {
-            this.adj_matrix_index_x[i] = this.nextIndex++;
-            this.adj_matrix_index_y[i] = this.nextIndex++;
-            this.cmd("CreateLabel", this.adj_matrix_index_x[i], i, this.adj_matrix_x_start + i * this.adj_matrix_width, this.adj_matrix_y_start - this.adj_matrix_height);
-            this.cmd("SetForegroundColor", this.adj_matrix_index_x[i], Graph.VERTEX_INDEX_COLOR);
-            this.cmd("CreateLabel", this.adj_matrix_index_y[i], i, this.adj_matrix_x_start - this.adj_matrix_width, this.adj_matrix_y_start + i * this.adj_matrix_height);
-            this.cmd("SetForegroundColor", this.adj_matrix_index_y[i], Graph.VERTEX_INDEX_COLOR);
-            this.cmd("SetLayer", this.adj_matrix_index_x[i], 3);
-            this.cmd("SetLayer", this.adj_matrix_index_y[i], 3);
+        this.adjMatrixIndexX = new Array(this.size);
+        this.adjMatrixIndexY = new Array(this.size);
+        for (let i = 0; i < this.size; i++) {
+            this.adjMatrixIndexX[i] = this.nextIndex++;
+            this.adjMatrixIndexY[i] = this.nextIndex++;
+            this.cmd("CreateLabel", this.adjMatrixIndexX[i], i, this.adjMatrixXStart + i * this.adjMatrixWidth, this.adjMatrixYStart - this.adjMatrixHeight);
+            this.cmd("SetForegroundColor", this.adjMatrixIndexX[i], Graph.VERTEX_INDEX_COLOR);
+            this.cmd("CreateLabel", this.adjMatrixIndexY[i], i, this.adjMatrixXStart - this.adjMatrixWidth, this.adjMatrixYStart + i * this.adjMatrixHeight);
+            this.cmd("SetForegroundColor", this.adjMatrixIndexY[i], Graph.VERTEX_INDEX_COLOR);
+            this.cmd("SetLayer", this.adjMatrixIndexX[i], 3);
+            this.cmd("SetLayer", this.adjMatrixIndexY[i], 3);
 
-            for (var j = 0; j < this.size; j++) {
-                this.adj_matrixID[i][j] = this.nextIndex++;
-                if (this.adj_matrix[i][j] < 0) {
-                    var lab = "";
+            for (let j = 0; j < this.size; j++) {
+                this.adjMatrixID[i][j] = this.nextIndex++;
+                let lab;
+                if (this.adjMatrix[i][j] < 0) {
+                    lab = "";
+                } else {
+                    lab = String(this.adjMatrix[i][j]);
                 }
-                else {
-                    lab = String(this.adj_matrix[i][j]);
-                }
-                this.cmd("CreateRectangle", this.adj_matrixID[i][j], lab, this.adj_matrix_width, this.adj_matrix_height,
-                    this.adj_matrix_x_start + j * this.adj_matrix_width, this.adj_matrix_y_start + i * this.adj_matrix_height);
-                this.cmd("SetLayer", this.adj_matrixID[i][j], 3);
+                this.cmd("CreateRectangle", this.adjMatrixID[i][j], lab, this.adjMatrixWidth, this.adjMatrixHeight,
+                    this.adjMatrixXStart + j * this.adjMatrixWidth, this.adjMatrixYStart + i * this.adjMatrixHeight);
+                this.cmd("SetLayer", this.adjMatrixID[i][j], 3);
             }
         }
     }
 
     removeAdjList() {
-        for (var i = 0; i < this.size; i++) {
-            this.cmd("Delete", this.adj_list_list[i], "RAL1");
-            this.cmd("Delete", this.adj_list_index[i], "RAL2");
-            for (var j = 0; j < this.size; j++) {
-                if (this.adj_matrix[i][j] > 0) {
-                    this.cmd("Delete", this.adj_list_edges[i][j], "RAL3");
+        for (let i = 0; i < this.size; i++) {
+            this.cmd("Delete", this.adjListList[i], "RAL1");
+            this.cmd("Delete", this.adjListIndex[i], "RAL2");
+            for (let j = 0; j < this.size; j++) {
+                if (this.adjMatrix[i][j] > 0) {
+                    this.cmd("Delete", this.adjListEdges[i][j], "RAL3");
                 }
             }
         }
-
     }
 
     buildAdjList() {
-        this.adj_list_index = new Array(this.size);
-        this.adj_list_list = new Array(this.size);
-        this.adj_list_edges = new Array(this.size);
+        this.adjListIndex = new Array(this.size);
+        this.adjListList = new Array(this.size);
+        this.adjListEdges = new Array(this.size);
 
-        for (var i = 0; i < this.size; i++) {
-            this.adj_list_index[i] = this.nextIndex++;
-            this.adj_list_edges[i] = new Array(this.size);
-            this.adj_list_index[i] = this.nextIndex++;
-            this.adj_list_list[i] = this.nextIndex++;
-            this.cmd("CreateRectangle", this.adj_list_list[i], "", this.adj_list_width, this.adj_list_height, this.adj_list_x_start, this.adj_list_y_start + i * this.adj_list_height);
-            this.cmd("SetLayer", this.adj_list_list[i], 2);
-            this.cmd("CreateLabel", this.adj_list_index[i], i, this.adj_list_x_start - this.adj_list_width, this.adj_list_y_start + i * this.adj_list_height);
-            this.cmd("SetForegroundColor", this.adj_list_index[i], Graph.VERTEX_INDEX_COLOR);
-            this.cmd("SetLayer", this.adj_list_index[i], 2);
-            var lastElem = this.adj_list_list[i];
-            var nextXPos = this.adj_list_x_start + this.adj_list_width + this.adj_list_spacing;
-            var hasEdges = false;
-            for (var j = 0; j < this.size; j++) {
-                if (this.adj_matrix[i][j] > 0) {
+        for (let i = 0; i < this.size; i++) {
+            this.adjListIndex[i] = this.nextIndex++;
+            this.adjListEdges[i] = new Array(this.size);
+            this.adjListIndex[i] = this.nextIndex++;
+            this.adjListList[i] = this.nextIndex++;
+            this.cmd("CreateRectangle", this.adjListList[i], "", this.adjListWidth, this.adjListHeight, this.adjListXStart, this.adjListYStart + i * this.adjListHeight);
+            this.cmd("SetLayer", this.adjListList[i], 2);
+            this.cmd("CreateLabel", this.adjListIndex[i], i, this.adjListXStart - this.adjListWidth, this.adjListYStart + i * this.adjListHeight);
+            this.cmd("SetForegroundColor", this.adjListIndex[i], Graph.VERTEX_INDEX_COLOR);
+            this.cmd("SetLayer", this.adjListIndex[i], 2);
+            let lastElem = this.adjListList[i];
+            let nextXPos = this.adjListXStart + this.adjListWidth + this.adjListSpacing;
+            let hasEdges = false;
+            for (let j = 0; j < this.size; j++) {
+                if (this.adjMatrix[i][j] > 0) {
                     hasEdges = true;
-                    this.adj_list_edges[i][j] = this.nextIndex++;
-                    this.cmd("CreateLinkedList", this.adj_list_edges[i][j], j, this.adj_list_elem_width, this.adj_list_elem_height,
-                        nextXPos, this.adj_list_y_start + i * this.adj_list_height, 0.25, 0, 1, 2);
-                    this.cmd("SetNull", this.adj_list_edges[i][j], 1);
-                    this.cmd("SetText", this.adj_list_edges[i][j], this.adj_matrix[i][j], 1);
-                    this.cmd("SetTextColor", this.adj_list_edges[i][j], Graph.VERTEX_INDEX_COLOR, 0);
-                    this.cmd("SetLayer", this.adj_list_edges[i][j], 2);
+                    this.adjListEdges[i][j] = this.nextIndex++;
+                    this.cmd("CreateLinkedList", this.adjListEdges[i][j], j, this.adjListElemWidth, this.adjListElemHeight,
+                        nextXPos, this.adjListYStart + i * this.adjListHeight, 0.25, 0, 1, 2);
+                    this.cmd("SetNull", this.adjListEdges[i][j], 1);
+                    this.cmd("SetText", this.adjListEdges[i][j], this.adjMatrix[i][j], 1);
+                    this.cmd("SetTextColor", this.adjListEdges[i][j], Graph.VERTEX_INDEX_COLOR, 0);
+                    this.cmd("SetLayer", this.adjListEdges[i][j], 2);
 
-                    nextXPos = nextXPos + this.adj_list_elem_width + this.adj_list_spacing;
-                    this.cmd("Connect", lastElem, this.adj_list_edges[i][j]);
+                    nextXPos = nextXPos + this.adjListElemWidth + this.adjListSpacing;
+                    this.cmd("Connect", lastElem, this.adjListEdges[i][j]);
                     this.cmd("SetNull", lastElem, 0);
-                    lastElem = this.adj_list_edges[i][j];
+                    lastElem = this.adjListEdges[i][j];
                 }
             }
             if (!hasEdges) {
-                this.cmd("SetNull", this.adj_list_list[i], 1);
+                this.cmd("SetNull", this.adjListList[i], 1);
             }
         }
     }

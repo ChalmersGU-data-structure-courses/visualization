@@ -24,6 +24,12 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Hash */
+/* exported HashOpenAdressing */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class HashOpenAdressing extends Hash {
     // This is a special key and should not be possible to enter in the GUI:
@@ -57,7 +63,7 @@ class HashOpenAdressing extends Hash {
         this.addLabelToAlgorithmBar("Probing:");
         this.probingSelect = this.addSelectToAlgorithmBar(
             [HashOpenAdressing.PROBING_LINEAR, HashOpenAdressing.PROBING_QUADRATIC, HashOpenAdressing.PROBING_DOUBLE],
-            ["Linear: 1, 2, 3, ...", "Quadratic: 1, 4, 9, ...", "Double hashing: h', 2h', ..."]
+            ["Linear: 1, 2, 3, ...", "Quadratic: 1, 4, 9, ...", "Double hashing: h', 2h', ..."],
         );
         this.probingSelect.value = HashOpenAdressing.PROBING_LINEAR;
         this.probingSelect.onchange = this.resetAll.bind(this);
@@ -68,7 +74,7 @@ class HashOpenAdressing extends Hash {
         super.resetAll();
 
         this.tableCells = new Array(this.tableSize);
-        for (var i = 0; i < this.tableSize; i++) {
+        for (let i = 0; i < this.tableSize; i++) {
             this.tableCells[i] = "";
         }
 
@@ -79,7 +85,7 @@ class HashOpenAdressing extends Hash {
     }
 
     reset() {
-        for (var i = 0; i < this.tableSize; i++) {
+        for (let i = 0; i < this.tableSize; i++) {
             this.tableCells[i] = "";
         }
         this.nextIndex = this.initialIndex;
@@ -101,23 +107,23 @@ class HashOpenAdressing extends Hash {
     }
 
     getCellPosXY(i) {
-        var startX = this.getCellWidth();
-        var x = startX;
-        var y = HashOpenAdressing.ARRAY_ELEM_START_Y;
-        for (var k = 0; k < i; k++) {
+        const startX = this.getCellWidth();
+        let x = startX;
+        let y = HashOpenAdressing.ARRAY_ELEM_START_Y;
+        for (let k = 0; k < i; k++) {
             x += this.getCellWidth();
             if (x + this.getCellWidth() > this.getCanvasWidth()) {
                 x = startX;
                 y += Math.round(2.2 * this.getCellHeight());
             }
         }
-        return { x: x, y: y };
+        return {x: x, y: y};
     }
 
     getCellWidth() {
-        var nrows = 1;
+        let nrows = 1;
         while (true) {
-            var w = nrows * this.getCanvasWidth() / (this.tableSize + 2 * nrows);
+            const w = nrows * this.getCanvasWidth() / (this.tableSize + 2 * nrows);
             if (w >= 65 || nrows >= 4) return Math.round(w);
             nrows++;
         }
@@ -135,24 +141,24 @@ class HashOpenAdressing extends Hash {
         this.cmd("SetText", this.messageID, "Printing hash table");
         this.highlightID = this.nextIndex++;
         this.cmd("CreateHighlightCircle", this.highlightID, "red", 0, 0);
-        var firstLabel = this.nextIndex;
+        const firstLabel = this.nextIndex;
 
-        var xPosOfNextLabel = Hash.FIRST_PRINT_POS_X;
-        var yPosOfNextLabel = this.getCanvasHeight() * 0.9;
+        let xPosOfNextLabel = Hash.FIRST_PRINT_POS_X;
+        let yPosOfNextLabel = this.getCanvasHeight() * 0.9;
 
-        for (var i = 0; i < this.tableCells.length; i++) {
+        for (let i = 0; i < this.tableCells.length; i++) {
             this.cmd("Move", this.highlightID, this.getCellPosX(i), this.getCellPosY(i));
             this.cmd("Step");
-            var elem = this.tableCells[i];
+            const elem = this.tableCells[i];
             if (elem && elem !== HashOpenAdressing.DELETED) {
-                var nextLabelID = this.nextIndex++;
+                const nextLabelID = this.nextIndex++;
                 this.cmd("CreateLabel", nextLabelID, elem, this.getCellPosX(i), this.getCellPosY(i));
                 this.cmd("SetForegroundColor", nextLabelID, "blue");
                 this.cmd("Move", nextLabelID, xPosOfNextLabel, yPosOfNextLabel);
                 this.cmd("Step");
 
                 xPosOfNextLabel += Hash.PRINT_HORIZONTAL_GAP;
-                if (xPosOfNextLabel > this.print_max) {
+                if (xPosOfNextLabel > this.printMax) {
                     xPosOfNextLabel = Hash.FIRST_PRINT_POS_X;
                     yPosOfNextLabel += Hash.PRINT_VERTICAL_GAP;
                 }
@@ -161,7 +167,7 @@ class HashOpenAdressing extends Hash {
 
         this.cmd("Delete", this.highlightID);
         this.cmd("Step");
-        for (var i = firstLabel; i < this.nextIndex; i++) {
+        for (let i = firstLabel; i < this.nextIndex; i++) {
             this.cmd("Delete", i);
         }
         this.nextIndex = this.highlightID; // Reuse objects. Not necessary.
@@ -171,7 +177,7 @@ class HashOpenAdressing extends Hash {
 
     clearTable() {
         this.commands = [];
-        for (var i = 0; i < this.tableCells.length; i++) {
+        for (let i = 0; i < this.tableCells.length; i++) {
             this.tableCells[i] = "";
             this.cmd("SetText", this.tableCellIDs[i], "");
         }
@@ -182,15 +188,14 @@ class HashOpenAdressing extends Hash {
         this.commands = [];
         this.cmd("SetText", this.messageID, `Inserting ${elem}`);
 
-        var hash = this.getHashCode(elem);
-        var startIndex = this.getStartIndex(hash);
-        var index = this.getEmptyIndex(startIndex, elem);
+        const hash = this.getHashCode(elem);
+        const startIndex = this.getStartIndex(hash);
+        const index = this.getEmptyIndex(startIndex, elem);
 
         if (index < 0) {
             this.cmd("SetText", this.messageID, `Inserting ${elem}: Table is full!`);
-        }
-        else {
-            var labID = this.nextIndex++;
+        } else {
+            const labID = this.nextIndex++;
             this.cmd("CreateLabel", labID, elem, 0, 0);
             this.cmd("AlignRight", labID, this.messageID);
             this.cmd("Move", labID, this.getCellPosX(index), this.getCellPosY(index));
@@ -212,14 +217,13 @@ class HashOpenAdressing extends Hash {
         this.commands = [];
         this.cmd("SetText", this.messageID, `Deleting: ${elem}`);
 
-        var hash = this.getHashCode(elem);
-        var startIndex = this.getStartIndex(hash);
-        var index = this.getElemIndex(startIndex, elem);
+        const hash = this.getHashCode(elem);
+        const startIndex = this.getStartIndex(hash);
+        const index = this.getElemIndex(startIndex, elem);
 
         if (index < 0) {
             this.cmd("SetText", this.messageID, `Deleting ${elem}: Element not found!`);
-        }
-        else {
+        } else {
             this.tableCells[index] = HashOpenAdressing.DELETED;
             this.cmd("SetText", this.tableCellIDs[index], HashOpenAdressing.DELETED);
             this.cmd("SetText", this.messageID, `Deleted ${elem}.`);
@@ -233,14 +237,13 @@ class HashOpenAdressing extends Hash {
         this.commands = [];
         this.cmd("SetText", this.messageID, `Finding ${elem}`);
 
-        var hash = this.getHashCode(elem);
-        var startIndex = this.getStartIndex(hash);
-        var index = this.getElemIndex(startIndex, elem);
+        const hash = this.getHashCode(elem);
+        const startIndex = this.getStartIndex(hash);
+        const index = this.getElemIndex(startIndex, elem);
 
         if (index < 0) {
             this.cmd("SetText", this.messageID, `Finding ${elem}: Element not found!`);
-        }
-        else {
+        } else {
             this.cmd("SetText", this.messageID, `Found ${elem}.`);
             this.cmd("SetHighlight", this.tableCellIDs[index], 0);
         }
@@ -248,16 +251,16 @@ class HashOpenAdressing extends Hash {
     }
 
     getElemIndex(index, elem) {
-        var probing = this.probingSelect.value;
-        var skipDelta = 1;
-        if (probing == HashOpenAdressing.PROBING_DOUBLE) {
+        const probing = this.probingSelect.value;
+        let skipDelta = 1;
+        if (probing === HashOpenAdressing.PROBING_DOUBLE) {
             skipDelta = this.getSkipDelta(elem, this.nextIndex++);
         }
-        for (var i = 0; i < this.tableSize; i++) {
-            var nextIndex = (index + this.getSkip(i, skipDelta)) % this.tableSize;
+        for (let i = 0; i < this.tableSize; i++) {
+            const nextIndex = (index + this.getSkip(i, skipDelta)) % this.tableSize;
             this.cmd("SetHighlight", this.tableCellIDs[nextIndex], 1);
             this.cmd("Step");
-            if (this.tableCells[nextIndex] == elem) {
+            if (this.tableCells[nextIndex] === elem) {
                 this.cmd("SetText", this.sndMessageID, "");
                 return nextIndex;
             }
@@ -271,13 +274,13 @@ class HashOpenAdressing extends Hash {
     }
 
     getEmptyIndex(index, elem) {
-        var probing = this.probingSelect.value;
-        var skipDelta = 1;
-        if (probing == HashOpenAdressing.PROBING_DOUBLE) {
+        const probing = this.probingSelect.value;
+        let skipDelta = 1;
+        if (probing === HashOpenAdressing.PROBING_DOUBLE) {
             skipDelta = this.getSkipDelta(elem);
         }
-        for (var i = 0; i < this.tableSize; i++) {
-            var nextIndex = (index + this.getSkip(i, skipDelta)) % this.tableSize;
+        for (let i = 0; i < this.tableSize; i++) {
+            const nextIndex = (index + this.getSkip(i, skipDelta)) % this.tableSize;
             this.cmd("SetHighlight", this.tableCellIDs[nextIndex], 1);
             this.cmd("Step");
             if (!this.tableCells[nextIndex]) {
@@ -291,20 +294,18 @@ class HashOpenAdressing extends Hash {
     }
 
     getSkipDelta(elem) {
-        var skipDelta = 7 - (this.currHash % 7);
+        const skipDelta = 7 - (this.currHash % 7);
         this.cmd("SetText", this.sndMessageID, `hash2(${elem}) = 7 - (${this.currHash} % 7) = ${skipDelta}`);
         return skipDelta;
     }
 
     getSkip(i, d) {
-        var probing = this.probingSelect.value;
+        const probing = this.probingSelect.value;
         if (!d) d = 1;
-        if (probing == HashOpenAdressing.PROBING_QUADRATIC) {
+        if (probing === HashOpenAdressing.PROBING_QUADRATIC) {
             return i * i * d;
-        }
-        else {
+        } else {
             return i * d;
         }
     }
 }
-

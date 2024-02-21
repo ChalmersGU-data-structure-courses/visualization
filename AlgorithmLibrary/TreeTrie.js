@@ -24,6 +24,12 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Algorithm */
+/* exported TreeTrie */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class TrieNode {
     constructor(val, id, initialX, initialY) {
@@ -33,7 +39,7 @@ class TrieNode {
         this.graphicID = id;
         this.children = new Array(26);
         this.childWidths = new Array(26);
-        for (var i = 0; i < 26; i++) {
+        for (let i = 0; i < 26; i++) {
             this.children[i] = null;
             this.childWidths[i] = 0;
         }
@@ -41,6 +47,7 @@ class TrieNode {
         this.parent = null;
     }
 }
+
 
 class TreeTrie extends Algorithm {
     static FOREGROUND_COLOR = "#007700";
@@ -58,12 +65,11 @@ class TreeTrie extends Algorithm {
     static HEIGHT_DELTA = 50;
     static STARTING_Y = 80;
     static LeftMargin = 300;
-    static NEW_NODE_Y = 100
+    static NEW_NODE_Y = 100;
     static NEW_NODE_X = 50;
     static FIRST_PRINT_POS_X = 50;
     static PRINT_VERTICAL_GAP = 20;
     static PRINT_HORIZONTAL_GAP = 50;
-
 
     constructor(am) {
         super();
@@ -88,12 +94,12 @@ class TreeTrie extends Algorithm {
     }
 
     sizeChanged() {
-        var w = this.getCanvasWidth();
-        var h = this.getCanvasHeight();
+        const w = this.getCanvasWidth();
+        const h = this.getCanvasHeight();
 
         this.startingX = w / 2;
-        this.first_print_pos_y = h - 2 * TreeTrie.PRINT_VERTICAL_GAP;
-        this.print_max = w - 10;
+        this.firstPrintPosY = h - 2 * TreeTrie.PRINT_VERTICAL_GAP;
+        this.printMax = w - 10;
 
         this.implementAction(() => {
             this.commands = [];
@@ -103,17 +109,17 @@ class TreeTrie extends Algorithm {
     }
 
     addControls() {
-        this.insertField = this.addControlToAlgorithmBar("Text", "", { maxlength: 12, size: 12 });
+        this.insertField = this.addControlToAlgorithmBar("Text", "", {maxlength: 12, size: 12});
         this.addReturnSubmit(this.insertField, "ALPHA", this.insertCallback.bind(this));
         this.insertButton = this.addControlToAlgorithmBar("Button", "Insert");
         this.insertButton.onclick = this.insertCallback.bind(this);
 
-        this.deleteField = this.addControlToAlgorithmBar("Text", "", { maxlength: 12, size: 12 });
+        this.deleteField = this.addControlToAlgorithmBar("Text", "", {maxlength: 12, size: 12});
         this.addReturnSubmit(this.deleteField, "ALPHA", this.deleteCallback.bind(this));
         this.deleteButton = this.addControlToAlgorithmBar("Button", "Delete");
         this.deleteButton.onclick = this.deleteCallback.bind(this);
 
-        this.findField = this.addControlToAlgorithmBar("Text", "", { maxlength: 12, size: 12 });
+        this.findField = this.addControlToAlgorithmBar("Text", "", {maxlength: 12, size: 12});
         this.addReturnSubmit(this.findField, "ALPHA", this.findCallback.bind(this));
         this.findButton = this.addControlToAlgorithmBar("Button", "Find");
         this.findButton.onclick = this.findCallback.bind(this);
@@ -128,7 +134,7 @@ class TreeTrie extends Algorithm {
     }
 
     insertCallback(event) {
-        var insertedValue = this.insertField.value;
+        const insertedValue = this.insertField.value;
         if (insertedValue !== "") {
             this.insertField.value = "";
             this.implementAction(this.add.bind(this), insertedValue);
@@ -136,7 +142,7 @@ class TreeTrie extends Algorithm {
     }
 
     deleteCallback(event) {
-        var deletedValue = this.deleteField.value;
+        const deletedValue = this.deleteField.value;
         if (deletedValue !== "") {
             this.deleteField.value = "";
             this.implementAction(this.deleteElement.bind(this), deletedValue);
@@ -148,7 +154,7 @@ class TreeTrie extends Algorithm {
     }
 
     findCallback(event) {
-        var findValue = this.findField.value;
+        const findValue = this.findField.value;
         if (findValue !== "") {
             this.findField.value = "";
             this.implementAction(this.findElement.bind(this), findValue);
@@ -161,15 +167,15 @@ class TreeTrie extends Algorithm {
             this.highlightID = this.nextIndex++;
             this.printLabel1 = this.nextIndex++;
             this.printLabel2 = this.nextIndex++;
-            var firstLabel = this.nextIndex++;
-            this.cmd("CreateLabel", firstLabel, "Output: ", TreeTrie.FIRST_PRINT_POS_X, this.first_print_pos_y);
+            const firstLabel = this.nextIndex++;
+            this.cmd("CreateLabel", firstLabel, "Output: ", TreeTrie.FIRST_PRINT_POS_X, this.firstPrintPosY);
             this.cmd("CreateHighlightCircle", this.highlightID, TreeTrie.HIGHLIGHT_CIRCLE_COLOR, this.root.x, this.root.y);
             this.cmd("SetWidth", this.highlightID, TreeTrie.NODE_WIDTH);
             this.cmd("CreateLabel", this.printLabel1, "Current String: ", 20, 10, 0);
             this.cmd("CreateLabel", this.printLabel2, "", 20, 10, 0);
             this.cmd("AlignRight", this.printLabel2, this.printLabel1);
             this.xPosOfNextLabel = TreeTrie.FIRST_PRINT_POS_X;
-            this.yPosOfNextLabel = this.first_print_pos_y;
+            this.yPosOfNextLabel = this.firstPrintPosY;
             this.printTreeRec(this.root, "");
 
             this.cmd("Delete", this.highlightID);
@@ -177,7 +183,7 @@ class TreeTrie extends Algorithm {
             this.cmd("Delete", this.printLabel2);
             this.cmd("Step");
 
-            for (var i = firstLabel; i < this.nextIndex; i++) {
+            for (let i = firstLabel; i < this.nextIndex; i++) {
                 this.cmd("Delete", i);
             }
             this.nextIndex = this.highlightID; /// Reuse objects.  Not necessary.
@@ -186,28 +192,26 @@ class TreeTrie extends Algorithm {
     }
 
     printTreeRec(tree, stringSoFar) {
-        if (tree.wordRemainder != "") {
-        }
         if (tree.isword) {
-            var nextLabelID = this.nextIndex++;
-            this.cmd("CreateLabel", nextLabelID, stringSoFar + "  ", 20, 10, 0);
+            const nextLabelID = this.nextIndex++;
+            this.cmd("CreateLabel", nextLabelID, `${stringSoFar}  `, 20, 10, 0);
             this.cmd("SetForegroundColor", nextLabelID, TreeTrie.PRINT_COLOR);
             this.cmd("AlignRight", nextLabelID, this.printLabel1, TreeTrie.PRINT_COLOR);
             this.cmd("MoveToAlignRight", nextLabelID, nextLabelID - 1);
             this.cmd("Step");
 
             this.xPosOfNextLabel += TreeTrie.PRINT_HORIZONTAL_GAP;
-            if (this.xPosOfNextLabel > this.print_max) {
+            if (this.xPosOfNextLabel > this.printMax) {
                 this.xPosOfNextLabel = TreeTrie.FIRST_PRINT_POS_X;
                 this.yPosOfNextLabel += TreeTrie.PRINT_VERTICAL_GAP;
             }
         }
-        for (var i = 0; i < 26; i++) {
+        for (let i = 0; i < 26; i++) {
             if (tree.children[i] != null) {
-                var stringSoFar2 = stringSoFar + tree.children[i].wordRemainder;
-                var nextLabelID = this.nextIndex++;
-                var fromx = (tree.children[i].x + tree.x) / 2 + TreeTrie.NODE_WIDTH / 2;
-                var fromy = (tree.children[i].y + tree.y) / 2;
+                const stringSoFar2 = stringSoFar + tree.children[i].wordRemainder;
+                const nextLabelID = this.nextIndex++;
+                const fromx = (tree.children[i].x + tree.x) / 2 + TreeTrie.NODE_WIDTH / 2;
+                const fromy = (tree.children[i].y + tree.y) / 2;
                 this.cmd("CreateLabel", nextLabelID, tree.children[i].wordRemainder, fromx, fromy, 0);
                 this.cmd("MoveToAlignRight", nextLabelID, this.printLabel2);
                 this.cmd("Move", this.highlightID, tree.children[i].x, tree.children[i].y);
@@ -227,16 +231,15 @@ class TreeTrie extends Algorithm {
     findElement(word) {
         this.commands = [];
         this.cmd("SetText", 0, "Finding: ");
-        this.cmd("SetText", 1, "\"" + word + "\"");
+        this.cmd("SetText", 1, `"${word}"`);
         this.cmd("AlignRight", 1, 0);
         this.cmd("Step");
 
-        var node = this.doFind(this.root, word);
+        const node = this.doFind(this.root, word);
         if (node != null) {
-            this.cmd("SetText", 0, "Found \"" + word + "\"");
-        }
-        else {
-            this.cmd("SetText", 0, "\"" + word + "\" not Found");
+            this.cmd("SetText", 0, `Found "${word}"`);
+        } else {
+            this.cmd("SetText", 0, `"${word}" not Found`);
         }
         this.cmd("SetText", 1, "");
         this.cmd("SetText", 2, "");
@@ -249,36 +252,34 @@ class TreeTrie extends Algorithm {
         }
         this.cmd("SetHighlight", tree.graphicID, 1);
 
-        if (s.length == 0) {
-            if (tree.isword == true) {
+        if (s.length === 0) {
+            if (tree.isword) {
                 this.cmd("SetText", 2, "Reached the end of the string \nCurrent node is True\nWord is in the tree");
                 this.cmd("Step");
                 this.cmd("SetHighlight", tree.graphicID, 0);
                 return tree;
-            }
-            else {
+            } else {
                 this.cmd("SetText", 2, "Reached the end of the string \nCurrent node is False\nWord is Not the tree");
                 this.cmd("Step");
                 this.cmd("SetHighlight", tree.graphicID, 0);
                 return null;
             }
-        }
-        else {
+        } else {
             this.cmd("SetHighlightIndex", 1, 1);
-            var index = s.charCodeAt(0) - "A".charCodeAt(0);
+            const index = s.charCodeAt(0) - "A".charCodeAt(0);
             if (tree.children[index] == null) {
-                this.cmd("SetText", 2, "Child " + s.charAt(0) + " does not exist\nWord is Not the tree");
+                this.cmd("SetText", 2, `Child ${s.charAt(0)} does not exist\nWord is Not the tree`);
                 this.cmd("Step");
                 this.cmd("SetHighlight", tree.graphicID, 0);
                 return null;
             }
             this.cmd("CreateHighlightCircle", this.highlightID, TreeTrie.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
             this.cmd("SetWidth", this.highlightID, TreeTrie.NODE_WIDTH);
-            this.cmd("SetText", 2, "Making recursive call to " + s.charAt(0) + " child, passing in " + s.substring(1));
+            this.cmd("SetText", 2, `Making recursive call to ${s.charAt(0)} child, passing in ${s.substring(1)}`);
             this.cmd("Step");
             this.cmd("SetHighlight", tree.graphicID, 0);
             this.cmd("SetHighlightIndex", 1, -1);
-            this.cmd("SetText", 1, "\"" + s.substring(1) + "\"");
+            this.cmd("SetText", 1, `"${s.substring(1)}"`);
             this.cmd("Move", this.highlightID, tree.children[index].x, tree.children[index].y);
             this.cmd("Step");
             this.cmd("Delete", this.highlightID);
@@ -294,23 +295,22 @@ class TreeTrie extends Algorithm {
     deleteElement(word) {
         this.commands = [];
         this.cmd("SetText", 0, "Deleting: ");
-        this.cmd("SetText", 1, "\"" + word + "\"");
+        this.cmd("SetText", 1, `"${word}"`);
         this.cmd("AlignRight", 1, 0);
         this.cmd("Step");
 
-        var node = this.doFind(this.root, word);
+        const node = this.doFind(this.root, word);
         if (node != null) {
             this.cmd("SetHighlight", node.graphicID, 1);
-            this.cmd("SetText", 2, "Found \"" + word + "\", setting value in tree to False");
+            this.cmd("SetText", 2, `Found "${word}", setting value in tree to False`);
             this.cmd("step");
             this.cmd("SetBackgroundColor", node.graphicID, TreeTrie.FALSE_COLOR);
             node.isword = false;
             this.cmd("SetHighlight", node.graphicID, 0);
             this.cleanupAfterDelete(node);
             this.resizeTree();
-        }
-        else {
-            this.cmd("SetText", 2, "\"" + word + "\" not in tree, nothing to delete");
+        } else {
+            this.cmd("SetText", 2, `"${word}" not in tree, nothing to delete`);
             this.cmd("step");
             this.cmd("SetHighlightIndex", 1, -1);
         }
@@ -325,8 +325,8 @@ class TreeTrie extends Algorithm {
         if (tree == null) {
             return 0;
         }
-        var children = 0;
-        for (var i = 0; i < 26; i++) {
+        let children = 0;
+        for (let i = 0; i < 26; i++) {
             if (tree.children[i] != null) {
                 children++;
             }
@@ -335,23 +335,22 @@ class TreeTrie extends Algorithm {
     }
 
     cleanupAfterDelete(tree) {
-        var children = this.numChildren(tree);
-        if (children == 0 && !tree.isword) {
+        const children = this.numChildren(tree);
+        if (children === 0 && !tree.isword) {
             this.cmd("SetText", 2, "Deletion left us with a \"False\" leaf\nRemoving false leaf");
             this.cmd("SetHighlight", tree.graphicID, 1);
             this.cmd("Step");
             this.cmd("SetHighlight", tree.graphicID, 0);
             if (tree.parent != null) {
-                var index = 0;
-                while (tree.parent.children[index] != tree) {
+                let index = 0;
+                while (tree.parent.children[index] !== tree) {
                     index++;
                 }
                 this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
                 this.cmd("Delete", tree.graphicID, 0);
                 tree.parent.children[index] = null;
                 this.cleanupAfterDelete(tree.parent);
-            }
-            else {
+            } else {
                 this.cmd("Delete", tree.graphicID, 0);
                 this.root = null;
             }
@@ -361,7 +360,7 @@ class TreeTrie extends Algorithm {
     resizeTree() {
         this.resizeWidths(this.root);
         if (this.root != null) {
-            var startingPoint = this.root.width / 2 + 1 + TreeTrie.LeftMargin;
+            const startingPoint = this.root.width / 2 + 1 + TreeTrie.LeftMargin;
             this.setNewPositions(this.root, startingPoint, TreeTrie.STARTING_Y);
             this.animateNewPositions(this.root);
             this.cmd("Step");
@@ -369,9 +368,9 @@ class TreeTrie extends Algorithm {
     }
 
     add(word) {
-        this.commands = new Array();
+        this.commands = [];
         this.cmd("SetText", 0, "Inserting; ");
-        this.cmd("SetText", 1, "\"" + word + "\"");
+        this.cmd("SetText", 1, `"${word}"`);
         this.cmd("AlignRight", 1, 0);
         this.cmd("Step");
         if (this.root == null) {
@@ -397,7 +396,7 @@ class TreeTrie extends Algorithm {
     addR(s, tree) {
         this.cmd("SetHighlight", tree.graphicID, 1);
 
-        if (s.length == 0) {
+        if (s.length === 0) {
             this.cmd("SetText", 2, "Reached the end of the string \nSet current node to true");
             this.cmd("Step");
             // this.cmd("SetText", tree.graphicID, "T");
@@ -405,16 +404,15 @@ class TreeTrie extends Algorithm {
             this.cmd("SetHighlight", tree.graphicID, 0);
             tree.isword = true;
             return;
-        }
-        else {
+        } else {
             this.cmd("SetHighlightIndex", 1, 1);
-            var index = s.charCodeAt(0) - "A".charCodeAt(0);
+            const index = s.charCodeAt(0) - "A".charCodeAt(0);
             if (tree.children[index] == null) {
                 this.cmd("CreateCircle", this.nextIndex, s.charAt(0), TreeTrie.NEW_NODE_X, TreeTrie.NEW_NODE_Y);
                 this.cmd("SetForegroundColor", this.nextIndex, TreeTrie.FOREGROUND_COLOR);
                 this.cmd("SetBackgroundColor", this.nextIndex, TreeTrie.FALSE_COLOR);
                 this.cmd("SetWidth", this.nextIndex, TreeTrie.NODE_WIDTH);
-                this.cmd("SetText", 2, "Child " + s.charAt(0) + " does not exist.  Creating ... ");
+                this.cmd("SetText", 2, `Child ${s.charAt(0)} does not exist.  Creating ... `);
                 tree.children[index] = new TrieNode(s.charAt(0), this.nextIndex, TreeTrie.NEW_NODE_X, TreeTrie.NEW_NODE_Y);
                 tree.children[index].parent = tree;
                 this.cmd("Connect", tree.graphicID, tree.children[index].graphicID, TreeTrie.FOREGROUND_COLOR, 0, false, s.charAt(0));
@@ -427,11 +425,11 @@ class TreeTrie extends Algorithm {
             }
             this.cmd("CreateHighlightCircle", this.highlightID, TreeTrie.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
             this.cmd("SetWidth", this.highlightID, TreeTrie.NODE_WIDTH);
-            this.cmd("SetText", 2, "Making recursive call to " + s.charAt(0) + " child, passing in \"" + s.substring(1) + "\"");
+            this.cmd("SetText", 2, `Making recursive call to ${s.charAt(0)} child, passing in "${s.substring(1)}"`);
             this.cmd("Step");
             this.cmd("SetHighlight", tree.graphicID, 0);
             this.cmd("SetHighlightIndex", 1, -1);
-            this.cmd("SetText", 1, "\"" + s.substring(1) + "\"");
+            this.cmd("SetText", 1, `"${s.substring(1)}"`);
 
             this.cmd("Move", this.highlightID, tree.children[index].x, tree.children[index].y);
             this.cmd("Step");
@@ -444,9 +442,9 @@ class TreeTrie extends Algorithm {
         if (tree != null) {
             tree.x = xPosition;
             tree.y = yPosition;
-            var newX = xPosition - tree.width / 2;
-            var newY = yPosition + TreeTrie.HEIGHT_DELTA;
-            for (var i = 0; i < 26; i++) {
+            let newX = xPosition - tree.width / 2;
+            const newY = yPosition + TreeTrie.HEIGHT_DELTA;
+            for (let i = 0; i < 26; i++) {
                 if (tree.children[i] != null) {
                     this.setNewPositions(tree.children[i], newX + tree.children[i].width / 2, newY);
                     newX = newX + tree.children[i].width;
@@ -458,7 +456,7 @@ class TreeTrie extends Algorithm {
     animateNewPositions(tree) {
         if (tree != null) {
             this.cmd("Move", tree.graphicID, tree.x, tree.y);
-            for (var i = 0; i < 26; i++) {
+            for (let i = 0; i < 26; i++) {
                 this.animateNewPositions(tree.children[i]);
             }
         }
@@ -468,8 +466,8 @@ class TreeTrie extends Algorithm {
         if (tree == null) {
             return 0;
         }
-        var size = 0;
-        for (var i = 0; i < 26; i++) {
+        let size = 0;
+        for (let i = 0; i < 26; i++) {
             tree.childWidths[i] = this.resizeWidths(tree.children[i]);
             size += tree.childWidths[i];
         }

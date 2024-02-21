@@ -24,30 +24,34 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Algorithm */
+/* exported SortComparison */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class SortComparison extends Algorithm {
-
     static INDEX_COLOR = "#0000FF";
     static BAR_FOREGROUND_COLOR = SortComparison.INDEX_COLOR;
-    static BAR_BACKGROUND_COLOR ="#AAAAFF";
+    static BAR_BACKGROUND_COLOR = "#AAAAFF";
     static HIGHLIGHT_BAR_COLOR = "#FF0000";
     static HIGHLIGHT_BAR_BACKGROUND_COLOR = "#FFAAAA";
     static QUICKSORT_LINE_COLOR = SortComparison.HIGHLIGHT_BAR_COLOR;
-    
+
     static DEFAULT_ARRAY_SIZE = 25;
     static ARRAY_SIZES = [25, 50, 100, 200];
     static ARRAY_SIZE_LABELS = ["Small (25)", "Medium (50)", "Large (100)", "Huge (200)"];
-    
+
     static DEFAULT_ALGORITHM = "insertion";
     static ALGORITHMS = ["insertion", "selection", "bubble", "quick", "merge", "shell"];
     static ALGORITHM_LABELS = ["Insertion sort", "Selection sort", "Bubble sort", "Quicksort", "Merge sort", "Shellsort"];
-    
+
     static Y_MARGINAL = 50;
     static LABEL_Y_ADD = 10;
-    
+
     static MAX_VALUE = 99;
     static MAX_SCALE_FACTOR = 2.0;
-
 
     constructor(am) {
         super();
@@ -89,24 +93,24 @@ class SortComparison extends Algorithm {
         this.info = {};
         this.info.size = parseInt(this.sizeSelect.value) || SortComparison.DEFAULT_ARRAY_SIZE;
         this.info.width = Math.floor((this.getCanvasWidth() - 50) / this.info.size);
-        this.info.initial_x = Math.floor((this.getCanvasWidth() - this.info.width * (1 + this.info.size)) / 2);
-        this.info.bar_width = Math.max(1, Math.floor(this.info.width * 0.8) - 2);
+        this.info.initialX = Math.floor((this.getCanvasWidth() - this.info.width * (1 + this.info.size)) / 2);
+        this.info.barWidth = Math.max(1, Math.floor(this.info.width * 0.8) - 2);
         this.info.labels = this.info.width >= 13;
-        this.info.scale_factor = Math.min(
+        this.info.scaleFactor = Math.min(
             SortComparison.MAX_SCALE_FACTOR,
-            this.getCanvasHeight() / (3 * SortComparison.MAX_VALUE)
+            this.getCanvasHeight() / (3 * SortComparison.MAX_VALUE),
         );
-        this.info.y_pos = SortComparison.Y_MARGINAL + SortComparison.MAX_VALUE * this.info.scale_factor;
-        this.info.lower_y_pos = Math.min(
-            2 * this.info.y_pos,
-            this.getCanvasHeight() - SortComparison.Y_MARGINAL - SortComparison.LABEL_Y_ADD
+        this.info.yPos = SortComparison.Y_MARGINAL + SortComparison.MAX_VALUE * this.info.scaleFactor;
+        this.info.lowerYPos = Math.min(
+            2 * this.info.yPos,
+            this.getCanvasHeight() - SortComparison.Y_MARGINAL - SortComparison.LABEL_Y_ADD,
         );
 
         this.createVisualObjects();
     }
 
     createVisualObjects() {
-        var size = this.info.size;
+        const size = this.info.size;
 
         this.arrayData = new Array(size);
         this.oldArrayData = new Array(size);
@@ -122,28 +126,28 @@ class SortComparison extends Algorithm {
         this.barPositionsX = new Array(size);
         this.obscureObject = new Array(size);
 
-        var xPos = this.info.initial_x;
-        var yPos = this.info.y_pos;
-        var yLabelPos = yPos + SortComparison.LABEL_Y_ADD;
+        let xPos = this.info.initialX;
+        const yPos = this.info.yPos;
+        const yLabelPos = yPos + SortComparison.LABEL_Y_ADD;
 
         this.commands = [];
-        for (var i = 0; i < size; i++) {
+        for (let i = 0; i < size; i++) {
             xPos = xPos + this.info.width;
             this.barPositionsX[i] = xPos;
             this.obscureObject[i] = false;
             this.oldArrayData[i] = this.arrayData[i] = Math.floor(1 + Math.random() * SortComparison.MAX_VALUE);
 
-            var rectID = this.nextIndex++;
-            var barHeight = this.arrayData[i] * this.info.scale_factor;
-            this.cmd("CreateRectangle", rectID, "", this.info.bar_width, barHeight, xPos, yPos, "center", "bottom");
+            const rectID = this.nextIndex++;
+            const barHeight = this.arrayData[i] * this.info.scaleFactor;
+            this.cmd("CreateRectangle", rectID, "", this.info.barWidth, barHeight, xPos, yPos, "center", "bottom");
             this.cmd("SetForegroundColor", rectID, SortComparison.BAR_FOREGROUND_COLOR);
             this.cmd("SetBackgroundColor", rectID, SortComparison.BAR_BACKGROUND_COLOR);
             this.oldBarObjects[i] = this.barObjects[i] = rectID;
 
-            var labelID = this.nextIndex++;
-            var label = this.info.labels ? this.arrayData[i] : "";
+            const labelID = this.nextIndex++;
+            const label = this.info.labels ? this.arrayData[i] : "";
             this.cmd("CreateLabel", labelID, label, xPos, yLabelPos);
-            this.cmd("SetHeight", labelID, 10); // this.array.bar_width);
+            this.cmd("SetHeight", labelID, 10); // this.array.barWidth);
             this.cmd("SetForegroundColor", labelID, SortComparison.INDEX_COLOR);
             this.oldBarLabels[i] = this.barLabels[i] = labelID;
         }
@@ -153,13 +157,13 @@ class SortComparison extends Algorithm {
     }
 
     reset() {
-        for (var i = 0; i < this.info.size; i++) {
+        for (let i = 0; i < this.info.size; i++) {
             this.arrayData[i] = this.oldArrayData[i];
             this.barObjects[i] = this.oldBarObjects[i];
             this.barLabels[i] = this.oldBarLabels[i];
-            var label = this.info.labels ? this.arrayData[i] : "";
+            const label = this.info.labels ? this.arrayData[i] : "";
             this.cmd("SetText", this.barLabels[i], label);
-            this.cmd("SetHeight", this.barObjects[i], this.arrayData[i] * this.info.scale_factor);
+            this.cmd("SetHeight", this.barObjects[i], this.arrayData[i] * this.info.scaleFactor);
         }
     }
 
@@ -170,24 +174,24 @@ class SortComparison extends Algorithm {
         this.animationManager.clearHistory();
         this.commands = [];
         switch (this.algorithmSelect.value) {
-            case "insertion":
-                this.insertionSort();
-                break;
-            case "selection":
-                this.selectionSort();
-                break;
-            case "bubble":
-                this.bubbleSort();
-                break;
-            case "quick":
-                this.quickSort();
-                break;
-            case "merge":
-                this.mergeSort();
-                break;
-            case "shell":
-                this.shellSort();
-                break;
+        case "insertion":
+            this.insertionSort();
+            break;
+        case "selection":
+            this.selectionSort();
+            break;
+        case "bubble":
+            this.bubbleSort();
+            break;
+        case "quick":
+            this.quickSort();
+            break;
+        case "merge":
+            this.mergeSort();
+            break;
+        case "shell":
+            this.shellSort();
+            break;
         }
         this.animationManager.StartNewAnimation(this.commands);
     }
@@ -200,11 +204,11 @@ class SortComparison extends Algorithm {
     }
 
     selectionSort() {
-        for (var i = 0; i < this.info.size - 1; i++) {
-            var smallestIndex = i;
+        for (let i = 0; i < this.info.size - 1; i++) {
+            let smallestIndex = i;
             this.cmd("SetForegroundColor", this.barObjects[smallestIndex], SortComparison.HIGHLIGHT_BAR_COLOR);
             this.cmd("SetBackgroundColor", this.barObjects[smallestIndex], SortComparison.HIGHLIGHT_BAR_BACKGROUND_COLOR);
-            for (var j = i + 1; j < this.info.size; j++) {
+            for (let j = i + 1; j < this.info.size; j++) {
                 this.cmd("SetForegroundColor", this.barObjects[j], SortComparison.HIGHLIGHT_BAR_COLOR);
                 this.cmd("SetBackgroundColor", this.barObjects[j], SortComparison.HIGHLIGHT_BAR_BACKGROUND_COLOR);
                 this.cmd("Step");
@@ -212,13 +216,12 @@ class SortComparison extends Algorithm {
                     this.cmd("SetForegroundColor", this.barObjects[smallestIndex], SortComparison.BAR_FOREGROUND_COLOR);
                     this.cmd("SetBackgroundColor", this.barObjects[smallestIndex], SortComparison.BAR_BACKGROUND_COLOR);
                     smallestIndex = j;
-                }
-                else {
+                } else {
                     this.cmd("SetForegroundColor", this.barObjects[j], SortComparison.BAR_FOREGROUND_COLOR);
                     this.cmd("SetBackgroundColor", this.barObjects[j], SortComparison.BAR_BACKGROUND_COLOR);
                 }
             }
-            if (smallestIndex != i) {
+            if (smallestIndex !== i) {
                 this.swap(smallestIndex, i);
             }
             this.cmd("SetForegroundColor", this.barObjects[i], SortComparison.BAR_FOREGROUND_COLOR);
@@ -227,8 +230,8 @@ class SortComparison extends Algorithm {
     }
 
     bubbleSort() {
-        for (var i = this.info.size - 1; i > 0; i--) {
-            for (var j = 0; j < i; j++) {
+        for (let i = this.info.size - 1; i > 0; i--) {
+            for (let j = 0; j < i; j++) {
                 this.cmd("SetForegroundColor", this.barObjects[j], SortComparison.HIGHLIGHT_BAR_COLOR);
                 this.cmd("SetBackgroundColor", this.barObjects[j], SortComparison.HIGHLIGHT_BAR_BACKGROUND_COLOR);
 
@@ -254,9 +257,9 @@ class SortComparison extends Algorithm {
     quickSort() {
         this.iID = this.nextIndex++;
         this.jID = this.nextIndex++;
-        this.info.y_ij_pos = this.info.y_pos + SortComparison.LABEL_Y_ADD * (this.info.labels ? 3 : 1);
-        this.cmd("CreateLabel", this.iID, "↑", this.barPositionsX[0], this.info.y_ij_pos);
-        this.cmd("CreateLabel", this.jID, "↑", this.barPositionsX[this.info.size - 1], this.info.y_ij_pos);
+        this.info.yIJPos = this.info.yPos + SortComparison.LABEL_Y_ADD * (this.info.labels ? 3 : 1);
+        this.cmd("CreateLabel", this.iID, "↑", this.barPositionsX[0], this.info.yIJPos);
+        this.cmd("CreateLabel", this.jID, "↑", this.barPositionsX[this.info.size - 1], this.info.yIJPos);
         this.cmd("SetForegroundColor", this.iID, SortComparison.HIGHLIGHT_BAR_COLOR);
         this.cmd("SetBackgroundColor", this.iID, SortComparison.HIGHLIGHT_BAR_BACKGROUND_COLOR);
         this.cmd("SetForegroundColor", this.jID, SortComparison.HIGHLIGHT_BAR_COLOR);
@@ -272,25 +275,25 @@ class SortComparison extends Algorithm {
             return;
         }
         this.cmd("Step");
-        var lineID = this.nextIndex;
-        var pivot = this.arrayData[low];
+        const lineID = this.nextIndex;
+        const pivot = this.arrayData[low];
         this.cmd(
             "CreateRectangle",
             lineID,
             "",
             (this.info.size + 1) * this.info.width,
             0,
-            this.info.initial_x,
-            this.info.y_pos - pivot * this.info.scale_factor,
+            this.info.initialX,
+            this.info.yPos - pivot * this.info.scaleFactor,
             "left",
-            "bottom"
+            "bottom",
         );
         this.cmd("SetForegroundColor", lineID, SortComparison.QUICKSORT_LINE_COLOR);
-        var i = low + 1;
-        var j = high;
+        let i = low + 1;
+        let j = high;
 
-        this.cmd("Move", this.iID, this.barPositionsX[i], this.info.y_ij_pos);
-        this.cmd("Move", this.jID, this.barPositionsX[j], this.info.y_ij_pos);
+        this.cmd("Move", this.iID, this.barPositionsX[i], this.info.yIJPos);
+        this.cmd("Move", this.jID, this.barPositionsX[j], this.info.yIJPos);
         this.cmd("Step");
 
         while (i <= j) {
@@ -306,7 +309,7 @@ class SortComparison extends Algorithm {
             this.cmd("SetBackgroundColor", this.barObjects[i], SortComparison.BAR_BACKGROUND_COLOR);
             while (i <= j && this.compare(this.arrayData[i], pivot) < 0) {
                 ++i;
-                this.cmd("Move", this.iID, this.barPositionsX[i], this.info.y_ij_pos);
+                this.cmd("Move", this.iID, this.barPositionsX[i], this.info.yIJPos);
                 this.cmd("Step");
                 this.cmd("SetForegroundColor", this.barObjects[low], SortComparison.HIGHLIGHT_BAR_COLOR);
                 this.cmd("SetBackgroundColor", this.barObjects[low], SortComparison.HIGHLIGHT_BAR_BACKGROUND_COLOR);
@@ -334,7 +337,7 @@ class SortComparison extends Algorithm {
 
             while (j >= i && this.compare(this.arrayData[j], pivot) > 0) {
                 --j;
-                this.cmd("Move", this.jID, this.barPositionsX[j], this.info.y_ij_pos);
+                this.cmd("Move", this.jID, this.barPositionsX[j], this.info.yIJPos);
                 this.cmd("Step");
                 this.cmd("SetForegroundColor", this.barObjects[j], SortComparison.HIGHLIGHT_BAR_COLOR);
                 this.cmd("SetBackgroundColor", this.barObjects[j], SortComparison.HIGHLIGHT_BAR_BACKGROUND_COLOR);
@@ -349,8 +352,8 @@ class SortComparison extends Algorithm {
                 this.cmd("SetBackgroundColor", this.barObjects[low], SortComparison.BAR_BACKGROUND_COLOR);
             }
             if (i <= j) {
-                this.cmd("Move", this.jID, this.barPositionsX[j - 1], this.info.y_ij_pos);
-                this.cmd("Move", this.iID, this.barPositionsX[i + 1], this.info.y_ij_pos);
+                this.cmd("Move", this.jID, this.barPositionsX[j - 1], this.info.yIJPos);
+                this.cmd("Move", this.iID, this.barPositionsX[i + 1], this.info.yIJPos);
                 this.swap(i, j);
                 ++i;
                 --j;
@@ -359,12 +362,10 @@ class SortComparison extends Algorithm {
         if (i >= low) {
             this.cmd("SetForegroundColor", this.barObjects[i], SortComparison.BAR_FOREGROUND_COLOR);
             this.cmd("SetBackgroundColor", this.barObjects[i], SortComparison.BAR_BACKGROUND_COLOR);
-
         }
         if (j <= high) {
             this.cmd("SetForegroundColor", this.barObjects[j], SortComparison.BAR_FOREGROUND_COLOR);
             this.cmd("SetBackgroundColor", this.barObjects[j], SortComparison.BAR_BACKGROUND_COLOR);
-
         }
         this.swap(low, j);
 
@@ -380,66 +381,58 @@ class SortComparison extends Algorithm {
         this.highlightRange(low, high);
         if (low < high) {
             this.cmd("Step");
-            var mid = Math.floor((low + high) / 2);
+            const mid = Math.floor((low + high) / 2);
             this.recursiveMergeSort(low, mid);
             this.recursiveMergeSort(mid + 1, high);
             this.highlightRange(low, high);
-            var insertIndex = low;
-            var leftIndex = low;
-            var rightIndex = mid + 1;
-            while (insertIndex <= high) {
+            let leftIndex = low;
+            let rightIndex = mid + 1;
+            for (let insertIndex = low; insertIndex <= high; insertIndex++) {
                 if (leftIndex <= mid && (rightIndex > high || this.compare(this.arrayData[leftIndex], this.arrayData[rightIndex]) <= 0)) {
                     this.arraySwap[insertIndex] = this.arrayData[leftIndex];
-                    this.cmd("Move", this.barObjects[leftIndex], this.barPositionsX[insertIndex], this.info.lower_y_pos);
-                    this.cmd("Move", this.barLabels[leftIndex], this.barPositionsX[insertIndex], this.info.lower_y_pos + SortComparison.LABEL_Y_ADD);
+                    this.cmd("Move", this.barObjects[leftIndex], this.barPositionsX[insertIndex], this.info.lowerYPos);
+                    this.cmd("Move", this.barLabels[leftIndex], this.barPositionsX[insertIndex], this.info.lowerYPos + SortComparison.LABEL_Y_ADD);
                     this.cmd("Step");
                     this.labelsSwap[insertIndex] = this.barLabels[leftIndex];
                     this.objectsSwap[insertIndex] = this.barObjects[leftIndex];
-                    insertIndex++;
                     leftIndex++;
-                }
-                else {
+                } else {
                     this.arraySwap[insertIndex] = this.arrayData[rightIndex];
-                    this.cmd("Move", this.barObjects[rightIndex], this.barPositionsX[insertIndex], this.info.lower_y_pos);
-                    this.cmd("Move", this.barLabels[rightIndex], this.barPositionsX[insertIndex], this.info.lower_y_pos + SortComparison.LABEL_Y_ADD);
+                    this.cmd("Move", this.barObjects[rightIndex], this.barPositionsX[insertIndex], this.info.lowerYPos);
+                    this.cmd("Move", this.barLabels[rightIndex], this.barPositionsX[insertIndex], this.info.lowerYPos + SortComparison.LABEL_Y_ADD);
                     this.cmd("Step");
                     this.labelsSwap[insertIndex] = this.barLabels[rightIndex];
                     this.objectsSwap[insertIndex] = this.barObjects[rightIndex];
-                    insertIndex++;
                     rightIndex++;
                 }
             }
-            for (insertIndex = low; insertIndex <= high; insertIndex++) {
+            for (let insertIndex = low; insertIndex <= high; insertIndex++) {
                 this.barObjects[insertIndex] = this.objectsSwap[insertIndex];
                 this.barLabels[insertIndex] = this.labelsSwap[insertIndex];
                 this.arrayData[insertIndex] = this.arraySwap[insertIndex];
-                this.cmd("Move", this.barObjects[insertIndex], this.barPositionsX[insertIndex], this.info.y_pos);
-                this.cmd("Move", this.barLabels[insertIndex], this.barPositionsX[insertIndex], this.info.y_pos + SortComparison.LABEL_Y_ADD);
+                this.cmd("Move", this.barObjects[insertIndex], this.barPositionsX[insertIndex], this.info.yPos);
+                this.cmd("Move", this.barLabels[insertIndex], this.barPositionsX[insertIndex], this.info.yPos + SortComparison.LABEL_Y_ADD);
             }
             this.cmd("Step");
-        }
-        else {
+        } else {
             this.cmd("Step");
         }
     }
 
     shellSort() {
-        for (var inc = Math.floor(this.info.size / 2); inc >= 1; inc = Math.floor(inc / 2)) {
-            for (var offset = 0; offset < inc; offset = offset + 1) {
-                for (var k = 0; k < this.info.size; k++) {
-                    if ((k - offset) % inc == 0) {
+        for (let inc = Math.floor(this.info.size / 2); inc >= 1; inc = Math.floor(inc / 2)) {
+            for (let offset = 0; offset < inc; offset = offset + 1) {
+                for (let k = 0; k < this.info.size; k++) {
+                    if ((k - offset) % inc === 0) {
                         if (this.obscureObject[k]) {
                             this.obscureObject[k] = false;
                             this.cmd("SetAlpha", this.barObjects[k], 1.0);
                             this.cmd("SetAlpha", this.barLabels[k], 1.0);
                         }
-                    }
-                    else {
-                        if (!this.obscureObject[k]) {
-                            this.obscureObject[k] = true;
-                            this.cmd("SetAlpha", this.barObjects[k], 0.08);
-                            this.cmd("SetAlpha", this.barLabels[k], 0.08);
-                        }
+                    } else if (!this.obscureObject[k]) {
+                        this.obscureObject[k] = true;
+                        this.cmd("SetAlpha", this.barObjects[k], 0.08);
+                        this.cmd("SetAlpha", this.barLabels[k], 0.08);
                     }
                 }
                 this.cmd("Step");
@@ -449,8 +442,8 @@ class SortComparison extends Algorithm {
     }
 
     insertionSortSkip(inc, offset) {
-        for (var i = inc + offset; i < this.info.size; i = i + inc) {
-            var j = i;
+        for (let i = inc + offset; i < this.info.size; i = i + inc) {
+            let j = i;
             while (j > inc - 1) {
                 this.cmd("SetForegroundColor", this.barObjects[j], SortComparison.HIGHLIGHT_BAR_COLOR);
                 this.cmd("SetForegroundColor", this.barObjects[j - inc], SortComparison.HIGHLIGHT_BAR_COLOR);
@@ -475,7 +468,7 @@ class SortComparison extends Algorithm {
     }
 
     swap(index1, index2) {
-        var tmp = this.arrayData[index1];
+        let tmp = this.arrayData[index1];
         this.arrayData[index1] = this.arrayData[index2];
         this.arrayData[index2] = tmp;
 
@@ -487,29 +480,29 @@ class SortComparison extends Algorithm {
         this.barLabels[index1] = this.barLabels[index2];
         this.barLabels[index2] = tmp;
 
-        this.cmd("Move", this.barObjects[index1], this.barPositionsX[index1], this.info.y_pos);
-        this.cmd("Move", this.barObjects[index2], this.barPositionsX[index2], this.info.y_pos);
-        this.cmd("Move", this.barLabels[index1], this.barPositionsX[index1], this.info.y_pos + SortComparison.LABEL_Y_ADD);
-        this.cmd("Move", this.barLabels[index2], this.barPositionsX[index2], this.info.y_pos + SortComparison.LABEL_Y_ADD);
+        this.cmd("Move", this.barObjects[index1], this.barPositionsX[index1], this.info.yPos);
+        this.cmd("Move", this.barObjects[index2], this.barPositionsX[index2], this.info.yPos);
+        this.cmd("Move", this.barLabels[index1], this.barPositionsX[index1], this.info.yPos + SortComparison.LABEL_Y_ADD);
+        this.cmd("Move", this.barLabels[index2], this.barPositionsX[index2], this.info.yPos + SortComparison.LABEL_Y_ADD);
         this.cmd("Step");
     }
 
     highlightRange(lowIndex, highIndex) {
-        for (var i = 0; i < lowIndex; i++) {
+        for (let i = 0; i < lowIndex; i++) {
             if (!this.obscureObject[i]) {
                 this.obscureObject[i] = true;
                 this.cmd("SetAlpha", this.barObjects[i], 0.08);
                 this.cmd("SetAlpha", this.barLabels[i], 0.08);
             }
         }
-        for (i = lowIndex; i <= highIndex; i++) {
+        for (let i = lowIndex; i <= highIndex; i++) {
             if (this.obscureObject[i]) {
                 this.obscureObject[i] = false;
                 this.cmd("SetAlpha", this.barObjects[i], 1.0);
                 this.cmd("SetAlpha", this.barLabels[i], 1.0);
             }
         }
-        for (i = highIndex + 1; i < this.info.size; i++) {
+        for (let i = highIndex + 1; i < this.info.size; i++) {
             if (!this.obscureObject[i]) {
                 this.obscureObject[i] = true;
                 this.cmd("SetAlpha", this.barObjects[i], 0.08);
@@ -517,5 +510,4 @@ class SortComparison extends Algorithm {
             }
         }
     }
-
 }

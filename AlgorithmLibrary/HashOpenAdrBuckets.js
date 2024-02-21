@@ -24,16 +24,22 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Hash */
+/* exported HashOpenAdrBuckets */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class HashOpenAdrBuckets extends Hash {
     // This is a special key and should not be possible to enter in the GUI:
     static DELETED = "<deleted>";
-    
+
     static DEFAULT_TABLE_SIZE = 23;
     static TABLE_SIZES = [13, 23, 41];
     static TABLE_SIZE_LABELS = ["Small (13)", "Medium (23)", "Large (41)"];
     static NUM_BUCKETS = {13: 5, 23: 6, 41: 11};
-    
+
     static ARRAY_ELEM_START_Y = 100;
 
     constructor(am) {
@@ -59,20 +65,20 @@ class HashOpenAdrBuckets extends Hash {
         this.bucketSize = Math.floor((this.tableSize - 2) / this.numBuckets);
 
         this.tableCells = new Array(this.tableSize);
-        for (var i = 0; i < this.tableSize; i++) {
+        for (let i = 0; i < this.tableSize; i++) {
             this.tableCells[i] = "";
         }
 
-        for (i = 0; i <= this.numBuckets; i++) {
-            var nextID = this.nextIndex++;
+        for (let i = 0; i <= this.numBuckets; i++) {
+            const nextID = this.nextIndex++;
             this.cmd(
                 "CreateRectangle", nextID, "",
                 0, 2.5 * this.getCellHeight(),
                 this.getBucketPosX(i), this.getBucketPosY(i),
-                "center", "top"
+                "center", "top",
             );
-            var lblID = this.nextIndex++;
-            var lbl = i < this.numBuckets ? i : "Overflow";
+            const lblID = this.nextIndex++;
+            const lbl = i < this.numBuckets ? i : "Overflow";
             this.cmd("CreateLabel", lblID, lbl, this.getBucketLabelX(i), this.getBucketLabelY(i), 0);
         }
 
@@ -83,7 +89,7 @@ class HashOpenAdrBuckets extends Hash {
     }
 
     reset() {
-        for (var i = 0; i < this.tableSize; i++) {
+        for (let i = 0; i < this.tableSize; i++) {
             this.tableCells[i] = "";
         }
         this.nextIndex = this.initialIndex;
@@ -121,23 +127,23 @@ class HashOpenAdrBuckets extends Hash {
     }
 
     getCellPosXY(i) {
-        var startX = this.getCellWidth();
-        var x = startX;
-        var y = HashOpenAdrBuckets.ARRAY_ELEM_START_Y;
-        for (var k = 0; k < i; k++) {
+        const startX = this.getCellWidth();
+        let x = startX;
+        let y = HashOpenAdrBuckets.ARRAY_ELEM_START_Y;
+        for (let k = 0; k < i; k++) {
             x += this.getCellWidth();
             if (x + this.getCellWidth() > this.getCanvasWidth()) {
                 x = startX;
                 y += Math.round(4 * this.getCellHeight());
             }
         }
-        return { x: x, y: y };
+        return {x: x, y: y};
     }
 
     getCellWidth() {
-        var nrows = 1;
+        let nrows = 1;
         while (true) {
-            var w = nrows * this.getCanvasWidth() / (this.tableSize + 2 * nrows);
+            const w = nrows * this.getCanvasWidth() / (this.tableSize + 2 * nrows);
             if (w >= 65 || nrows >= 4) return Math.round(w);
             nrows++;
         }
@@ -155,24 +161,24 @@ class HashOpenAdrBuckets extends Hash {
         this.cmd("SetText", this.messageID, "Printing hash table");
         this.highlightID = this.nextIndex++;
         this.cmd("CreateHighlightCircle", this.highlightID, "red", 0, 0);
-        var firstLabel = this.nextIndex;
+        const firstLabel = this.nextIndex;
 
-        var xPosOfNextLabel = Hash.FIRST_PRINT_POS_X;
-        var yPosOfNextLabel = this.getCanvasHeight() * 0.9;
+        let xPosOfNextLabel = Hash.FIRST_PRINT_POS_X;
+        let yPosOfNextLabel = this.getCanvasHeight() * 0.9;
 
-        for (var i = 0; i < this.tableCells.length; i++) {
+        for (let i = 0; i < this.tableCells.length; i++) {
             this.cmd("Move", this.highlightID, this.getCellPosX(i), this.getCellPosY(i));
             this.cmd("Step");
-            var elem = this.tableCells[i];
+            const elem = this.tableCells[i];
             if (elem && elem !== HashOpenAdrBuckets.DELETED) {
-                var nextLabelID = this.nextIndex++;
+                const nextLabelID = this.nextIndex++;
                 this.cmd("CreateLabel", nextLabelID, elem, this.getCellPosX(i), this.getCellPosY(i));
                 this.cmd("SetForegroundColor", nextLabelID, "blue");
                 this.cmd("Move", nextLabelID, xPosOfNextLabel, yPosOfNextLabel);
                 this.cmd("Step");
 
                 xPosOfNextLabel += Hash.PRINT_HORIZONTAL_GAP;
-                if (xPosOfNextLabel > this.print_max) {
+                if (xPosOfNextLabel > this.printMax) {
                     xPosOfNextLabel = Hash.FIRST_PRINT_POS_X;
                     yPosOfNextLabel += Hash.PRINT_VERTICAL_GAP;
                 }
@@ -181,7 +187,7 @@ class HashOpenAdrBuckets extends Hash {
 
         this.cmd("Delete", this.highlightID);
         this.cmd("Step");
-        for (var i = firstLabel; i < this.nextIndex; i++) {
+        for (let i = firstLabel; i < this.nextIndex; i++) {
             this.cmd("Delete", i);
         }
         this.nextIndex = this.highlightID; // Reuse objects. Not necessary.
@@ -191,7 +197,7 @@ class HashOpenAdrBuckets extends Hash {
 
     clearTable() {
         this.commands = [];
-        for (var i = 0; i < this.tableCells.length; i++) {
+        for (let i = 0; i < this.tableCells.length; i++) {
             this.tableCells[i] = "";
             this.cmd("SetText", this.tableCellIDs[i], "");
         }
@@ -202,16 +208,15 @@ class HashOpenAdrBuckets extends Hash {
         this.commands = [];
         this.cmd("SetText", this.messageID, `Inserting ${elem}`);
 
-        var hash = this.getHashCode(elem);
-        var bucket = this.getBucket(hash);
-        var index = this.getEmptyIndex(bucket, elem);
+        const hash = this.getHashCode(elem);
+        const bucket = this.getBucket(hash);
+        const index = this.getEmptyIndex(bucket, elem);
         this.cmd("SetText", this.sndMessageID, "");
 
         if (index < 0) {
             this.cmd("SetText", this.messageID, `Inserting ${elem}: Buckets are full!`);
-        }
-        else {
-            var labID = this.nextIndex++;
+        } else {
+            const labID = this.nextIndex++;
             this.cmd("CreateLabel", labID, elem, 0, 0);
             this.cmd("AlignRight", labID, this.messageID);
             this.cmd("Move", labID, this.getCellPosX(index), this.getCellPosY(index));
@@ -235,17 +240,16 @@ class HashOpenAdrBuckets extends Hash {
         this.commands = [];
         this.cmd("SetText", this.messageID, `Deleting: ${elem}`);
 
-        var hash = this.getHashCode(elem);
-        var bucket = this.getBucket(hash);
-        var index = this.getElemIndex(bucket, elem);
+        const hash = this.getHashCode(elem);
+        const bucket = this.getBucket(hash);
+        const index = this.getElemIndex(bucket, elem);
         this.cmd("SetText", this.sndMessageID, "");
 
         if (index < 0) {
             this.cmd("SetText", this.messageID, `Deleting ${elem}: Element not found!`);
-        }
-        else {
-            this.tableCells[index] = HashOpenAdressing.DELETED;
-            this.cmd("SetText", this.tableCellIDs[index], HashOpenAdressing.DELETED);
+        } else {
+            this.tableCells[index] = HashOpenAdrBuckets.DELETED;
+            this.cmd("SetText", this.tableCellIDs[index], HashOpenAdrBuckets.DELETED);
             this.cmd("SetText", this.messageID, `Deleted ${elem}.`);
             this.cmd("Step");
             this.cmd("SetHighlight", this.tableCellIDs[index], 0);
@@ -257,15 +261,14 @@ class HashOpenAdrBuckets extends Hash {
         this.commands = [];
         this.cmd("SetText", this.messageID, `Finding ${elem}`);
 
-        var hash = this.getHashCode(elem);
-        var bucket = this.getBucket(hash);
-        var index = this.getElemIndex(bucket, elem);
+        const hash = this.getHashCode(elem);
+        const bucket = this.getBucket(hash);
+        const index = this.getElemIndex(bucket, elem);
         this.cmd("SetText", this.sndMessageID, "");
 
         if (index < 0) {
             this.cmd("SetText", this.messageID, `Finding ${elem}: Element not found!`);
-        }
-        else {
+        } else {
             this.cmd("SetText", this.messageID, `Found ${elem}.`);
             this.cmd("Step");
             this.cmd("SetHighlight", this.tableCellIDs[index], 0);
@@ -275,28 +278,28 @@ class HashOpenAdrBuckets extends Hash {
 
     getBucketIndices(bucket) {
         if (bucket < 0) bucket = this.numBuckets;
-        var len = this.bucketSize;
-        var start = bucket * len;
+        let len = this.bucketSize;
+        const start = bucket * len;
         if (bucket >= this.numBuckets) len = this.tableSize - start;
-        return Array.from({ length: len }, (_, i) => i + start);
+        return Array.from({length: len}, (_, i) => i + start);
     }
 
     getElemIndex(bucket, elem) {
         this.cmd("SetText", this.sndMessageID, `Searching in bucket ${bucket}.`);
-        for (var i of this.getBucketIndices(bucket)) {
+        for (const i of this.getBucketIndices(bucket)) {
             this.cmd("SetHighlight", this.tableCellIDs[i], 1);
             this.cmd("Step");
-            if (this.tableCells[i] == elem) return i;
+            if (this.tableCells[i] === elem) return i;
             this.cmd("SetHighlight", this.tableCellIDs[i], 0);
             if (!this.tableCells[i]) return -1;
         }
         // Can only get this far if we didn't find the element we are looking for,
         //  *and* the bucket was full -- look at overflow bucket.
         this.cmd("SetText", this.sndMessageID, "Bucket is full - searching the overflow bucket.");
-        for (var i of this.getBucketIndices(-1)) {
+        for (const i of this.getBucketIndices(-1)) {
             this.cmd("SetHighlight", this.tableCellIDs[i], 1);
             this.cmd("Step");
-            if (this.tableCells[i] == elem) return i;
+            if (this.tableCells[i] === elem) return i;
             this.cmd("SetHighlight", this.tableCellIDs[i], 0);
             if (!this.tableCells[i]) return -1;
         }
@@ -305,7 +308,7 @@ class HashOpenAdrBuckets extends Hash {
 
     getEmptyIndex(bucket) {
         this.cmd("SetText", this.sndMessageID, `Searching in bucket ${bucket}.`);
-        for (var i of this.getBucketIndices(bucket)) {
+        for (const i of this.getBucketIndices(bucket)) {
             this.cmd("SetHighlight", this.tableCellIDs[i], 1);
             this.cmd("Step");
             this.cmd("SetHighlight", this.tableCellIDs[i], 0);
@@ -313,22 +316,23 @@ class HashOpenAdrBuckets extends Hash {
         }
         // Can only get this far if we didn't find any empty cell -- look at overflow bucket.
         this.cmd("SetText", this.sndMessageID, "Bucket is full - searching the overflow bucket.");
-        for (var i of this.getBucketIndices(-1)) {
+        for (const i of this.getBucketIndices(-1)) {
             this.cmd("SetHighlight", this.tableCellIDs[i], 1);
             this.cmd("Step");
             this.cmd("SetHighlight", this.tableCellIDs[i], 0);
             if (!this.tableCells[i]) return i;
         }
+        return -1;
     }
 
     getBucket(hash) {
-        var bucket = hash % this.numBuckets;
+        const bucket = hash % this.numBuckets;
 
-        var labelID = this.nextIndex++;
-        var labelID2 = this.nextIndex++;
-        var highlightID = this.nextIndex++;
+        const labelID = this.nextIndex++;
+        const labelID2 = this.nextIndex++;
+        const highlightID = this.nextIndex++;
 
-        var lblText = `    ${hash} % ${this.tableSize}  =  `;
+        const lblText = `    ${hash} % ${this.tableSize}  =  `;
         this.cmd("CreateLabel", labelID, lblText, Hash.HASH_MOD_X, Hash.HASH_NUMBER_START_Y, 0);
         this.cmd("CreateLabel", labelID2, "", 0, 0);
         this.cmd("AlignRight", labelID2, labelID);
@@ -348,4 +352,3 @@ class HashOpenAdrBuckets extends Hash {
         return bucket;
     }
 }
-

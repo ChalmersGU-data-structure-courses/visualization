@@ -24,12 +24,18 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Algorithm */
+/* exported HeapSkew */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class SkewHeapNode {
     constructor(val, id, initialX, initialY) {
         this.data = val;
-        this.x = (initialX == undefined) ? 0 : initialX;
-        this.y = (initialY == undefined) ? 0 : initialY;
+        this.x = (initialX == null) ? 0 : initialX;
+        this.y = (initialY == null) ? 0 : initialY;
 
         this.graphicID = id;
         this.left = null;
@@ -38,13 +44,13 @@ class SkewHeapNode {
         this.rightWidth = 0;
         this.parent = null;
     }
+
     disconnectFromParent() {
         if (this.parent != null) {
-            if (this.parent.right == this) {
+            if (this.parent.right === this) {
                 this.parent.right = null;
-            }
-            else if (this.parent.left === this) {
-                this.parent.left == null;
+            } else if (this.parent.left === this) {
+                this.parent.left = null;
             }
         }
     }
@@ -73,7 +79,6 @@ class HeapSkew extends Algorithm {
     constructor(am) {
         super();
         this.init(am);
-
     }
 
     init(am) {
@@ -92,7 +97,7 @@ class HeapSkew extends Algorithm {
     }
 
     addControls() {
-        this.insertField = this.addControlToAlgorithmBar("Text", "", { maxlength: 4, size: 4 });
+        this.insertField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
         this.addReturnSubmit(this.insertField, "int", this.insertCallback.bind(this));
 
         this.insertButton = this.addControlToAlgorithmBar("Button", "Insert");
@@ -106,7 +111,7 @@ class HeapSkew extends Algorithm {
     }
 
     insertCallback(event) {
-        var insertedValue = this.normalizeNumber(this.insertField.value);
+        const insertedValue = this.normalizeNumber(this.insertField.value);
         if (insertedValue !== "") {
             this.insertField.value = "";
             this.implementAction(this.insertElement.bind(this), insertedValue);
@@ -118,7 +123,7 @@ class HeapSkew extends Algorithm {
     }
 
     clear(ignored) {
-        this.commands = new Array();
+        this.commands = [];
         this.clearTree(this.treeRoot);
         this.treeRoot = null;
         this.nexIndex = 1;
@@ -131,7 +136,6 @@ class HeapSkew extends Algorithm {
             this.clearTree(tree.left);
             this.clearTree(tree.right);
         }
-
     }
 
     reset() {
@@ -145,7 +149,7 @@ class HeapSkew extends Algorithm {
     }
 
     removeSmallest(dummy) {
-        this.commands = new Array();
+        this.commands = [];
 
         if (this.treeRoot != null) {
             this.highlightLeft = this.nextIndex++;
@@ -158,24 +162,22 @@ class HeapSkew extends Algorithm {
             if (this.treeRoot.right != null) {
                 this.cmd("Disconnect", this.treeRoot.graphicID, this.treeRoot.right.graphicID);
             }
-            var oldElem = this.treeRoot.graphicID;
+            const oldElem = this.treeRoot.graphicID;
             this.cmd("Move", this.treeRoot.graphicID, HeapSkew.INSERT_X, HeapSkew.INSERT_Y);
             this.cmd("Step");
             this.cmd("SetText", HeapSkew.MESSAGE_ID, "Merge the two subtrees");
 
             if (this.treeRoot.left == null) {
                 this.treeRoot = null;
-            }
-            else if (this.treeRoot.right == null) {
+            } else if (this.treeRoot.right == null) {
                 this.treeRoot = this.treeRoot.left;
                 this.resizeTrees();
-            }
-            else {
-                var secondTree = this.treeRoot.right;
+            } else {
+                const secondTree = this.treeRoot.right;
                 this.secondaryRoot = secondTree;
                 this.treeRoot = this.treeRoot.left;
                 this.resizeTrees();
-                //this.secondaryRoot = null;
+                // this.secondaryRoot = null;
                 this.cmd("CreateHighlightCircle", this.highlightLeft, HeapSkew.HIGHLIGHT_CIRCLE_COLOR, this.treeRoot.x, this.treeRoot.y);
 
                 this.cmd("CreateHighlightCircle", this.highlightRight, HeapSkew.HIGHLIGHT_CIRCLE_COLOR, secondTree.x, secondTree.y);
@@ -185,15 +187,13 @@ class HeapSkew extends Algorithm {
             this.resizeTrees();
             this.cmd("Delete", oldElem);
             this.cmd("SetText", HeapSkew.MESSAGE_ID, "");
-
-
         }
         // Clear for real
         return this.commands;
     }
 
     insertElement(insertedValue) {
-        this.commands = new Array();
+        this.commands = [];
         this.cmd("SetText", HeapSkew.MESSAGE_ID, "Create a heap with one node, merge with existing heap.");
 
         this.secondaryRoot = new SkewHeapNode(insertedValue, this.nextIndex++, HeapSkew.INSERT_X, HeapSkew.INSERT_Y);
@@ -208,14 +208,13 @@ class HeapSkew extends Algorithm {
             this.cmd("CreateHighlightCircle", this.highlightLeft, HeapSkew.HIGHLIGHT_CIRCLE_COLOR, this.treeRoot.x, this.treeRoot.y);
             this.cmd("CreateHighlightCircle", this.highlightRight, HeapSkew.HIGHLIGHT_CIRCLE_COLOR, this.secondaryRoot.x, this.secondaryRoot.y);
 
-            var rightTree = this.secondaryRoot;
+            const rightTree = this.secondaryRoot;
             this.secondaryRoot = null;
 
             this.treeRoot = this.merge(this.treeRoot, rightTree);
 
             this.resizeTrees();
-        }
-        else {
+        } else {
             this.treeRoot = this.secondaryRoot;
             this.secondaryRoot = null;
             this.resizeTrees();
@@ -239,19 +238,17 @@ class HeapSkew extends Algorithm {
             this.cmd("Delete", this.highlightLeft);
             return tree1;
         }
-        var tmp;
         this.cmd("SetHighlight", tree1.graphicID, 1);
         this.cmd("SetHighlight", tree2.graphicID, 1);
         if (tree2.data < tree1.data) {
             this.cmd("SetText", HeapSkew.MESSAGE_ID, "Min element is in right heap.  Recursively merge right subtree of right heap with left heap");
-            tmp = tree1;
+            const tmp = tree1;
             tree1 = tree2;
             tree2 = tmp;
-            tmp = this.highlightRight;
+            const tmpR = this.highlightRight;
             this.highlightRight = this.highlightLeft;
-            this.highlightLeft = tmp;
-        }
-        else {
+            this.highlightLeft = tmpR;
+        } else {
             this.cmd("SetText", HeapSkew.MESSAGE_ID, "Min element is in left heap.  Recursively merge right subtree of left heap with right heap");
         }
         this.cmd("Step");
@@ -259,15 +256,14 @@ class HeapSkew extends Algorithm {
         this.cmd("SetHighlight", tree2.graphicID, 0);
         if (tree1.right == null) {
             this.cmd("Move", this.highlightLeft, tree1.x + HeapSkew.WIDTH_DELTA / 2, tree1.y + HeapSkew.HEIGHT_DELTA);
-        }
-        else {
+        } else {
             this.cmd("Move", this.highlightLeft, tree1.right.x, tree1.right.y);
         }
         this.cmd("Step");
         if (tree1.right != null) {
             this.cmd("Disconnect", tree1.graphicID, tree1.right.graphicID, HeapSkew.LINK_COLOR);
         }
-        var next = tree1.right;
+        const next = tree1.right;
         this.cmd("SetAlpha", tree1.graphicID, HeapSkew.BACKGROUND_ALPHA);
         if (tree1.left != null) {
             this.cmd("SetEdgeAlpha", tree1.graphicID, tree1.left.graphicID, HeapSkew.BACKGROUND_ALPHA);
@@ -275,13 +271,13 @@ class HeapSkew extends Algorithm {
         }
         this.cmd("Step");
         tree1.right = this.merge(next, tree2);
-        if (this.secondaryRoot == tree1.right) {
+        if (this.secondaryRoot === tree1.right) {
             this.secondaryRoot = null;
         }
-        if (this.treeRoot == tree1.right) {
+        if (this.treeRoot === tree1.right) {
             this.treeRoot = null;
         }
-        if (tree1.right.parent != tree1) {
+        if (tree1.right.parent !== tree1) {
             tree1.right.disconnectFromParent();
         }
         tree1.right.parent = tree1;
@@ -301,7 +297,7 @@ class HeapSkew extends Algorithm {
         this.cmd("SetText", HeapSkew.MESSAGE_ID, "Swapping subtrees after merge ...");
         this.cmd("Step");
         this.cmd("SetHighlight", tree1.graphicID, 0);
-        var tmp = tree1.left;
+        const tmp = tree1.left;
         tree1.left = tree1.right;
         tree1.right = tmp;
         this.resizeTrees();
@@ -332,24 +328,21 @@ class HeapSkew extends Algorithm {
     }
 
     resizeTrees() {
-        var startingPoint;
-        var secondTreeStart;
         this.resizeWidths(this.treeRoot);
         this.resizeWidths(this.secondaryRoot);
 
         if (this.treeRoot != null) {
-            startingPoint = this.treeRoot.leftWidth;
+            const startingPoint = this.treeRoot.leftWidth;
             this.setNewPositions(this.treeRoot, startingPoint, HeapSkew.STARTING_Y, 0);
             this.animateNewPositions(this.treeRoot);
             if (this.secondaryRoot != null) {
-                secondTreeStart = this.treeRoot.leftWidth + this.treeRoot.rightWidth + this.secondaryRoot.leftWidth + 50;
+                const secondTreeStart = this.treeRoot.leftWidth + this.treeRoot.rightWidth + this.secondaryRoot.leftWidth + 50;
                 this.setNewPositions(this.secondaryRoot, secondTreeStart, HeapSkew.STARTING_Y, 0);
                 this.animateNewPositions(this.secondaryRoot);
             }
             this.cmd("Step");
-        }
-        else if (this.secondaryRoot != null) {
-            startingPoint = this.secondaryRoot.leftWidth;
+        } else if (this.secondaryRoot != null) {
+            const startingPoint = this.secondaryRoot.leftWidth;
             this.setNewPositions(this.secondaryRoot, startingPoint, HeapSkew.STARTING_Y, 0);
             this.animateNewPositions(this.secondaryRoot);
         }
@@ -358,13 +351,11 @@ class HeapSkew extends Algorithm {
     setNewPositions(tree, xPosition, yPosition, side) {
         if (tree != null) {
             tree.y = yPosition;
-            if (side == -1) {
+            if (side === -1) {
                 xPosition = xPosition - tree.rightWidth;
-            }
-            else if (side == 1) {
+            } else if (side === 1) {
                 xPosition = xPosition + tree.leftWidth;
-            }
-            else {
+            } else {
                 // ???            tree.heightLabelX = xPosition - SkewHeap.NPL_OFFSET_Y;
             }
             tree.x = xPosition;
@@ -381,4 +372,3 @@ class HeapSkew extends Algorithm {
         }
     }
 }
-

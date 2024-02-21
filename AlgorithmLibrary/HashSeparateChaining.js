@@ -24,6 +24,12 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Hash */
+/* exported HashSeparateChaining */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class HashLinkedListNode {
     constructor(data, id, x, y) {
@@ -40,10 +46,10 @@ class HashSeparateChaining extends Hash {
     static DEFAULT_TABLE_SIZE = 13;
     static TABLE_SIZES = [7, 13, 23];
     static TABLE_SIZE_LABELS = ["Small (7)", "Medium (13)", "Large (23)"];
-    
+
     static NODE_INSERT_X = 100;
     static NODE_INSERT_Y = 75;
-    
+
     constructor(am) {
         super();
         this.init(am);
@@ -64,7 +70,7 @@ class HashSeparateChaining extends Hash {
         super.resetAll();
 
         this.tableCells = new Array(this.tableSize);
-        for (var i = 0; i < this.tableSize; i++) {
+        for (let i = 0; i < this.tableSize; i++) {
             this.tableCells[i] = null;
             this.cmd("SetNull", this.tableCellIDs[i], 1);
         }
@@ -76,7 +82,7 @@ class HashSeparateChaining extends Hash {
     }
 
     reset() {
-        for (var i = 0; i < this.table_size; i++) {
+        for (let i = 0; i < this.table_size; i++) {
             this.tableCells[i] = null;
         }
         this.nextIndex = this.initialIndex;
@@ -113,27 +119,27 @@ class HashSeparateChaining extends Hash {
         this.cmd("SetText", this.messageID, "Printing hash table");
         this.highlightID = this.nextIndex++;
         this.cmd("CreateHighlightCircle", this.highlightID, "red", 0, 0);
-        var firstLabel = this.nextIndex;
+        const firstLabel = this.nextIndex;
 
-        var xPosOfNextLabel = Hash.FIRST_PRINT_POS_X;
-        var yPosOfNextLabel = this.getCanvasHeight() * 0.9;
+        let xPosOfNextLabel = Hash.FIRST_PRINT_POS_X;
+        let yPosOfNextLabel = this.getCanvasHeight() * 0.9;
 
-        for (var i = 0; i < this.tableCells.length; i++) {
+        for (let i = 0; i < this.tableCells.length; i++) {
             this.cmd("Move", this.highlightID, this.getCellPosX(i), this.getCellPosY(i));
             this.cmd("Step");
-            var node = this.tableCells[i];
+            let node = this.tableCells[i];
             while (node != null) {
                 this.cmd("Move", this.highlightID, node.x, node.y);
                 this.cmd("Step");
 
-                var nextLabelID = this.nextIndex++;
+                const nextLabelID = this.nextIndex++;
                 this.cmd("CreateLabel", nextLabelID, node.data, node.x, node.y);
                 this.cmd("SetForegroundColor", nextLabelID, "blue");
                 this.cmd("Move", nextLabelID, xPosOfNextLabel, yPosOfNextLabel);
                 this.cmd("Step");
 
                 xPosOfNextLabel += Hash.PRINT_HORIZONTAL_GAP;
-                if (xPosOfNextLabel > this.print_max) {
+                if (xPosOfNextLabel > this.printMax) {
                     xPosOfNextLabel = Hash.FIRST_PRINT_POS_X;
                     yPosOfNextLabel += Hash.PRINT_VERTICAL_GAP;
                 }
@@ -143,7 +149,7 @@ class HashSeparateChaining extends Hash {
 
         this.cmd("Delete", this.highlightID);
         this.cmd("Step");
-        for (var i = firstLabel; i < this.nextIndex; i++) {
+        for (let i = firstLabel; i < this.nextIndex; i++) {
             this.cmd("Delete", i);
         }
         this.nextIndex = this.highlightID; // Reuse objects. Not necessary.
@@ -153,8 +159,8 @@ class HashSeparateChaining extends Hash {
 
     clearTable() {
         this.commands = [];
-        for (var i = 0; i < this.tableCells.length; i++) {
-            var node = this.tableCells[i];
+        for (let i = 0; i < this.tableCells.length; i++) {
+            let node = this.tableCells[i];
             if (node != null) {
                 while (node != null) {
                     this.cmd("Delete", node.graphicID);
@@ -171,18 +177,17 @@ class HashSeparateChaining extends Hash {
         this.commands = [];
         this.cmd("SetText", this.messageID, `Inserting ${elem}`);
 
-        var hash = this.getHashCode(elem);
-        var index = this.getStartIndex(hash);
+        const hash = this.getHashCode(elem);
+        const index = this.getStartIndex(hash);
 
-        var node = new HashLinkedListNode(elem, this.nextIndex++, 0, 0);
+        const node = new HashLinkedListNode(elem, this.nextIndex++, 0, 0);
         this.cmd("CreateLinkedList", node.graphicID, elem, this.getCellWidth() * 0.8, this.getCellHeight(), 0, 0);
         this.cmd("AlignRight", node.graphicID, this.messageID);
 
         if (this.tableCells[index] != null) {
             this.cmd("Connect", node.graphicID, this.tableCells[index].graphicID);
             this.cmd("Disconnect", this.tableCellIDs[index], this.tableCells[index].graphicID);
-        }
-        else {
+        } else {
             this.cmd("SetNull", node.graphicID, 1);
             this.cmd("SetNull", this.tableCellIDs[index], 0);
         }
@@ -200,8 +205,8 @@ class HashSeparateChaining extends Hash {
         this.commands = [];
         this.cmd("SetText", this.messageID, `Deleting ${elem}`);
 
-        var hash = this.getHashCode(elem);
-        var index = this.getStartIndex(hash);
+        const hash = this.getHashCode(elem);
+        const index = this.getStartIndex(hash);
 
         if (this.tableCells[index] == null) {
             this.cmd("SetText", this.messageID, `Deleting ${elem}: Element not found!`);
@@ -211,7 +216,7 @@ class HashSeparateChaining extends Hash {
         this.cmd("SetHighlight", this.tableCells[index].graphicID, 1);
         this.cmd("Step");
         this.cmd("SetHighlight", this.tableCells[index].graphicID, 0);
-        if (this.tableCells[index].data == elem) {
+        if (this.tableCells[index].data === elem) {
             if (this.tableCells[index].next != null) {
                 this.cmd("Connect", this.tableCellIDs[index], this.tableCells[index].next.graphicID);
             } else {
@@ -224,13 +229,13 @@ class HashSeparateChaining extends Hash {
             return this.commands;
         }
 
-        var prevNode = this.tableCells[index];
-        var node = this.tableCells[index].next;
+        let prevNode = this.tableCells[index];
+        let node = this.tableCells[index].next;
         while (node != null) {
             this.cmd("SetHighlight", node.graphicID, 1);
             this.cmd("Step");
             this.cmd("SetHighlight", node.graphicID, 0);
-            if (node.data == elem) {
+            if (node.data === elem) {
                 if (node.next != null) {
                     this.cmd("Connect", prevNode.graphicID, node.next.graphicID);
                 } else {
@@ -241,8 +246,7 @@ class HashSeparateChaining extends Hash {
                 this.repositionList(index);
                 this.cmd("SetText", this.messageID, `Deleted ${elem}.`);
                 return this.commands;
-            }
-            else {
+            } else {
                 prevNode = node;
                 node = node.next;
             }
@@ -256,15 +260,15 @@ class HashSeparateChaining extends Hash {
         this.commands = [];
         this.cmd("SetText", this.messageID, `Finding ${elem}`);
 
-        var hash = this.getHashCode(elem);
-        var index = this.getStartIndex(hash);
+        const hash = this.getHashCode(elem);
+        const index = this.getStartIndex(hash);
 
-        var node = this.tableCells[index];
-        var found = false;
+        let node = this.tableCells[index];
+        let found = false;
         while (node != null && !found) {
             this.cmd("SetHighlight", node.graphicID, 1);
-            if (node.data == elem) {
-                this.cmd("SetText", this.sndMessageID, `${node.data} == ${elem}`);
+            if (node.data === elem) {
+                this.cmd("SetText", this.sndMessageID, `${node.data} = ${elem}`);
                 found = true;
             } else {
                 this.cmd("SetText", this.sndMessageID, `${node.data} != ${elem}`);
@@ -285,12 +289,12 @@ class HashSeparateChaining extends Hash {
 
     repositionList(index) {
         if (this.tableCells[index] == null) return;
-        var length = 0;
-        for (var node = this.tableCells[index]; node != null; node = node.next) length++;
-        var nodeSpacing = Math.min(2 * this.getCellHeight(), this.getCellPosY(index) / (length + 1));
-        var x = this.getCellPosX(index);
-        var y = this.getCellPosY(index) - nodeSpacing;
-        var node = this.tableCells[index];
+        let length = 0;
+        for (let node = this.tableCells[index]; node != null; node = node.next) length++;
+        const nodeSpacing = Math.min(2 * this.getCellHeight(), this.getCellPosY(index) / (length + 1));
+        const x = this.getCellPosX(index);
+        let y = this.getCellPosY(index) - nodeSpacing;
+        let node = this.tableCells[index];
         while (node != null) {
             this.cmd("Move", node.graphicID, x, y);
             node.x = x;
@@ -300,4 +304,3 @@ class HashSeparateChaining extends Hash {
         }
     }
 }
-

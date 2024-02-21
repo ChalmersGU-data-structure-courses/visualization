@@ -24,6 +24,12 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Algorithm */
+/* exported HeapBinary */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class HeapBinary extends Algorithm {
     static HEAP_X_POSITIONS = [
@@ -31,8 +37,9 @@ class HeapBinary extends Algorithm {
         0.08, 0.20, 0.32, 0.44, 0.56, 0.68, 0.80, 0.92,
         0.05, 0.11, 0.17, 0.23, 0.29, 0.35, 0.41, 0.47,
         0.53, 0.59, 0.65, 0.71, 0.77, 0.83, 0.89, 0.95,
-    
+
     ];
+
     static HEAP_Y_POSITIONS = [
         null, 0.00, 0.20, 0.20, 0.40, 0.40, 0.40, 0.40,
         0.60, 0.60, 0.60, 0.60, 0.60, 0.60, 0.60, 0.60,
@@ -62,7 +69,7 @@ class HeapBinary extends Algorithm {
     }
 
     addControls() {
-        this.insertField = this.addControlToAlgorithmBar("Text", "", { maxlength: 4, size: 4 });
+        this.insertField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
         this.addReturnSubmit(this.insertField, "int", this.insertCallback.bind(this));
         this.insertButton = this.addControlToAlgorithmBar("Button", "Insert");
         this.insertButton.onclick = this.insertCallback.bind(this);
@@ -98,7 +105,7 @@ class HeapBinary extends Algorithm {
         this.circleObjs = [];
         this.currentHeapSize = 0;
 
-        for (var i = 0; i < HeapBinary.ARRAY_SIZE; i++) {
+        for (let i = 0; i < HeapBinary.ARRAY_SIZE; i++) {
             this.arrayLabels[i] = this.nextIndex++;
             this.arrayRects[i] = this.nextIndex++;
             this.circleObjs[i] = this.nextIndex++;
@@ -136,7 +143,7 @@ class HeapBinary extends Algorithm {
     }
 
     getHeapY(i) {
-        var startY = 6 * this.getArrayElemHeight();
+        const startY = 6 * this.getArrayElemHeight();
         return startY + HeapBinary.HEAP_Y_POSITIONS[i] * (Math.min(500, this.getCanvasHeight()) - startY);
     }
 
@@ -149,22 +156,22 @@ class HeapBinary extends Algorithm {
     }
 
     getArrayXY(i) {
-        var x = HeapBinary.ARRAY_INITIAL_X;
-        var y = 1.5 * this.getArrayElemHeight();
-        for (var k = 0; k < i; k++) {
+        let x = HeapBinary.ARRAY_INITIAL_X;
+        let y = 1.5 * this.getArrayElemHeight();
+        for (let k = 0; k < i; k++) {
             x += this.getArrayElemWidth();
             if (x + this.getArrayElemWidth() > this.getCanvasWidth()) {
                 x = HeapBinary.ARRAY_INITIAL_X;
                 y += this.getArrayElemHeight() * 2;
             }
         }
-        return { x: x, y: y };
+        return {x: x, y: y};
     }
 
     getArrayElemWidth() {
-        var nrows = 1;
+        let nrows = 1;
         while (true) {
-            var w = nrows * (this.getCanvasWidth() - HeapBinary.ARRAY_INITIAL_X) / HeapBinary.ARRAY_SIZE;
+            const w = nrows * (this.getCanvasWidth() - HeapBinary.ARRAY_INITIAL_X) / HeapBinary.ARRAY_SIZE;
             if (w >= 25) return w;
             nrows++;
         }
@@ -186,7 +193,7 @@ class HeapBinary extends Algorithm {
     // Callback functions for the algorithm control bar
 
     insertCallback(event) {
-        var insertedValue = this.normalizeNumber(this.insertField.value);
+        const insertedValue = this.normalizeNumber(this.insertField.value);
         if (insertedValue !== "") {
             this.insertField.value = "";
             this.implementAction(this.insertElement.bind(this), insertedValue);
@@ -225,7 +232,7 @@ class HeapBinary extends Algorithm {
             return this.commands;
         }
 
-        this.cmd("SetText", this.descriptLabel1, "Inserting Element:  " + insertedValue);
+        this.cmd("SetText", this.descriptLabel1, `Inserting Element:  ${insertedValue}`);
         this.cmd("Step");
         this.cmd("CreateLabel", this.descriptLabel2, insertedValue, 0, 0, 1);
         this.cmd("AlignRight", this.descriptLabel2, this.descriptLabel1);
@@ -247,8 +254,8 @@ class HeapBinary extends Algorithm {
         this.cmd("Delete", this.descriptLabel2);
         this.cmd("Delete", this.descriptLabel3);
 
-        var currentIndex = this.currentHeapSize;
-        var parentIndex = Math.floor(currentIndex / 2);
+        let currentIndex = this.currentHeapSize;
+        let parentIndex = Math.floor(currentIndex / 2);
 
         if (currentIndex > 1) {
             this.setIndexHighlight(currentIndex, 1);
@@ -279,7 +286,7 @@ class HeapBinary extends Algorithm {
         this.commands = [];
         this.cmd("SetText", this.descriptLabel1, "");
 
-        if (this.currentHeapSize == 0) {
+        if (this.currentHeapSize === 0) {
             this.cmd("SetText", this.descriptLabel1, "Heap is empty, cannot remove smallest element");
             return this.commands;
         }
@@ -293,7 +300,7 @@ class HeapBinary extends Algorithm {
         this.cmd("Step");
         this.cmd("Delete", this.descriptLabel2);
         this.cmd("Delete", this.descriptLabel3);
-        this.cmd("SetText", this.descriptLabel1, "Removing element:  " + this.arrayData[1]);
+        this.cmd("SetText", this.descriptLabel1, `Removing element:  ${this.arrayData[1]}`);
         this.arrayData[1] = "";
         if (this.currentHeapSize > 1) {
             this.cmd("SetText", this.arrayRects[this.currentHeapSize], "");
@@ -314,29 +321,27 @@ class HeapBinary extends Algorithm {
         this.commands = [];
         this.clearHeap();
         if (data instanceof Array) {
-            for (var i = 0; i < data.length; i++) {
+            for (let i = 0; i < data.length; i++) {
                 this.arrayData[i + 1] = data[i];
             }
             this.currentHeapSize = data.length;
-        }
-        else if (data == HeapBinary.RANDOM_ARRAY) {
+        } else if (data === HeapBinary.RANDOM_ARRAY) {
             // Using the "inside-out" variant of Fisher-Yates shuffle:
             // https://en.wikipedia.org/wiki/Fisher–Yates_shuffle#The_%22inside-out%22_algorithm
-            for (var i = 0; i < HeapBinary.ARRAY_SIZE; i++) {
-                var j = Math.floor(Math.random() * (i + 1));
-                if (j != i) this.arrayData[i] = this.arrayData[j];
+            for (let i = 0; i < HeapBinary.ARRAY_SIZE; i++) {
+                const j = Math.floor(Math.random() * (i + 1));
+                if (j !== i) this.arrayData[i] = this.arrayData[j];
                 this.arrayData[j] = i + 1;
             }
             this.currentHeapSize = HeapBinary.ARRAY_SIZE - 1;
-        }
-        else { // data == Heap.REVERSED_ARRAY
-            for (var i = 1; i < HeapBinary.ARRAY_SIZE; i++) {
+        } else { // data === Heap.REVERSED_ARRAY
+            for (let i = 1; i < HeapBinary.ARRAY_SIZE; i++) {
                 this.arrayData[i] = HeapBinary.ARRAY_SIZE - i;
             }
             this.currentHeapSize = HeapBinary.ARRAY_SIZE - 1;
         }
 
-        for (var i = 1; i <= this.currentHeapSize; i++) {
+        for (let i = 1; i <= this.currentHeapSize; i++) {
             this.cmd("CreateCircle", this.circleObjs[i], this.arrayData[i], this.getHeapX(i), this.getHeapY(i));
             this.cmd("SetWidth", this.circleObjs[i], this.getCircleWidth());
             this.cmd("SetText", this.arrayRects[i], this.arrayData[i]);
@@ -345,7 +350,7 @@ class HeapBinary extends Algorithm {
             }
         }
         this.cmd("Step");
-        var nextElem = this.currentHeapSize;
+        let nextElem = this.currentHeapSize;
         while (nextElem > 0) {
             this.pushDown(nextElem);
             nextElem = nextElem - 1;
@@ -366,7 +371,7 @@ class HeapBinary extends Algorithm {
         this.cmd("Move", this.swapLabel2, this.getArrayX(index1), this.getArrayY(index1));
         this.cmd("Move", this.swapLabel3, this.getHeapX(index2), this.getHeapY(index2));
         this.cmd("Move", this.swapLabel4, this.getHeapX(index1), this.getHeapY(index1));
-        var tmp = this.arrayData[index1];
+        const tmp = this.arrayData[index1];
         this.arrayData[index1] = this.arrayData[index2];
         this.arrayData[index2] = tmp;
         this.cmd("Step");
@@ -385,7 +390,7 @@ class HeapBinary extends Algorithm {
             if (index * 2 > this.currentHeapSize) {
                 return;
             }
-            var smallestIndex = 2 * index;
+            let smallestIndex = 2 * index;
             if (index * 2 + 1 <= this.currentHeapSize) {
                 this.setIndexHighlight(2 * index, 1);
                 this.setIndexHighlight(2 * index + 1, 1);
@@ -404,8 +409,7 @@ class HeapBinary extends Algorithm {
             if (this.compare(this.arrayData[smallestIndex], this.arrayData[index]) < 0) {
                 this.swap(smallestIndex, index);
                 index = smallestIndex;
-            }
-            else {
+            } else {
                 return;
             }
         }
@@ -416,4 +420,3 @@ class HeapBinary extends Algorithm {
         this.cmd("SetHighlight", this.arrayRects[index], highlightVal);
     }
 }
-

@@ -24,13 +24,19 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
+///////////////////////////////////////////////////////////////////////////////
+// Import and export information used by the Javascript linter ESLint:
+/* globals Recursive */
+/* exported RecReverse */
+///////////////////////////////////////////////////////////////////////////////
+
 
 class RecReverse extends Recursive {
     static ACTIVATION_FIELDS = ["word ", "subProblem ", "subSolution ", "solution "];
 
     static CODE = [
-        ["def ","reverse(word)",":"],
-        ["     if ","(word == \"\"): "],
+        ["def ", "reverse(word)", ":"],
+        ["     if ", "(word === \"\"): "],
         ["          return word"],
         ["     else:"],
         ["          subProblem = ", "word[1:]"],
@@ -43,7 +49,6 @@ class RecReverse extends Recursive {
 
     static ACTIVATION_RECORT_START_X = 375;
     static ACTIVATION_RECORT_START_Y = 20;
-
 
     constructor(am) {
         super();
@@ -68,7 +73,7 @@ class RecReverse extends Recursive {
 
     addControls() {
         this.controls = [];
-        this.reverseField = this.addControlToAlgorithmBar("Text", "", { maxlength: 10, size: 10 });
+        this.reverseField = this.addControlToAlgorithmBar("Text", "", {maxlength: 10, size: 10});
         this.addReturnSubmit(this.reverseField, "ALPHA", this.reverseCallback.bind(this));
         this.controls.push(this.reverseField);
 
@@ -78,7 +83,7 @@ class RecReverse extends Recursive {
     }
 
     reverseCallback(event) {
-        var revValue = this.reverseField.value;
+        const revValue = this.reverseField.value;
         if (revValue !== "") {
             this.implementAction(this.doReverse.bind(this), revValue);
         }
@@ -92,20 +97,20 @@ class RecReverse extends Recursive {
         this.currentY = RecReverse.ACTIVATION_RECORT_START_Y;
         this.currentX = RecReverse.ACTIVATION_RECORT_START_X;
 
-        var final = this.reverse(value);
-        var resultID = this.nextIndex++;
+        const final = this.reverse(value);
+        const resultID = this.nextIndex++;
         this.oldIDs.push(resultID);
-        this.cmd("CreateLabel", resultID, "reverse(" + String(value) + ") = " + String(final),
+        this.cmd("CreateLabel", resultID, `reverse(${String(value)}) = ${String(final)}`,
             Recursive.CODE_START_X, Recursive.CODE_START_Y + (this.code.length + 1) * Recursive.CODE_LINE_HEIGHT, 0);
         return this.commands;
     }
 
     reverse(value) {
-        var activationRec = this.createActivation("reverse     ", RecReverse.ACTIVATION_FIELDS, this.currentX, this.currentY);
+        const activationRec = this.createActivation("reverse     ", RecReverse.ACTIVATION_FIELDS, this.currentX, this.currentY);
         this.cmd("SetText", activationRec.fieldIDs[0], value);
         //    this.cmd("CreateLabel", ID, "", 10, this.currentY, 0);
-        var oldX = this.currentX;
-        var oldY = this.currentY;
+        const oldX = this.currentX;
+        const oldY = this.currentY;
         this.currentY += RecReverse.RECURSIVE_DELTA_Y;
         if (this.currentY + Recursive.RECURSIVE_DELTA_Y > this.getCanvasHeight()) {
             this.currentY = RecReverse.ACTIVATION_RECORT_START_Y;
@@ -117,10 +122,10 @@ class RecReverse extends Recursive {
         this.cmd("SetForegroundColor", this.codeID[1][1], Recursive.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");
         this.cmd("SetForegroundColor", this.codeID[1][1], Recursive.CODE_STANDARD_COLOR);
-        if (value != "") {
+        if (value !== "") {
             this.cmd("SetForegroundColor", this.codeID[4][0], Recursive.CODE_HIGHLIGHT_COLOR);
             this.cmd("SetForegroundColor", this.codeID[4][1], Recursive.CODE_HIGHLIGHT_COLOR);
-            var subProblem = value.substr(1);
+            const subProblem = value.substr(1);
             this.cmd("SetText", activationRec.fieldIDs[1], subProblem);
             this.cmd("Step");
             this.cmd("SetForegroundColor", this.codeID[4][0], Recursive.CODE_STANDARD_COLOR);
@@ -129,7 +134,7 @@ class RecReverse extends Recursive {
             this.cmd("Step");
             this.cmd("SetForegroundColor", this.codeID[5][1], Recursive.CODE_STANDARD_COLOR);
 
-            var subSolution = this.reverse(subProblem);
+            const subSolution = this.reverse(subProblem);
 
             this.cmd("SetForegroundColor", this.codeID[5][0], Recursive.CODE_HIGHLIGHT_COLOR);
             this.cmd("SetForegroundColor", this.codeID[5][1], Recursive.CODE_HIGHLIGHT_COLOR);
@@ -140,7 +145,7 @@ class RecReverse extends Recursive {
 
             this.cmd("SetForegroundColor", this.codeID[6][0], Recursive.CODE_HIGHLIGHT_COLOR);
             this.cmd("SetForegroundColor", this.codeID[6][1], Recursive.CODE_HIGHLIGHT_COLOR);
-            var solution = subSolution + value[0];
+            const solution = subSolution + value[0];
             this.cmd("SetText", activationRec.fieldIDs[3], solution);
             this.cmd("Step");
             this.cmd("SetForegroundColor", this.codeID[6][0], Recursive.CODE_STANDARD_COLOR);
@@ -153,7 +158,7 @@ class RecReverse extends Recursive {
             this.deleteActivation(activationRec);
             this.currentY = oldY;
             this.currentX = oldX;
-            this.cmd("CreateLabel", this.nextIndex, "Return Value = \"" + solution + "\"", oldX, oldY);
+            this.cmd("CreateLabel", this.nextIndex, `Return Value = "${solution}"`, oldX, oldY);
             this.cmd("SetForegroundColor", this.nextIndex, Recursive.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
             this.cmd("SetForegroundColor", this.codeID[7][0], Recursive.CODE_STANDARD_COLOR);
@@ -163,8 +168,7 @@ class RecReverse extends Recursive {
             //        this.cmd("SetForegroundColor", this.codeID[4][3], Recursive.CODE_HIGHLIGHT_COLOR);
             //        this.cmd("Step");
             return solution;
-        }
-        else {
+        } else {
             this.cmd("SetForegroundColor", this.codeID[2][0], Recursive.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
             this.cmd("SetForegroundColor", this.codeID[2][0], Recursive.CODE_STANDARD_COLOR);
@@ -181,4 +185,3 @@ class RecReverse extends Recursive {
         }
     }
 }
-
