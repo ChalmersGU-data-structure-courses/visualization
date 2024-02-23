@@ -63,7 +63,7 @@ class Hash extends Algorithm {
     PRINT_VERTICAL_GAP = 20;
     PRINT_HORIZONTAL_GAP = 50;
 
-    
+
     constructor(am) {
         super();
         if (am) this.init(am);
@@ -252,7 +252,7 @@ class Hash extends Algorithm {
 
         this.cmd("CreateRectangle", barID, "", this.HASH_BITS * this.HASH_X_DIFF, 0, this.HASH_NUMBER_START_X, this.HASH_ADD_LINE_Y, "left", "bottom");
         const floatingVals = [];
-        for (let i = wordTothis.length - 1; i >= 0; i--) {
+        for (let i = wordToHash.length - 1; i >= 0; i--) {
             for (let j = 0; j < this.HASH_BITS; j++) {
                 this.cmd("CreateLabel", digits[j], hashValue[j],
                     this.HASH_NUMBER_START_X + j * this.HASH_X_DIFF, this.HASH_NUMBER_START_Y, 0);

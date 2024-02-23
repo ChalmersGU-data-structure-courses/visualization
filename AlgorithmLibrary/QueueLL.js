@@ -194,11 +194,11 @@ class QueueLL extends Algorithm {
             this.getElemWidth(), this.getElemHeight(), insertX, insertY,
             0.25, 0, 1, 1,
         );
+        this.cmd("SetNull", elemID, 1);
         this.cmd("Move", this.messageLabelID, insertX, insertY);
         this.cmd("Step");
 
         this.cmd("Settext", elemID, elem);
-        this.cmd("SetNull", elemID, 1);
         this.cmd("Delete", this.messageLabelID);
         if (this.queue.length === 0) {
             this.cmd("SetNull", this.headID, 0);

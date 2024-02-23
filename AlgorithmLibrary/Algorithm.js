@@ -130,8 +130,8 @@ class Algorithm {
             allowed === "ALPHA+" ? "A-Z " :
             allowed === "alpha" ? "a-zA-Z" :
             allowed === "alpha+" ? "a-zA-Z " :
-            allowed === "ALPHANUM" ? "A-Z0-9" : 
-            allowed === "ALPHANUM+" ? "A-Z0-9 " : 
+            allowed === "ALPHANUM" ? "A-Z0-9" :
+            allowed === "ALPHANUM+" ? "A-Z0-9 " :
             allowed === "alphanum" ? "a-zA-Z0-9" :
             allowed === "alphanum+" ? "a-zA-Z0-9 " :
             allowed
