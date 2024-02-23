@@ -29,14 +29,15 @@
 /* globals Algorithm */
 ///////////////////////////////////////////////////////////////////////////////
 
+
 ///////////////////////////////////////////////////////////////////////////////
 // This is an example data structure, a simple stack.
 // You can start from this when developing your own algorithm / data structure.
 
-// Note: remember to replace all references to SimpleStack with the name of your own data structure!
+// Note: remember to replace all references to ExampleStack with the name of your own data structure!
 
 
-Algorithm.SimpleStack = class SimpleStack extends Algorithm {
+Algorithm.ExampleStack = class ExampleStack extends Algorithm {
     // First some constants that are specific to the data structure.
     // We placed them in the function's namespace to avoid symbol clashes:
 

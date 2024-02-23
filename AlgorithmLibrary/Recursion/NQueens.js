@@ -30,7 +30,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-Algorithm.Recursive.NQueens = class NQueens extends Algorithm.Recursive {
+Algorithm.Recursion.NQueens = class NQueens extends Algorithm.Recursion {
     CALC_QUEENS_ACTIVATION_FIELDS = ["  size  ", "  board  "];
     QUEENS_ACTIVATION_FIELDS = ["  board  ", "  current  ", "  size  ", "  i  ", "  done  "];
     CHECK_ACTIVATION_FIELDS = ["  board  ", "  current  ", "  i  "];

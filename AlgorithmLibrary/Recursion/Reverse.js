@@ -10,9 +10,9 @@
 // of conditions and the following disclaimer in the documentation and/or other materials
 // provided with the distribution.
 //
-// THIS SOFTWARE IS PROVIDED BY David Galles ``AS IS'' AND ANY EXPRESS OR IMPLIED
+// THIS SOFTWARE IS PROVIDED BY <COPYRIGHT HOLDER> ``AS IS'' AND ANY EXPRESS OR IMPLIED
 // WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-// FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL David Galles OR
+// FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> OR
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
 // CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
 // SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
@@ -30,21 +30,23 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-Algorithm.Recursive.Factorial = class Factorial extends Algorithm.Recursive {
-    MAX_VALUE = 20;
+Algorithm.Recursion.Reverse = class Reverse extends Algorithm.Recursion {
+    ACTIVATION_FIELDS = ["word ", "subProblem ", "subSolution ", "solution "];
 
-    ACTIVATION_FIELDS = ["n ", "subValue ", "returnValue "];
-    CODE = [["def ", "factorial(n)", ":"],
-        ["     if ", "(n <= 1): "],
-        ["          return 1"],
+    CODE = [
+        ["def ", "reverse(word)", ":"],
+        ["     if ", "(word === \"\"): "],
+        ["          return word"],
         ["     else:"],
-        ["          subSolution = ", "factorial(n - 1)"],
-        ["          solution = ", "subSolution * n"],
-        ["          return ", "solution"]];
+        ["          subProblem = ", "word[1:]"],
+        ["          subSolution = ", "reverse(subProblem)"],
+        ["          solution = ", "subSolution + word[0]"],
+        ["          return = ", "solution"],
+    ];
 
     RECURSIVE_DELTA_Y = this.ACTIVATION_FIELDS.length * this.ACTIVATION_RECORD_HEIGHT;
 
-    ACTIVATION_RECORT_START_X = 330;
+    ACTIVATION_RECORT_START_X = 375;
     ACTIVATION_RECORT_START_Y = 20;
 
     constructor(am) {
@@ -70,26 +72,23 @@ Algorithm.Recursive.Factorial = class Factorial extends Algorithm.Recursive {
 
     addControls() {
         this.controls = [];
+        this.reverseField = this.addControlToAlgorithmBar("Text", "", {maxlength: 10, size: 10});
+        this.addReturnSubmit(this.reverseField, "ALPHA", this.reverseCallback.bind(this));
+        this.controls.push(this.reverseField);
 
-        this.factorialField = this.addControlToAlgorithmBar("Text", "", {maxlength: 2, size: 2});
-        this.addReturnSubmit(this.factorialField, "int", this.factorialCallback.bind(this));
-        this.controls.push(this.factorialField);
-
-        this.factorialButton = this.addButtonToAlgorithmBar("Factorial");
-        this.factorialButton.onclick = this.factorialCallback.bind(this);
-        this.controls.push(this.factorialButton);
+        this.reverseButton = this.addButtonToAlgorithmBar("Reverse");
+        this.reverseButton.onclick = this.reverseCallback.bind(this);
+        this.controls.push(this.reverseButton);
     }
 
-    factorialCallback(event) {
-        let factValue = this.normalizeNumber(this.factorialField.value);
-        if (factValue) {
-            factValue = Math.min(factValue, this.MAX_VALUE);
-            this.factorialField.value = factValue;
-            this.implementAction(this.doFactorial.bind(this), factValue);
+    reverseCallback(event) {
+        const revValue = this.reverseField.value;
+        if (revValue !== "") {
+            this.implementAction(this.doReverse.bind(this), revValue);
         }
     }
 
-    doFactorial(value) {
+    doReverse(value) {
         this.commands = [];
 
         this.clearOldIDs();
@@ -97,17 +96,16 @@ Algorithm.Recursive.Factorial = class Factorial extends Algorithm.Recursive {
         this.currentY = this.ACTIVATION_RECORT_START_Y;
         this.currentX = this.ACTIVATION_RECORT_START_X;
 
-        const final = this.factorial(value);
+        const final = this.reverse(value);
         const resultID = this.nextIndex++;
         this.oldIDs.push(resultID);
-        this.cmd("CreateLabel", resultID, `factorial(${String(value)}) = ${String(final)}`,
+        this.cmd("CreateLabel", resultID, `reverse(${String(value)}) = ${String(final)}`,
             this.CODE_START_X, this.CODE_START_Y + (this.code.length + 1) * this.CODE_LINE_HEIGHT, 0);
-        // this.cmd("SetText", functionCallID, "factorial(" + String(value) + ") = " + String(final));
         return this.commands;
     }
 
-    factorial(value) {
-        const activationRec = this.createActivation("factorial     ", this.ACTIVATION_FIELDS, this.currentX, this.currentY);
+    reverse(value) {
+        const activationRec = this.createActivation("reverse     ", this.ACTIVATION_FIELDS, this.currentX, this.currentY);
         this.cmd("SetText", activationRec.fieldIDs[0], value);
         //    this.cmd("CreateLabel", ID, "", 10, this.currentY, 0);
         const oldX = this.currentX;
@@ -123,44 +121,52 @@ Algorithm.Recursive.Factorial = class Factorial extends Algorithm.Recursive {
         this.cmd("SetForegroundColor", this.codeID[1][1], this.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");
         this.cmd("SetForegroundColor", this.codeID[1][1], this.CODE_STANDARD_COLOR);
-        if (value > 1) {
-            this.cmd("SetForegroundColor", this.codeID[4][1], this.CODE_HIGHLIGHT_COLOR);
-            this.cmd("Step");
-            this.cmd("SetForegroundColor", this.codeID[4][1], this.CODE_STANDARD_COLOR);
-
-            const firstValue = this.factorial(value - 1);
-
+        if (value !== "") {
             this.cmd("SetForegroundColor", this.codeID[4][0], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("SetForegroundColor", this.codeID[4][1], this.CODE_HIGHLIGHT_COLOR);
-            this.cmd("SetText", activationRec.fieldIDs[1], firstValue);
+            const subProblem = value.substr(1);
+            this.cmd("SetText", activationRec.fieldIDs[1], subProblem);
             this.cmd("Step");
             this.cmd("SetForegroundColor", this.codeID[4][0], this.CODE_STANDARD_COLOR);
             this.cmd("SetForegroundColor", this.codeID[4][1], this.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[5][1], this.CODE_HIGHLIGHT_COLOR);
+            this.cmd("Step");
+            this.cmd("SetForegroundColor", this.codeID[5][1], this.CODE_STANDARD_COLOR);
+
+            const subSolution = this.reverse(subProblem);
 
             this.cmd("SetForegroundColor", this.codeID[5][0], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("SetForegroundColor", this.codeID[5][1], this.CODE_HIGHLIGHT_COLOR);
-            this.cmd("SetText", activationRec.fieldIDs[2], firstValue * value);
+            this.cmd("SetText", activationRec.fieldIDs[2], subSolution);
             this.cmd("Step");
             this.cmd("SetForegroundColor", this.codeID[5][0], this.CODE_STANDARD_COLOR);
             this.cmd("SetForegroundColor", this.codeID[5][1], this.CODE_STANDARD_COLOR);
 
             this.cmd("SetForegroundColor", this.codeID[6][0], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("SetForegroundColor", this.codeID[6][1], this.CODE_HIGHLIGHT_COLOR);
+            const solution = subSolution + value[0];
+            this.cmd("SetText", activationRec.fieldIDs[3], solution);
+            this.cmd("Step");
+            this.cmd("SetForegroundColor", this.codeID[6][0], this.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[6][1], this.CODE_STANDARD_COLOR);
+
+            this.cmd("SetForegroundColor", this.codeID[7][0], this.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[7][1], this.CODE_HIGHLIGHT_COLOR);
 
             this.cmd("Step");
             this.deleteActivation(activationRec);
             this.currentY = oldY;
             this.currentX = oldX;
-            this.cmd("CreateLabel", this.nextIndex, `Return Value = ${String(firstValue * value)}`, oldX, oldY);
+            this.cmd("CreateLabel", this.nextIndex, `Return Value = "${solution}"`, oldX, oldY);
             this.cmd("SetForegroundColor", this.nextIndex, this.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.codeID[6][0], this.CODE_STANDARD_COLOR);
-            this.cmd("SetForegroundColor", this.codeID[6][1], this.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[7][0], this.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[7][1], this.CODE_STANDARD_COLOR);
             this.cmd("Delete", this.nextIndex);
 
             //        this.cmd("SetForegroundColor", this.codeID[4][3], this.CODE_HIGHLIGHT_COLOR);
             //        this.cmd("Step");
-            return firstValue * value;
+            return solution;
         } else {
             this.cmd("SetForegroundColor", this.codeID[2][0], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
@@ -169,12 +175,12 @@ Algorithm.Recursive.Factorial = class Factorial extends Algorithm.Recursive {
             this.currentY = oldY;
             this.currentX = oldX;
             this.deleteActivation(activationRec);
-            this.cmd("CreateLabel", this.nextIndex, "Return Value = 1", oldX, oldY);
+            this.cmd("CreateLabel", this.nextIndex, "Return Value = \"\"", oldX, oldY);
             this.cmd("SetForegroundColor", this.nextIndex, this.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
             this.cmd("Delete", this.nextIndex);
 
-            return 1;
+            return "";
         }
     }
 };

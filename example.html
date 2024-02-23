@@ -12,25 +12,25 @@
 <!-- Javascript for the actual visualization code -->
 <script type="text/javascript" src="AnimationLibrary/EventListener.js"> </script>
 <script type="text/javascript" src="AnimationLibrary/UndoBlock.js"> </script>
-<script type="text/javascript" src="AnimationLibrary/AnimatedObject.js"> </script>
-<script type="text/javascript" src="AnimationLibrary/AnimatedLabel.js"> </script>
-<script type="text/javascript" src="AnimationLibrary/AnimatedCircle.js"> </script>
-<script type="text/javascript" src="AnimationLibrary/AnimatedRectangle.js"> </script>
-<script type="text/javascript" src="AnimationLibrary/AnimatedLinkedList.js"> </script>
-<script type="text/javascript" src="AnimationLibrary/AnimatedBTreeNode.js"> </script>
-<script type="text/javascript" src="AnimationLibrary/HighlightCircle.js"> </script>
-<script type="text/javascript" src="AnimationLibrary/Connection.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/Objects/AnimatedObject.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/Objects/BTreeNode.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/Objects/Circle.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/Objects/Connection.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/Objects/HighlightCircle.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/Objects/Label.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/Objects/Rectangle.js"> </script>
+<script type="text/javascript" src="AnimationLibrary/Objects/LinkedList.js"> </script>
 <script type="text/javascript" src="AnimationLibrary/ObjectManager.js"> </script>
 <script type="text/javascript" src="AnimationLibrary/AnimationManager.js"> </script>
 <script type="text/javascript" src="AnimationLibrary/Toolbar.js"> </script>
 <script type="text/javascript" src="AlgorithmLibrary/Algorithm.js"> </script>
 
 <!-- Replace this with the file(s) of the algorithm/data structure you want to visualize -->
-<script type="text/javascript" src="AlgorithmLibrary/ExampleAlgorithm.js"> </script>
+<script type="text/javascript" src="AlgorithmLibrary/ExampleStack.js"> </script>
 
 </head>
 
-<body onload="new Algorithm.SimpleStack(initCanvas())">
+<body onload="new Algorithm.ExampleStack(initCanvas())">
 
 <header>
   <!-- Place your header here -->

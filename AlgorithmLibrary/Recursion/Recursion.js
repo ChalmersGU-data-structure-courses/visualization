@@ -30,7 +30,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-Algorithm.Recursive = class Recursive extends Algorithm {
+Algorithm.Recursion = class Recursion extends Algorithm {
     CODE_START_X = 10;
     CODE_START_Y = 10;
     CODE_LINE_HEIGHT = 14;
