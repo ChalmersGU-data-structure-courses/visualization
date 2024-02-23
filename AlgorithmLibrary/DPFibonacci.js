@@ -101,13 +101,13 @@ class DPFibonacci extends Algorithm {
         this.fibField = this.addControlToAlgorithmBar("Text", "", {maxlength: 2, size: 2});
         this.addReturnSubmit(this.fibField, "int", this.emptyCallback.bind(this));
 
-        this.recursiveButton = this.addControlToAlgorithmBar("Button", "Fibonacci Recursive");
+        this.recursiveButton = this.addButtonToAlgorithmBar("Fibonacci Recursive");
         this.recursiveButton.onclick = this.recursiveCallback.bind(this);
 
-        this.tableButton = this.addControlToAlgorithmBar("Button", "Fibonacci Table");
+        this.tableButton = this.addButtonToAlgorithmBar("Fibonacci Table");
         this.tableButton.onclick = this.tableCallback.bind(this);
 
-        this.memoizedButton = this.addControlToAlgorithmBar("Button", "Fibonacci Memoized");
+        this.memoizedButton = this.addButtonToAlgorithmBar("Fibonacci Memoized");
         this.memoizedButton.onclick = this.memoizedCallback.bind(this);
     }
 

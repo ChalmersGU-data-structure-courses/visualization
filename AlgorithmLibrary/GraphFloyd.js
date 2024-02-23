@@ -78,7 +78,7 @@ class GraphFloyd extends Graph {
     }
 
     addControls() {
-        this.startButton = this.addControlToAlgorithmBar("Button", "Run Floyd-Warshall");
+        this.startButton = this.addButtonToAlgorithmBar("Run Floyd-Warshall");
         this.startButton.onclick = this.startCallback.bind(this);
         super.addControls();
         this.smallGraphButton.onclick = this.smallGraphCallback.bind(this);

@@ -61,10 +61,10 @@ class SortCounting extends Algorithm {
     }
 
     addControls() {
-        this.resetButton = this.addControlToAlgorithmBar("Button", "Randomize List");
+        this.resetButton = this.addButtonToAlgorithmBar("Randomize List");
         this.resetButton.onclick = this.resetCallback.bind(this);
 
-        this.countingsSortButton = this.addControlToAlgorithmBar("Button", "Counting Sort");
+        this.countingsSortButton = this.addButtonToAlgorithmBar("Counting Sort");
         this.countingsSortButton.onclick = this.countingSortCallback.bind(this);
     }
 

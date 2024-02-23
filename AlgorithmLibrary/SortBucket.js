@@ -80,10 +80,10 @@ class SortBucket extends Algorithm {
     }
 
     addControls() {
-        this.resetButton = this.addControlToAlgorithmBar("Button", "Randomize List");
+        this.resetButton = this.addButtonToAlgorithmBar("Randomize List");
         this.resetButton.onclick = this.resetCallback.bind(this);
 
-        this.bucketSortButton = this.addControlToAlgorithmBar("Button", "Bucket Sort");
+        this.bucketSortButton = this.addButtonToAlgorithmBar("Bucket Sort");
         this.bucketSortButton.onclick = this.bucketSortCallback.bind(this);
     }
 

@@ -113,11 +113,11 @@ class SimpleStack extends Algorithm {
         );
 
         // The button for pushing onto the stack:
-        this.pushButton = this.addControlToAlgorithmBar("Button", "Push");
+        this.pushButton = this.addButtonToAlgorithmBar("Push");
         this.pushButton.onclick = this.pushCallback.bind(this);
 
         // The button for popping from the stack:
-        this.popButton = this.addControlToAlgorithmBar("Button", "Pop");
+        this.popButton = this.addButtonToAlgorithmBar("Pop");
         this.popButton.onclick = this.popCallback.bind(this);
 
         // To add a checkbox:

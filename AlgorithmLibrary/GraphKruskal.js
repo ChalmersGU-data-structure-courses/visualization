@@ -64,7 +64,7 @@ class GraphKruskal extends Graph {
     }
 
     addControls() {
-        this.startButton = this.addControlToAlgorithmBar("Button", "Run Kruskal");
+        this.startButton = this.addButtonToAlgorithmBar("Run Kruskal");
         this.startButton.onclick = this.startCallback.bind(this);
         super.addControls(false);
     }

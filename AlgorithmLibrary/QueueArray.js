@@ -75,15 +75,15 @@ class QueueArray extends Algorithm {
     addControls() {
         this.enqueueField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
         this.addReturnSubmit(this.enqueueField, "ALPHANUM", this.enqueueCallback.bind(this));
-        this.enqueueButton = this.addControlToAlgorithmBar("Button", "Enqueue");
+        this.enqueueButton = this.addButtonToAlgorithmBar("Enqueue");
         this.enqueueButton.onclick = this.enqueueCallback.bind(this);
         this.addBreakToAlgorithmBar();
 
-        this.dequeueButton = this.addControlToAlgorithmBar("Button", "Dequeue");
+        this.dequeueButton = this.addButtonToAlgorithmBar("Dequeue");
         this.dequeueButton.onclick = this.dequeueCallback.bind(this);
         this.addBreakToAlgorithmBar();
 
-        this.clearButton = this.addControlToAlgorithmBar("Button", "Clear");
+        this.clearButton = this.addButtonToAlgorithmBar("Clear");
         this.clearButton.onclick = this.clearCallback.bind(this);
     }
 

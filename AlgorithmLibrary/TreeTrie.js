@@ -111,20 +111,20 @@ class TreeTrie extends Algorithm {
     addControls() {
         this.insertField = this.addControlToAlgorithmBar("Text", "", {maxlength: 12, size: 12});
         this.addReturnSubmit(this.insertField, "ALPHA", this.insertCallback.bind(this));
-        this.insertButton = this.addControlToAlgorithmBar("Button", "Insert");
+        this.insertButton = this.addButtonToAlgorithmBar("Insert");
         this.insertButton.onclick = this.insertCallback.bind(this);
 
         this.deleteField = this.addControlToAlgorithmBar("Text", "", {maxlength: 12, size: 12});
         this.addReturnSubmit(this.deleteField, "ALPHA", this.deleteCallback.bind(this));
-        this.deleteButton = this.addControlToAlgorithmBar("Button", "Delete");
+        this.deleteButton = this.addButtonToAlgorithmBar("Delete");
         this.deleteButton.onclick = this.deleteCallback.bind(this);
 
         this.findField = this.addControlToAlgorithmBar("Text", "", {maxlength: 12, size: 12});
         this.addReturnSubmit(this.findField, "ALPHA", this.findCallback.bind(this));
-        this.findButton = this.addControlToAlgorithmBar("Button", "Find");
+        this.findButton = this.addButtonToAlgorithmBar("Find");
         this.findButton.onclick = this.findCallback.bind(this);
 
-        this.printButton = this.addControlToAlgorithmBar("Button", "Print");
+        this.printButton = this.addButtonToAlgorithmBar("Print");
         this.printButton.onclick = this.printCallback.bind(this);
     }
 

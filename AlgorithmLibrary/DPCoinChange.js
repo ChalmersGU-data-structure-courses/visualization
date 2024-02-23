@@ -148,16 +148,16 @@ class DPCoinChange extends Algorithm {
         this.changeField = this.addControlToAlgorithmBar("Text", "", {maxlength: 2, size: 2});
         this.addReturnSubmit(this.changeField, "int", this.emptyCallback.bind(this));
 
-        this.recursiveButton = this.addControlToAlgorithmBar("Button", "Change Recursive");
+        this.recursiveButton = this.addButtonToAlgorithmBar("Change Recursive");
         this.recursiveButton.onclick = this.recursiveCallback.bind(this);
 
-        this.tableButton = this.addControlToAlgorithmBar("Button", "Change Table");
+        this.tableButton = this.addButtonToAlgorithmBar("Change Table");
         this.tableButton.onclick = this.tableCallback.bind(this);
 
-        this.memoizedButton = this.addControlToAlgorithmBar("Button", "Change Memoized");
+        this.memoizedButton = this.addButtonToAlgorithmBar("Change Memoized");
         this.memoizedButton.onclick = this.memoizedCallback.bind(this);
 
-        this.greedyButton = this.addControlToAlgorithmBar("Button", "Change Greedy");
+        this.greedyButton = this.addButtonToAlgorithmBar("Change Greedy");
         this.greedyButton.onclick = this.greedyCallback.bind(this);
 
         const coinLabels = [];

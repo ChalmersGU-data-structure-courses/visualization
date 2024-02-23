@@ -108,13 +108,13 @@ class HeapLeftist extends Algorithm {
         this.insertField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
         this.addReturnSubmit(this.insertField, "int", this.insertCallback.bind(this));
 
-        this.insertButton = this.addControlToAlgorithmBar("Button", "Insert");
+        this.insertButton = this.addButtonToAlgorithmBar("Insert");
         this.insertButton.onclick = this.insertCallback.bind(this);
 
-        this.removeSmallestButton = this.addControlToAlgorithmBar("Button", "Remove Smallest");
+        this.removeSmallestButton = this.addButtonToAlgorithmBar("Remove Smallest");
         this.removeSmallestButton.onclick = this.removeSmallestCallback.bind(this);
 
-        this.clearHeapButton = this.addControlToAlgorithmBar("Button", "Clear Heap");
+        this.clearHeapButton = this.addButtonToAlgorithmBar("Clear Heap");
         this.clearHeapButton.onclick = this.clearCallback.bind(this);
 
         this.showNPLBox = this.addCheckboxToAlgorithmBar("Show Null Path Lengths");

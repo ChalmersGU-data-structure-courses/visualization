@@ -53,15 +53,15 @@ class StackArray extends Algorithm {
     addControls() {
         this.pushField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
         this.addReturnSubmit(this.pushField, "ALPHANUM", this.pushCallback.bind(this));
-        this.pushButton = this.addControlToAlgorithmBar("Button", "Push");
+        this.pushButton = this.addButtonToAlgorithmBar("Push");
         this.pushButton.onclick = this.pushCallback.bind(this);
         this.addBreakToAlgorithmBar();
 
-        this.popButton = this.addControlToAlgorithmBar("Button", "Pop");
+        this.popButton = this.addButtonToAlgorithmBar("Pop");
         this.popButton.onclick = this.popCallback.bind(this);
         this.addBreakToAlgorithmBar();
 
-        this.clearButton = this.addControlToAlgorithmBar("Button", "Clear");
+        this.clearButton = this.addButtonToAlgorithmBar("Clear");
         this.clearButton.onclick = this.clearCallback.bind(this);
     }
 

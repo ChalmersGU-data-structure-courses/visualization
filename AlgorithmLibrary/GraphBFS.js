@@ -56,7 +56,7 @@ class GraphBFS extends Graph {
         this.addLabelToAlgorithmBar("Start Vertex: ");
         this.startField = this.addControlToAlgorithmBar("Text", "", {maxlength: 2, size: 2});
         this.addReturnSubmit(this.startField, "int", this.startCallback.bind(this));
-        this.startButton = this.addControlToAlgorithmBar("Button", "Run BFS");
+        this.startButton = this.addButtonToAlgorithmBar("Run BFS");
         this.startButton.onclick = this.startCallback.bind(this);
         super.addControls();
     }

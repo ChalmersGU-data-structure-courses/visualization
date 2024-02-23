@@ -64,9 +64,9 @@ class SortHeap extends Algorithm {
     }
 
     addControls() {
-        this.randomizeArrayButton = this.addControlToAlgorithmBar("Button", "Randomize Array");
+        this.randomizeArrayButton = this.addButtonToAlgorithmBar("Randomize Array");
         this.randomizeArrayButton.onclick = this.randomizeCallback.bind(this);
-        this.heapsortButton = this.addControlToAlgorithmBar("Button", "Heap Sort");
+        this.heapsortButton = this.addButtonToAlgorithmBar("Heap Sort");
         this.heapsortButton.onclick = this.heapsortCallback.bind(this);
     }
 

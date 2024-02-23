@@ -127,9 +127,9 @@ class SearchArray extends Algorithm {
     addControls() {
         this.searchField = this.addControlToAlgorithmBar("Text", "", {maxlength: 3, size: 3});
         this.addReturnSubmit(this.searchField, "int");
-        this.linearSearchButton = this.addControlToAlgorithmBar("Button", "Linear search");
+        this.linearSearchButton = this.addButtonToAlgorithmBar("Linear search");
         this.linearSearchButton.onclick = this.linearSearchCallback.bind(this);
-        this.binarySearchButton = this.addControlToAlgorithmBar("Button", "Binary search");
+        this.binarySearchButton = this.addButtonToAlgorithmBar("Binary search");
         this.binarySearchButton.onclick = this.binarySearchCallback.bind(this);
         this.addBreakToAlgorithmBar();
 
@@ -139,7 +139,7 @@ class SearchArray extends Algorithm {
         this.sizeSelect.onchange = this.resetAll.bind(this);
         this.addBreakToAlgorithmBar();
 
-        this.resetButton = this.addControlToAlgorithmBar("Button", "Regenerate array");
+        this.resetButton = this.addButtonToAlgorithmBar("Regenerate array");
         this.resetButton.onclick = this.resetAll.bind(this);
     }
 

@@ -126,27 +126,27 @@ class TreeBPlus extends Algorithm {
     addControls() {
         this.insertField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
         this.addReturnSubmit(this.insertField, "ALPHANUM", this.insertCallback.bind(this));
-        this.insertButton = this.addControlToAlgorithmBar("Button", "Insert");
+        this.insertButton = this.addButtonToAlgorithmBar("Insert");
         this.insertButton.onclick = this.insertCallback.bind(this);
         this.addBreakToAlgorithmBar();
 
         this.deleteField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
         this.addReturnSubmit(this.deleteField, "ALPHANUM", this.deleteCallback.bind(this));
-        this.deleteButton = this.addControlToAlgorithmBar("Button", "Delete");
+        this.deleteButton = this.addButtonToAlgorithmBar("Delete");
         this.deleteButton.onclick = this.deleteCallback.bind(this);
         this.addBreakToAlgorithmBar();
 
         this.findField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
         this.addReturnSubmit(this.findField, "ALPHANUM", this.findCallback.bind(this));
-        this.findButton = this.addControlToAlgorithmBar("Button", "Find");
+        this.findButton = this.addButtonToAlgorithmBar("Find");
         this.findButton.onclick = this.findCallback.bind(this);
         this.addBreakToAlgorithmBar();
 
-        this.printButton = this.addControlToAlgorithmBar("Button", "Print");
+        this.printButton = this.addButtonToAlgorithmBar("Print");
         this.printButton.onclick = this.printCallback.bind(this);
         this.addBreakToAlgorithmBar();
 
-        this.clearButton = this.addControlToAlgorithmBar("Button", "Clear");
+        this.clearButton = this.addButtonToAlgorithmBar("Clear");
         this.clearButton.onclick = this.clearCallback.bind(this);
         this.addBreakToAlgorithmBar();
 

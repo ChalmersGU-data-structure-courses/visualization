@@ -71,22 +71,22 @@ class HeapBinary extends Algorithm {
     addControls() {
         this.insertField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
         this.addReturnSubmit(this.insertField, "int", this.insertCallback.bind(this));
-        this.insertButton = this.addControlToAlgorithmBar("Button", "Insert");
+        this.insertButton = this.addButtonToAlgorithmBar("Insert");
         this.insertButton.onclick = this.insertCallback.bind(this);
         this.addBreakToAlgorithmBar();
 
-        this.removeSmallestButton = this.addControlToAlgorithmBar("Button", "Remove smallest");
+        this.removeSmallestButton = this.addButtonToAlgorithmBar("Remove smallest");
         this.removeSmallestButton.onclick = this.removeSmallestCallback.bind(this);
         this.addBreakToAlgorithmBar();
 
-        this.clearHeapButton = this.addControlToAlgorithmBar("Button", "Clear heap");
+        this.clearHeapButton = this.addButtonToAlgorithmBar("Clear heap");
         this.clearHeapButton.onclick = this.clearCallback.bind(this);
         this.addBreakToAlgorithmBar();
 
         this.addLabelToAlgorithmBar("Build heap from: ");
-        this.buildHeapButton = this.addControlToAlgorithmBar("Button", "Reversed array");
+        this.buildHeapButton = this.addButtonToAlgorithmBar("Reversed array");
         this.buildHeapButton.onclick = this.buildHeapCallback.bind(this, this.REVERSED_ARRAY);
-        this.buildHeapButton = this.addControlToAlgorithmBar("Button", "Random array");
+        this.buildHeapButton = this.addButtonToAlgorithmBar("Random array");
         this.buildHeapButton.onclick = this.buildHeapCallback.bind(this, this.RANDOM_ARRAY);
     }
 

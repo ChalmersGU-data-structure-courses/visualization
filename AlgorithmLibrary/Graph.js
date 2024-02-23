@@ -178,7 +178,7 @@ class Graph extends Algorithm {
     }
 
     addControls(addDirection = true) {
-        this.newGraphButton = this.addControlToAlgorithmBar("Button", "New Graph");
+        this.newGraphButton = this.addButtonToAlgorithmBar("New Graph");
         this.newGraphButton.onclick = this.newGraphCallback.bind(this);
 
         if (addDirection) {

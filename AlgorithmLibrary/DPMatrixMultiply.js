@@ -114,13 +114,13 @@ class DPMatrixMultiply extends Algorithm {
         this.S2Field = this.addControlToAlgorithmBar("Text", "", {maxlength: this.MAX_SEQUENCE_LENGTH, size: this.MAX_SEQUENCE_LENGTH});
         this.addReturnSubmit(this.S2Field, "ALPHANUM", this.emptyCallback.bind(this));
 
-        this.recursiveButton = this.addControlToAlgorithmBar("Button", "LCS Recursive");
+        this.recursiveButton = this.addButtonToAlgorithmBar("LCS Recursive");
         this.recursiveButton.onclick = this.recursiveCallback.bind(this);
 
-        this.tableButton = this.addControlToAlgorithmBar("Button", "LCS Table");
+        this.tableButton = this.addButtonToAlgorithmBar("LCS Table");
         this.tableButton.onclick = this.tableCallback.bind(this);
 
-        this.memoizedButton = this.addControlToAlgorithmBar("Button", "LCS Memoized");
+        this.memoizedButton = this.addButtonToAlgorithmBar("LCS Memoized");
         this.memoizedButton.onclick = this.memoizedCallback.bind(this);
     }
 

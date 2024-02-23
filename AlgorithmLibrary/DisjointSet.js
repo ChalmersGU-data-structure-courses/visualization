@@ -67,7 +67,7 @@ class DisjointSet extends Algorithm {
         this.findField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
         this.addReturnSubmit(this.findField, "int", this.findCallback.bind(this));
 
-        const findButton = this.addControlToAlgorithmBar("Button", "Find");
+        const findButton = this.addButtonToAlgorithmBar("Find");
         findButton.onclick = this.findCallback.bind(this);
 
         this.unionField1 = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
@@ -76,7 +76,7 @@ class DisjointSet extends Algorithm {
         this.unionField2 = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
         this.addReturnSubmit(this.unionField2, "int", this.unionCallback.bind(this));
 
-        this.unionButton = this.addControlToAlgorithmBar("Button", "Union");
+        this.unionButton = this.addButtonToAlgorithmBar("Union");
         this.unionButton.onclick = this.unionCallback.bind(this);
 
         this.pathCompressionBox = this.addCheckboxToAlgorithmBar("Path Compression");

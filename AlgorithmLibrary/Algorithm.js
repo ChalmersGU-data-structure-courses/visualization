@@ -224,6 +224,10 @@ class Algorithm {
         return this.animationManager.algorithmControlBar.addSelect(values, labels, attrs);
     }
 
+    addButtonToAlgorithmBar(text, attrs) {
+        return this.animationManager.algorithmControlBar.addButton(text, attrs);
+    }
+
     addControlToAlgorithmBar(type, name, attrs) {
         return this.animationManager.algorithmControlBar.addInput(type, name, attrs);
     }

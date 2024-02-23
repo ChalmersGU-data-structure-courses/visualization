@@ -77,7 +77,7 @@ class RecReverse extends Recursive {
         this.addReturnSubmit(this.reverseField, "ALPHA", this.reverseCallback.bind(this));
         this.controls.push(this.reverseField);
 
-        this.reverseButton = this.addControlToAlgorithmBar("Button", "Reverse");
+        this.reverseButton = this.addButtonToAlgorithmBar("Reverse");
         this.reverseButton.onclick = this.reverseCallback.bind(this);
         this.controls.push(this.reverseButton);
     }

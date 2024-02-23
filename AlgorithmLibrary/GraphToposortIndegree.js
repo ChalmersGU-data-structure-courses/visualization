@@ -60,7 +60,7 @@ class GraphToposortIndegree extends Graph {
     }
 
     addControls() {
-        this.startButton = this.addControlToAlgorithmBar("Button", "Do Topological Sort");
+        this.startButton = this.addButtonToAlgorithmBar("Do Topological Sort");
         this.startButton.onclick = this.startCallback.bind(this);
         super.addControls(false);
     }

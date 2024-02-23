@@ -265,7 +265,7 @@ class GeoRotateScale3D extends Geometric {
         this.rotationFieldZ = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
         this.addReturnSubmit(this.rotationFieldZ, "float", this.rotateCallback.bind(this));
 
-        const rotateButton = this.addControlToAlgorithmBar("Button", "Rotate");
+        const rotateButton = this.addButtonToAlgorithmBar("Rotate");
         rotateButton.onclick = this.rotateCallback.bind(this);
 
         this.addLabelToAlgorithmBar("Scale X");
@@ -283,7 +283,7 @@ class GeoRotateScale3D extends Geometric {
         this.scaleZField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
         this.addReturnSubmit(this.scaleZField, "float", this.scaleCallback.bind(this));
 
-        const scaleButton = this.addControlToAlgorithmBar("Button", "Scale");
+        const scaleButton = this.addButtonToAlgorithmBar("Scale");
         scaleButton.onclick = this.scaleCallback.bind(this);
 
         const radioButtonList = this.addRadioButtonGroupToAlgorithmBar(
@@ -299,7 +299,7 @@ class GeoRotateScale3D extends Geometric {
         this.rowMajorButton.checked = this.rowMajor;
         this.colMajorButton.checked = !this.rowMajor;
 
-        const changeShapeButton = this.addControlToAlgorithmBar("Button", "Change Shape");
+        const changeShapeButton = this.addButtonToAlgorithmBar("Change Shape");
         changeShapeButton.onclick = this.changeShapeCallback.bind(this);
     }
 

@@ -111,7 +111,7 @@ class RecNQueens extends Recursive {
         this.addReturnSubmit(this.sizeField, "int", this.queensCallback.bind(this));
         this.controls.push(this.sizeField);
 
-        this.queensButton = this.addControlToAlgorithmBar("Button", "Queens");
+        this.queensButton = this.addButtonToAlgorithmBar("Queens");
         this.queensButton.onclick = this.queensCallback.bind(this);
         this.controls.push(this.queensButton);
     }

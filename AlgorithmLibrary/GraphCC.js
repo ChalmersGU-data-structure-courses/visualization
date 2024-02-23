@@ -78,7 +78,7 @@ class GraphCC extends Graph {
     }
 
     addControls() {
-        this.startButton = this.addControlToAlgorithmBar("Button", "Run Connected Component");
+        this.startButton = this.addButtonToAlgorithmBar("Run Connected Component");
         this.startButton.onclick = this.startCallback.bind(this);
         super.addControls(false);
     }

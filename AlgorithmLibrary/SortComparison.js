@@ -69,7 +69,7 @@ class SortComparison extends Algorithm {
     }
 
     addControls() {
-        this.resetButton = this.addControlToAlgorithmBar("Button", "Randomize Array");
+        this.resetButton = this.addButtonToAlgorithmBar("Randomize Array");
         this.resetButton.onclick = this.resetAll.bind(this);
         this.addBreakToAlgorithmBar();
 
@@ -82,7 +82,7 @@ class SortComparison extends Algorithm {
         this.addLabelToAlgorithmBar("Algorithm:");
         this.algorithmSelect = this.addSelectToAlgorithmBar(this.ALGORITHMS, this.ALGORITHM_LABELS);
         this.algorithmSelect.value = this.DEFAULT_ALGORITHM;
-        this.sortButton = this.addControlToAlgorithmBar("Button", "Run");
+        this.sortButton = this.addButtonToAlgorithmBar("Run");
         this.sortButton.onclick = this.runSortCallback.bind(this);
     }
 

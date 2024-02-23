@@ -63,10 +63,10 @@ class SortRadix extends Algorithm {
     }
 
     addControls() {
-        this.resetButton = this.addControlToAlgorithmBar("Button", "Randomize List");
+        this.resetButton = this.addButtonToAlgorithmBar("Randomize List");
         this.resetButton.onclick = this.resetCallback.bind(this);
 
-        this.radixSortButton = this.addControlToAlgorithmBar("Button", "Radix Sort");
+        this.radixSortButton = this.addButtonToAlgorithmBar("Radix Sort");
         this.radixSortButton.onclick = this.radixSortCallback.bind(this);
     }
 

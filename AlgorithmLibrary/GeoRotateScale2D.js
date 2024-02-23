@@ -188,7 +188,7 @@ class GeoRotateScale2D extends Geometric {
         this.scaleYField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
         this.addReturnSubmit(this.scaleYField, "float", this.transformCallback.bind(this));
 
-        const transformButton = this.addControlToAlgorithmBar("Button", "Transform");
+        const transformButton = this.addButtonToAlgorithmBar("Transform");
         transformButton.onclick = this.transformCallback.bind(this);
 
         const rankTypeButtonList = this.addRadioButtonGroupToAlgorithmBar(
@@ -230,7 +230,7 @@ class GeoRotateScale2D extends Geometric {
         this.rotateScaleButton.checked = this.rotateFirst;
         this.scaleRotateButton.checked = !this.rotateFirst;
 
-        const changeShapeButton = this.addControlToAlgorithmBar("Button", "Change Shape");
+        const changeShapeButton = this.addButtonToAlgorithmBar("Change Shape");
         changeShapeButton.onclick = this.changeShapeCallback.bind(this);
     }
 

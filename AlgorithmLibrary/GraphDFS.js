@@ -51,7 +51,7 @@ class GraphDFS extends Graph {
         this.addLabelToAlgorithmBar("Start Vertex: ");
         this.startField = this.addControlToAlgorithmBar("Text", "", {maxlength: 2, size: 2});
         this.addReturnSubmit(this.startField, "int", this.startCallback.bind(this));
-        this.startButton = this.addControlToAlgorithmBar("Button", "Run DFS");
+        this.startButton = this.addButtonToAlgorithmBar("Run DFS");
         this.startButton.onclick = this.startCallback.bind(this);
         super.addControls();
     }

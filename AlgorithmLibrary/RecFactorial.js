@@ -76,7 +76,7 @@ class RecFactorial extends Recursive {
         this.addReturnSubmit(this.factorialField, "int", this.factorialCallback.bind(this));
         this.controls.push(this.factorialField);
 
-        this.factorialButton = this.addControlToAlgorithmBar("Button", "Factorial");
+        this.factorialButton = this.addButtonToAlgorithmBar("Factorial");
         this.factorialButton.onclick = this.factorialCallback.bind(this);
         this.controls.push(this.factorialButton);
     }

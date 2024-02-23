@@ -424,7 +424,7 @@ class GeoChangeCoord2D extends Geometric {
         this.yField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
         this.addReturnSubmit(this.yField, "float", this.transformPointCallback.bind(this));
 
-        const transformButton = this.addControlToAlgorithmBar("Button", "Transform Point");
+        const transformButton = this.addButtonToAlgorithmBar("Transform Point");
         transformButton.onclick = this.transformPointCallback.bind(this);
 
         const transformTypeButtonList = this.addRadioButtonGroupToAlgorithmBar(
@@ -457,7 +457,7 @@ class GeoChangeCoord2D extends Geometric {
         this.showAxisBox.onclick = this.showAllAxesCallback.bind(this);
         this.showAxisBox.checked = true;
 
-        const moveObjectsButton = this.addControlToAlgorithmBar("Button", "Move Objects");
+        const moveObjectsButton = this.addButtonToAlgorithmBar("Move Objects");
         moveObjectsButton.onclick = this.moveObjectsCallback.bind(this);
     }
 
