@@ -32,31 +32,31 @@
 
 
 class DPFibonacci extends Algorithm {
-    static TABLE_ELEM_WIDTH = 40;
-    static TABLE_ELEM_HEIGHT = 30;
+    TABLE_ELEM_WIDTH = 40;
+    TABLE_ELEM_HEIGHT = 30;
 
-    static TABLE_START_X = 500;
-    static TABLE_START_Y = 40;
-    static TABLE_DIFF_X = 100;
+    TABLE_START_X = 500;
+    TABLE_START_Y = 40;
+    TABLE_DIFF_X = 100;
 
-    static CODE_START_X = 10;
-    static CODE_START_Y = 10;
-    static CODE_LINE_HEIGHT = 14;
+    CODE_START_X = 10;
+    CODE_START_Y = 10;
+    CODE_LINE_HEIGHT = 14;
 
-    static RECURSIVE_START_X = 20;
-    static RECURSIVE_START_Y = 120;
-    static RECURSIVE_DELTA_Y = 14;
-    static RECURSIVE_DELTA_X = 15;
-    static CODE_HIGHLIGHT_COLOR = "#FF0000";
-    static CODE_STANDARD_COLOR = "#000000";
+    RECURSIVE_START_X = 20;
+    RECURSIVE_START_Y = 120;
+    RECURSIVE_DELTA_Y = 14;
+    RECURSIVE_DELTA_X = 15;
+    CODE_HIGHLIGHT_COLOR = "#FF0000";
+    CODE_STANDARD_COLOR = "#000000";
 
-    static TABLE_INDEX_COLOR = "#0000FF";
-    static CODE_RECURSIVE_1_COLOR = "#339933";
-    static CODE_RECURSIVE_2_COLOR = "#0099FF";
+    TABLE_INDEX_COLOR = "#0000FF";
+    CODE_RECURSIVE_1_COLOR = "#339933";
+    CODE_RECURSIVE_2_COLOR = "#0099FF";
 
-    static MAX_VALUE = 20;
+    MAX_VALUE = 20;
 
-    static MESSAGE_ID = 0;
+    MESSAGE_ID = 0;
 
     constructor(am) {
         super();
@@ -81,8 +81,8 @@ class DPFibonacci extends Algorithm {
             this.codeID[i] = new Array(this.code[i].length);
             for (let j = 0; j < this.code[i].length; j++) {
                 this.codeID[i][j] = this.nextIndex++;
-                this.cmd("CreateLabel", this.codeID[i][j], this.code[i][j], DPFibonacci.CODE_START_X, DPFibonacci.CODE_START_Y + i * DPFibonacci.CODE_LINE_HEIGHT, 0);
-                this.cmd("SetForegroundColor", this.codeID[i][j], DPFibonacci.CODE_STANDARD_COLOR);
+                this.cmd("CreateLabel", this.codeID[i][j], this.code[i][j], this.CODE_START_X, this.CODE_START_Y + i * this.CODE_LINE_HEIGHT, 0);
+                this.cmd("SetForegroundColor", this.codeID[i][j], this.CODE_STANDARD_COLOR);
                 if (j > 0) {
                     this.cmd("AlignRight", this.codeID[i][j], this.codeID[i][j - 1]);
                 }
@@ -116,29 +116,29 @@ class DPFibonacci extends Algorithm {
         this.tableVals = new Array(maxVal + 1);
         this.tableXPos = new Array(maxVal + 1);
         this.tableYPos = new Array(maxVal + 1);
-        const tableRows = Math.floor((this.getCanvasHeight() - DPFibonacci.TABLE_ELEM_HEIGHT - DPFibonacci.TABLE_START_Y) / DPFibonacci.TABLE_ELEM_HEIGHT);
+        const tableRows = Math.floor((this.getCanvasHeight() - this.TABLE_ELEM_HEIGHT - this.TABLE_START_Y) / this.TABLE_ELEM_HEIGHT);
 
         for (let i = 0; i <= maxVal; i++) {
             this.tableID[i] = this.nextIndex++;
             this.tableVals[i] = -1;
             this.oldIDs.push(this.tableID[i]);
 
-            const yPos = i % tableRows * DPFibonacci.TABLE_ELEM_HEIGHT + DPFibonacci.TABLE_START_Y;
-            const xPos = Math.floor(i / tableRows) * DPFibonacci.TABLE_DIFF_X + DPFibonacci.TABLE_START_X;
+            const yPos = i % tableRows * this.TABLE_ELEM_HEIGHT + this.TABLE_START_Y;
+            const xPos = Math.floor(i / tableRows) * this.TABLE_DIFF_X + this.TABLE_START_X;
 
             this.tableXPos[i] = xPos;
             this.tableYPos[i] = yPos;
 
             this.cmd("CreateRectangle", this.tableID[i],
                 "",
-                DPFibonacci.TABLE_ELEM_WIDTH,
-                DPFibonacci.TABLE_ELEM_HEIGHT,
+                this.TABLE_ELEM_WIDTH,
+                this.TABLE_ELEM_HEIGHT,
                 xPos,
                 yPos);
             const indexID = this.nextIndex++;
             this.oldIDs.push(indexID);
-            this.cmd("CreateLabel", indexID, i, xPos - DPFibonacci.TABLE_ELEM_WIDTH, yPos);
-            this.cmd("SetForegroundColor", indexID, DPFibonacci.TABLE_INDEX_COLOR);
+            this.cmd("CreateLabel", indexID, i, xPos - this.TABLE_ELEM_WIDTH, yPos);
+            this.cmd("SetForegroundColor", indexID, this.TABLE_INDEX_COLOR);
         }
     }
 
@@ -163,7 +163,7 @@ class DPFibonacci extends Algorithm {
     recursiveCallback(event) {
         let fibValue = this.normalizeNumber(this.fibField.value);
         if (fibValue !== "") {
-            fibValue = Math.min(fibValue, DPFibonacci.MAX_VALUE);
+            fibValue = Math.min(fibValue, this.MAX_VALUE);
             this.fibField.value = fibValue;
             this.implementAction(this.recursiveFib.bind(this), fibValue);
         }
@@ -172,7 +172,7 @@ class DPFibonacci extends Algorithm {
     tableCallback(event) {
         let fibValue = this.normalizeNumber(this.fibField.value);
         if (fibValue !== "") {
-            fibValue = Math.min(fibValue, DPFibonacci.MAX_VALUE);
+            fibValue = Math.min(fibValue, this.MAX_VALUE);
             this.fibField.value = fibValue;
             this.implementAction(this.tableFib.bind(this), fibValue);
         }
@@ -181,7 +181,7 @@ class DPFibonacci extends Algorithm {
     memoizedCallback(event) {
         let fibValue = this.normalizeNumber(this.fibField.value);
         if (fibValue !== "") {
-            fibValue = Math.min(fibValue, DPFibonacci.MAX_VALUE);
+            fibValue = Math.min(fibValue, this.MAX_VALUE);
             this.fibField.value = fibValue;
             this.implementAction(this.memoizedFib.bind(this), fibValue);
         }
@@ -193,9 +193,9 @@ class DPFibonacci extends Algorithm {
         const messageID = this.nextIndex++;
         this.oldIDs.push(messageID);
         this.cmd("CreateLabel", messageID,
-            `Enter a value betweeen 0 and ${String(DPFibonacci.MAX_VALUE)} in the text field.\n` +
+            `Enter a value betweeen 0 and ${String(this.MAX_VALUE)} in the text field.\n` +
             "Then press the Fibonacci Recursive, Fibonacci Table, or Fibonacci Memoized button",
-            DPFibonacci.RECURSIVE_START_X, DPFibonacci.RECURSIVE_START_Y, 0);
+            this.RECURSIVE_START_X, this.RECURSIVE_START_Y, 0);
         return this.commands;
     }
 
@@ -204,60 +204,60 @@ class DPFibonacci extends Algorithm {
 
         this.clearOldIDs();
 
-        this.currentY = DPFibonacci.RECURSIVE_START_Y;
+        this.currentY = this.RECURSIVE_START_Y;
 
         const functionCallID = this.nextIndex++;
         this.oldIDs.push(functionCallID);
-        const final = this.fib(value, DPFibonacci.RECURSIVE_START_X, functionCallID);
+        const final = this.fib(value, this.RECURSIVE_START_X, functionCallID);
         this.cmd("SetText", functionCallID, `fib(${String(value)}) = ${String(final)}`);
         return this.commands;
     }
 
     fib(value, xPos, ID) {
         this.cmd("CreateLabel", ID, `fib(${String(value)})`, xPos, this.currentY, 0);
-        this.currentY += DPFibonacci.RECURSIVE_DELTA_Y;
-        this.cmd("SetForegroundColor", this.codeID[0][1], DPFibonacci.CODE_HIGHLIGHT_COLOR);
+        this.currentY += this.RECURSIVE_DELTA_Y;
+        this.cmd("SetForegroundColor", this.codeID[0][1], this.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");
-        this.cmd("SetForegroundColor", this.codeID[0][1], DPFibonacci.CODE_STANDARD_COLOR);
-        this.cmd("SetForegroundColor", this.codeID[1][1], DPFibonacci.CODE_HIGHLIGHT_COLOR);
+        this.cmd("SetForegroundColor", this.codeID[0][1], this.CODE_STANDARD_COLOR);
+        this.cmd("SetForegroundColor", this.codeID[1][1], this.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");
-        this.cmd("SetForegroundColor", this.codeID[1][1], DPFibonacci.CODE_STANDARD_COLOR);
+        this.cmd("SetForegroundColor", this.codeID[1][1], this.CODE_STANDARD_COLOR);
         if (value > 1) {
             const firstID = this.nextIndex++;
             const secondID = this.nextIndex++;
-            this.cmd("SetForegroundColor", this.codeID[4][1], DPFibonacci.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][1], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.codeID[4][1], DPFibonacci.CODE_STANDARD_COLOR);
-            const firstValue = this.fib(value - 1, xPos + DPFibonacci.RECURSIVE_DELTA_X, firstID);
-            this.currentY += DPFibonacci.RECURSIVE_DELTA_Y;
-            this.cmd("SetForegroundColor", this.codeID[4][3], DPFibonacci.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][1], this.CODE_STANDARD_COLOR);
+            const firstValue = this.fib(value - 1, xPos + this.RECURSIVE_DELTA_X, firstID);
+            this.currentY += this.RECURSIVE_DELTA_Y;
+            this.cmd("SetForegroundColor", this.codeID[4][3], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.codeID[4][3], DPFibonacci.CODE_STANDARD_COLOR);
-            const secondValue = this.fib(value - 2, xPos + DPFibonacci.RECURSIVE_DELTA_X, secondID);
+            this.cmd("SetForegroundColor", this.codeID[4][3], this.CODE_STANDARD_COLOR);
+            const secondValue = this.fib(value - 2, xPos + this.RECURSIVE_DELTA_X, secondID);
 
-            this.cmd("SetForegroundColor", this.codeID[4][1], DPFibonacci.CODE_RECURSIVE_1_COLOR);
-            this.cmd("SetForegroundColor", firstID, DPFibonacci.CODE_RECURSIVE_1_COLOR);
-            this.cmd("SetForegroundColor", this.codeID[4][2], DPFibonacci.CODE_HIGHLIGHT_COLOR);
-            this.cmd("SetForegroundColor", this.codeID[4][3], DPFibonacci.CODE_RECURSIVE_2_COLOR);
-            this.cmd("SetForegroundColor", secondID, DPFibonacci.CODE_RECURSIVE_2_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][1], this.CODE_RECURSIVE_1_COLOR);
+            this.cmd("SetForegroundColor", firstID, this.CODE_RECURSIVE_1_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][2], this.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][3], this.CODE_RECURSIVE_2_COLOR);
+            this.cmd("SetForegroundColor", secondID, this.CODE_RECURSIVE_2_COLOR);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.codeID[4][1], DPFibonacci.CODE_STANDARD_COLOR);
-            this.cmd("SetForegroundColor", this.codeID[4][2], DPFibonacci.CODE_STANDARD_COLOR);
-            this.cmd("SetForegroundColor", this.codeID[4][3], DPFibonacci.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][1], this.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][2], this.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][3], this.CODE_STANDARD_COLOR);
 
             this.cmd("Delete", firstID);
             this.cmd("Delete", secondID);
             this.cmd("SetText", ID, firstValue + secondValue);
             this.cmd("Step");
-            this.currentY = this.currentY - 2 * DPFibonacci.RECURSIVE_DELTA_Y;
+            this.currentY = this.currentY - 2 * this.RECURSIVE_DELTA_Y;
             return firstValue + secondValue;
         } else {
             this.cmd("SetText", ID, "1");
-            this.cmd("SetForegroundColor", this.codeID[2][0], DPFibonacci.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[2][0], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.codeID[2][0], DPFibonacci.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[2][0], this.CODE_STANDARD_COLOR);
 
-            this.currentY -= DPFibonacci.RECURSIVE_DELTA_Y;
+            this.currentY -= this.RECURSIVE_DELTA_Y;
             return 1;
         }
     }
@@ -268,31 +268,31 @@ class DPFibonacci extends Algorithm {
         this.buildTable(value);
 
         for (let i = 0; i <= value && i <= 1; i++) {
-            this.cmd("SetForegroundColor", this.codeID[1][1], DPFibonacci.CODE_HIGHLIGHT_COLOR);
-            this.cmd("SetForegroundColor", this.codeID[2][0], DPFibonacci.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[1][1], this.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[2][0], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("SetHighlight", this.tableID[i], 1);
             this.cmd("SetText", this.tableID[i], 1);
             this.tableVals[i] = 1;
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.codeID[1][1], DPFibonacci.CODE_STANDARD_COLOR);
-            this.cmd("SetForegroundColor", this.codeID[2][0], DPFibonacci.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[1][1], this.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[2][0], this.CODE_STANDARD_COLOR);
             this.cmd("SetHighlight", this.tableID[i], 0);
         }
         for (let i = 2; i <= value; i++) {
             this.cmd("SetHighlight", this.tableID[i - 1], 1);
             this.cmd("SetHighlight", this.tableID[i - 2], 1);
-            this.cmd("SetForegroundColor", this.codeID[4][1], DPFibonacci.CODE_HIGHLIGHT_COLOR);
-            this.cmd("SetForegroundColor", this.codeID[4][2], DPFibonacci.CODE_HIGHLIGHT_COLOR);
-            this.cmd("SetForegroundColor", this.codeID[4][3], DPFibonacci.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][1], this.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][2], this.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][3], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
             this.tableVals[i] = this.tableVals[i - 1] + this.tableVals[i - 2];
             this.cmd("SetText", this.tableID[i], this.tableVals[i]);
-            this.cmd("SetTextColor", this.tableID[i], DPFibonacci.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetTextColor", this.tableID[i], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.codeID[4][1], DPFibonacci.CODE_STANDARD_COLOR);
-            this.cmd("SetForegroundColor", this.codeID[4][2], DPFibonacci.CODE_STANDARD_COLOR);
-            this.cmd("SetForegroundColor", this.codeID[4][3], DPFibonacci.CODE_STANDARD_COLOR);
-            this.cmd("SetTextColor", this.tableID[i], DPFibonacci.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][1], this.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][2], this.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][3], this.CODE_STANDARD_COLOR);
+            this.cmd("SetTextColor", this.tableID[i], this.CODE_STANDARD_COLOR);
             this.cmd("SetHighlight", this.tableID[i - 1], 0);
             this.cmd("SetHighlight", this.tableID[i - 2], 0);
         }
@@ -300,7 +300,7 @@ class DPFibonacci extends Algorithm {
         const finalID = this.nextIndex++;
         this.oldIDs.push(finalID);
         this.cmd("CreateLabel", finalID, this.tableVals[value], this.tableXPos[value] - 5, this.tableYPos[value] - 5, 0);
-        this.cmd("Move", finalID, DPFibonacci.RECURSIVE_START_X, DPFibonacci.RECURSIVE_START_Y);
+        this.cmd("Move", finalID, this.RECURSIVE_START_X, this.RECURSIVE_START_Y);
         this.cmd("Step");
         this.cmd("SetText", finalID, `fib(${String(value)}) = ${String(this.tableVals[value])}`);
 
@@ -321,42 +321,42 @@ class DPFibonacci extends Algorithm {
             return this.tableVals[value];
         }
         this.cmd("SetHighlight", this.tableID[value], 0);
-        this.currentY += DPFibonacci.RECURSIVE_DELTA_Y;
-        this.cmd("SetForegroundColor", this.codeID[0][1], DPFibonacci.CODE_HIGHLIGHT_COLOR);
+        this.currentY += this.RECURSIVE_DELTA_Y;
+        this.cmd("SetForegroundColor", this.codeID[0][1], this.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");
-        this.cmd("SetForegroundColor", this.codeID[0][1], DPFibonacci.CODE_STANDARD_COLOR);
-        this.cmd("SetForegroundColor", this.codeID[1][1], DPFibonacci.CODE_HIGHLIGHT_COLOR);
+        this.cmd("SetForegroundColor", this.codeID[0][1], this.CODE_STANDARD_COLOR);
+        this.cmd("SetForegroundColor", this.codeID[1][1], this.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");
-        this.cmd("SetForegroundColor", this.codeID[1][1], DPFibonacci.CODE_STANDARD_COLOR);
+        this.cmd("SetForegroundColor", this.codeID[1][1], this.CODE_STANDARD_COLOR);
         if (value > 1) {
             const firstID = this.nextIndex++;
             const secondID = this.nextIndex++;
-            this.cmd("SetForegroundColor", this.codeID[4][1], DPFibonacci.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][1], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.codeID[4][1], DPFibonacci.CODE_STANDARD_COLOR);
-            const firstValue = this.fibMem(value - 1, xPos + DPFibonacci.RECURSIVE_DELTA_X, firstID);
-            this.currentY += DPFibonacci.RECURSIVE_DELTA_Y;
-            this.cmd("SetForegroundColor", this.codeID[4][3], DPFibonacci.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][1], this.CODE_STANDARD_COLOR);
+            const firstValue = this.fibMem(value - 1, xPos + this.RECURSIVE_DELTA_X, firstID);
+            this.currentY += this.RECURSIVE_DELTA_Y;
+            this.cmd("SetForegroundColor", this.codeID[4][3], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.codeID[4][3], DPFibonacci.CODE_STANDARD_COLOR);
-            const secondValue = this.fibMem(value - 2, xPos + DPFibonacci.RECURSIVE_DELTA_X, secondID);
+            this.cmd("SetForegroundColor", this.codeID[4][3], this.CODE_STANDARD_COLOR);
+            const secondValue = this.fibMem(value - 2, xPos + this.RECURSIVE_DELTA_X, secondID);
 
-            this.cmd("SetForegroundColor", this.codeID[4][1], DPFibonacci.CODE_RECURSIVE_1_COLOR);
-            this.cmd("SetForegroundColor", firstID, DPFibonacci.CODE_RECURSIVE_1_COLOR);
-            this.cmd("SetForegroundColor", this.codeID[4][2], DPFibonacci.CODE_HIGHLIGHT_COLOR);
-            this.cmd("SetForegroundColor", this.codeID[4][3], DPFibonacci.CODE_RECURSIVE_2_COLOR);
-            this.cmd("SetForegroundColor", secondID, DPFibonacci.CODE_RECURSIVE_2_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][1], this.CODE_RECURSIVE_1_COLOR);
+            this.cmd("SetForegroundColor", firstID, this.CODE_RECURSIVE_1_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][2], this.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][3], this.CODE_RECURSIVE_2_COLOR);
+            this.cmd("SetForegroundColor", secondID, this.CODE_RECURSIVE_2_COLOR);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.codeID[4][1], DPFibonacci.CODE_STANDARD_COLOR);
-            this.cmd("SetForegroundColor", this.codeID[4][2], DPFibonacci.CODE_STANDARD_COLOR);
-            this.cmd("SetForegroundColor", this.codeID[4][3], DPFibonacci.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][1], this.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][2], this.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][3], this.CODE_STANDARD_COLOR);
 
             this.cmd("Delete", firstID);
             this.cmd("Delete", secondID);
             this.cmd("SetText", ID, firstValue + secondValue);
             this.cmd("Step");
             this.tableVals[value] = firstValue + secondValue;
-            this.currentY = this.currentY - 2 * DPFibonacci.RECURSIVE_DELTA_Y;
+            this.currentY = this.currentY - 2 * this.RECURSIVE_DELTA_Y;
             this.cmd("CreateLabel", this.nextIndex, this.tableVals[value], xPos + 5, this.currentY + 5);
             this.cmd("Move", this.nextIndex, this.tableXPos[value], this.tableYPos[value], this.currentY);
             this.cmd("Step");
@@ -365,9 +365,9 @@ class DPFibonacci extends Algorithm {
             return firstValue + secondValue;
         } else {
             this.cmd("SetText", ID, "1");
-            this.cmd("SetForegroundColor", this.codeID[2][0], DPFibonacci.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[2][0], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.codeID[2][0], DPFibonacci.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[2][0], this.CODE_STANDARD_COLOR);
             this.tableVals[value] = 1;
             this.cmd("CreateLabel", this.nextIndex, this.tableVals[value], xPos + 5, this.currentY + 5);
             this.cmd("Move", this.nextIndex, this.tableXPos[value], this.tableYPos[value], this.currentY);
@@ -375,7 +375,7 @@ class DPFibonacci extends Algorithm {
             this.cmd("Delete", this.nextIndex);
             this.cmd("SetText", this.tableID[value], this.tableVals[value]);
 
-            this.currentY -= DPFibonacci.RECURSIVE_DELTA_Y;
+            this.currentY -= this.RECURSIVE_DELTA_Y;
             return 1;
         }
     }
@@ -386,11 +386,11 @@ class DPFibonacci extends Algorithm {
         this.clearOldIDs();
         this.buildTable(value);
 
-        this.currentY = DPFibonacci.RECURSIVE_START_Y;
+        this.currentY = this.RECURSIVE_START_Y;
 
         const functionCallID = this.nextIndex++;
         this.oldIDs.push(functionCallID);
-        const final = this.fibMem(value, DPFibonacci.RECURSIVE_START_X, functionCallID);
+        const final = this.fibMem(value, this.RECURSIVE_START_X, functionCallID);
 
         this.cmd("SetText", functionCallID, `fib(${String(value)}) = ${String(final)}`);
         return this.commands;

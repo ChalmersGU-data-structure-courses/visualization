@@ -32,45 +32,45 @@
 
 
 class GraphFloyd extends Graph {
-    static SMALL_COST_TABLE_WIDTH = 30;
-    static SMALL_COST_TABLE_HEIGHT = 30;
-    static SMALL_COST_TABLE_START_X = 40;
-    static SMALL_COST_TABLE_START_Y = 70;
+    SMALL_COST_TABLE_WIDTH = 30;
+    SMALL_COST_TABLE_HEIGHT = 30;
+    SMALL_COST_TABLE_START_X = 40;
+    SMALL_COST_TABLE_START_Y = 70;
 
-    static SMALL_PATH_TABLE_WIDTH = 30;
-    static SMALL_PATH_TABLE_HEIGHT = 30;
-    static SMALL_PATH_TABLE_START_X = 330;
-    static SMALL_PATH_TABLE_START_Y = 70;
+    SMALL_PATH_TABLE_WIDTH = 30;
+    SMALL_PATH_TABLE_HEIGHT = 30;
+    SMALL_PATH_TABLE_START_X = 330;
+    SMALL_PATH_TABLE_START_Y = 70;
 
-    static SMALL_NODE_1_X_POS = 50;
-    static SMALL_NODE_1_Y_POS = 400;
-    static SMALL_NODE_2_X_POS = 150;
-    static SMALL_NODE_2_Y_POS = 350;
-    static SMALL_NODE_3_X_POS = 250;
-    static SMALL_NODE_3_Y_POS = 400;
+    SMALL_NODE_1_X_POS = 50;
+    SMALL_NODE_1_Y_POS = 400;
+    SMALL_NODE_2_X_POS = 150;
+    SMALL_NODE_2_Y_POS = 350;
+    SMALL_NODE_3_X_POS = 250;
+    SMALL_NODE_3_Y_POS = 400;
 
-    static SMALL_MESSAGE_X = 400;
-    static SMALL_MESSAGE_Y = 350;
+    SMALL_MESSAGE_X = 400;
+    SMALL_MESSAGE_Y = 350;
 
-    static LARGE_COST_TABLE_WIDTH = 20;
-    static LARGE_COST_TABLE_HEIGHT = 20;
-    static LARGE_COST_TABLE_START_X = 40;
-    static LARGE_COST_TABLE_START_Y = 50;
+    LARGE_COST_TABLE_WIDTH = 20;
+    LARGE_COST_TABLE_HEIGHT = 20;
+    LARGE_COST_TABLE_START_X = 40;
+    LARGE_COST_TABLE_START_Y = 50;
 
-    static LARGE_PATH_TABLE_WIDTH = 20;
-    static LARGE_PATH_TABLE_HEIGHT = 20;
-    static LARGE_PATH_TABLE_START_X = 500;
-    static LARGE_PATH_TABLE_START_Y = 50;
+    LARGE_PATH_TABLE_WIDTH = 20;
+    LARGE_PATH_TABLE_HEIGHT = 20;
+    LARGE_PATH_TABLE_START_X = 500;
+    LARGE_PATH_TABLE_START_Y = 50;
 
-    static LARGE_NODE_1_X_POS = 50;
-    static LARGE_NODE_1_Y_POS = 500;
-    static LARGE_NODE_2_X_POS = 150;
-    static LARGE_NODE_2_Y_POS = 450;
-    static LARGE_NODE_3_X_POS = 250;
-    static LARGE_NODE_3_Y_POS = 500;
+    LARGE_NODE_1_X_POS = 50;
+    LARGE_NODE_1_Y_POS = 500;
+    LARGE_NODE_2_X_POS = 150;
+    LARGE_NODE_2_Y_POS = 450;
+    LARGE_NODE_3_X_POS = 250;
+    LARGE_NODE_3_Y_POS = 500;
 
-    static LARGE_MESSAGE_X = 300;
-    static LARGE_MESSAGE_Y = 450;
+    LARGE_MESSAGE_X = 300;
+    LARGE_MESSAGE_Y = 450;
 
     constructor(am, dir) {
         super();
@@ -104,7 +104,7 @@ class GraphFloyd extends Graph {
     }
 
     smallGraphCallback(event) {
-        if (this.size !== Graph.SMALL_SIZE) {
+        if (this.size !== this.SMALL_SIZE) {
             this.animationManager.resetAll();
             this.animationManager.setAllLayers([0, this.currentLayer]);
             this.logicalButton.disabled = false;
@@ -115,7 +115,7 @@ class GraphFloyd extends Graph {
     }
 
     largeGraphCallback(event) {
-        if (this.size !== Graph.LARGE_SIZE) {
+        if (this.size !== this.LARGE_SIZE) {
             this.animationManager.resetAll();
             // this.animationManager.setAllLayers([0]);
             this.logicalButton.disabled = true;
@@ -129,7 +129,7 @@ class GraphFloyd extends Graph {
         alwaysUseINF = alwaysUseINF == null ? false : alwaysUseINF;
         if (value >= 0) {
             return String(value);
-        } else if (this.size === Graph.SMALL_SIZE || alwaysUseINF) {
+        } else if (this.size === this.SMALL_SIZE || alwaysUseINF) {
             return "INF";
         } else {
             return "";
@@ -137,48 +137,48 @@ class GraphFloyd extends Graph {
     }
 
     setupSmall() {
-        this.costTableWidth = GraphFloyd.SMALL_COST_TABLE_WIDTH;
-        this.costTableHeight = GraphFloyd.SMALL_COST_TABLE_HEIGHT;
-        this.costTableStartX = GraphFloyd.SMALL_COST_TABLE_START_X;
-        this.costTableStartY = GraphFloyd.SMALL_COST_TABLE_START_Y;
+        this.costTableWidth = this.SMALL_COST_TABLE_WIDTH;
+        this.costTableHeight = this.SMALL_COST_TABLE_HEIGHT;
+        this.costTableStartX = this.SMALL_COST_TABLE_START_X;
+        this.costTableStartY = this.SMALL_COST_TABLE_START_Y;
 
-        this.pathTableWidth = GraphFloyd.SMALL_PATH_TABLE_WIDTH;
-        this.pathTableHeight = GraphFloyd.SMALL_PATH_TABLE_HEIGHT;
-        this.pathTableStartX = GraphFloyd.SMALL_PATH_TABLE_START_X;
-        this.pathTableStartY = GraphFloyd.SMALL_PATH_TABLE_START_Y;
+        this.pathTableWidth = this.SMALL_PATH_TABLE_WIDTH;
+        this.pathTableHeight = this.SMALL_PATH_TABLE_HEIGHT;
+        this.pathTableStartX = this.SMALL_PATH_TABLE_START_X;
+        this.pathTableStartY = this.SMALL_PATH_TABLE_START_Y;
 
-        this.node1xPos = GraphFloyd.SMALL_NODE_1_X_POS;
-        this.node1yPos = GraphFloyd.SMALL_NODE_1_Y_POS;
-        this.node2xPos = GraphFloyd.SMALL_NODE_2_X_POS;
-        this.node2yPos = GraphFloyd.SMALL_NODE_2_Y_POS;
-        this.node3xPos = GraphFloyd.SMALL_NODE_3_X_POS;
-        this.node3yPos = GraphFloyd.SMALL_NODE_3_Y_POS;
+        this.node1xPos = this.SMALL_NODE_1_X_POS;
+        this.node1yPos = this.SMALL_NODE_1_Y_POS;
+        this.node2xPos = this.SMALL_NODE_2_X_POS;
+        this.node2yPos = this.SMALL_NODE_2_Y_POS;
+        this.node3xPos = this.SMALL_NODE_3_X_POS;
+        this.node3yPos = this.SMALL_NODE_3_Y_POS;
 
-        this.messageX = GraphFloyd.SMALL_MESSAGE_X;
-        this.messageY = GraphFloyd.SMALL_MESSAGE_Y;
+        this.messageX = this.SMALL_MESSAGE_X;
+        this.messageY = this.SMALL_MESSAGE_Y;
         super.setupSmall();
     }
 
     setupLarge() {
-        this.costTableWidth = GraphFloyd.LARGE_COST_TABLE_WIDTH;
-        this.costTableHeight = GraphFloyd.LARGE_COST_TABLE_HEIGHT;
-        this.costTableStartX = GraphFloyd.LARGE_COST_TABLE_START_X;
-        this.costTableStartY = GraphFloyd.LARGE_COST_TABLE_START_Y;
+        this.costTableWidth = this.LARGE_COST_TABLE_WIDTH;
+        this.costTableHeight = this.LARGE_COST_TABLE_HEIGHT;
+        this.costTableStartX = this.LARGE_COST_TABLE_START_X;
+        this.costTableStartY = this.LARGE_COST_TABLE_START_Y;
 
-        this.pathTableWidth = GraphFloyd.LARGE_PATH_TABLE_WIDTH;
-        this.pathTableHeight = GraphFloyd.LARGE_PATH_TABLE_HEIGHT;
-        this.pathTableStartX = GraphFloyd.LARGE_PATH_TABLE_START_X;
-        this.pathTableStartY = GraphFloyd.LARGE_PATH_TABLE_START_Y;
+        this.pathTableWidth = this.LARGE_PATH_TABLE_WIDTH;
+        this.pathTableHeight = this.LARGE_PATH_TABLE_HEIGHT;
+        this.pathTableStartX = this.LARGE_PATH_TABLE_START_X;
+        this.pathTableStartY = this.LARGE_PATH_TABLE_START_Y;
 
-        this.node1xPos = GraphFloyd.LARGE_NODE_1_X_POS;
-        this.node1yPos = GraphFloyd.LARGE_NODE_1_Y_POS;
-        this.node2xPos = GraphFloyd.LARGE_NODE_2_X_POS;
-        this.node2yPos = GraphFloyd.LARGE_NODE_2_Y_POS;
-        this.node3xPos = GraphFloyd.LARGE_NODE_3_X_POS;
-        this.node3yPos = GraphFloyd.LARGE_NODE_3_Y_POS;
+        this.node1xPos = this.LARGE_NODE_1_X_POS;
+        this.node1yPos = this.LARGE_NODE_1_Y_POS;
+        this.node2xPos = this.LARGE_NODE_2_X_POS;
+        this.node2yPos = this.LARGE_NODE_2_Y_POS;
+        this.node3xPos = this.LARGE_NODE_3_X_POS;
+        this.node3yPos = this.LARGE_NODE_3_Y_POS;
 
-        this.messageX = GraphFloyd.LARGE_MESSAGE_X;
-        this.messageY = GraphFloyd.LARGE_MESSAGE_Y;
+        this.messageX = this.LARGE_MESSAGE_X;
+        this.messageY = this.LARGE_MESSAGE_Y;
 
         super.setupLarge();
     }
@@ -243,7 +243,7 @@ class GraphFloyd extends Graph {
         this.animationManager.StartNewAnimation(this.commands);
         this.animationManager.skipForward();
         this.animationManager.clearHistory();
-        if (this.size === Graph.LARGE_SIZE) {
+        if (this.size === this.LARGE_SIZE) {
             this.animationManager.setAllLayers([0]);
         }
     }

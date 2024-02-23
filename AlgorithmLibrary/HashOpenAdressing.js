@@ -33,17 +33,17 @@
 
 class HashOpenAdressing extends Hash {
     // This is a special key and should not be possible to enter in the GUI:
-    static DELETED = "<deleted>";
+    DELETED = "<deleted>";
 
-    static PROBING_LINEAR = "linear";
-    static PROBING_QUADRATIC = "quadratic";
-    static PROBING_DOUBLE = "double";
+    PROBING_LINEAR = "linear";
+    PROBING_QUADRATIC = "quadratic";
+    PROBING_DOUBLE = "double";
 
-    static DEFAULT_TABLE_SIZE = 23;
-    static TABLE_SIZES = [13, 23, 41];
-    static TABLE_SIZE_LABELS = ["Small (13)", "Medium (23)", "Large (41)"];
+    DEFAULT_TABLE_SIZE = 23;
+    TABLE_SIZES = [13, 23, 41];
+    TABLE_SIZE_LABELS = ["Small (13)", "Medium (23)", "Large (41)"];
 
-    static ARRAY_ELEM_START_Y = 100;
+    ARRAY_ELEM_START_Y = 100;
 
     constructor(am) {
         super();
@@ -55,22 +55,22 @@ class HashOpenAdressing extends Hash {
         this.addBreakToAlgorithmBar();
 
         this.addLabelToAlgorithmBar("Table size:");
-        this.sizeSelect = this.addSelectToAlgorithmBar(HashOpenAdressing.TABLE_SIZES, HashOpenAdressing.TABLE_SIZE_LABELS);
-        this.sizeSelect.value = HashOpenAdressing.DEFAULT_TABLE_SIZE;
+        this.sizeSelect = this.addSelectToAlgorithmBar(this.TABLE_SIZES, this.TABLE_SIZE_LABELS);
+        this.sizeSelect.value = this.DEFAULT_TABLE_SIZE;
         this.sizeSelect.onchange = this.resetAll.bind(this);
         this.addBreakToAlgorithmBar();
 
         this.addLabelToAlgorithmBar("Probing:");
         this.probingSelect = this.addSelectToAlgorithmBar(
-            [HashOpenAdressing.PROBING_LINEAR, HashOpenAdressing.PROBING_QUADRATIC, HashOpenAdressing.PROBING_DOUBLE],
+            [this.PROBING_LINEAR, this.PROBING_QUADRATIC, this.PROBING_DOUBLE],
             ["Linear: 1, 2, 3, ...", "Quadratic: 1, 4, 9, ...", "Double hashing: h', 2h', ..."],
         );
-        this.probingSelect.value = HashOpenAdressing.PROBING_LINEAR;
+        this.probingSelect.value = this.PROBING_LINEAR;
         this.probingSelect.onchange = this.resetAll.bind(this);
     }
 
     resetAll() {
-        this.tableSize = parseInt(this.sizeSelect.value) || HashOpenAdressing.DEFAULT_TABLE_SIZE;
+        this.tableSize = parseInt(this.sizeSelect.value) || this.DEFAULT_TABLE_SIZE;
         super.resetAll();
 
         this.tableCells = new Array(this.tableSize);
@@ -109,7 +109,7 @@ class HashOpenAdressing extends Hash {
     getCellPosXY(i) {
         const startX = this.getCellWidth();
         let x = startX;
-        let y = HashOpenAdressing.ARRAY_ELEM_START_Y;
+        let y = this.ARRAY_ELEM_START_Y;
         for (let k = 0; k < i; k++) {
             x += this.getCellWidth();
             if (x + this.getCellWidth() > this.getCanvasWidth()) {
@@ -143,24 +143,24 @@ class HashOpenAdressing extends Hash {
         this.cmd("CreateHighlightCircle", this.highlightID, "red", 0, 0);
         const firstLabel = this.nextIndex;
 
-        let xPosOfNextLabel = Hash.FIRST_PRINT_POS_X;
+        let xPosOfNextLabel = this.FIRST_PRINT_POS_X;
         let yPosOfNextLabel = this.getCanvasHeight() * 0.9;
 
         for (let i = 0; i < this.tableCells.length; i++) {
             this.cmd("Move", this.highlightID, this.getCellPosX(i), this.getCellPosY(i));
             this.cmd("Step");
             const elem = this.tableCells[i];
-            if (elem && elem !== HashOpenAdressing.DELETED) {
+            if (elem && elem !== this.DELETED) {
                 const nextLabelID = this.nextIndex++;
                 this.cmd("CreateLabel", nextLabelID, elem, this.getCellPosX(i), this.getCellPosY(i));
                 this.cmd("SetForegroundColor", nextLabelID, "blue");
                 this.cmd("Move", nextLabelID, xPosOfNextLabel, yPosOfNextLabel);
                 this.cmd("Step");
 
-                xPosOfNextLabel += Hash.PRINT_HORIZONTAL_GAP;
+                xPosOfNextLabel += this.PRINT_HORIZONTAL_GAP;
                 if (xPosOfNextLabel > this.printMax) {
-                    xPosOfNextLabel = Hash.FIRST_PRINT_POS_X;
-                    yPosOfNextLabel += Hash.PRINT_VERTICAL_GAP;
+                    xPosOfNextLabel = this.FIRST_PRINT_POS_X;
+                    yPosOfNextLabel += this.PRINT_VERTICAL_GAP;
                 }
             }
         }
@@ -224,8 +224,8 @@ class HashOpenAdressing extends Hash {
         if (index < 0) {
             this.cmd("SetText", this.messageID, `Deleting ${elem}: Element not found!`);
         } else {
-            this.tableCells[index] = HashOpenAdressing.DELETED;
-            this.cmd("SetText", this.tableCellIDs[index], HashOpenAdressing.DELETED);
+            this.tableCells[index] = this.DELETED;
+            this.cmd("SetText", this.tableCellIDs[index], this.DELETED);
             this.cmd("SetText", this.messageID, `Deleted ${elem}.`);
             this.cmd("Step");
             this.cmd("SetHighlight", this.tableCellIDs[index], 0);
@@ -253,7 +253,7 @@ class HashOpenAdressing extends Hash {
     getElemIndex(index, elem) {
         const probing = this.probingSelect.value;
         let skipDelta = 1;
-        if (probing === HashOpenAdressing.PROBING_DOUBLE) {
+        if (probing === this.PROBING_DOUBLE) {
             skipDelta = this.getSkipDelta(elem, this.nextIndex++);
         }
         for (let i = 0; i < this.tableSize; i++) {
@@ -276,7 +276,7 @@ class HashOpenAdressing extends Hash {
     getEmptyIndex(index, elem) {
         const probing = this.probingSelect.value;
         let skipDelta = 1;
-        if (probing === HashOpenAdressing.PROBING_DOUBLE) {
+        if (probing === this.PROBING_DOUBLE) {
             skipDelta = this.getSkipDelta(elem);
         }
         for (let i = 0; i < this.tableSize; i++) {
@@ -302,7 +302,7 @@ class HashOpenAdressing extends Hash {
     getSkip(i, d) {
         const probing = this.probingSelect.value;
         if (!d) d = 1;
-        if (probing === HashOpenAdressing.PROBING_QUADRATIC) {
+        if (probing === this.PROBING_QUADRATIC) {
             return i * i * d;
         } else {
             return i * d;

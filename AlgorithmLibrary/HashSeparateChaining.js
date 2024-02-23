@@ -43,12 +43,12 @@ class HashLinkedListNode {
 
 
 class HashSeparateChaining extends Hash {
-    static DEFAULT_TABLE_SIZE = 13;
-    static TABLE_SIZES = [7, 13, 23];
-    static TABLE_SIZE_LABELS = ["Small (7)", "Medium (13)", "Large (23)"];
+    DEFAULT_TABLE_SIZE = 13;
+    TABLE_SIZES = [7, 13, 23];
+    TABLE_SIZE_LABELS = ["Small (7)", "Medium (13)", "Large (23)"];
 
-    static NODE_INSERT_X = 100;
-    static NODE_INSERT_Y = 75;
+    NODE_INSERT_X = 100;
+    NODE_INSERT_Y = 75;
 
     constructor(am) {
         super();
@@ -60,13 +60,13 @@ class HashSeparateChaining extends Hash {
         this.addBreakToAlgorithmBar();
 
         this.addLabelToAlgorithmBar("Table size:");
-        this.sizeSelect = this.addSelectToAlgorithmBar(HashSeparateChaining.TABLE_SIZES, HashSeparateChaining.TABLE_SIZE_LABELS);
-        this.sizeSelect.value = HashSeparateChaining.DEFAULT_TABLE_SIZE;
+        this.sizeSelect = this.addSelectToAlgorithmBar(this.TABLE_SIZES, this.TABLE_SIZE_LABELS);
+        this.sizeSelect.value = this.DEFAULT_TABLE_SIZE;
         this.sizeSelect.onchange = this.resetAll.bind(this);
     }
 
     resetAll() {
-        this.tableSize = parseInt(this.sizeSelect.value) || HashSeparateChaining.DEFAULT_TABLE_SIZE;
+        this.tableSize = parseInt(this.sizeSelect.value) || this.DEFAULT_TABLE_SIZE;
         super.resetAll();
 
         this.tableCells = new Array(this.tableSize);
@@ -121,7 +121,7 @@ class HashSeparateChaining extends Hash {
         this.cmd("CreateHighlightCircle", this.highlightID, "red", 0, 0);
         const firstLabel = this.nextIndex;
 
-        let xPosOfNextLabel = Hash.FIRST_PRINT_POS_X;
+        let xPosOfNextLabel = this.FIRST_PRINT_POS_X;
         let yPosOfNextLabel = this.getCanvasHeight() * 0.9;
 
         for (let i = 0; i < this.tableCells.length; i++) {
@@ -138,10 +138,10 @@ class HashSeparateChaining extends Hash {
                 this.cmd("Move", nextLabelID, xPosOfNextLabel, yPosOfNextLabel);
                 this.cmd("Step");
 
-                xPosOfNextLabel += Hash.PRINT_HORIZONTAL_GAP;
+                xPosOfNextLabel += this.PRINT_HORIZONTAL_GAP;
                 if (xPosOfNextLabel > this.printMax) {
-                    xPosOfNextLabel = Hash.FIRST_PRINT_POS_X;
-                    yPosOfNextLabel += Hash.PRINT_VERTICAL_GAP;
+                    xPosOfNextLabel = this.FIRST_PRINT_POS_X;
+                    yPosOfNextLabel += this.PRINT_VERTICAL_GAP;
                 }
                 node = node.next;
             }

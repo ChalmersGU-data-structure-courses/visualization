@@ -55,34 +55,34 @@ class BPlusTreeNode {
 
 
 class TreeBPlus extends Algorithm {
-    static MAX_DEGREES = [3, 4, 5, 6, 7];
-    static MAX_DEGREE_LABELS = ["2/3-tree", "2/3/4-tree", "Max. degree 5", "Max. degree 6", "Max. degree 7"];
-    static INITIAL_MAX_DEGREE = 3;
+    MAX_DEGREES = [3, 4, 5, 6, 7];
+    MAX_DEGREE_LABELS = ["2/3-tree", "2/3/4-tree", "Max. degree 5", "Max. degree 6", "Max. degree 7"];
+    INITIAL_MAX_DEGREE = 3;
 
-    static FOREGROUND_COLOR = "#007700";
-    static BACKGROUND_COLOR = "#EEFFEE";
-    static HIGHLIGHT_COLOR = "#FF0000";
+    FOREGROUND_COLOR = "#007700";
+    BACKGROUND_COLOR = "#EEFFEE";
+    HIGHLIGHT_COLOR = "#FF0000";
 
-    static LINK_COLOR = TreeBPlus.FOREGROUND_COLOR;
-    static HIGHLIGHT_CIRCLE_COLOR = TreeBPlus.FOREGROUND_COLOR;
-    static PRINT_COLOR = TreeBPlus.FOREGROUND_COLOR;
+    LINK_COLOR = this.FOREGROUND_COLOR;
+    HIGHLIGHT_CIRCLE_COLOR = this.FOREGROUND_COLOR;
+    PRINT_COLOR = this.FOREGROUND_COLOR;
 
-    static WIDTH_PER_ELEM = 40;
-    static NODE_HEIGHT = 30;
-    static NODE_SPACING = 20;
-    static HEIGHT_DELTA = TreeBPlus.NODE_HEIGHT + 20;
-    static STARTING_Y = 40;
+    WIDTH_PER_ELEM = 40;
+    NODE_HEIGHT = 30;
+    NODE_SPACING = 20;
+    HEIGHT_DELTA = this.NODE_HEIGHT + 20;
+    STARTING_Y = 40;
 
-    static FIRST_PRINT_POS_X = 50;
-    static PRINT_VERTICAL_GAP = 20;
-    static PRINT_HORIZONTAL_GAP = 50;
+    FIRST_PRINT_POS_X = 50;
+    PRINT_VERTICAL_GAP = 20;
+    PRINT_HORIZONTAL_GAP = 50;
 
-    static MESSAGE_X = 10;
-    static MESSAGE_Y = 10;
+    MESSAGE_X = 10;
+    MESSAGE_Y = 10;
 
     constructor(am, maxDegree) {
         super();
-        this.initialMaxDegree = maxDegree || TreeBPlus.INITIAL_MAX_DEGREE;
+        this.initialMaxDegree = maxDegree || this.INITIAL_MAX_DEGREE;
         this.init(am);
     }
 
@@ -96,7 +96,7 @@ class TreeBPlus extends Algorithm {
         this.nextIndex = 0;
         this.commands = [];
         this.messageID = this.nextIndex++;
-        this.cmd("CreateLabel", this.messageID, "", TreeBPlus.MESSAGE_X, TreeBPlus.MESSAGE_Y, 0);
+        this.cmd("CreateLabel", this.messageID, "", this.MESSAGE_X, this.MESSAGE_Y, 0);
         this.moveLabel1ID = this.nextIndex++;
         this.moveLabel2ID = this.nextIndex++;
 
@@ -113,8 +113,8 @@ class TreeBPlus extends Algorithm {
         const h = this.getCanvasHeight();
 
         this.startingX = w / 2;
-        this.firstPrintPosY = h - 3 * TreeBPlus.PRINT_VERTICAL_GAP;
-        this.printMax = w - TreeBPlus.PRINT_HORIZONTAL_GAP;
+        this.firstPrintPosY = h - 3 * this.PRINT_VERTICAL_GAP;
+        this.printMax = w - this.PRINT_HORIZONTAL_GAP;
 
         this.implementAction(() => {
             this.commands = [];
@@ -150,7 +150,7 @@ class TreeBPlus extends Algorithm {
         this.clearButton.onclick = this.clearCallback.bind(this);
         this.addBreakToAlgorithmBar();
 
-        this.maxDegreeSelect = this.addSelectToAlgorithmBar(TreeBPlus.MAX_DEGREES, TreeBPlus.MAX_DEGREE_LABELS);
+        this.maxDegreeSelect = this.addSelectToAlgorithmBar(this.MAX_DEGREES, this.MAX_DEGREE_LABELS);
         this.maxDegreeSelect.value = this.initialMaxDegree;
         this.maxDegreeSelect.onchange = this.maxDegreeChangedHandler.bind(this);
     }
@@ -229,7 +229,7 @@ class TreeBPlus extends Algorithm {
         this.cmd("SetText", this.messageID, "Printing tree");
         const firstLabel = this.nextIndex;
 
-        this.xPosOfNextLabel = TreeBPlus.FIRST_PRINT_POS_X;
+        this.xPosOfNextLabel = this.FIRST_PRINT_POS_X;
         this.yPosOfNextLabel = this.firstPrintPosY;
 
         let node = this.treeRoot;
@@ -251,13 +251,13 @@ class TreeBPlus extends Algorithm {
             for (let i = 0; i < node.numKeys; i++) {
                 const nextLabelID = this.nextIndex++;
                 this.cmd("CreateLabel", nextLabelID, node.keys[i], this.getLabelX(node, i), node.y);
-                this.cmd("SetForegroundColor", nextLabelID, TreeBPlus.PRINT_COLOR);
+                this.cmd("SetForegroundColor", nextLabelID, this.PRINT_COLOR);
                 this.cmd("Move", nextLabelID, this.xPosOfNextLabel, this.yPosOfNextLabel);
                 this.cmd("Step");
-                this.xPosOfNextLabel += TreeBPlus.PRINT_HORIZONTAL_GAP;
+                this.xPosOfNextLabel += this.PRINT_HORIZONTAL_GAP;
                 if (this.xPosOfNextLabel > this.printMax) {
-                    this.xPosOfNextLabel = TreeBPlus.FIRST_PRINT_POS_X;
-                    this.yPosOfNextLabel += TreeBPlus.PRINT_VERTICAL_GAP;
+                    this.xPosOfNextLabel = this.FIRST_PRINT_POS_X;
+                    this.yPosOfNextLabel += this.PRINT_VERTICAL_GAP;
                 }
             }
             if (node.next != null) {
@@ -329,10 +329,10 @@ class TreeBPlus extends Algorithm {
                     return false;
                 }
             } else if (tree.isLeaf) {
-                this.cmd("SetTextColor", tree.graphicID, TreeBPlus.HIGHLIGHT_COLOR, i);
+                this.cmd("SetTextColor", tree.graphicID, this.HIGHLIGHT_COLOR, i);
                 this.cmd("SetText", this.messageID, `Element ${value} found`);
                 this.cmd("Step");
-                this.cmd("SetTextColor", tree.graphicID, TreeBPlus.FOREGROUND_COLOR, i);
+                this.cmd("SetTextColor", tree.graphicID, this.FOREGROUND_COLOR, i);
                 this.cmd("SetHighlight", tree.graphicID, 0);
                 this.cmd("Step");
                 return true;
@@ -354,17 +354,17 @@ class TreeBPlus extends Algorithm {
         this.cmd("Step");
 
         if (this.treeRoot == null) {
-            this.treeRoot = new BPlusTreeNode(this.nextIndex++, this.startingX, TreeBPlus.STARTING_Y);
+            this.treeRoot = new BPlusTreeNode(this.nextIndex++, this.startingX, this.STARTING_Y);
             this.cmd(
                 "CreateBTreeNode",
                 this.treeRoot.graphicID,
-                TreeBPlus.WIDTH_PER_ELEM,
-                TreeBPlus.NODE_HEIGHT,
+                this.WIDTH_PER_ELEM,
+                this.NODE_HEIGHT,
                 1,
                 this.startingX,
-                TreeBPlus.STARTING_Y,
-                TreeBPlus.BACKGROUND_COLOR,
-                TreeBPlus.FOREGROUND_COLOR,
+                this.STARTING_Y,
+                this.BACKGROUND_COLOR,
+                this.FOREGROUND_COLOR,
             );
             this.treeRoot.keys[0] = insertedValue;
             this.treeRoot.numKeys = 1;
@@ -402,7 +402,7 @@ class TreeBPlus extends Algorithm {
                     "Connect",
                     tree.graphicID,
                     tree.next.graphicID,
-                    TreeBPlus.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     1, // Directed
                     "", // Label
@@ -455,7 +455,7 @@ class TreeBPlus extends Algorithm {
                     "Connect",
                     currentParent.graphicID,
                     currentParent.children[i].graphicID,
-                    TreeBPlus.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     0, // Directed
                     "", // Label
@@ -485,13 +485,13 @@ class TreeBPlus extends Algorithm {
         this.cmd(
             "CreateBTreeNode",
             rightNode.graphicID,
-            TreeBPlus.WIDTH_PER_ELEM,
-            TreeBPlus.NODE_HEIGHT,
+            this.WIDTH_PER_ELEM,
+            this.NODE_HEIGHT,
             tree.numKeys - rightSplit,
             tree.x,
             tree.y,
-            TreeBPlus.BACKGROUND_COLOR,
-            TreeBPlus.FOREGROUND_COLOR,
+            this.BACKGROUND_COLOR,
+            this.FOREGROUND_COLOR,
         );
         if (tree.isLeaf) {
             if (rightNode.next != null) {
@@ -500,7 +500,7 @@ class TreeBPlus extends Algorithm {
                     "Connect",
                     rightNode.graphicID,
                     rightNode.next.graphicID,
-                    TreeBPlus.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     1, // Directed
                     "", // Label
@@ -511,7 +511,7 @@ class TreeBPlus extends Algorithm {
                 "Connect",
                 tree.graphicID,
                 rightNode.graphicID,
-                TreeBPlus.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0, // Curve
                 1, // Directed
                 "", // Label
@@ -532,7 +532,7 @@ class TreeBPlus extends Algorithm {
                     "Connect",
                     rightNode.graphicID,
                     rightNode.children[j].graphicID,
-                    TreeBPlus.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     0, // Directed
                     "", // Label
@@ -558,7 +558,7 @@ class TreeBPlus extends Algorithm {
                 "Connect",
                 currentParent.graphicID,
                 rightNode.graphicID,
-                TreeBPlus.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0, // Curve
                 0, // Directed
                 "", // Label
@@ -570,17 +570,17 @@ class TreeBPlus extends Algorithm {
             this.cmd("SetText", currentParent.graphicID, risingNode, parentIndex);
             return tree.parent;
         } else { // if (tree.parent == null)
-            this.treeRoot = new BPlusTreeNode(this.nextIndex++, this.startingX, TreeBPlus.STARTING_Y);
+            this.treeRoot = new BPlusTreeNode(this.nextIndex++, this.startingX, this.STARTING_Y);
             this.cmd(
                 "CreateBTreeNode",
                 this.treeRoot.graphicID,
-                TreeBPlus.WIDTH_PER_ELEM,
-                TreeBPlus.NODE_HEIGHT,
+                this.WIDTH_PER_ELEM,
+                this.NODE_HEIGHT,
                 1,
                 this.startingX,
-                TreeBPlus.STARTING_Y,
-                TreeBPlus.BACKGROUND_COLOR,
-                TreeBPlus.FOREGROUND_COLOR,
+                this.STARTING_Y,
+                this.BACKGROUND_COLOR,
+                this.FOREGROUND_COLOR,
             );
             this.treeRoot.keys[0] = risingNode;
             this.treeRoot.numKeys = 1;
@@ -593,7 +593,7 @@ class TreeBPlus extends Algorithm {
                 "Connect",
                 this.treeRoot.graphicID,
                 leftNode.graphicID,
-                TreeBPlus.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0, // Curve
                 0, // Directed
                 "", // Label
@@ -602,7 +602,7 @@ class TreeBPlus extends Algorithm {
             this.cmd(
                 "Connect",
                 this.treeRoot.graphicID, rightNode.graphicID,
-                TreeBPlus.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0, // Curve
                 0, // Directed
                 "", // Label
@@ -664,9 +664,9 @@ class TreeBPlus extends Algorithm {
                 this.cmd("SetEdgeHighlight", tree.graphicID, tree.children[i].graphicID, 0);
                 this.doDelete(tree.children[i], val);
             } else if (tree.isLeaf && this.compare(tree.keys[i], val) === 0) {
-                this.cmd("SetTextColor", tree.graphicID, TreeBPlus.HIGHLIGHT_COLOR, i);
+                this.cmd("SetTextColor", tree.graphicID, this.HIGHLIGHT_COLOR, i);
                 this.cmd("Step");
-                this.cmd("SetTextColor", tree.graphicID, TreeBPlus.FOREGROUND_COLOR, i);
+                this.cmd("SetTextColor", tree.graphicID, this.FOREGROUND_COLOR, i);
                 for (let j = i; j < tree.numKeys - 1; j++) {
                     tree.keys[j] = tree.keys[j + 1];
                     this.cmd("SetText", tree.graphicID, tree.keys[j], j);
@@ -683,7 +683,7 @@ class TreeBPlus extends Algorithm {
                         "Connect",
                         tree.graphicID,
                         tree.next.graphicID,
-                        TreeBPlus.FOREGROUND_COLOR,
+                        this.FOREGROUND_COLOR,
                         0, // Curve
                         1, // Directed
                         "", // Label
@@ -757,7 +757,7 @@ class TreeBPlus extends Algorithm {
                 tree.children[j].parent = tree;
                 this.cmd("Connect", tree.graphicID,
                     tree.children[j].graphicID,
-                    TreeBPlus.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     0, // Directed
                     "", // Label
@@ -773,7 +773,7 @@ class TreeBPlus extends Algorithm {
                     "Connect",
                     tree.graphicID,
                     tree.next.graphicID,
-                    TreeBPlus.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     1, // Directed
                     "", // Label
@@ -789,7 +789,7 @@ class TreeBPlus extends Algorithm {
                 "Connect",
                 parentNode.graphicID,
                 parentNode.children[i].graphicID,
-                TreeBPlus.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0, // Curve
                 0, // Directed
                 "", // Label
@@ -839,7 +839,7 @@ class TreeBPlus extends Algorithm {
                 "Connect",
                 tree.graphicID,
                 tree.next.graphicID,
-                TreeBPlus.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0, // Curve
                 1, // Directed
                 "", // Label
@@ -879,7 +879,7 @@ class TreeBPlus extends Algorithm {
                 "Connect",
                 tree.graphicID,
                 tree.children[tree.numKeys].graphicID,
-                TreeBPlus.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0, // Curve
                 0, // Directed
                 "", // Label
@@ -892,7 +892,7 @@ class TreeBPlus extends Algorithm {
                     "Connect",
                     rightSib.graphicID,
                     rightSib.children[i - 1].graphicID,
-                    TreeBPlus.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     0, // Directed
                     "", // Label
@@ -922,7 +922,7 @@ class TreeBPlus extends Algorithm {
                 "Connect",
                 rightSib.graphicID,
                 rightSib.next.graphicID,
-                TreeBPlus.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0, // Curve
                 1, // Directed
                 "", // Label
@@ -944,7 +944,7 @@ class TreeBPlus extends Algorithm {
                 "Connect",
                 tree.graphicID,
                 tree.next.graphicID,
-                TreeBPlus.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0, // Curve
                 1, // Directed
                 "", // Label
@@ -987,7 +987,7 @@ class TreeBPlus extends Algorithm {
                     "Connect",
                     tree.graphicID,
                     tree.children[i].graphicID,
-                    TreeBPlus.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     0, // Directed
                     "", // Label
@@ -1000,7 +1000,7 @@ class TreeBPlus extends Algorithm {
                 "Connect",
                 tree.graphicID,
                 tree.children[0].graphicID,
-                TreeBPlus.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0, // Curve
                 0, // Directed
                 "", // Label
@@ -1026,7 +1026,7 @@ class TreeBPlus extends Algorithm {
                 "Connect",
                 leftSib.graphicID,
                 tree.graphicID,
-                TreeBPlus.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0, // Curve
                 1, // Directed
                 "", // Label
@@ -1121,12 +1121,12 @@ class TreeBPlus extends Algorithm {
     }
 
     getLabelX(tree, index) {
-        return tree.x - TreeBPlus.WIDTH_PER_ELEM * tree.numKeys / 2 + TreeBPlus.WIDTH_PER_ELEM / 2 + index * TreeBPlus.WIDTH_PER_ELEM;
+        return tree.x - this.WIDTH_PER_ELEM * tree.numKeys / 2 + this.WIDTH_PER_ELEM / 2 + index * this.WIDTH_PER_ELEM;
     }
 
     resizeTree() {
         this.resizeWidths(this.treeRoot);
-        this.setNewPositions(this.treeRoot, this.startingX, TreeBPlus.STARTING_Y);
+        this.setNewPositions(this.treeRoot, this.startingX, this.STARTING_Y);
         this.animateNewPositions(this.treeRoot);
     }
 
@@ -1141,7 +1141,7 @@ class TreeBPlus extends Algorithm {
                     this.setNewPositions(
                         tree.children[i],
                         leftEdge + priorWidth + tree.widths[i] / 2,
-                        yPosition + TreeBPlus.HEIGHT_DELTA,
+                        yPosition + this.HEIGHT_DELTA,
                     );
                     priorWidth += tree.widths[i];
                 }
@@ -1167,7 +1167,7 @@ class TreeBPlus extends Algorithm {
             for (let i = 0; i < tree.numKeys + 1; i++) {
                 tree.widths[i] = 0;
             }
-            tree.width = tree.numKeys * TreeBPlus.WIDTH_PER_ELEM + TreeBPlus.NODE_SPACING;
+            tree.width = tree.numKeys * this.WIDTH_PER_ELEM + this.NODE_SPACING;
             return tree.width;
         } else {
             let treeWidth = 0;
@@ -1175,7 +1175,7 @@ class TreeBPlus extends Algorithm {
                 tree.widths[i] = this.resizeWidths(tree.children[i]);
                 treeWidth = treeWidth + tree.widths[i];
             }
-            treeWidth = Math.max(treeWidth, tree.numKeys * TreeBPlus.WIDTH_PER_ELEM + TreeBPlus.NODE_SPACING);
+            treeWidth = Math.max(treeWidth, tree.numKeys * this.WIDTH_PER_ELEM + this.NODE_SPACING);
             tree.width = treeWidth;
             return treeWidth;
         }

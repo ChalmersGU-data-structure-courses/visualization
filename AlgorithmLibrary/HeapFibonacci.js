@@ -48,33 +48,33 @@ class FibonacciNode {
 
 
 class HeapFibonacci extends Algorithm {
-    static LINK_COLOR = "#007700";
-    static FOREGROUND_COLOR = "#007700";
-    static BACKGROUND_COLOR = "#EEFFEE";
-    static INDEX_COLOR = "#0000FF";
+    LINK_COLOR = "#007700";
+    FOREGROUND_COLOR = "#007700";
+    BACKGROUND_COLOR = "#EEFFEE";
+    INDEX_COLOR = "#0000FF";
 
-    static DEGREE_OFFSET_X = -20;
-    static DEGREE_OFFSET_Y = -20;
+    DEGREE_OFFSET_X = -20;
+    DEGREE_OFFSET_Y = -20;
 
-    static DELETE_LAB_X = 30;
-    static DELETE_LAB_Y = 50;
+    DELETE_LAB_X = 30;
+    DELETE_LAB_Y = 50;
 
-    static NODE_WIDTH = 60;
-    static NODE_HEIGHT = 70;
+    NODE_WIDTH = 60;
+    NODE_HEIGHT = 70;
 
-    static STARTING_X = 70;
+    STARTING_X = 70;
 
-    static INSERT_X = 30;
-    static INSERT_Y = 25;
+    INSERT_X = 30;
+    INSERT_Y = 25;
 
-    static STARTING_Y = 100;
-    static MAX_DEGREE = 7;
-    static DEGREE_ARRAY_ELEM_WIDTH = 30;
-    static DEGREE_ARRAY_ELEM_HEIGHT = 30;
-    static DEGREE_ARRAY_START_X = 500;
-    static INDEGREE_ARRAY_START_Y = 50;
+    STARTING_Y = 100;
+    MAX_DEGREE = 7;
+    DEGREE_ARRAY_ELEM_WIDTH = 30;
+    DEGREE_ARRAY_ELEM_HEIGHT = 30;
+    DEGREE_ARRAY_START_X = 500;
+    INDEGREE_ARRAY_START_Y = 50;
 
-    static TMP_PTR_Y = 60;
+    TMP_PTR_Y = 60;
 
     constructor(am) {
         super();
@@ -129,18 +129,18 @@ class HeapFibonacci extends Algorithm {
             if (tree.degree === 0) {
                 tree.x = xPosition;
                 tree.y = yPosition;
-                return this.setPositions(tree.rightSib, xPosition + HeapFibonacci.NODE_WIDTH, yPosition);
+                return this.setPositions(tree.rightSib, xPosition + this.NODE_WIDTH, yPosition);
             } else if (tree.degree === 1) {
                 tree.x = xPosition;
                 tree.y = yPosition;
-                this.setPositions(tree.leftChild, xPosition, yPosition + HeapFibonacci.NODE_HEIGHT);
-                return this.setPositions(tree.rightSib, xPosition + HeapFibonacci.NODE_WIDTH, yPosition);
+                this.setPositions(tree.leftChild, xPosition, yPosition + this.NODE_HEIGHT);
+                return this.setPositions(tree.rightSib, xPosition + this.NODE_WIDTH, yPosition);
             } else {
                 const treeWidth = Math.pow(2, tree.degree - 1);
-                tree.x = xPosition + (treeWidth - 1) * HeapFibonacci.NODE_WIDTH;
+                tree.x = xPosition + (treeWidth - 1) * this.NODE_WIDTH;
                 tree.y = yPosition;
-                this.setPositions(tree.leftChild, xPosition, yPosition + HeapFibonacci.NODE_HEIGHT);
-                return this.setPositions(tree.rightSib, xPosition + treeWidth * HeapFibonacci.NODE_WIDTH, yPosition);
+                this.setPositions(tree.leftChild, xPosition, yPosition + this.NODE_HEIGHT);
+                return this.setPositions(tree.rightSib, xPosition + treeWidth * this.NODE_WIDTH, yPosition);
             }
         }
         return xPosition;
@@ -150,7 +150,7 @@ class HeapFibonacci extends Algorithm {
         if (tree != null) {
             this.cmd("Move", tree.graphicID, tree.x, tree.y);
             this.cmd("Move", tree.internalGraphicID, tree.x, tree.y);
-            this.cmd("Move", tree.degreeID, tree.x + HeapFibonacci.DEGREE_OFFSET_X, tree.y + HeapFibonacci.DEGREE_OFFSET_Y);
+            this.cmd("Move", tree.degreeID, tree.x + this.DEGREE_OFFSET_X, tree.y + this.DEGREE_OFFSET_Y);
 
             this.moveTree(tree.leftChild);
             this.moveTree(tree.rightSib);
@@ -219,7 +219,7 @@ class HeapFibonacci extends Algorithm {
             this.cmd("SetText", this.minElement.graphicID, "");
             this.cmd("SetText", this.minElement.internalGraphicID, "");
             this.cmd("CreateLabel", moveLabel, this.minElement.data, this.minElement.x, this.minElement.y);
-            this.cmd("Move", moveLabel, HeapFibonacci.DELETE_LAB_X, HeapFibonacci.DELETE_LAB_Y);
+            this.cmd("Move", moveLabel, this.DELETE_LAB_X, this.DELETE_LAB_Y);
             this.cmd("Step");
             this.cmd("Delete", this.minID);
             const childList = this.minElement.leftChild;
@@ -235,16 +235,16 @@ class HeapFibonacci extends Algorithm {
                             this.minElement = tmp;
                         }
                     }
-                    this.cmd("CreateLabel", this.minID, "Min element", this.minElement.x, HeapFibonacci.TMP_PTR_Y);
+                    this.cmd("CreateLabel", this.minID, "Min element", this.minElement.x, this.TMP_PTR_Y);
                     this.cmd("Connect", this.minID,
                         this.minElement.graphicID,
-                        HeapFibonacci.FOREGROUND_COLOR,
+                        this.FOREGROUND_COLOR,
                         0, // Curve
                         1, // Directed
                         ""); // Label
                     this.cmd("Connect", this.minID,
                         this.minElement.internalGraphicID,
-                        HeapFibonacci.FOREGROUND_COLOR,
+                        this.FOREGROUND_COLOR,
                         0, // Curve
                         1, // Directed
                         ""); // Label
@@ -258,13 +258,13 @@ class HeapFibonacci extends Algorithm {
                 if (prev != null && prev.rightSib != null) {
                     this.cmd("Connect", prev.internalGraphicID,
                         prev.rightSib.internalGraphicID,
-                        HeapFibonacci.FOREGROUND_COLOR,
+                        this.FOREGROUND_COLOR,
                         0.15, // Curve
                         1, // Directed
                         ""); // Label
                     this.cmd("Connect", prev.rightSib.internalGraphicID,
                         prev.internalGraphicID,
-                        HeapFibonacci.FOREGROUND_COLOR,
+                        this.FOREGROUND_COLOR,
                         0.15, // Curve
                         1, // Directed
                         ""); // Label
@@ -281,13 +281,13 @@ class HeapFibonacci extends Algorithm {
                 if (prev == null) {
                     this.cmd("Connect", tmp.internalGraphicID,
                         this.treeRoot.internalGraphicID,
-                        HeapFibonacci.FOREGROUND_COLOR,
+                        this.FOREGROUND_COLOR,
                         0.15, // Curve
                         1, // Directed
                         ""); // Label
                     this.cmd("Connect", this.treeRoot.internalGraphicID,
                         tmp.internalGraphicID,
-                        HeapFibonacci.FOREGROUND_COLOR,
+                        this.FOREGROUND_COLOR,
                         0.15, // Curve
                         1, // Directed
                         ""); // Label
@@ -297,13 +297,13 @@ class HeapFibonacci extends Algorithm {
                 } else {
                     this.cmd("Connect", prev.internalGraphicID,
                         childList.internalGraphicID,
-                        HeapFibonacci.FOREGROUND_COLOR,
+                        this.FOREGROUND_COLOR,
                         0.15, // Curve
                         1, // Directed
                         ""); // Label
                     this.cmd("Connect", childList.internalGraphicID,
                         prev.internalGraphicID,
-                        HeapFibonacci.FOREGROUND_COLOR,
+                        this.FOREGROUND_COLOR,
                         0.15, // Curve
                         1, // Directed
                         ""); // Label
@@ -311,13 +311,13 @@ class HeapFibonacci extends Algorithm {
                     if (prev.rightSib != null) {
                         this.cmd("Connect", prev.rightSib.internalGraphicID,
                             tmp.internalGraphicID,
-                            HeapFibonacci.FOREGROUND_COLOR,
+                            this.FOREGROUND_COLOR,
                             0.15, // Curve
                             1, // Directed
                             ""); // Label
                         this.cmd("Connect", tmp.internalGraphicID,
                             prev.rightSib.internalGraphicID,
-                            HeapFibonacci.FOREGROUND_COLOR,
+                            this.FOREGROUND_COLOR,
                             0.15, // Curve
                             1, // Directed
                             ""); // Label
@@ -341,38 +341,38 @@ class HeapFibonacci extends Algorithm {
     insertElement(insertedValue) {
         this.commands = [];
 
-        const insertNode = new FibonacciNode(insertedValue, this.nextIndex++, HeapFibonacci.INSERT_X, HeapFibonacci.INSERT_Y);
+        const insertNode = new FibonacciNode(insertedValue, this.nextIndex++, this.INSERT_X, this.INSERT_Y);
         insertNode.internalGraphicID = this.nextIndex++;
         insertNode.degreeID = this.nextIndex++;
-        this.cmd("CreateCircle", insertNode.graphicID, insertedValue, HeapFibonacci.INSERT_X, HeapFibonacci.INSERT_Y);
-        this.cmd("SetForegroundColor", insertNode.graphicID, HeapFibonacci.FOREGROUND_COLOR);
-        this.cmd("SetBackgroundColor", insertNode.graphicID, HeapFibonacci.BACKGROUND_COLOR);
+        this.cmd("CreateCircle", insertNode.graphicID, insertedValue, this.INSERT_X, this.INSERT_Y);
+        this.cmd("SetForegroundColor", insertNode.graphicID, this.FOREGROUND_COLOR);
+        this.cmd("SetBackgroundColor", insertNode.graphicID, this.BACKGROUND_COLOR);
         this.cmd("SetLayer", insertNode.graphicID, 1);
-        this.cmd("CreateCircle", insertNode.internalGraphicID, insertedValue, HeapFibonacci.INSERT_X, HeapFibonacci.INSERT_Y);
-        this.cmd("SetForegroundColor", insertNode.internalGraphicID, HeapFibonacci.FOREGROUND_COLOR);
-        this.cmd("SetBackgroundColor", insertNode.internalGraphicID, HeapFibonacci.BACKGROUND_COLOR);
+        this.cmd("CreateCircle", insertNode.internalGraphicID, insertedValue, this.INSERT_X, this.INSERT_Y);
+        this.cmd("SetForegroundColor", insertNode.internalGraphicID, this.FOREGROUND_COLOR);
+        this.cmd("SetBackgroundColor", insertNode.internalGraphicID, this.BACKGROUND_COLOR);
         this.cmd("SetLayer", insertNode.internalGraphicID, 2);
-        this.cmd("CreateLabel", insertNode.degreeID, insertNode.degree, insertNode.x + HeapFibonacci.DEGREE_OFFSET_X, insertNode.y + HeapFibonacci.DEGREE_OFFSET_Y);
+        this.cmd("CreateLabel", insertNode.degreeID, insertNode.degree, insertNode.x + this.DEGREE_OFFSET_X, insertNode.y + this.DEGREE_OFFSET_Y);
         this.cmd("SetTextColor", insertNode.degreeID, "#0000FF");
         this.cmd("SetLayer", insertNode.degreeID, 2);
         this.cmd("Step");
 
         if (this.treeRoot == null) {
             this.treeRoot = insertNode;
-            this.setPositions(this.treeRoot, HeapFibonacci.STARTING_X, HeapFibonacci.STARTING_Y);
+            this.setPositions(this.treeRoot, this.STARTING_X, this.STARTING_Y);
             this.moveTree(this.treeRoot);
-            this.cmd("CreateLabel", this.minID, "Min element", this.treeRoot.x, HeapFibonacci.TMP_PTR_Y);
+            this.cmd("CreateLabel", this.minID, "Min element", this.treeRoot.x, this.TMP_PTR_Y);
             this.minElement = this.treeRoot;
             this.cmd("Connect", this.minID,
                 this.minElement.graphicID,
-                HeapFibonacci.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0, // Curve
                 1, // Directed
                 ""); // Label
 
             this.cmd("Connect", this.minID,
                 this.minElement.internalGraphicID,
-                HeapFibonacci.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0, // Curve
                 1, // Directed
                 ""); // Label
@@ -382,39 +382,39 @@ class HeapFibonacci extends Algorithm {
 
             this.cmd("Connect", this.treeRoot.internalGraphicID,
                 this.treeRoot.rightSib.internalGraphicID,
-                HeapFibonacci.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0.15, // Curve
                 1, // Directed
                 ""); // Label
 
             this.cmd("Connect", this.treeRoot.rightSib.internalGraphicID,
                 this.treeRoot.internalGraphicID,
-                HeapFibonacci.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0.15, // Curve
                 1, // Directed
                 ""); // Label
 
             this.cmd("Step");
-            this.setPositions(this.treeRoot, HeapFibonacci.STARTING_X, HeapFibonacci.STARTING_Y);
+            this.setPositions(this.treeRoot, this.STARTING_X, this.STARTING_Y);
             if (this.compare(this.minElement.data, insertNode.data) > 0) {
                 this.cmd("Disconnect", this.minID, this.minElement.graphicID);
                 this.cmd("Disconnect", this.minID, this.minElement.internalGraphicID);
                 this.minElement = insertNode;
                 this.cmd("Connect", this.minID,
                     this.minElement.graphicID,
-                    HeapFibonacci.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     1, // Directed
                     ""); // Label
 
                 this.cmd("Connect", this.minID,
                     this.minElement.internalGraphicID,
-                    HeapFibonacci.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     1, // Directed
                     ""); // Label
             }
-            this.cmd("Move", this.minID, this.minElement.x, HeapFibonacci.TMP_PTR_Y);
+            this.cmd("Move", this.minID, this.minElement.x, this.TMP_PTR_Y);
             this.moveTree(this.treeRoot);
         } else {
             let prev = this.treeRoot;
@@ -430,14 +430,14 @@ class HeapFibonacci extends Algorithm {
 
             this.cmd("Connect", prev.internalGraphicID,
                 prev.rightSib.internalGraphicID,
-                HeapFibonacci.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0.15, // Curve
                 1, // Directed
                 ""); // Label
 
             this.cmd("Connect", prev.rightSib.internalGraphicID,
                 prev.internalGraphicID,
-                HeapFibonacci.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0.15, // Curve
                 1, // Directed
                 ""); // Label
@@ -445,40 +445,40 @@ class HeapFibonacci extends Algorithm {
             if (prev.rightSib.rightSib != null) {
                 this.cmd("Connect", prev.rightSib.internalGraphicID,
                     prev.rightSib.rightSib.internalGraphicID,
-                    HeapFibonacci.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0.15, // Curve
                     1, // Directed
                     ""); // Label
 
                 this.cmd("Connect", prev.rightSib.rightSib.internalGraphicID,
                     prev.rightSib.internalGraphicID,
-                    HeapFibonacci.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0.15, // Curve
                     1, // Directed
                     ""); // Label
             }
 
             this.cmd("Step");
-            this.setPositions(this.treeRoot, HeapFibonacci.STARTING_X, HeapFibonacci.STARTING_Y);
+            this.setPositions(this.treeRoot, this.STARTING_X, this.STARTING_Y);
             if (this.compare(this.minElement.data, insertNode.data) > 0) {
                 this.cmd("Disconnect", this.minID, this.minElement.graphicID);
                 this.cmd("Disconnect", this.minID, this.minElement.internalGraphicID);
                 this.minElement = insertNode;
                 this.cmd("Connect", this.minID,
                     this.minElement.graphicID,
-                    HeapFibonacci.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     1, // Directed
                     ""); // Label
 
                 this.cmd("Connect", this.minID,
                     this.minElement.internalGraphicID,
-                    HeapFibonacci.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     1, // Directed
                     ""); // Label
             }
-            this.cmd("Move", this.minID, this.minElement.x, HeapFibonacci.TMP_PTR_Y);
+            this.cmd("Move", this.minID, this.minElement.x, this.TMP_PTR_Y);
             this.moveTree(this.treeRoot);
         }
         return this.commands;
@@ -487,41 +487,41 @@ class HeapFibonacci extends Algorithm {
     fixAfterRemoveMin() {
         if (this.treeRoot == null)
             return;
-        const degreeArray = new Array(HeapFibonacci.MAX_DEGREE);
-        const degreeGraphic = new Array(HeapFibonacci.MAX_DEGREE);
-        const indexID = new Array(HeapFibonacci.MAX_DEGREE);
+        const degreeArray = new Array(this.MAX_DEGREE);
+        const degreeGraphic = new Array(this.MAX_DEGREE);
+        const indexID = new Array(this.MAX_DEGREE);
         const tmpPtrID = this.nextIndex++;
 
-        for (let i = 0; i <= HeapFibonacci.MAX_DEGREE; i++) {
+        for (let i = 0; i <= this.MAX_DEGREE; i++) {
             degreeArray[i] = null;
             degreeGraphic[i] = this.nextIndex++;
             indexID[i] = this.nextIndex++;
             this.cmd("CreateRectangle",
                 degreeGraphic[i],
                 " ",
-                HeapFibonacci.DEGREE_ARRAY_ELEM_WIDTH,
-                HeapFibonacci.DEGREE_ARRAY_ELEM_HEIGHT,
-                HeapFibonacci.DEGREE_ARRAY_START_X + i * HeapFibonacci.DEGREE_ARRAY_ELEM_WIDTH,
-                HeapFibonacci.INDEGREE_ARRAY_START_Y);
+                this.DEGREE_ARRAY_ELEM_WIDTH,
+                this.DEGREE_ARRAY_ELEM_HEIGHT,
+                this.DEGREE_ARRAY_START_X + i * this.DEGREE_ARRAY_ELEM_WIDTH,
+                this.INDEGREE_ARRAY_START_Y);
             this.cmd("SetNull", degreeGraphic[i], 1);
-            this.cmd("CreateLabel", indexID[i], i, HeapFibonacci.DEGREE_ARRAY_START_X + i * HeapFibonacci.DEGREE_ARRAY_ELEM_WIDTH,
-                HeapFibonacci.INDEGREE_ARRAY_START_Y - HeapFibonacci.DEGREE_ARRAY_ELEM_HEIGHT);
-            this.cmd("SetTextColor", indexID[i], HeapFibonacci.INDEX_COLOR);
+            this.cmd("CreateLabel", indexID[i], i, this.DEGREE_ARRAY_START_X + i * this.DEGREE_ARRAY_ELEM_WIDTH,
+                this.INDEGREE_ARRAY_START_Y - this.DEGREE_ARRAY_ELEM_HEIGHT);
+            this.cmd("SetTextColor", indexID[i], this.INDEX_COLOR);
         }
         let tmp = this.treeRoot;
         // When remving w/ 1 tree.this.treeRoot == null?
-        this.cmd("CreateLabel", tmpPtrID, "NextElem", this.treeRoot.x, HeapFibonacci.TMP_PTR_Y);
+        this.cmd("CreateLabel", tmpPtrID, "NextElem", this.treeRoot.x, this.TMP_PTR_Y);
         while (this.treeRoot != null) {
             tmp = this.treeRoot;
             this.cmd("Connect", tmpPtrID,
                 tmp.graphicID,
-                HeapFibonacci.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0, // Curve
                 1, // Directed
                 ""); // Label
             this.cmd("Connect", tmpPtrID,
                 tmp.internalGraphicID,
-                HeapFibonacci.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0, // Curve
                 1, // Directed
                 ""); // Label
@@ -552,18 +552,18 @@ class HeapFibonacci extends Algorithm {
                 tmp = this.combineTrees(tmp, tmp2);
                 this.cmd("Connect", tmpPtrID,
                     tmp.graphicID,
-                    HeapFibonacci.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     1, // Directed
                     ""); // Label
                 this.cmd("Connect", tmpPtrID,
                     tmp.internalGraphicID,
-                    HeapFibonacci.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     1, // Directed
                     ""); // Label
                 this.SetAllTreePositions(this.treeRoot, degreeArray, tmp);
-                this.cmd("Move", tmpPtrID, tmp.x, HeapFibonacci.TMP_PTR_Y);
+                this.cmd("Move", tmpPtrID, tmp.x, this.TMP_PTR_Y);
                 this.MoveAllTrees(this.treeRoot, degreeArray, tmp);
             }
             this.cmd("Disconnect", tmpPtrID, tmp.graphicID);
@@ -573,13 +573,13 @@ class HeapFibonacci extends Algorithm {
             this.cmd("SetNull", degreeGraphic[tmp.degree], 0);
             this.cmd("Connect", degreeGraphic[tmp.degree],
                 tmp.graphicID,
-                HeapFibonacci.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0, // Curve
                 1, // Directed
                 ""); // Label
             this.cmd("Connect", degreeGraphic[tmp.degree],
                 tmp.internalGraphicID,
-                HeapFibonacci.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0, // Curve
                 1, // Directed
                 ""); // Label
@@ -588,7 +588,7 @@ class HeapFibonacci extends Algorithm {
             this.MoveAllTrees(this.treeRoot, degreeArray);
         }
         this.minElement = null;
-        for (let i = HeapFibonacci.MAX_DEGREE; i >= 0; i--) {
+        for (let i = this.MAX_DEGREE; i >= 0; i--) {
             if (degreeArray[i] != null) {
                 degreeArray[i].rightSib = this.treeRoot;
                 if (this.minElement == null || this.compare(this.minElement.data, degreeArray[i].data) > 0) {
@@ -598,13 +598,13 @@ class HeapFibonacci extends Algorithm {
                 if (this.treeRoot.rightSib != null) {
                     this.cmd("Connect", this.treeRoot.internalGraphicID,
                         this.treeRoot.rightSib.internalGraphicID,
-                        HeapFibonacci.FOREGROUND_COLOR,
+                        this.FOREGROUND_COLOR,
                         0.15, // Curve
                         1, // Directed
                         ""); // Label
                     this.cmd("Connect", this.treeRoot.rightSib.internalGraphicID,
                         this.treeRoot.internalGraphicID,
-                        HeapFibonacci.FOREGROUND_COLOR,
+                        this.FOREGROUND_COLOR,
                         0.15, // Curve
                         1, // Directed
                         ""); // Label
@@ -615,16 +615,16 @@ class HeapFibonacci extends Algorithm {
             this.cmd("Delete", indexID[i]);
         }
         if (this.minElement != null) {
-            this.cmd("CreateLabel", this.minID, "Min element", this.minElement.x, HeapFibonacci.TMP_PTR_Y);
+            this.cmd("CreateLabel", this.minID, "Min element", this.minElement.x, this.TMP_PTR_Y);
             this.cmd("Connect", this.minID,
                 this.minElement.graphicID,
-                HeapFibonacci.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0, // Curve
                 1, // Directed
                 ""); // Label
             this.cmd("Connect", this.minID,
                 this.minElement.internalGraphicID,
-                HeapFibonacci.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0, // Curve
                 1, // Directed
                 ""); // Label
@@ -648,16 +648,16 @@ class HeapFibonacci extends Algorithm {
     }
 
     SetAllTreePositions(tree, treeList, tree2) {
-        let leftSize = HeapFibonacci.STARTING_X;
+        let leftSize = this.STARTING_X;
         if (tree2 != null) {
-            leftSize = this.setPositions(tree2, leftSize, HeapFibonacci.STARTING_Y); //  +FibonacciHeap.NODE_WIDTH;
+            leftSize = this.setPositions(tree2, leftSize, this.STARTING_Y); //  + this.NODE_WIDTH;
         }
         if (tree != null) {
-            leftSize = this.setPositions(tree, leftSize, HeapFibonacci.STARTING_Y); // + FibonacciHeap.NODE_WIDTH;
+            leftSize = this.setPositions(tree, leftSize, this.STARTING_Y); // + this.NODE_WIDTH;
         }
         for (let i = 0; i < treeList.length; i++) {
             if (treeList[i] != null) {
-                leftSize = this.setPositions(treeList[i], leftSize, HeapFibonacci.STARTING_Y); // + FibonacciHeap.NODE_WIDTH;
+                leftSize = this.setPositions(treeList[i], leftSize, this.STARTING_Y); // + this.NODE_WIDTH;
             }
         }
     }
@@ -680,13 +680,13 @@ class HeapFibonacci extends Algorithm {
             this.cmd("Disconnect", tree1.internalGraphicID, tree1.leftChild.rightSib.internalGraphicID);
             this.cmd("Connect", tree1.leftChild.internalGraphicID,
                 tree1.leftChild.rightSib.internalGraphicID,
-                HeapFibonacci.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0.3, // Curve
                 1, // Directed
                 ""); // Label
             this.cmd("Connect", tree1.leftChild.rightSib.internalGraphicID,
                 tree1.leftChild.internalGraphicID,
-                HeapFibonacci.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0.3, // Curve
                 1, // Directed
                 ""); // Label
@@ -694,14 +694,14 @@ class HeapFibonacci extends Algorithm {
 
         this.cmd("Connect", tree1.internalGraphicID,
             tree1.leftChild.internalGraphicID,
-            HeapFibonacci.FOREGROUND_COLOR,
+            this.FOREGROUND_COLOR,
             0.15, // Curve
             1, // Directed
             ""); // Label
 
         this.cmd("Connect", tree1.leftChild.internalGraphicID,
             tree1.internalGraphicID,
-            HeapFibonacci.FOREGROUND_COLOR,
+            this.FOREGROUND_COLOR,
             0.0, // Curve
             1, // Directed
             ""); // Label
@@ -709,7 +709,7 @@ class HeapFibonacci extends Algorithm {
         this.cmd("SetText", tree1.degreeID, tree1.degree);
         this.cmd("Connect", tree1.graphicID,
             tree2.graphicID,
-            HeapFibonacci.FOREGROUND_COLOR,
+            this.FOREGROUND_COLOR,
             0, // Curve
             0, // Directed
             ""); // Label

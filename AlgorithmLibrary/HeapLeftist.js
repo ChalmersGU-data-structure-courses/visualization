@@ -36,8 +36,8 @@ class LeftistHeapNode {
         this.data = val;
         this.x = (initialX == null) ? 0 : initialX;
         this.y = (initialY == null) ? 0 : initialY;
-        this.npX = initialX - HeapLeftist.NPL_OFFSET_X;
-        this.npY = initialY - HeapLeftist.NPL_OFFSET_Y;
+        this.npX = initialX - this.NPL_OFFSET_X;
+        this.npY = initialY - this.NPL_OFFSET_Y;
 
         this.graphicID = id;
         this.nplID = nplID;
@@ -62,27 +62,27 @@ class LeftistHeapNode {
 
 
 class HeapLeftist extends Algorithm {
-    static LINK_COLOR = "#007700";
-    static HIGHLIGHT_CIRCLE_COLOR = "#007700";
-    static FOREGROUND_COLOR = "#007700";
-    static BACKGROUND_COLOR = "#EEFFEE";
+    LINK_COLOR = "#007700";
+    HIGHLIGHT_CIRCLE_COLOR = "#007700";
+    FOREGROUND_COLOR = "#007700";
+    BACKGROUND_COLOR = "#EEFFEE";
 
-    static WIDTH_DELTA = 50;
-    static HEIGHT_DELTA = 50;
-    static STARTING_Y = 85;
+    WIDTH_DELTA = 50;
+    HEIGHT_DELTA = 50;
+    STARTING_Y = 85;
 
-    static INSERT_X = 50;
-    static INSERT_Y = 45;
-    static BACKGROUND_ALPHA = 0.5;
+    INSERT_X = 50;
+    INSERT_Y = 45;
+    BACKGROUND_ALPHA = 0.5;
 
-    static MESSAGE_X = 20;
-    static MESSAGE_Y = 10;
+    MESSAGE_X = 20;
+    MESSAGE_Y = 10;
 
-    static NPL_OFFSET_X = 20;
-    static NPL_OFFSET_Y = 20;
-    static NPL_COLOR = "#0000FF";
+    NPL_OFFSET_X = 20;
+    NPL_OFFSET_Y = 20;
+    NPL_COLOR = "#0000FF";
 
-    static MESSAGE_ID = 0;
+    MESSAGE_ID = 0;
 
     constructor(am) {
         super();
@@ -97,7 +97,7 @@ class HeapLeftist extends Algorithm {
         this.animationManager.setAllLayers([0, 1]);
         this.nextIndex = 1;
         this.commands = [];
-        this.cmd("CreateLabel", 0, "", HeapLeftist.MESSAGE_X, HeapLeftist.MESSAGE_Y, 0);
+        this.cmd("CreateLabel", 0, "", this.MESSAGE_X, this.MESSAGE_Y, 0);
         this.animationManager.StartNewAnimation(this.commands);
         this.animationManager.skipForward();
         this.animationManager.clearHistory();
@@ -176,7 +176,7 @@ class HeapLeftist extends Algorithm {
             this.highlightLeft = this.nextIndex++;
             this.highlightRight = this.nextIndex++;
 
-            this.cmd("SetText", HeapLeftist.MESSAGE_ID, "Remove root element, leaving two subtrees");
+            this.cmd("SetText", this.MESSAGE_ID, "Remove root element, leaving two subtrees");
             if (this.treeRoot.left != null) {
                 this.cmd("Disconnect", this.treeRoot.graphicID, this.treeRoot.left.graphicID);
             }
@@ -185,9 +185,9 @@ class HeapLeftist extends Algorithm {
             }
             const oldElem = this.treeRoot.graphicID;
             this.cmd("Delete", this.treeRoot.nplID);
-            this.cmd("Move", this.treeRoot.graphicID, HeapLeftist.INSERT_X, HeapLeftist.INSERT_Y);
+            this.cmd("Move", this.treeRoot.graphicID, this.INSERT_X, this.INSERT_Y);
             this.cmd("Step");
-            this.cmd("SetText", HeapLeftist.MESSAGE_ID, "Merge the two subtrees");
+            this.cmd("SetText", this.MESSAGE_ID, "Merge the two subtrees");
 
             if (this.treeRoot.left == null) {
                 this.treeRoot = null;
@@ -200,15 +200,15 @@ class HeapLeftist extends Algorithm {
                 this.treeRoot = this.treeRoot.left;
                 this.resizeTrees();
                 // this.secondaryRoot = null;
-                this.cmd("CreateHighlightCircle", this.highlightLeft, HeapLeftist.HIGHLIGHT_CIRCLE_COLOR, this.treeRoot.x, this.treeRoot.y);
+                this.cmd("CreateHighlightCircle", this.highlightLeft, this.HIGHLIGHT_CIRCLE_COLOR, this.treeRoot.x, this.treeRoot.y);
 
-                this.cmd("CreateHighlightCircle", this.highlightRight, HeapLeftist.HIGHLIGHT_CIRCLE_COLOR, secondTree.x, secondTree.y);
+                this.cmd("CreateHighlightCircle", this.highlightRight, this.HIGHLIGHT_CIRCLE_COLOR, secondTree.x, secondTree.y);
                 this.treeRoot = this.merge(this.treeRoot, secondTree);
                 this.secondaryRoot = null;
             }
             this.resizeTrees();
             this.cmd("Delete", oldElem);
-            this.cmd("SetText", HeapLeftist.MESSAGE_ID, "");
+            this.cmd("SetText", this.MESSAGE_ID, "");
         }
         // Clear for real
         return this.commands;
@@ -216,22 +216,22 @@ class HeapLeftist extends Algorithm {
 
     insertElement(insertedValue) {
         this.commands = [];
-        this.cmd("SetText", HeapLeftist.MESSAGE_ID, "Create a heap with one node, merge with existing heap.");
+        this.cmd("SetText", this.MESSAGE_ID, "Create a heap with one node, merge with existing heap.");
 
-        this.secondaryRoot = new LeftistHeapNode(insertedValue, this.nextIndex++, this.nextIndex++, HeapLeftist.INSERT_X, HeapLeftist.INSERT_Y);
+        this.secondaryRoot = new LeftistHeapNode(insertedValue, this.nextIndex++, this.nextIndex++, this.INSERT_X, this.INSERT_Y);
         this.cmd("CreateCircle", this.secondaryRoot.graphicID, insertedValue, this.secondaryRoot.x, this.secondaryRoot.y);
-        this.cmd("CreateLabel", this.secondaryRoot.nplID, 0, HeapLeftist.INSERT_X - HeapLeftist.NPL_OFFSET_X, HeapLeftist.INSERT_Y - HeapLeftist.NPL_OFFSET_Y);
-        this.cmd("SetForegroundColor", this.secondaryRoot.nplID, HeapLeftist.NPL_COLOR);
+        this.cmd("CreateLabel", this.secondaryRoot.nplID, 0, this.INSERT_X - this.NPL_OFFSET_X, this.INSERT_Y - this.NPL_OFFSET_Y);
+        this.cmd("SetForegroundColor", this.secondaryRoot.nplID, this.NPL_COLOR);
         this.cmd("SetLayer", this.secondaryRoot.nplID, 1);
-        this.cmd("SetForegroundColor", this.secondaryRoot.graphicID, HeapLeftist.FOREGROUND_COLOR);
-        this.cmd("SetBackgroundColor", this.secondaryRoot.graphicID, HeapLeftist.BACKGROUND_COLOR);
+        this.cmd("SetForegroundColor", this.secondaryRoot.graphicID, this.FOREGROUND_COLOR);
+        this.cmd("SetBackgroundColor", this.secondaryRoot.graphicID, this.BACKGROUND_COLOR);
 
         if (this.treeRoot != null) {
             this.resizeTrees();
             this.highlightLeft = this.nextIndex++;
             this.highlightRight = this.nextIndex++;
-            this.cmd("CreateHighlightCircle", this.highlightLeft, HeapLeftist.HIGHLIGHT_CIRCLE_COLOR, this.treeRoot.x, this.treeRoot.y);
-            this.cmd("CreateHighlightCircle", this.highlightRight, HeapLeftist.HIGHLIGHT_CIRCLE_COLOR, this.secondaryRoot.x, this.secondaryRoot.y);
+            this.cmd("CreateHighlightCircle", this.highlightLeft, this.HIGHLIGHT_CIRCLE_COLOR, this.treeRoot.x, this.treeRoot.y);
+            this.cmd("CreateHighlightCircle", this.highlightRight, this.HIGHLIGHT_CIRCLE_COLOR, this.secondaryRoot.x, this.secondaryRoot.y);
 
             const rightTree = this.secondaryRoot;
             this.secondaryRoot = null;
@@ -242,20 +242,20 @@ class HeapLeftist extends Algorithm {
             this.secondaryRoot = null;
             this.resizeTrees();
         }
-        this.cmd("SetText", HeapLeftist.MESSAGE_ID, "");
+        this.cmd("SetText", this.MESSAGE_ID, "");
         return this.commands;
     }
 
     merge(tree1, tree2) {
         if (tree1 == null) {
-            this.cmd("SetText", HeapLeftist.MESSAGE_ID, "Merging right heap with empty heap, return right heap");
+            this.cmd("SetText", this.MESSAGE_ID, "Merging right heap with empty heap, return right heap");
             this.cmd("Step");
             this.cmd("Delete", this.highlightRight);
             this.cmd("Delete", this.highlightLeft);
             return tree2;
         }
         if (tree2 == null) {
-            this.cmd("SetText", HeapLeftist.MESSAGE_ID, "Merging left heap with empty heap, return left heap");
+            this.cmd("SetText", this.MESSAGE_ID, "Merging left heap with empty heap, return left heap");
             this.cmd("Step");
             this.cmd("Delete", this.highlightRight);
             this.cmd("Delete", this.highlightLeft);
@@ -265,7 +265,7 @@ class HeapLeftist extends Algorithm {
         this.cmd("SetHighlight", tree1.graphicID, 1);
         this.cmd("SetHighlight", tree2.graphicID, 1);
         if (this.compare(tree2.data, tree1.data) < 0) {
-            this.cmd("SetText", HeapLeftist.MESSAGE_ID, "Min element is in right heap.  Recursively merge right subtree of right heap with left heap");
+            this.cmd("SetText", this.MESSAGE_ID, "Min element is in right heap.  Recursively merge right subtree of right heap with left heap");
             const tmp = tree1;
             tree1 = tree2;
             tree2 = tmp;
@@ -273,26 +273,26 @@ class HeapLeftist extends Algorithm {
             this.highlightRight = this.highlightLeft;
             this.highlightLeft = tmpR;
         } else {
-            this.cmd("SetText", HeapLeftist.MESSAGE_ID, "Min element is in left heap.  Recursively merge right subtree of left heap with right heap");
+            this.cmd("SetText", this.MESSAGE_ID, "Min element is in left heap.  Recursively merge right subtree of left heap with right heap");
         }
         this.cmd("Step");
         this.cmd("SetHighlight", tree1.graphicID, 0);
         this.cmd("SetHighlight", tree2.graphicID, 0);
         if (tree1.right == null) {
-            this.cmd("Move", this.highlightLeft, tree1.x + HeapLeftist.WIDTH_DELTA / 2, tree1.y + HeapLeftist.HEIGHT_DELTA);
+            this.cmd("Move", this.highlightLeft, tree1.x + this.WIDTH_DELTA / 2, tree1.y + this.HEIGHT_DELTA);
         } else {
             this.cmd("Move", this.highlightLeft, tree1.right.x, tree1.right.y);
         }
         this.cmd("Step");
         if (tree1.right != null) {
-            this.cmd("Disconnect", tree1.graphicID, tree1.right.graphicID, HeapLeftist.LINK_COLOR);
+            this.cmd("Disconnect", tree1.graphicID, tree1.right.graphicID, this.LINK_COLOR);
         }
         const next = tree1.right;
-        this.cmd("SetAlpha", tree1.graphicID, HeapLeftist.BACKGROUND_ALPHA);
-        this.cmd("SetAlpha", tree1.nplID, HeapLeftist.BACKGROUND_ALPHA);
+        this.cmd("SetAlpha", tree1.graphicID, this.BACKGROUND_ALPHA);
+        this.cmd("SetAlpha", tree1.nplID, this.BACKGROUND_ALPHA);
         if (tree1.left != null) {
-            this.cmd("SetEdgeAlpha", tree1.graphicID, tree1.left.graphicID, HeapLeftist.BACKGROUND_ALPHA);
-            this.setTreeAlpha(tree1.left, HeapLeftist.BACKGROUND_ALPHA);
+            this.cmd("SetEdgeAlpha", tree1.graphicID, tree1.left.graphicID, this.BACKGROUND_ALPHA);
+            this.setTreeAlpha(tree1.left, this.BACKGROUND_ALPHA);
         }
         this.cmd("Step");
         tree1.right = this.merge(next, tree2);
@@ -306,9 +306,9 @@ class HeapLeftist extends Algorithm {
             tree1.right.disconnectFromParent();
         }
         tree1.right.parent = tree1;
-        this.cmd("SetText", HeapLeftist.MESSAGE_ID, "Reconnecting tree after merge");
+        this.cmd("SetText", this.MESSAGE_ID, "Reconnecting tree after merge");
 
-        this.cmd("Connect", tree1.graphicID, tree1.right.graphicID, HeapLeftist.LINK_COLOR);
+        this.cmd("Connect", tree1.graphicID, tree1.right.graphicID, this.LINK_COLOR);
         this.cmd("SetAlpha", tree1.graphicID, 1);
         this.cmd("SetAlpha", tree1.nplID, 1);
 
@@ -321,7 +321,7 @@ class HeapLeftist extends Algorithm {
 
         if (tree1.left == null || (tree1.left.npl < tree1.right.npl)) {
             this.cmd("SetHighlight", tree1.graphicID, 1);
-            this.cmd("SetText", HeapLeftist.MESSAGE_ID, "Right subtree has larger Null Path Length than left subtree.  Swapping ...");
+            this.cmd("SetText", this.MESSAGE_ID, "Right subtree has larger Null Path Length than left subtree.  Swapping ...");
             this.cmd("Step");
             this.cmd("SetHighlight", tree1.graphicID, 0);
             const tmp = tree1.left;
@@ -330,7 +330,7 @@ class HeapLeftist extends Algorithm {
             this.resizeTrees();
         } else {
             this.cmd("SetHighlight", tree1.graphicID, 1);
-            this.cmd("SetText", HeapLeftist.MESSAGE_ID, "Left subtree has Null Path Length at least as large as right subtree.  No swap required ...");
+            this.cmd("SetText", this.MESSAGE_ID, "Left subtree has Null Path Length at least as large as right subtree.  No swap required ...");
             this.cmd("Step");
             this.cmd("SetHighlight", tree1.graphicID, 0);
         }
@@ -363,8 +363,8 @@ class HeapLeftist extends Algorithm {
         if (tree == null) {
             return 0;
         }
-        tree.leftWidth = Math.max(this.resizeWidths(tree.left), HeapLeftist.WIDTH_DELTA / 2);
-        tree.rightWidth = Math.max(this.resizeWidths(tree.right), HeapLeftist.WIDTH_DELTA / 2);
+        tree.leftWidth = Math.max(this.resizeWidths(tree.left), this.WIDTH_DELTA / 2);
+        tree.rightWidth = Math.max(this.resizeWidths(tree.right), this.WIDTH_DELTA / 2);
         return tree.leftWidth + tree.rightWidth;
     }
 
@@ -374,18 +374,18 @@ class HeapLeftist extends Algorithm {
 
         if (this.treeRoot != null) {
             const startingPoint = this.treeRoot.leftWidth;
-            this.setNewPositions(this.treeRoot, startingPoint, HeapLeftist.STARTING_Y, 0);
+            this.setNewPositions(this.treeRoot, startingPoint, this.STARTING_Y, 0);
             this.animateNewPositions(this.treeRoot);
             if (this.secondaryRoot != null) {
                 const secondTreeStart = this.treeRoot.leftWidth + this.treeRoot.rightWidth + this.secondaryRoot.leftWidth + 50;
-                this.setNewPositions(this.secondaryRoot, secondTreeStart, HeapLeftist.STARTING_Y, 0);
+                this.setNewPositions(this.secondaryRoot, secondTreeStart, this.STARTING_Y, 0);
                 this.animateNewPositions(this.secondaryRoot);
             }
 
             this.cmd("Step");
         } else if (this.secondaryRoot != null) {
             const startingPoint = this.secondaryRoot.leftWidth;
-            this.setNewPositions(this.secondaryRoot, startingPoint, HeapLeftist.STARTING_Y, 0);
+            this.setNewPositions(this.secondaryRoot, startingPoint, this.STARTING_Y, 0);
             this.animateNewPositions(this.secondaryRoot);
         }
     }
@@ -395,18 +395,18 @@ class HeapLeftist extends Algorithm {
             tree.y = yPosition;
             if (side === -1) {
                 xPosition = xPosition - tree.rightWidth;
-                tree.npX = xPosition - HeapLeftist.NPL_OFFSET_X;
+                tree.npX = xPosition - this.NPL_OFFSET_X;
             } else if (side === 1) {
                 xPosition = xPosition + tree.leftWidth;
-                tree.npX = xPosition + HeapLeftist.NPL_OFFSET_X;
+                tree.npX = xPosition + this.NPL_OFFSET_X;
             } else {
-                tree.heightLabelX = xPosition - HeapLeftist.NPL_OFFSET_Y;
-                tree.npX = xPosition + HeapLeftist.NPL_OFFSET_X;
+                tree.heightLabelX = xPosition - this.NPL_OFFSET_Y;
+                tree.npX = xPosition + this.NPL_OFFSET_X;
             }
             tree.x = xPosition;
-            tree.npY = tree.y - HeapLeftist.NPL_OFFSET_Y;
-            this.setNewPositions(tree.left, xPosition, yPosition + HeapLeftist.HEIGHT_DELTA, -1);
-            this.setNewPositions(tree.right, xPosition, yPosition + HeapLeftist.HEIGHT_DELTA, 1);
+            tree.npY = tree.y - this.NPL_OFFSET_Y;
+            this.setNewPositions(tree.left, xPosition, yPosition + this.HEIGHT_DELTA, -1);
+            this.setNewPositions(tree.right, xPosition, yPosition + this.HEIGHT_DELTA, 1);
         }
     }
 

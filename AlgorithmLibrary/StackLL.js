@@ -32,8 +32,8 @@
 
 
 class StackLL extends Algorithm {
-    static SIZE = 32;
-    static ELEM_SPACING = 1.5;
+    SIZE = 32;
+    ELEM_SPACING = 1.5;
 
     constructor(am) {
         super();
@@ -110,7 +110,7 @@ class StackLL extends Algorithm {
         let x = 1.5 * this.getElemWidth();
         let y = 4.5 * this.getElemHeight();
         for (let k = 0; k < i; k++) {
-            x += this.getElemWidth() * StackLL.ELEM_SPACING;
+            x += this.getElemWidth() * this.ELEM_SPACING;
             if (x + this.getElemWidth() > this.getCanvasWidth()) {
                 x = 1.5 * this.getElemWidth();
                 y += 2.5 * this.getElemHeight();
@@ -122,8 +122,8 @@ class StackLL extends Algorithm {
     getElemWidth() {
         let nrows = 1;
         while (true) {
-            const w = nrows * this.getCanvasWidth() / (StackLL.SIZE + 2 * nrows);
-            if (w >= 100) return w / StackLL.ELEM_SPACING;
+            const w = nrows * this.getCanvasWidth() / (this.SIZE + 2 * nrows);
+            if (w >= 100) return w / this.ELEM_SPACING;
             nrows++;
         }
     }

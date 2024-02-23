@@ -45,42 +45,42 @@ class ActivationRecord {
 
 
 class Recursive extends Algorithm {
-    static CODE_START_X = 10;
-    static CODE_START_Y = 10;
-    static CODE_LINE_HEIGHT = 14;
+    CODE_START_X = 10;
+    CODE_START_Y = 10;
+    CODE_LINE_HEIGHT = 14;
 
-    static RECURSIVE_START_X = 20;
-    static RECURSIVE_START_Y = 120;
-    static RECURSIVE_DELTA_Y = 14;
-    static RECURSIVE_DELTA_X = 15;
-    static CODE_HIGHLIGHT_COLOR = "#FF0000";
-    static CODE_STANDARD_COLOR = "#000000";
+    RECURSIVE_START_X = 20;
+    RECURSIVE_START_Y = 120;
+    RECURSIVE_DELTA_Y = 14;
+    RECURSIVE_DELTA_X = 15;
+    CODE_HIGHLIGHT_COLOR = "#FF0000";
+    CODE_STANDARD_COLOR = "#000000";
 
-    static TABLE_INDEX_COLOR = "#0000FF";
-    static CODE_RECURSIVE_1_COLOR = "#339933";
-    static CODE_RECURSIVE_2_COLOR = "#0099FF";
+    TABLE_INDEX_COLOR = "#0000FF";
+    CODE_RECURSIVE_1_COLOR = "#339933";
+    CODE_RECURSIVE_2_COLOR = "#0099FF";
 
-    static ACTIVATION_RECORD_WIDTH = 100;
-    static ACTIVATION_RECORD_HEIGHT = 20;
+    ACTIVATION_RECORD_WIDTH = 100;
+    ACTIVATION_RECORD_HEIGHT = 20;
 
-    static ACTIVATION_RECORD_SPACING = 2 * Recursive.ACTIVATION_RECORD_WIDTH + 10;
+    ACTIVATION_RECORD_SPACING = 2 * this.ACTIVATION_RECORD_WIDTH + 10;
 
-    static SEPARATING_LINE_COLOR = "#0000FF";
+    SEPARATING_LINE_COLOR = "#0000FF";
 
     init(am) {
         super.init(am);
     }
 
     addCodeToCanvas(code) {
-        this.codeID = this.addCodeToCanvasBase(code, Recursive.CODE_START_X, Recursive.CODE_START_Y, Recursive.CODE_LINE_HEIGHT, Recursive.CODE_STANDARD_COLOR);
+        this.codeID = this.addCodeToCanvasBase(code, this.CODE_START_X, this.CODE_START_Y, this.CODE_LINE_HEIGHT, this.CODE_STANDARD_COLOR);
         /*  this.codeID = new Array(this.code.length);
             var i, j;
             for (let i = 0; i < code.length; i++) {
                 this.codeID[i] = new Array(code[i].length);
                 for (let j = 0; j < code[i].length; j++) {
                     this.codeID[i][j] = this.nextIndex++;
-                    this.cmd("CreateLabel", this.codeID[i][j], code[i][j], Recursive.CODE_START_X, Recursive.CODE_START_Y + i * Recursive.CODE_LINE_HEIGHT, 0);
-                    this.cmd("SetForegroundColor", this.codeID[i][j], Recursive.CODE_STANDARD_COLOR);
+                    this.cmd("CreateLabel", this.codeID[i][j], code[i][j], this.CODE_START_X, this.CODE_START_Y + i * this.CODE_LINE_HEIGHT, 0);
+                    this.cmd("SetForegroundColor", this.codeID[i][j], this.CODE_STANDARD_COLOR);
                     if (j > 0) {
                         this.cmd("AlignRight", this.codeID[i][j], this.codeID[i][j-1]);
                     }
@@ -121,10 +121,10 @@ class Recursive extends Algorithm {
 
             this.cmd("CreateRectangle", valueID,
                 "",
-                Recursive.ACTIVATION_RECORD_WIDTH,
-                Recursive.ACTIVATION_RECORD_HEIGHT,
+                this.ACTIVATION_RECORD_WIDTH,
+                this.ACTIVATION_RECORD_HEIGHT,
                 x,
-                y + i * Recursive.ACTIVATION_RECORD_HEIGHT);
+                y + i * this.ACTIVATION_RECORD_HEIGHT);
 
             const labelID = this.nextIndex++;
             activationRec.labelIDs[i] = labelID;
@@ -137,26 +137,26 @@ class Recursive extends Algorithm {
         }
         activationRec.separatingLineID = this.nextIndex++;
         this.cmd("CreateLabel", activationRec.nameID, `   ${functionName}   `);
-        this.cmd("SetForegroundColor", activationRec.nameID, Recursive.SEPARATING_LINE_COLOR);
+        this.cmd("SetForegroundColor", activationRec.nameID, this.SEPARATING_LINE_COLOR);
 
         if (labelsOnLeft) {
             this.cmd("CreateRectangle", activationRec.separatingLineID,
                 "",
-                Recursive.ACTIVATION_RECORD_WIDTH * 2,
+                this.ACTIVATION_RECORD_WIDTH * 2,
                 1,
-                x - Recursive.ACTIVATION_RECORD_WIDTH / 2,
-                y - Recursive.ACTIVATION_RECORD_HEIGHT / 2);
+                x - this.ACTIVATION_RECORD_WIDTH / 2,
+                y - this.ACTIVATION_RECORD_HEIGHT / 2);
             this.cmd("AlignLeft", activationRec.nameID, activationRec.labelIDs[0]);
         } else {
             this.cmd("CreateRectangle", activationRec.separatingLineID,
                 "",
-                Recursive.ACTIVATION_RECORD_WIDTH * 2,
+                this.ACTIVATION_RECORD_WIDTH * 2,
                 1,
-                x + Recursive.ACTIVATION_RECORD_WIDTH / 2,
-                y - Recursive.ACTIVATION_RECORD_HEIGHT / 2);
+                x + this.ACTIVATION_RECORD_WIDTH / 2,
+                y - this.ACTIVATION_RECORD_HEIGHT / 2);
             this.cmd("AlignRight", activationRec.nameID, activationRec.labelIDs[0]);
         }
-        this.cmd("SetForegroundColor", activationRec.separatingLineID, Recursive.SEPARATING_LINE_COLOR);
+        this.cmd("SetForegroundColor", activationRec.separatingLineID, this.SEPARATING_LINE_COLOR);
         return activationRec;
     }
 }

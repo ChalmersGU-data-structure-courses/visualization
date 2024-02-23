@@ -32,9 +32,9 @@
 
 
 class AnimatedBTreeNode extends AnimatedObject {
-    static MIN_WIDTH = 10;
-    static CORNER_RADIUS = 10;
-    static EDGE_POINTER_DISPLACEMENT = 5;
+    MIN_WIDTH = 10;
+    CORNER_RADIUS = 10;
+    EDGE_POINTER_DISPLACEMENT = 5;
 
     widthPerElement;
     nodeHeight;
@@ -64,7 +64,7 @@ class AnimatedBTreeNode extends AnimatedObject {
         if (this.numLabels > 0) {
             return this.widthPerElement * this.numLabels;
         } else {
-            return AnimatedBTreeNode.MIN_WIDTH;
+            return this.MIN_WIDTH;
         }
     }
 
@@ -94,9 +94,9 @@ class AnimatedBTreeNode extends AnimatedObject {
 
     getTailPointerAttachPos(fromX, fromY, anchor) {
         if (anchor === 0) {
-            return [this.left() + AnimatedBTreeNode.EDGE_POINTER_DISPLACEMENT, this.y];
+            return [this.left() + this.EDGE_POINTER_DISPLACEMENT, this.y];
         } else if (anchor === this.numLabels) {
-            return [this.right() - AnimatedBTreeNode.EDGE_POINTER_DISPLACEMENT, this.y];
+            return [this.right() - this.EDGE_POINTER_DISPLACEMENT, this.y];
         } else {
             return [this.left() + anchor * this.widthPerElement, this.y];
         }
@@ -142,7 +142,7 @@ class AnimatedBTreeNode extends AnimatedObject {
 
         ctx.fillStyle = this.backgroundColor;
         ctx.beginPath();
-        ctx.roundRect(x, y, w, h, AnimatedBTreeNode.CORNER_RADIUS);
+        ctx.roundRect(x, y, w, h, this.CORNER_RADIUS);
         ctx.fill();
 
         ctx.textAlign = "center";
@@ -168,7 +168,7 @@ class AnimatedBTreeNode extends AnimatedObject {
             ctx.lineWidth = this.highlightDiff;
         }
         ctx.beginPath();
-        ctx.roundRect(this.left(), this.top(), this.getWidth(), this.getHeight(), AnimatedBTreeNode.CORNER_RADIUS);
+        ctx.roundRect(this.left(), this.top(), this.getWidth(), this.getHeight(), this.CORNER_RADIUS);
         ctx.stroke();
     }
 

@@ -32,45 +32,45 @@
 
 
 class GraphCC extends Graph {
-    static AUX_ARRAY_WIDTH = 25;
-    static AUX_ARRAY_HEIGHT = 25;
-    static AUX_ARRAY_START_Y = 100;
+    AUX_ARRAY_WIDTH = 25;
+    AUX_ARRAY_HEIGHT = 25;
+    AUX_ARRAY_START_Y = 100;
 
-    static VISITED_START_X = 475;
-    static PARENT_START_X = 400;
+    VISITED_START_X = 475;
+    PARENT_START_X = 400;
 
-    static D_X_POS_SMALL = [760, 685, 915, 610, 910, 685, 915, 760];
-    static F_X_POS_SMALL = [760, 685, 915, 610, 910, 685, 915, 760];
+    D_X_POS_SMALL = [760, 685, 915, 610, 910, 685, 915, 760];
+    F_X_POS_SMALL = [760, 685, 915, 610, 910, 685, 915, 760];
 
-    static D_Y_POS_SMALL = [18, 118, 118, 218, 218, 318, 318, 418];
-    static F_Y_POS_SMALL = [32, 132, 132, 232, 232, 332, 332, 432];
+    D_Y_POS_SMALL = [18, 118, 118, 218, 218, 318, 318, 418];
+    F_Y_POS_SMALL = [32, 132, 132, 232, 232, 332, 332, 432];
 
-    static D_X_POS_LARGE = [560, 660, 760, 860,
+    D_X_POS_LARGE = [560, 660, 760, 860,
         610, 710, 810,
         560, 660, 760, 860,
         610, 710, 810,
         560, 660, 760, 860];
 
-    static F_X_POS_LARGE = [560, 660, 760, 860,
+    F_X_POS_LARGE = [560, 660, 760, 860,
         610, 710, 810,
         560, 660, 760, 860,
         610, 710, 810,
         560, 660, 760, 860];
 
-    static D_Y_POS_LARGE = [37, 37, 37, 37,
+    D_Y_POS_LARGE = [37, 37, 37, 37,
         137, 137, 137,
         237, 237, 237, 237,
         337, 337, 337,
         437, 437, 437, 437];
 
-    static F_Y_POS_LARGE = [62, 62, 62, 62,
+    F_Y_POS_LARGE = [62, 62, 62, 62,
         162, 162, 162,
         262, 262, 262, 262,
         362, 362, 362,
         462, 462, 462, 462];
 
-    static HIGHLIGHT_CIRCLE_COLOR = "#000000";
-    static DFS_TREE_COLOR = "#0000FF";
+    HIGHLIGHT_CIRCLE_COLOR = "#000000";
+    DFS_TREE_COLOR = "#0000FF";
 
     constructor(am) {
         super();
@@ -164,12 +164,12 @@ class GraphCC extends Graph {
 
         for (let vertex = 0; vertex < this.size; vertex++) {
             if (!this.visited[vertex]) {
-                this.cmd("CreateHighlightCircle", this.highlightCircleL, GraphCC.HIGHLIGHT_CIRCLE_COLOR, this.xPosLogical[vertex], this.yPosLogical[vertex]);
+                this.cmd("CreateHighlightCircle", this.highlightCircleL, this.HIGHLIGHT_CIRCLE_COLOR, this.xPosLogical[vertex], this.yPosLogical[vertex]);
                 this.cmd("SetLayer", this.highlightCircleL, 1);
-                this.cmd("CreateHighlightCircle", this.highlightCircleAL, GraphCC.HIGHLIGHT_CIRCLE_COLOR, this.adjListXStart - this.adjListWidth, this.adjListYStart + vertex * this.adjListHeight);
+                this.cmd("CreateHighlightCircle", this.highlightCircleAL, this.HIGHLIGHT_CIRCLE_COLOR, this.adjListXStart - this.adjListWidth, this.adjListYStart + vertex * this.adjListHeight);
                 this.cmd("SetLayer", this.highlightCircleAL, 2);
 
-                this.cmd("CreateHighlightCircle", this.highlightCircleAM, GraphCC.HIGHLIGHT_CIRCLE_COLOR, this.adjMatrixXStart - this.adjMatrixWidth, this.adjMatrixYStart + vertex * this.adjMatrixHeight);
+                this.cmd("CreateHighlightCircle", this.highlightCircleAM, this.HIGHLIGHT_CIRCLE_COLOR, this.adjMatrixXStart - this.adjMatrixWidth, this.adjMatrixYStart + vertex * this.adjMatrixHeight);
                 this.cmd("SetLayer", this.highlightCircleAM, 3);
 
                 if (vertex > 0) {
@@ -259,12 +259,12 @@ class GraphCC extends Graph {
                 this.cmd("SetForegroundColor", breakID2, "#004B00");
                 this.messageY = this.messageY + 20;
 
-                this.cmd("CreateHighlightCircle", this.highlightCircleL, GraphCC.HIGHLIGHT_CIRCLE_COLOR, this.xPosLogical[vertex], this.yPosLogical[vertex]);
+                this.cmd("CreateHighlightCircle", this.highlightCircleL, this.HIGHLIGHT_CIRCLE_COLOR, this.xPosLogical[vertex], this.yPosLogical[vertex]);
                 this.cmd("SetLayer", this.highlightCircleL, 1);
-                this.cmd("CreateHighlightCircle", this.highlightCircleAL, GraphCC.HIGHLIGHT_CIRCLE_COLOR, this.adjListXStart - this.adjListWidth, this.adjListYStart + vertex * this.adjListHeight);
+                this.cmd("CreateHighlightCircle", this.highlightCircleAL, this.HIGHLIGHT_CIRCLE_COLOR, this.adjListXStart - this.adjListWidth, this.adjListYStart + vertex * this.adjListHeight);
                 this.cmd("SetLayer", this.highlightCircleAL, 2);
 
-                this.cmd("CreateHighlightCircle", this.highlightCircleAM, GraphCC.HIGHLIGHT_CIRCLE_COLOR, this.adjMatrixXStart - this.adjMatrixWidth, this.adjMatrixYStart + vertex * this.adjMatrixHeight);
+                this.cmd("CreateHighlightCircle", this.highlightCircleAM, this.HIGHLIGHT_CIRCLE_COLOR, this.adjMatrixXStart - this.adjMatrixWidth, this.adjMatrixYStart + vertex * this.adjMatrixHeight);
                 this.cmd("SetLayer", this.highlightCircleAM, 3);
 
                 this.dfsVisit(vertex, 75, true);
@@ -286,18 +286,18 @@ class GraphCC extends Graph {
     }
 
     setupLarge() {
-        this.dXPos = GraphCC.D_X_POS_LARGE;
-        this.dYPos = GraphCC.D_Y_POS_LARGE;
-        this.fXPos = GraphCC.F_X_POS_LARGE;
-        this.fYPos = GraphCC.F_Y_POS_LARGE;
+        this.dXPos = this.D_X_POS_LARGE;
+        this.dYPos = this.D_Y_POS_LARGE;
+        this.fXPos = this.F_X_POS_LARGE;
+        this.fYPos = this.F_Y_POS_LARGE;
         super.setupLarge();
     }
 
     setupSmall() {
-        this.dXPos = GraphCC.D_X_POS_SMALL;
-        this.dYPos = GraphCC.D_Y_POS_SMALL;
-        this.fXPos = GraphCC.F_X_POS_SMALL;
-        this.fYPos = GraphCC.F_Y_POS_SMALL;
+        this.dXPos = this.D_X_POS_SMALL;
+        this.dYPos = this.D_Y_POS_SMALL;
+        this.fXPos = this.F_X_POS_SMALL;
+        this.fYPos = this.F_Y_POS_SMALL;
         super.setupSmall();
     }
 
@@ -337,7 +337,7 @@ class GraphCC extends Graph {
 
                     if (!this.visited[neighbor]) {
                         this.cmd("Disconnect", this.circleID[startVertex], this.circleID[neighbor]);
-                        this.cmd("Connect", this.circleID[startVertex], this.circleID[neighbor], GraphCC.DFS_TREE_COLOR, this.curve[startVertex][neighbor], 1, "");
+                        this.cmd("Connect", this.circleID[startVertex], this.circleID[neighbor], this.DFS_TREE_COLOR, this.curve[startVertex][neighbor], 1, "");
                         this.cmd("Move", this.highlightCircleL, this.xPosLogical[neighbor], this.yPosLogical[neighbor]);
                         this.cmd("Move", this.highlightCircleAL, this.adjListXStart - this.adjListWidth, this.adjListYStart + neighbor * this.adjListHeight);
                         this.cmd("Move", this.highlightCircleAM, this.adjMatrixXStart - this.adjMatrixWidth, this.adjMatrixYStart + neighbor * this.adjMatrixHeight);

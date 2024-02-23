@@ -32,17 +32,17 @@
 
 
 class GraphToposortDFS extends Graph {
-    static ORDERING_INITIAL_X = 300;
-    static ORDERING_INITIAL_Y = 70;
-    static ORDERING_DELTA_Y = 20;
+    ORDERING_INITIAL_X = 300;
+    ORDERING_INITIAL_Y = 70;
+    ORDERING_DELTA_Y = 20;
 
-    static D_X_POS_SMALL = [760, 685, 915, 610, 910, 685, 915, 760];
-    static F_X_POS_SMALL = [760, 685, 915, 610, 910, 685, 915, 760];
+    D_X_POS_SMALL = [760, 685, 915, 610, 910, 685, 915, 760];
+    F_X_POS_SMALL = [760, 685, 915, 610, 910, 685, 915, 760];
 
-    static D_Y_POS_SMALL = [18, 118, 118, 218, 218, 318, 318, 418];
-    static F_Y_POS_SMALL = [32, 132, 132, 232, 232, 332, 332, 432];
+    D_Y_POS_SMALL = [18, 118, 118, 218, 218, 318, 318, 418];
+    F_Y_POS_SMALL = [32, 132, 132, 232, 232, 332, 332, 432];
 
-    static D_X_POS_LARGE = [
+    D_X_POS_LARGE = [
         560, 660, 760, 860,
         610, 710, 810,
         560, 660, 760, 860,
@@ -50,7 +50,7 @@ class GraphToposortDFS extends Graph {
         560, 660, 760, 860,
     ];
 
-    static F_X_POS_LARGE = [
+    F_X_POS_LARGE = [
         560, 660, 760, 860,
         610, 710, 810,
         560, 660, 760, 860,
@@ -58,7 +58,7 @@ class GraphToposortDFS extends Graph {
         560, 660, 760, 860,
     ];
 
-    static D_Y_POS_LARGE = [
+    D_Y_POS_LARGE = [
         37, 37, 37, 37,
         137, 137, 137,
         237, 237, 237, 237,
@@ -66,7 +66,7 @@ class GraphToposortDFS extends Graph {
         437, 437, 437, 437,
     ];
 
-    static F_Y_POS_LARGE = [
+    F_Y_POS_LARGE = [
         62, 62, 62, 62,
         162, 162, 162,
         262, 262, 262, 262,
@@ -74,8 +74,8 @@ class GraphToposortDFS extends Graph {
         462, 462, 462, 462,
     ];
 
-    static HIGHLIGHT_CIRCLE_COLOR = "#000000";
-    static DFS_TREE_COLOR = "#0000FF";
+    HIGHLIGHT_CIRCLE_COLOR = "#000000";
+    DFS_TREE_COLOR = "#0000FF";
 
     constructor(am) {
         super();
@@ -142,11 +142,11 @@ class GraphToposortDFS extends Graph {
 
         let headerID = this.nextIndex++;
         this.messageID.push(headerID);
-        this.cmd("CreateLabel", headerID, "Topological Order", GraphToposortDFS.ORDERING_INITIAL_X, GraphToposortDFS.ORDERING_INITIAL_Y - 1.5 * GraphToposortDFS.ORDERING_DELTA_Y);
+        this.cmd("CreateLabel", headerID, "Topological Order", this.ORDERING_INITIAL_X, this.ORDERING_INITIAL_Y - 1.5 * this.ORDERING_DELTA_Y);
 
         headerID = this.nextIndex++;
         this.messageID.push(headerID);
-        this.cmd("CreateRectangle", headerID, "", 100, 0, GraphToposortDFS.ORDERING_INITIAL_X, GraphToposortDFS.ORDERING_INITIAL_Y - GraphToposortDFS.ORDERING_DELTA_Y, "center", "center");
+        this.cmd("CreateRectangle", headerID, "", 100, 0, this.ORDERING_INITIAL_X, this.ORDERING_INITIAL_Y - this.ORDERING_DELTA_Y, "center", "center");
 
         this.dTimesIDL = new Array(this.size);
         this.fTimesIDL = new Array(this.size);
@@ -166,12 +166,12 @@ class GraphToposortDFS extends Graph {
 
         for (let vertex = 0; vertex < this.size; vertex++) {
             if (!this.visited[vertex]) {
-                this.cmd("CreateHighlightCircle", this.highlightCircleL, GraphToposortDFS.HIGHLIGHT_CIRCLE_COLOR, this.xPosLogical[vertex], this.yPosLogical[vertex]);
+                this.cmd("CreateHighlightCircle", this.highlightCircleL, this.HIGHLIGHT_CIRCLE_COLOR, this.xPosLogical[vertex], this.yPosLogical[vertex]);
                 this.cmd("SetLayer", this.highlightCircleL, 1);
-                this.cmd("CreateHighlightCircle", this.highlightCircleAL, GraphToposortDFS.HIGHLIGHT_CIRCLE_COLOR, this.adjListXStart - this.adjListWidth, this.adjListYStart + vertex * this.adjListHeight);
+                this.cmd("CreateHighlightCircle", this.highlightCircleAL, this.HIGHLIGHT_CIRCLE_COLOR, this.adjListXStart - this.adjListWidth, this.adjListYStart + vertex * this.adjListHeight);
                 this.cmd("SetLayer", this.highlightCircleAL, 2);
 
-                this.cmd("CreateHighlightCircle", this.highlightCircleAM, GraphToposortDFS.HIGHLIGHT_CIRCLE_COLOR, this.adjMatrixXStart - this.adjMatrixWidth, this.adjMatrixYStart + vertex * this.adjMatrixHeight);
+                this.cmd("CreateHighlightCircle", this.highlightCircleAM, this.HIGHLIGHT_CIRCLE_COLOR, this.adjMatrixXStart - this.adjMatrixWidth, this.adjMatrixYStart + vertex * this.adjMatrixHeight);
                 this.cmd("SetLayer", this.highlightCircleAM, 3);
 
                 if (vertex > 0) {
@@ -190,18 +190,18 @@ class GraphToposortDFS extends Graph {
     }
 
     setupLarge() {
-        this.dXPos = GraphToposortDFS.D_X_POS_LARGE;
-        this.dYPos = GraphToposortDFS.D_Y_POS_LARGE;
-        this.fXPos = GraphToposortDFS.F_X_POS_LARGE;
-        this.fYPos = GraphToposortDFS.F_Y_POS_LARGE;
+        this.dXPos = this.D_X_POS_LARGE;
+        this.dYPos = this.D_Y_POS_LARGE;
+        this.fXPos = this.F_X_POS_LARGE;
+        this.fYPos = this.F_Y_POS_LARGE;
         super.setupLarge();
     }
 
     setupSmall() {
-        this.dXPos = GraphToposortDFS.D_X_POS_SMALL;
-        this.dYPos = GraphToposortDFS.D_Y_POS_SMALL;
-        this.fXPos = GraphToposortDFS.F_X_POS_SMALL;
-        this.fYPos = GraphToposortDFS.F_Y_POS_SMALL;
+        this.dXPos = this.D_X_POS_SMALL;
+        this.dYPos = this.D_Y_POS_SMALL;
+        this.fXPos = this.F_X_POS_SMALL;
+        this.fYPos = this.F_Y_POS_SMALL;
         super.setupSmall();
     }
 
@@ -235,7 +235,7 @@ class GraphToposortDFS extends Graph {
 
                     if (!this.visited[neighbor]) {
                         this.cmd("Disconnect", this.circleID[startVertex], this.circleID[neighbor]);
-                        this.cmd("Connect", this.circleID[startVertex], this.circleID[neighbor], GraphToposortDFS.DFS_TREE_COLOR, this.curve[startVertex][neighbor], 1, "");
+                        this.cmd("Connect", this.circleID[startVertex], this.circleID[neighbor], this.DFS_TREE_COLOR, this.curve[startVertex][neighbor], 1, "");
                         this.cmd("Move", this.highlightCircleL, this.xPosLogical[neighbor], this.yPosLogical[neighbor]);
                         this.cmd("Move", this.highlightCircleAL, this.adjListXStart - this.adjListWidth, this.adjListYStart + neighbor * this.adjListHeight);
                         this.cmd("Move", this.highlightCircleAM, this.adjMatrixXStart - this.adjMatrixWidth, this.adjMatrixYStart + neighbor * this.adjMatrixHeight);
@@ -289,12 +289,12 @@ class GraphToposortDFS extends Graph {
             this.topoOrderArrayAM[0] = nextVertexLabel;
 
             for (let i = 0; i < this.topoOrderArrayL.length; i++) {
-                this.cmd("Move", this.topoOrderArrayL[i], GraphToposortDFS.ORDERING_INITIAL_X,
-                    GraphToposortDFS.ORDERING_INITIAL_Y + i * GraphToposortDFS.ORDERING_DELTA_Y);
-                this.cmd("Move", this.topoOrderArrayAL[i], GraphToposortDFS.ORDERING_INITIAL_X,
-                    GraphToposortDFS.ORDERING_INITIAL_Y + i * GraphToposortDFS.ORDERING_DELTA_Y);
-                this.cmd("Move", this.topoOrderArrayAM[i], GraphToposortDFS.ORDERING_INITIAL_X,
-                    GraphToposortDFS.ORDERING_INITIAL_Y + i * GraphToposortDFS.ORDERING_DELTA_Y);
+                this.cmd("Move", this.topoOrderArrayL[i], this.ORDERING_INITIAL_X,
+                    this.ORDERING_INITIAL_Y + i * this.ORDERING_DELTA_Y);
+                this.cmd("Move", this.topoOrderArrayAL[i], this.ORDERING_INITIAL_X,
+                    this.ORDERING_INITIAL_Y + i * this.ORDERING_DELTA_Y);
+                this.cmd("Move", this.topoOrderArrayAM[i], this.ORDERING_INITIAL_X,
+                    this.ORDERING_INITIAL_Y + i * this.ORDERING_DELTA_Y);
             }
             this.cmd("Step");
         }

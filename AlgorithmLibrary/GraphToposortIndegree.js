@@ -32,27 +32,27 @@
 
 
 class GraphToposortIndegree extends Graph {
-    static INDEGREE_ARRAY_ELEM_WIDTH = 25;
-    static INDEGREE_ARRAY_ELEM_HEIGHT = 25;
-    static INDEGREE_ARRAY_START_X = 50;
-    static INDEGREE_ARRAY_START_Y = 60;
+    INDEGREE_ARRAY_ELEM_WIDTH = 25;
+    INDEGREE_ARRAY_ELEM_HEIGHT = 25;
+    INDEGREE_ARRAY_START_X = 50;
+    INDEGREE_ARRAY_START_Y = 60;
 
-    static STACK_START_X = GraphToposortIndegree.INDEGREE_ARRAY_START_X + 100;
-    static STACK_START_Y = GraphToposortIndegree.INDEGREE_ARRAY_START_Y;
-    static STACK_HEIGHT = GraphToposortIndegree.INDEGREE_ARRAY_ELEM_HEIGHT;
+    STACK_START_X = this.INDEGREE_ARRAY_START_X + 100;
+    STACK_START_Y = this.INDEGREE_ARRAY_START_Y;
+    STACK_HEIGHT = this.INDEGREE_ARRAY_ELEM_HEIGHT;
 
-    static TOPO_ARRAY_START_X = GraphToposortIndegree.STACK_START_X + 150;
-    static TOPO_ARRAY_START_Y = GraphToposortIndegree.INDEGREE_ARRAY_START_Y;
-    static TOPO_HEIGHT = GraphToposortIndegree.INDEGREE_ARRAY_ELEM_HEIGHT;
+    TOPO_ARRAY_START_X = this.STACK_START_X + 150;
+    TOPO_ARRAY_START_Y = this.INDEGREE_ARRAY_START_Y;
+    TOPO_HEIGHT = this.INDEGREE_ARRAY_ELEM_HEIGHT;
 
-    static MESSAGE_LABEL_1_X = 70;
-    static MESSAGE_LABEL_1_Y = 10;
+    MESSAGE_LABEL_1_X = 70;
+    MESSAGE_LABEL_1_Y = 10;
 
-    static MESSAGE_LABEL_2_X = 70;
-    static MESSAGE_LABEL_2_Y = 40;
+    MESSAGE_LABEL_2_X = 70;
+    MESSAGE_LABEL_2_Y = 40;
 
-    static HIGHLIGHT_CIRCLE_COLOR = "#000000";
-    static MESSAGE_COLOR = "#0000FF";
+    HIGHLIGHT_CIRCLE_COLOR = "#000000";
+    MESSAGE_COLOR = "#0000FF";
 
     constructor(am) {
         super();
@@ -87,23 +87,23 @@ class GraphToposortIndegree extends Graph {
             this.setIndexID[i] = this.nextIndex++;
             this.orderID[i] = this.nextIndex++;
             this.cmd("CreateLabel", this.orderID[i], "", 0, 0); // HACK!!
-            this.cmd("CreateRectangle", this.indegreeID[i], " ", GraphToposortIndegree.INDEGREE_ARRAY_ELEM_WIDTH, GraphToposortIndegree.INDEGREE_ARRAY_ELEM_HEIGHT, GraphToposortIndegree.INDEGREE_ARRAY_START_X, GraphToposortIndegree.INDEGREE_ARRAY_START_Y + i * GraphToposortIndegree.INDEGREE_ARRAY_ELEM_HEIGHT);
-            this.cmd("CreateLabel", this.setIndexID[i], i, GraphToposortIndegree.INDEGREE_ARRAY_START_X - GraphToposortIndegree.INDEGREE_ARRAY_ELEM_WIDTH, GraphToposortIndegree.INDEGREE_ARRAY_START_Y + i * GraphToposortIndegree.INDEGREE_ARRAY_ELEM_HEIGHT);
-            this.cmd("SetForegroundColor", this.setIndexID[i], Graph.VERTEX_INDEX_COLOR);
+            this.cmd("CreateRectangle", this.indegreeID[i], " ", this.INDEGREE_ARRAY_ELEM_WIDTH, this.INDEGREE_ARRAY_ELEM_HEIGHT, this.INDEGREE_ARRAY_START_X, this.INDEGREE_ARRAY_START_Y + i * this.INDEGREE_ARRAY_ELEM_HEIGHT);
+            this.cmd("CreateLabel", this.setIndexID[i], i, this.INDEGREE_ARRAY_START_X - this.INDEGREE_ARRAY_ELEM_WIDTH, this.INDEGREE_ARRAY_START_Y + i * this.INDEGREE_ARRAY_ELEM_HEIGHT);
+            this.cmd("SetForegroundColor", this.setIndexID[i], this.VERTEX_INDEX_COLOR);
         }
-        this.cmd("CreateLabel", this.nextIndex++, "Indegree", GraphToposortIndegree.INDEGREE_ARRAY_START_X - 1 * GraphToposortIndegree.INDEGREE_ARRAY_ELEM_WIDTH, GraphToposortIndegree.INDEGREE_ARRAY_START_Y - GraphToposortIndegree.INDEGREE_ARRAY_ELEM_HEIGHT * 1.5, 0);
+        this.cmd("CreateLabel", this.nextIndex++, "Indegree", this.INDEGREE_ARRAY_START_X - 1 * this.INDEGREE_ARRAY_ELEM_WIDTH, this.INDEGREE_ARRAY_START_Y - this.INDEGREE_ARRAY_ELEM_HEIGHT * 1.5, 0);
 
         this.message1ID = this.nextIndex++;
         this.message2ID = this.nextIndex++;
-        this.cmd("CreateLabel", this.message1ID, "", GraphToposortIndegree.MESSAGE_LABEL_1_X, GraphToposortIndegree.MESSAGE_LABEL_1_Y, 0);
-        this.cmd("SetTextColor", this.message1ID, GraphToposortIndegree.MESSAGE_COLOR);
-        this.cmd("CreateLabel", this.message2ID, "", GraphToposortIndegree.MESSAGE_LABEL_2_X, GraphToposortIndegree.MESSAGE_LABEL_2_Y);
-        this.cmd("SetTextColor", this.message2ID, GraphToposortIndegree.MESSAGE_COLOR);
+        this.cmd("CreateLabel", this.message1ID, "", this.MESSAGE_LABEL_1_X, this.MESSAGE_LABEL_1_Y, 0);
+        this.cmd("SetTextColor", this.message1ID, this.MESSAGE_COLOR);
+        this.cmd("CreateLabel", this.message2ID, "", this.MESSAGE_LABEL_2_X, this.MESSAGE_LABEL_2_Y);
+        this.cmd("SetTextColor", this.message2ID, this.MESSAGE_COLOR);
 
         this.stackLabelID = this.nextIndex++;
         this.topoLabelID = this.nextIndex++;
-        this.cmd("CreateLabel", this.stackLabelID, "", GraphToposortIndegree.STACK_START_X, GraphToposortIndegree.STACK_START_Y - GraphToposortIndegree.STACK_HEIGHT);
-        this.cmd("CreateLabel", this.topoLabelID, "", GraphToposortIndegree.TOPO_ARRAY_START_X, GraphToposortIndegree.TOPO_ARRAY_START_Y - GraphToposortIndegree.TOPO_HEIGHT);
+        this.cmd("CreateLabel", this.stackLabelID, "", this.STACK_START_X, this.STACK_START_Y - this.STACK_HEIGHT);
+        this.cmd("CreateLabel", this.topoLabelID, "", this.TOPO_ARRAY_START_X, this.TOPO_ARRAY_START_Y - this.TOPO_HEIGHT);
 
         this.animationManager.StartNewAnimation(this.commands);
         this.animationManager.skipForward();
@@ -144,17 +144,17 @@ class GraphToposortIndegree extends Graph {
                     this.highlightEdge(vertex, neighbor, 1);
                     this.cmd("Step");
 
-                    this.cmd("CreateHighlightCircle", this.highlightCircleL, GraphToposortIndegree.HIGHLIGHT_CIRCLE_COLOR, this.xPosLogical[neighbor], this.yPosLogical[neighbor]);
+                    this.cmd("CreateHighlightCircle", this.highlightCircleL, this.HIGHLIGHT_CIRCLE_COLOR, this.xPosLogical[neighbor], this.yPosLogical[neighbor]);
                     this.cmd("SetLayer", this.highlightCircleL, 1);
-                    this.cmd("CreateHighlightCircle", this.highlightCircleAL, GraphToposortIndegree.HIGHLIGHT_CIRCLE_COLOR, this.adjListXStart + adjListIndex * (this.adjListWidth + this.adjListSpacing), this.adjListYStart + vertex * this.adjListHeight);
+                    this.cmd("CreateHighlightCircle", this.highlightCircleAL, this.HIGHLIGHT_CIRCLE_COLOR, this.adjListXStart + adjListIndex * (this.adjListWidth + this.adjListSpacing), this.adjListYStart + vertex * this.adjListHeight);
                     this.cmd("SetLayer", this.highlightCircleAL, 2);
-                    this.cmd("CreateHighlightCircle", this.highlightCircleAM, GraphToposortIndegree.HIGHLIGHT_CIRCLE_COLOR, this.adjMatrixXStart + neighbor * this.adjMatrixWidth, this.adjMatrixYStart - this.adjMatrixHeight);
+                    this.cmd("CreateHighlightCircle", this.highlightCircleAM, this.HIGHLIGHT_CIRCLE_COLOR, this.adjMatrixXStart + neighbor * this.adjMatrixWidth, this.adjMatrixYStart - this.adjMatrixHeight);
                     this.cmd("SetLayer", this.highlightCircleAM, 3);
 
-                    this.cmd("Move", this.highlightCircleL, GraphToposortIndegree.INDEGREE_ARRAY_START_X - GraphToposortIndegree.INDEGREE_ARRAY_ELEM_WIDTH, GraphToposortIndegree.INDEGREE_ARRAY_START_Y + neighbor * GraphToposortIndegree.INDEGREE_ARRAY_ELEM_HEIGHT);
+                    this.cmd("Move", this.highlightCircleL, this.INDEGREE_ARRAY_START_X - this.INDEGREE_ARRAY_ELEM_WIDTH, this.INDEGREE_ARRAY_START_Y + neighbor * this.INDEGREE_ARRAY_ELEM_HEIGHT);
 
-                    this.cmd("Move", this.highlightCircleAL, GraphToposortIndegree.INDEGREE_ARRAY_START_X - GraphToposortIndegree.INDEGREE_ARRAY_ELEM_WIDTH, GraphToposortIndegree.INDEGREE_ARRAY_START_Y + neighbor * GraphToposortIndegree.INDEGREE_ARRAY_ELEM_HEIGHT);
-                    this.cmd("Move", this.highlightCircleAM, GraphToposortIndegree.INDEGREE_ARRAY_START_X - GraphToposortIndegree.INDEGREE_ARRAY_ELEM_WIDTH, GraphToposortIndegree.INDEGREE_ARRAY_START_Y + neighbor * GraphToposortIndegree.INDEGREE_ARRAY_ELEM_HEIGHT);
+                    this.cmd("Move", this.highlightCircleAL, this.INDEGREE_ARRAY_START_X - this.INDEGREE_ARRAY_ELEM_WIDTH, this.INDEGREE_ARRAY_START_Y + neighbor * this.INDEGREE_ARRAY_ELEM_HEIGHT);
+                    this.cmd("Move", this.highlightCircleAM, this.INDEGREE_ARRAY_START_X - this.INDEGREE_ARRAY_ELEM_WIDTH, this.INDEGREE_ARRAY_START_Y + neighbor * this.INDEGREE_ARRAY_ELEM_HEIGHT);
 
                     this.cmd("Step");
                     this.indegree[neighbor] = this.indegree[neighbor] + 1;
@@ -164,7 +164,7 @@ class GraphToposortIndegree extends Graph {
                     this.cmd("Delete", this.highlightCircleL);
                     this.cmd("Delete", this.highlightCircleAL);
                     this.cmd("Delete", this.highlightCircleAM);
-                    this.cmd("SetTextColor", this.indegreeID[neighbor], Graph.EDGE_COLOR);
+                    this.cmd("SetTextColor", this.indegreeID[neighbor], this.EDGE_COLOR);
                     this.highlightEdge(vertex, neighbor, 0);
                 }
         }
@@ -176,8 +176,8 @@ class GraphToposortIndegree extends Graph {
             this.cmd("Step");
             if (this.indegree[vertex] === 0) {
                 stack[stackTop] = vertex;
-                this.cmd("CreateLabel", stackID[stackTop], vertex, GraphToposortIndegree.INDEGREE_ARRAY_START_X - GraphToposortIndegree.INDEGREE_ARRAY_ELEM_WIDTH, GraphToposortIndegree.INDEGREE_ARRAY_START_Y + vertex * GraphToposortIndegree.INDEGREE_ARRAY_ELEM_HEIGHT);
-                this.cmd("Move", stackID[stackTop], GraphToposortIndegree.STACK_START_X, GraphToposortIndegree.STACK_START_Y + stackTop * GraphToposortIndegree.STACK_HEIGHT);
+                this.cmd("CreateLabel", stackID[stackTop], vertex, this.INDEGREE_ARRAY_START_X - this.INDEGREE_ARRAY_ELEM_WIDTH, this.INDEGREE_ARRAY_START_Y + vertex * this.INDEGREE_ARRAY_ELEM_HEIGHT);
+                this.cmd("Move", stackID[stackTop], this.STACK_START_X, this.STACK_START_Y + stackTop * this.STACK_HEIGHT);
                 this.cmd("Step");
                 stackTop++;
             }
@@ -190,10 +190,10 @@ class GraphToposortIndegree extends Graph {
             stackTop--;
             const nextElem = stack[stackTop];
             this.cmd("SetText", this.message1ID, "Pop off top vertex with this.indegree 0, add to topological sort");
-            this.cmd("CreateLabel", this.orderID[nextInOrder], nextElem, GraphToposortIndegree.STACK_START_X, GraphToposortIndegree.STACK_START_Y + stackTop * GraphToposortIndegree.STACK_HEIGHT);
+            this.cmd("CreateLabel", this.orderID[nextInOrder], nextElem, this.STACK_START_X, this.STACK_START_Y + stackTop * this.STACK_HEIGHT);
             this.cmd("Delete", stackID[stackTop]);
             this.cmd("Step");
-            this.cmd("Move", this.orderID[nextInOrder], GraphToposortIndegree.TOPO_ARRAY_START_X, GraphToposortIndegree.TOPO_ARRAY_START_Y + nextInOrder * GraphToposortIndegree.TOPO_HEIGHT);
+            this.cmd("Move", this.orderID[nextInOrder], this.TOPO_ARRAY_START_X, this.TOPO_ARRAY_START_Y + nextInOrder * this.TOPO_HEIGHT);
             this.cmd("Step");
             this.cmd("SetText", this.message1ID, `Find all neigbors of vertex ${String(nextElem)}, decrease their this.indegree.  If this.indegree becomes 0, add to stack`);
             this.cmd("SetHighlight", this.circleID[nextElem], 1);
@@ -207,17 +207,17 @@ class GraphToposortIndegree extends Graph {
                     this.highlightEdge(nextElem, vertex, 1);
                     this.cmd("Step");
 
-                    this.cmd("CreateHighlightCircle", this.highlightCircleL, GraphToposortIndegree.HIGHLIGHT_CIRCLE_COLOR, this.xPosLogical[vertex], this.yPosLogical[vertex]);
+                    this.cmd("CreateHighlightCircle", this.highlightCircleL, this.HIGHLIGHT_CIRCLE_COLOR, this.xPosLogical[vertex], this.yPosLogical[vertex]);
                     this.cmd("SetLayer", this.highlightCircleL, 1);
-                    this.cmd("CreateHighlightCircle", this.highlightCircleAL, GraphToposortIndegree.HIGHLIGHT_CIRCLE_COLOR, this.adjListXStart + adjListIndex * (this.adjListWidth + this.adjListSpacing), this.adjListYStart + nextElem * this.adjListHeight);
+                    this.cmd("CreateHighlightCircle", this.highlightCircleAL, this.HIGHLIGHT_CIRCLE_COLOR, this.adjListXStart + adjListIndex * (this.adjListWidth + this.adjListSpacing), this.adjListYStart + nextElem * this.adjListHeight);
                     this.cmd("SetLayer", this.highlightCircleAL, 2);
-                    this.cmd("CreateHighlightCircle", this.highlightCircleAM, GraphToposortIndegree.HIGHLIGHT_CIRCLE_COLOR, this.adjMatrixXStart + vertex * this.adjMatrixWidth, this.adjMatrixYStart - this.adjMatrixHeight);
+                    this.cmd("CreateHighlightCircle", this.highlightCircleAM, this.HIGHLIGHT_CIRCLE_COLOR, this.adjMatrixXStart + vertex * this.adjMatrixWidth, this.adjMatrixYStart - this.adjMatrixHeight);
                     this.cmd("SetLayer", this.highlightCircleAM, 3);
 
-                    this.cmd("Move", this.highlightCircleL, GraphToposortIndegree.INDEGREE_ARRAY_START_X - GraphToposortIndegree.INDEGREE_ARRAY_ELEM_WIDTH, GraphToposortIndegree.INDEGREE_ARRAY_START_Y + vertex * GraphToposortIndegree.INDEGREE_ARRAY_ELEM_HEIGHT);
+                    this.cmd("Move", this.highlightCircleL, this.INDEGREE_ARRAY_START_X - this.INDEGREE_ARRAY_ELEM_WIDTH, this.INDEGREE_ARRAY_START_Y + vertex * this.INDEGREE_ARRAY_ELEM_HEIGHT);
 
-                    this.cmd("Move", this.highlightCircleAL, GraphToposortIndegree.INDEGREE_ARRAY_START_X - GraphToposortIndegree.INDEGREE_ARRAY_ELEM_WIDTH, GraphToposortIndegree.INDEGREE_ARRAY_START_Y + vertex * GraphToposortIndegree.INDEGREE_ARRAY_ELEM_HEIGHT);
-                    this.cmd("Move", this.highlightCircleAM, GraphToposortIndegree.INDEGREE_ARRAY_START_X - GraphToposortIndegree.INDEGREE_ARRAY_ELEM_WIDTH, GraphToposortIndegree.INDEGREE_ARRAY_START_Y + vertex * GraphToposortIndegree.INDEGREE_ARRAY_ELEM_HEIGHT);
+                    this.cmd("Move", this.highlightCircleAL, this.INDEGREE_ARRAY_START_X - this.INDEGREE_ARRAY_ELEM_WIDTH, this.INDEGREE_ARRAY_START_Y + vertex * this.INDEGREE_ARRAY_ELEM_HEIGHT);
+                    this.cmd("Move", this.highlightCircleAM, this.INDEGREE_ARRAY_START_X - this.INDEGREE_ARRAY_ELEM_WIDTH, this.INDEGREE_ARRAY_START_Y + vertex * this.INDEGREE_ARRAY_ELEM_HEIGHT);
 
                     this.cmd("Step");
                     this.indegree[vertex] = this.indegree[vertex] - 1;
@@ -226,15 +226,15 @@ class GraphToposortIndegree extends Graph {
                     this.cmd("Step");
                     if (this.indegree[vertex] === 0) {
                         stack[stackTop] = vertex;
-                        this.cmd("CreateLabel", stackID[stackTop], vertex, GraphToposortIndegree.INDEGREE_ARRAY_START_X - GraphToposortIndegree.INDEGREE_ARRAY_ELEM_WIDTH, GraphToposortIndegree.INDEGREE_ARRAY_START_Y + vertex * GraphToposortIndegree.INDEGREE_ARRAY_ELEM_HEIGHT);
-                        this.cmd("Move", stackID[stackTop], GraphToposortIndegree.STACK_START_X, GraphToposortIndegree.STACK_START_Y + stackTop * GraphToposortIndegree.STACK_HEIGHT);
+                        this.cmd("CreateLabel", stackID[stackTop], vertex, this.INDEGREE_ARRAY_START_X - this.INDEGREE_ARRAY_ELEM_WIDTH, this.INDEGREE_ARRAY_START_Y + vertex * this.INDEGREE_ARRAY_ELEM_HEIGHT);
+                        this.cmd("Move", stackID[stackTop], this.STACK_START_X, this.STACK_START_Y + stackTop * this.STACK_HEIGHT);
                         this.cmd("Step");
                         stackTop++;
                     }
                     this.cmd("Delete", this.highlightCircleL);
                     this.cmd("Delete", this.highlightCircleAL);
                     this.cmd("Delete", this.highlightCircleAM);
-                    this.cmd("SetTextColor", this.indegreeID[vertex], Graph.EDGE_COLOR);
+                    this.cmd("SetTextColor", this.indegreeID[vertex], this.EDGE_COLOR);
                     this.highlightEdge(nextElem, vertex, 0);
                 }
             }
@@ -248,18 +248,18 @@ class GraphToposortIndegree extends Graph {
     }
 
     setupLarge() {
-        this.dXPos = GraphToposortIndegree.D_X_POS_LARGE;
-        this.dYPos = GraphToposortIndegree.D_Y_POS_LARGE;
-        this.fXPos = GraphToposortIndegree.F_X_POS_LARGE;
-        this.fYPos = GraphToposortIndegree.F_Y_POS_LARGE;
+        this.dXPos = this.D_X_POS_LARGE;
+        this.dYPos = this.D_Y_POS_LARGE;
+        this.fXPos = this.F_X_POS_LARGE;
+        this.fYPos = this.F_Y_POS_LARGE;
         super.setupLarge();
     }
 
     setupSmall() {
-        this.dXPos = GraphToposortIndegree.D_X_POS_SMALL;
-        this.dYPos = GraphToposortIndegree.D_Y_POS_SMALL;
-        this.fXPos = GraphToposortIndegree.F_X_POS_SMALL;
-        this.fYPos = GraphToposortIndegree.F_Y_POS_SMALL;
+        this.dXPos = this.D_X_POS_SMALL;
+        this.dYPos = this.D_Y_POS_SMALL;
+        this.fXPos = this.F_X_POS_SMALL;
+        this.fYPos = this.F_Y_POS_SMALL;
         super.setupSmall();
     }
 
@@ -293,7 +293,7 @@ class GraphToposortIndegree extends Graph {
 
                     if (!this.visited[neighbor]) {
                         this.cmd("Disconnect", this.circleID[startVertex], this.circleID[neighbor]);
-                        this.cmd("Connect", this.circleID[startVertex], this.circleID[neighbor], GraphToposortIndegree.DFS_TREE_COLOR, this.curve[startVertex][neighbor], 1, "");
+                        this.cmd("Connect", this.circleID[startVertex], this.circleID[neighbor], this.DFS_TREE_COLOR, this.curve[startVertex][neighbor], 1, "");
                         this.cmd("Move", this.highlightCircleL, this.xPosLogical[neighbor], this.yPosLogical[neighbor]);
                         this.cmd("Move", this.highlightCircleAL, this.adjListXStart - this.adjListWidth, this.adjListYStart + neighbor * this.adjListHeight);
                         this.cmd("Move", this.highlightCircleAM, this.adjMatrixXStart - this.adjMatrixWidth, this.adjMatrixYStart + neighbor * this.adjMatrixHeight);
@@ -347,12 +347,12 @@ class GraphToposortIndegree extends Graph {
             this.topoOrderArrayAM[0] = nextVertexLabel;
 
             for (let i = 0; i < this.topoOrderArrayL.length; i++) {
-                this.cmd("Move", this.topoOrderArrayL[i], GraphToposortIndegree.ORDERING_INITIAL_X,
-                    GraphToposortIndegree.ORDERING_INITIAL_Y + i * GraphToposortIndegree.ORDERING_DELTA_Y);
-                this.cmd("Move", this.topoOrderArrayAL[i], GraphToposortIndegree.ORDERING_INITIAL_X,
-                    GraphToposortIndegree.ORDERING_INITIAL_Y + i * GraphToposortIndegree.ORDERING_DELTA_Y);
-                this.cmd("Move", this.topoOrderArrayAM[i], GraphToposortIndegree.ORDERING_INITIAL_X,
-                    GraphToposortIndegree.ORDERING_INITIAL_Y + i * GraphToposortIndegree.ORDERING_DELTA_Y);
+                this.cmd("Move", this.topoOrderArrayL[i], this.ORDERING_INITIAL_X,
+                    this.ORDERING_INITIAL_Y + i * this.ORDERING_DELTA_Y);
+                this.cmd("Move", this.topoOrderArrayAL[i], this.ORDERING_INITIAL_X,
+                    this.ORDERING_INITIAL_Y + i * this.ORDERING_DELTA_Y);
+                this.cmd("Move", this.topoOrderArrayAM[i], this.ORDERING_INITIAL_X,
+                    this.ORDERING_INITIAL_Y + i * this.ORDERING_DELTA_Y);
             }
             this.cmd("Step");
         }

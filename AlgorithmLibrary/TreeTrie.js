@@ -50,26 +50,26 @@ class TrieNode {
 
 
 class TreeTrie extends Algorithm {
-    static FOREGROUND_COLOR = "#007700";
-    static BACKGROUND_COLOR = "#EEFFEE";
+    FOREGROUND_COLOR = "#007700";
+    BACKGROUND_COLOR = "#EEFFEE";
 
-    static LINK_COLOR = TreeTrie.FOREGROUND_COLOR;
-    static HIGHLIGHT_CIRCLE_COLOR = TreeTrie.FOREGROUND_COLOR;
-    static PRINT_COLOR = TreeTrie.FOREGROUND_COLOR;
-    static TRUE_COLOR = TreeTrie.BACKGROUND_COLOR;
-    static FALSE_COLOR = "#FFFFFF";
+    LINK_COLOR = this.FOREGROUND_COLOR;
+    HIGHLIGHT_CIRCLE_COLOR = this.FOREGROUND_COLOR;
+    PRINT_COLOR = this.FOREGROUND_COLOR;
+    TRUE_COLOR = this.BACKGROUND_COLOR;
+    FALSE_COLOR = "#FFFFFF";
 
-    static NODE_WIDTH = 30;
+    NODE_WIDTH = 30;
 
-    static WIDTH_DELTA = 50;
-    static HEIGHT_DELTA = 50;
-    static STARTING_Y = 80;
-    static LeftMargin = 300;
-    static NEW_NODE_Y = 100;
-    static NEW_NODE_X = 50;
-    static FIRST_PRINT_POS_X = 50;
-    static PRINT_VERTICAL_GAP = 20;
-    static PRINT_HORIZONTAL_GAP = 50;
+    WIDTH_DELTA = 50;
+    HEIGHT_DELTA = 50;
+    STARTING_Y = 80;
+    LeftMargin = 300;
+    NEW_NODE_Y = 100;
+    NEW_NODE_X = 50;
+    FIRST_PRINT_POS_X = 50;
+    PRINT_VERTICAL_GAP = 20;
+    PRINT_HORIZONTAL_GAP = 50;
 
     constructor(am) {
         super();
@@ -98,7 +98,7 @@ class TreeTrie extends Algorithm {
         const h = this.getCanvasHeight();
 
         this.startingX = w / 2;
-        this.firstPrintPosY = h - 2 * TreeTrie.PRINT_VERTICAL_GAP;
+        this.firstPrintPosY = h - 2 * this.PRINT_VERTICAL_GAP;
         this.printMax = w - 10;
 
         this.implementAction(() => {
@@ -168,13 +168,13 @@ class TreeTrie extends Algorithm {
             this.printLabel1 = this.nextIndex++;
             this.printLabel2 = this.nextIndex++;
             const firstLabel = this.nextIndex++;
-            this.cmd("CreateLabel", firstLabel, "Output: ", TreeTrie.FIRST_PRINT_POS_X, this.firstPrintPosY);
-            this.cmd("CreateHighlightCircle", this.highlightID, TreeTrie.HIGHLIGHT_CIRCLE_COLOR, this.root.x, this.root.y);
-            this.cmd("SetWidth", this.highlightID, TreeTrie.NODE_WIDTH);
+            this.cmd("CreateLabel", firstLabel, "Output: ", this.FIRST_PRINT_POS_X, this.firstPrintPosY);
+            this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, this.root.x, this.root.y);
+            this.cmd("SetWidth", this.highlightID, this.NODE_WIDTH);
             this.cmd("CreateLabel", this.printLabel1, "Current String: ", 20, 10, 0);
             this.cmd("CreateLabel", this.printLabel2, "", 20, 10, 0);
             this.cmd("AlignRight", this.printLabel2, this.printLabel1);
-            this.xPosOfNextLabel = TreeTrie.FIRST_PRINT_POS_X;
+            this.xPosOfNextLabel = this.FIRST_PRINT_POS_X;
             this.yPosOfNextLabel = this.firstPrintPosY;
             this.printTreeRec(this.root, "");
 
@@ -195,22 +195,22 @@ class TreeTrie extends Algorithm {
         if (tree.isword) {
             const nextLabelID = this.nextIndex++;
             this.cmd("CreateLabel", nextLabelID, `${stringSoFar}  `, 20, 10, 0);
-            this.cmd("SetForegroundColor", nextLabelID, TreeTrie.PRINT_COLOR);
-            this.cmd("AlignRight", nextLabelID, this.printLabel1, TreeTrie.PRINT_COLOR);
+            this.cmd("SetForegroundColor", nextLabelID, this.PRINT_COLOR);
+            this.cmd("AlignRight", nextLabelID, this.printLabel1, this.PRINT_COLOR);
             this.cmd("MoveToAlignRight", nextLabelID, nextLabelID - 1);
             this.cmd("Step");
 
-            this.xPosOfNextLabel += TreeTrie.PRINT_HORIZONTAL_GAP;
+            this.xPosOfNextLabel += this.PRINT_HORIZONTAL_GAP;
             if (this.xPosOfNextLabel > this.printMax) {
-                this.xPosOfNextLabel = TreeTrie.FIRST_PRINT_POS_X;
-                this.yPosOfNextLabel += TreeTrie.PRINT_VERTICAL_GAP;
+                this.xPosOfNextLabel = this.FIRST_PRINT_POS_X;
+                this.yPosOfNextLabel += this.PRINT_VERTICAL_GAP;
             }
         }
         for (let i = 0; i < 26; i++) {
             if (tree.children[i] != null) {
                 const stringSoFar2 = stringSoFar + tree.children[i].wordRemainder;
                 const nextLabelID = this.nextIndex++;
-                const fromx = (tree.children[i].x + tree.x) / 2 + TreeTrie.NODE_WIDTH / 2;
+                const fromx = (tree.children[i].x + tree.x) / 2 + this.NODE_WIDTH / 2;
                 const fromy = (tree.children[i].y + tree.y) / 2;
                 this.cmd("CreateLabel", nextLabelID, tree.children[i].wordRemainder, fromx, fromy, 0);
                 this.cmd("MoveToAlignRight", nextLabelID, this.printLabel2);
@@ -273,8 +273,8 @@ class TreeTrie extends Algorithm {
                 this.cmd("SetHighlight", tree.graphicID, 0);
                 return null;
             }
-            this.cmd("CreateHighlightCircle", this.highlightID, TreeTrie.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
-            this.cmd("SetWidth", this.highlightID, TreeTrie.NODE_WIDTH);
+            this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+            this.cmd("SetWidth", this.highlightID, this.NODE_WIDTH);
             this.cmd("SetText", 2, `Making recursive call to ${s.charAt(0)} child, passing in ${s.substring(1)}`);
             this.cmd("Step");
             this.cmd("SetHighlight", tree.graphicID, 0);
@@ -304,7 +304,7 @@ class TreeTrie extends Algorithm {
             this.cmd("SetHighlight", node.graphicID, 1);
             this.cmd("SetText", 2, `Found "${word}", setting value in tree to False`);
             this.cmd("step");
-            this.cmd("SetBackgroundColor", node.graphicID, TreeTrie.FALSE_COLOR);
+            this.cmd("SetBackgroundColor", node.graphicID, this.FALSE_COLOR);
             node.isword = false;
             this.cmd("SetHighlight", node.graphicID, 0);
             this.cleanupAfterDelete(node);
@@ -360,8 +360,8 @@ class TreeTrie extends Algorithm {
     resizeTree() {
         this.resizeWidths(this.root);
         if (this.root != null) {
-            const startingPoint = this.root.width / 2 + 1 + TreeTrie.LeftMargin;
-            this.setNewPositions(this.root, startingPoint, TreeTrie.STARTING_Y);
+            const startingPoint = this.root.width / 2 + 1 + this.LeftMargin;
+            this.setNewPositions(this.root, startingPoint, this.STARTING_Y);
             this.animateNewPositions(this.root);
             this.cmd("Step");
         }
@@ -374,12 +374,12 @@ class TreeTrie extends Algorithm {
         this.cmd("AlignRight", 1, 0);
         this.cmd("Step");
         if (this.root == null) {
-            this.cmd("CreateCircle", this.nextIndex, "", TreeTrie.NEW_NODE_X, TreeTrie.NEW_NODE_Y);
-            this.cmd("SetForegroundColor", this.nextIndex, TreeTrie.FOREGROUND_COLOR);
-            this.cmd("SetBackgroundColor", this.nextIndex, TreeTrie.FALSE_COLOR);
-            this.cmd("SetWidth", this.nextIndex, TreeTrie.NODE_WIDTH);
+            this.cmd("CreateCircle", this.nextIndex, "", this.NEW_NODE_X, this.NEW_NODE_Y);
+            this.cmd("SetForegroundColor", this.nextIndex, this.FOREGROUND_COLOR);
+            this.cmd("SetBackgroundColor", this.nextIndex, this.FALSE_COLOR);
+            this.cmd("SetWidth", this.nextIndex, this.NODE_WIDTH);
             this.cmd("SetText", 2, "Creating a new root");
-            this.root = new TrieNode("", this.nextIndex, TreeTrie.NEW_NODE_X, TreeTrie.NEW_NODE_Y);
+            this.root = new TrieNode("", this.nextIndex, this.NEW_NODE_X, this.NEW_NODE_Y);
             this.cmd("Step");
             this.resizeTree();
             this.cmd("SetText", 2, "");
@@ -400,7 +400,7 @@ class TreeTrie extends Algorithm {
             this.cmd("SetText", 2, "Reached the end of the string \nSet current node to true");
             this.cmd("Step");
             // this.cmd("SetText", tree.graphicID, "T");
-            this.cmd("SetBackgroundColor", tree.graphicID, TreeTrie.TRUE_COLOR);
+            this.cmd("SetBackgroundColor", tree.graphicID, this.TRUE_COLOR);
             this.cmd("SetHighlight", tree.graphicID, 0);
             tree.isword = true;
             return;
@@ -408,14 +408,14 @@ class TreeTrie extends Algorithm {
             this.cmd("SetHighlightIndex", 1, 1);
             const index = s.charCodeAt(0) - "A".charCodeAt(0);
             if (tree.children[index] == null) {
-                this.cmd("CreateCircle", this.nextIndex, s.charAt(0), TreeTrie.NEW_NODE_X, TreeTrie.NEW_NODE_Y);
-                this.cmd("SetForegroundColor", this.nextIndex, TreeTrie.FOREGROUND_COLOR);
-                this.cmd("SetBackgroundColor", this.nextIndex, TreeTrie.FALSE_COLOR);
-                this.cmd("SetWidth", this.nextIndex, TreeTrie.NODE_WIDTH);
+                this.cmd("CreateCircle", this.nextIndex, s.charAt(0), this.NEW_NODE_X, this.NEW_NODE_Y);
+                this.cmd("SetForegroundColor", this.nextIndex, this.FOREGROUND_COLOR);
+                this.cmd("SetBackgroundColor", this.nextIndex, this.FALSE_COLOR);
+                this.cmd("SetWidth", this.nextIndex, this.NODE_WIDTH);
                 this.cmd("SetText", 2, `Child ${s.charAt(0)} does not exist.  Creating ... `);
-                tree.children[index] = new TrieNode(s.charAt(0), this.nextIndex, TreeTrie.NEW_NODE_X, TreeTrie.NEW_NODE_Y);
+                tree.children[index] = new TrieNode(s.charAt(0), this.nextIndex, this.NEW_NODE_X, this.NEW_NODE_Y);
                 tree.children[index].parent = tree;
-                this.cmd("Connect", tree.graphicID, tree.children[index].graphicID, TreeTrie.FOREGROUND_COLOR, 0, false, s.charAt(0));
+                this.cmd("Connect", tree.graphicID, tree.children[index].graphicID, this.FOREGROUND_COLOR, 0, false, s.charAt(0));
 
                 this.cmd("Step");
                 this.resizeTree();
@@ -423,8 +423,8 @@ class TreeTrie extends Algorithm {
                 this.nextIndex++;
                 this.highlightID = this.nextIndex++;
             }
-            this.cmd("CreateHighlightCircle", this.highlightID, TreeTrie.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
-            this.cmd("SetWidth", this.highlightID, TreeTrie.NODE_WIDTH);
+            this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+            this.cmd("SetWidth", this.highlightID, this.NODE_WIDTH);
             this.cmd("SetText", 2, `Making recursive call to ${s.charAt(0)} child, passing in "${s.substring(1)}"`);
             this.cmd("Step");
             this.cmd("SetHighlight", tree.graphicID, 0);
@@ -443,7 +443,7 @@ class TreeTrie extends Algorithm {
             tree.x = xPosition;
             tree.y = yPosition;
             let newX = xPosition - tree.width / 2;
-            const newY = yPosition + TreeTrie.HEIGHT_DELTA;
+            const newY = yPosition + this.HEIGHT_DELTA;
             for (let i = 0; i < 26; i++) {
                 if (tree.children[i] != null) {
                     this.setNewPositions(tree.children[i], newX + tree.children[i].width / 2, newY);
@@ -471,7 +471,7 @@ class TreeTrie extends Algorithm {
             tree.childWidths[i] = this.resizeWidths(tree.children[i]);
             size += tree.childWidths[i];
         }
-        tree.width = Math.max(size, TreeTrie.NODE_WIDTH + 4);
+        tree.width = Math.max(size, this.NODE_WIDTH + 4);
         return tree.width;
     }
 }

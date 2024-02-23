@@ -32,20 +32,20 @@
 
 
 class GraphBFS extends Graph {
-    static AUX_ARRAY_WIDTH = 25;
-    static AUX_ARRAY_HEIGHT = 25;
-    static AUX_ARRAY_START_Y = 50;
+    AUX_ARRAY_WIDTH = 25;
+    AUX_ARRAY_HEIGHT = 25;
+    AUX_ARRAY_START_Y = 50;
 
-    static VISITED_START_X = 475;
-    static PARENT_START_X = 400;
+    VISITED_START_X = 475;
+    PARENT_START_X = 400;
 
-    static HIGHLIGHT_CIRCLE_COLOR = "#000000";
-    static BFS_TREE_COLOR = "#0000FF";
-    static BFS_QUEUE_HEAD_COLOR = "#0000FF";
+    HIGHLIGHT_CIRCLE_COLOR = "#000000";
+    BFS_TREE_COLOR = "#0000FF";
+    BFS_QUEUE_HEAD_COLOR = "#0000FF";
 
-    static QUEUE_START_X = 30;
-    static QUEUE_START_Y = 50;
-    static QUEUE_SPACING = 30;
+    QUEUE_START_X = 30;
+    QUEUE_START_Y = 50;
+    QUEUE_SPACING = 30;
 
     constructor(am, dir) {
         super();
@@ -80,16 +80,16 @@ class GraphBFS extends Graph {
             this.visitedIndexID[i] = this.nextIndex++;
             this.parentID[i] = this.nextIndex++;
             this.parentIndexID[i] = this.nextIndex++;
-            this.cmd("CreateRectangle", this.visitedID[i], "f", GraphBFS.AUX_ARRAY_WIDTH, GraphBFS.AUX_ARRAY_HEIGHT, GraphBFS.VISITED_START_X, GraphBFS.AUX_ARRAY_START_Y + i * GraphBFS.AUX_ARRAY_HEIGHT);
-            this.cmd("CreateLabel", this.visitedIndexID[i], i, GraphBFS.VISITED_START_X - GraphBFS.AUX_ARRAY_WIDTH, GraphBFS.AUX_ARRAY_START_Y + i * GraphBFS.AUX_ARRAY_HEIGHT);
-            this.cmd("SetForegroundColor", this.visitedIndexID[i], GraphBFS.VERTEX_INDEX_COLOR);
-            this.cmd("CreateRectangle", this.parentID[i], "", GraphBFS.AUX_ARRAY_WIDTH, GraphBFS.AUX_ARRAY_HEIGHT, GraphBFS.PARENT_START_X, GraphBFS.AUX_ARRAY_START_Y + i * GraphBFS.AUX_ARRAY_HEIGHT);
-            this.cmd("CreateLabel", this.parentIndexID[i], i, GraphBFS.PARENT_START_X - GraphBFS.AUX_ARRAY_WIDTH, GraphBFS.AUX_ARRAY_START_Y + i * GraphBFS.AUX_ARRAY_HEIGHT);
-            this.cmd("SetForegroundColor", this.parentIndexID[i], GraphBFS.VERTEX_INDEX_COLOR);
+            this.cmd("CreateRectangle", this.visitedID[i], "f", this.AUX_ARRAY_WIDTH, this.AUX_ARRAY_HEIGHT, this.VISITED_START_X, this.AUX_ARRAY_START_Y + i * this.AUX_ARRAY_HEIGHT);
+            this.cmd("CreateLabel", this.visitedIndexID[i], i, this.VISITED_START_X - this.AUX_ARRAY_WIDTH, this.AUX_ARRAY_START_Y + i * this.AUX_ARRAY_HEIGHT);
+            this.cmd("SetForegroundColor", this.visitedIndexID[i], this.VERTEX_INDEX_COLOR);
+            this.cmd("CreateRectangle", this.parentID[i], "", this.AUX_ARRAY_WIDTH, this.AUX_ARRAY_HEIGHT, this.PARENT_START_X, this.AUX_ARRAY_START_Y + i * this.AUX_ARRAY_HEIGHT);
+            this.cmd("CreateLabel", this.parentIndexID[i], i, this.PARENT_START_X - this.AUX_ARRAY_WIDTH, this.AUX_ARRAY_START_Y + i * this.AUX_ARRAY_HEIGHT);
+            this.cmd("SetForegroundColor", this.parentIndexID[i], this.VERTEX_INDEX_COLOR);
         }
-        this.cmd("CreateLabel", this.nextIndex++, "Parent", GraphBFS.PARENT_START_X - GraphBFS.AUX_ARRAY_WIDTH, GraphBFS.AUX_ARRAY_START_Y - GraphBFS.AUX_ARRAY_HEIGHT * 1.5, 0);
-        this.cmd("CreateLabel", this.nextIndex++, "Visited", GraphBFS.VISITED_START_X - GraphBFS.AUX_ARRAY_WIDTH, GraphBFS.AUX_ARRAY_START_Y - GraphBFS.AUX_ARRAY_HEIGHT * 1.5, 0);
-        this.cmd("CreateLabel", this.nextIndex++, "BFS Queue", GraphBFS.QUEUE_START_X, GraphBFS.QUEUE_START_Y - 30, 0);
+        this.cmd("CreateLabel", this.nextIndex++, "Parent", this.PARENT_START_X - this.AUX_ARRAY_WIDTH, this.AUX_ARRAY_START_Y - this.AUX_ARRAY_HEIGHT * 1.5, 0);
+        this.cmd("CreateLabel", this.nextIndex++, "Visited", this.VISITED_START_X - this.AUX_ARRAY_WIDTH, this.AUX_ARRAY_START_Y - this.AUX_ARRAY_HEIGHT * 1.5, 0);
+        this.cmd("CreateLabel", this.nextIndex++, "BFS Queue", this.QUEUE_START_X, this.QUEUE_START_Y - 30, 0);
         this.animationManager.setAllLayers([0, this.currentLayer]);
         this.animationManager.StartNewAnimation(this.commands);
         this.animationManager.skipForward();
@@ -133,19 +133,19 @@ class GraphBFS extends Graph {
         let vertex = parseInt(startVetex);
         this.visited[vertex] = true;
         this.queue[tail] = vertex;
-        this.cmd("CreateLabel", queueID[tail], vertex, GraphBFS.QUEUE_START_X + queueSize * GraphBFS.QUEUE_SPACING, GraphBFS.QUEUE_START_Y);
+        this.cmd("CreateLabel", queueID[tail], vertex, this.QUEUE_START_X + queueSize * this.QUEUE_SPACING, this.QUEUE_START_Y);
         queueSize = queueSize + 1;
         tail = (tail + 1) % (this.size);
 
         while (queueSize > 0) {
             vertex = this.queue[head];
-            this.cmd("CreateHighlightCircle", this.highlightCircleL, GraphBFS.HIGHLIGHT_CIRCLE_COLOR, this.xPosLogical[vertex], this.yPosLogical[vertex]);
+            this.cmd("CreateHighlightCircle", this.highlightCircleL, this.HIGHLIGHT_CIRCLE_COLOR, this.xPosLogical[vertex], this.yPosLogical[vertex]);
             this.cmd("SetLayer", this.highlightCircleL, 1);
-            this.cmd("CreateHighlightCircle", this.highlightCircleAL, GraphBFS.HIGHLIGHT_CIRCLE_COLOR, this.adjListXStart - this.adjListWidth, this.adjListYStart + vertex * this.adjListHeight);
+            this.cmd("CreateHighlightCircle", this.highlightCircleAL, this.HIGHLIGHT_CIRCLE_COLOR, this.adjListXStart - this.adjListWidth, this.adjListYStart + vertex * this.adjListHeight);
             this.cmd("SetLayer", this.highlightCircleAL, 2);
-            this.cmd("CreateHighlightCircle", this.highlightCircleAM, GraphBFS.HIGHLIGHT_CIRCLE_COLOR, this.adjMatrixXStart - this.adjMatrixWidth, this.adjMatrixYStart + vertex * this.adjMatrixHeight);
+            this.cmd("CreateHighlightCircle", this.highlightCircleAM, this.HIGHLIGHT_CIRCLE_COLOR, this.adjMatrixXStart - this.adjMatrixWidth, this.adjMatrixYStart + vertex * this.adjMatrixHeight);
             this.cmd("SetLayer", this.highlightCircleAM, 3);
-            this.cmd("SetTextColor", queueID[head], GraphBFS.BFS_QUEUE_HEAD_COLOR);
+            this.cmd("SetTextColor", queueID[head], this.BFS_QUEUE_HEAD_COLOR);
 
             for (let neighbor = 0; neighbor < this.size; neighbor++) {
                 if (this.adjMatrix[vertex][neighbor] > 0) {
@@ -158,9 +158,9 @@ class GraphBFS extends Graph {
                         this.cmd("SetText", this.parentID[neighbor], vertex);
                         this.highlightEdge(vertex, neighbor, 0);
                         this.cmd("Disconnect", this.circleID[vertex], this.circleID[neighbor]);
-                        this.cmd("Connect", this.circleID[vertex], this.circleID[neighbor], GraphBFS.BFS_TREE_COLOR, this.curve[vertex][neighbor], 1, "");
+                        this.cmd("Connect", this.circleID[vertex], this.circleID[neighbor], this.BFS_TREE_COLOR, this.curve[vertex][neighbor], 1, "");
                         this.queue[tail] = neighbor;
-                        this.cmd("CreateLabel", queueID[tail], neighbor, GraphBFS.QUEUE_START_X + queueSize * GraphBFS.QUEUE_SPACING, GraphBFS.QUEUE_START_Y);
+                        this.cmd("CreateLabel", queueID[tail], neighbor, this.QUEUE_START_X + queueSize * this.QUEUE_SPACING, this.QUEUE_START_Y);
                         tail = (tail + 1) % (this.size);
                         queueSize = queueSize + 1;
                     } else {
@@ -175,7 +175,7 @@ class GraphBFS extends Graph {
             queueSize = queueSize - 1;
             for (let i = 0; i < queueSize; i++) {
                 const nextQueueIndex = (i + head) % this.size;
-                this.cmd("Move", queueID[nextQueueIndex], GraphBFS.QUEUE_START_X + i * GraphBFS.QUEUE_SPACING, GraphBFS.QUEUE_START_Y);
+                this.cmd("Move", queueID[nextQueueIndex], this.QUEUE_START_X + i * this.QUEUE_SPACING, this.QUEUE_START_Y);
             }
 
             this.cmd("Delete", this.highlightCircleL);

@@ -32,8 +32,8 @@
 
 
 class StackArray extends Algorithm {
-    static SIZE = 15;
-    static INDEX_COLOR = "#0000FF";
+    SIZE = 15;
+    INDEX_COLOR = "#0000FF";
 
     constructor(am) {
         super();
@@ -83,12 +83,12 @@ class StackArray extends Algorithm {
         this.arrayData = [];
         this.arrayID = [];
         this.arrayLabelID = [];
-        for (let i = 0; i < StackArray.SIZE; i++) {
+        for (let i = 0; i < this.SIZE; i++) {
             this.arrayID[i] = this.nextIndex++;
             this.arrayLabelID[i] = this.nextIndex++;
             this.cmd("CreateRectangle", this.arrayID[i], "", this.getArrayElemWidth(), this.getArrayElemHeight(), this.getArrayX(i), this.getArrayY(i));
             this.cmd("CreateLabel", this.arrayLabelID[i], i, this.getArrayX(i), this.getArrayLabelY(i));
-            this.cmd("SetForegroundColor", this.arrayLabelID[i], StackArray.INDEX_COLOR);
+            this.cmd("SetForegroundColor", this.arrayLabelID[i], this.INDEX_COLOR);
         }
 
         this.highlightID = this.nextIndex++;
@@ -135,7 +135,7 @@ class StackArray extends Algorithm {
     getArrayElemWidth() {
         let nrows = 1;
         while (true) {
-            const w = nrows * this.getCanvasWidth() / (StackArray.SIZE + 2 * nrows);
+            const w = nrows * this.getCanvasWidth() / (this.SIZE + 2 * nrows);
             if (w >= 25) return w;
             nrows++;
         }
@@ -170,7 +170,7 @@ class StackArray extends Algorithm {
     clearAll() {
         this.commands = [];
         this.cmd("SetText", this.leftoverLabelID, "");
-        for (let i = 0; i < StackArray.SIZE; i++) {
+        for (let i = 0; i < this.SIZE; i++) {
             this.arrayData[i] = null;
             this.cmd("SetText", this.arrayID[i], "");
         }
@@ -181,7 +181,7 @@ class StackArray extends Algorithm {
 
     push(elemToPush) {
         this.commands = [];
-        if (this.top >= StackArray.SIZE) {
+        if (this.top >= this.SIZE) {
             this.cmd("SetText", this.leftoverLabelID, "Stack full!");
             return this.commands;
         }
@@ -197,7 +197,7 @@ class StackArray extends Algorithm {
         this.cmd("AlignRight", labPushValID2, this.leftoverLabelID);
         this.cmd("Step");
 
-        this.cmd("CreateHighlightCircle", this.highlightID, StackArray.INDEX_COLOR, 0, 0);
+        this.cmd("CreateHighlightCircle", this.highlightID, this.INDEX_COLOR, 0, 0);
         this.cmd("SetWidth", this.highlightID, this.getArrayElemHeight());
         this.cmd("AlignMiddle", this.highlightID, this.topID);
         this.cmd("Step");
@@ -243,7 +243,7 @@ class StackArray extends Algorithm {
         this.cmd("Step");
 
         this.cmd("SetHighlight", this.topID, 0);
-        this.cmd("CreateHighlightCircle", this.highlightID, StackArray.INDEX_COLOR, 0, 0);
+        this.cmd("CreateHighlightCircle", this.highlightID, this.INDEX_COLOR, 0, 0);
         this.cmd("SetWidth", this.highlightID, this.getArrayElemHeight());
         this.cmd("AlignMiddle", this.highlightID, this.topID);
         this.cmd("Step");

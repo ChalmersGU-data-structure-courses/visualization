@@ -45,8 +45,8 @@
 
 
 class ObjectManager {
-    static STATUSREPORT_LEFT_MARGIN = 25;
-    static STATUSREPORT_BOTTOM_MARGIN = 5;
+    STATUSREPORT_LEFT_MARGIN = 25;
+    STATUSREPORT_BOTTOM_MARGIN = 5;
 
     Nodes = [];
     Edges = [];
@@ -119,8 +119,8 @@ class ObjectManager {
     // Status report
 
     drawStatusReport() {
-        this.statusReport.x = ObjectManager.STATUSREPORT_LEFT_MARGIN;
-        this.statusReport.y = this.canvas.height - this.statusReport.textHeight - ObjectManager.STATUSREPORT_BOTTOM_MARGIN;
+        this.statusReport.x = this.STATUSREPORT_LEFT_MARGIN;
+        this.statusReport.y = this.canvas.height - this.statusReport.textHeight - this.STATUSREPORT_BOTTOM_MARGIN;
         this.statusReport.draw(this.ctx);
     }
 

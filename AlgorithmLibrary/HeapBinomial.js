@@ -48,25 +48,25 @@ class BinomialNode {
 
 
 class HeapBinomial extends Algorithm {
-    static LINK_COLOR = "#007700";
-    static HIGHLIGHT_CIRCLE_COLOR = "#007700";
-    static MERGE_SEPARATING_LINE_COLOR = "#0000FF";
-    static FOREGROUND_COLOR = "#007700";
-    static BACKGROUND_COLOR = "#EEFFEE";
-    static DEGREE_OFFSET_X = -20;
-    static DEGREE_OFFSET_Y = -20;
+    LINK_COLOR = "#007700";
+    HIGHLIGHT_CIRCLE_COLOR = "#007700";
+    MERGE_SEPARATING_LINE_COLOR = "#0000FF";
+    FOREGROUND_COLOR = "#007700";
+    BACKGROUND_COLOR = "#EEFFEE";
+    DEGREE_OFFSET_X = -20;
+    DEGREE_OFFSET_Y = -20;
 
-    static DELETE_LAB_X = 30;
-    static DELETE_LAB_Y = 50;
+    DELETE_LAB_X = 30;
+    DELETE_LAB_Y = 50;
 
-    static NODE_WIDTH = 60;
-    static NODE_HEIGHT = 70;
+    NODE_WIDTH = 60;
+    NODE_HEIGHT = 70;
 
-    static STARTING_X = 70;
-    static STARTING_Y = 80;
+    STARTING_X = 70;
+    STARTING_Y = 80;
 
-    static INSERT_X = 30;
-    static INSERT_Y = 25;
+    INSERT_X = 30;
+    INSERT_Y = 25;
 
     constructor(am) {
         super();
@@ -119,18 +119,18 @@ class HeapBinomial extends Algorithm {
             if (tree.degree === 0) {
                 tree.x = xPosition;
                 tree.y = yPosition;
-                return this.setPositions(tree.rightSib, xPosition + HeapBinomial.NODE_WIDTH, yPosition);
+                return this.setPositions(tree.rightSib, xPosition + this.NODE_WIDTH, yPosition);
             } else if (tree.degree === 1) {
                 tree.x = xPosition;
                 tree.y = yPosition;
-                this.setPositions(tree.leftChild, xPosition, yPosition + HeapBinomial.NODE_HEIGHT);
-                return this.setPositions(tree.rightSib, xPosition + HeapBinomial.NODE_WIDTH, yPosition);
+                this.setPositions(tree.leftChild, xPosition, yPosition + this.NODE_HEIGHT);
+                return this.setPositions(tree.rightSib, xPosition + this.NODE_WIDTH, yPosition);
             } else {
                 const treeWidth = Math.pow(2, tree.degree - 1);
-                tree.x = xPosition + (treeWidth - 1) * HeapBinomial.NODE_WIDTH;
+                tree.x = xPosition + (treeWidth - 1) * this.NODE_WIDTH;
                 tree.y = yPosition;
-                this.setPositions(tree.leftChild, xPosition, yPosition + HeapBinomial.NODE_HEIGHT);
-                return this.setPositions(tree.rightSib, xPosition + treeWidth * HeapBinomial.NODE_WIDTH, yPosition);
+                this.setPositions(tree.leftChild, xPosition, yPosition + this.NODE_HEIGHT);
+                return this.setPositions(tree.rightSib, xPosition + treeWidth * this.NODE_WIDTH, yPosition);
             }
         }
         return xPosition;
@@ -140,7 +140,7 @@ class HeapBinomial extends Algorithm {
         if (tree != null) {
             this.cmd("Move", tree.graphicID, tree.x, tree.y);
             this.cmd("Move", tree.internalGraphicID, tree.x, tree.y);
-            this.cmd("Move", tree.degreeID, tree.x + HeapBinomial.DEGREE_OFFSET_X, tree.y + HeapBinomial.DEGREE_OFFSET_Y);
+            this.cmd("Move", tree.degreeID, tree.x + this.DEGREE_OFFSET_X, tree.y + this.DEGREE_OFFSET_Y);
 
             this.moveTree(tree.leftChild);
             this.moveTree(tree.rightSib);
@@ -215,12 +215,12 @@ class HeapBinomial extends Algorithm {
             this.cmd("SetText", smallest.graphicID, "");
             this.cmd("SetText", smallest.internalGraphicID, "");
             this.cmd("CreateLabel", moveLabel, smallest.data, smallest.x, smallest.y);
-            this.cmd("Move", moveLabel, HeapBinomial.DELETE_LAB_X, HeapBinomial.DELETE_LAB_Y);
+            this.cmd("Move", moveLabel, this.DELETE_LAB_X, this.DELETE_LAB_Y);
             this.cmd("Step");
             if (prev != null && prev.rightSib != null) {
                 this.cmd("Connect", prev.internalGraphicID,
                     prev.rightSib.internalGraphicID,
-                    HeapBinomial.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     1, // Directed
                     ""); // Label
@@ -246,7 +246,7 @@ class HeapBinomial extends Algorithm {
                 this.cmd("Disconnect", tree.internalGraphicID, tree.rightSib.internalGraphicID);
                 this.cmd("Connect", tree.rightSib.internalGraphicID,
                     tree.internalGraphicID,
-                    HeapBinomial.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     1, // Directed
                     ""); // Label
@@ -263,25 +263,25 @@ class HeapBinomial extends Algorithm {
     insertElement(insertedValue) {
         this.commands = [];
 
-        const insertNode = new BinomialNode(insertedValue, this.nextIndex++, HeapBinomial.INSERT_X, HeapBinomial.INSERT_Y);
+        const insertNode = new BinomialNode(insertedValue, this.nextIndex++, this.INSERT_X, this.INSERT_Y);
         insertNode.internalGraphicID = this.nextIndex++;
         insertNode.degreeID = this.nextIndex++;
-        this.cmd("CreateCircle", insertNode.graphicID, insertedValue, HeapBinomial.INSERT_X, HeapBinomial.INSERT_Y);
-        this.cmd("SetForegroundColor", insertNode.graphicID, HeapBinomial.FOREGROUND_COLOR);
-        this.cmd("SetBackgroundColor", insertNode.graphicID, HeapBinomial.BACKGROUND_COLOR);
+        this.cmd("CreateCircle", insertNode.graphicID, insertedValue, this.INSERT_X, this.INSERT_Y);
+        this.cmd("SetForegroundColor", insertNode.graphicID, this.FOREGROUND_COLOR);
+        this.cmd("SetBackgroundColor", insertNode.graphicID, this.BACKGROUND_COLOR);
         this.cmd("SetLayer", insertNode.graphicID, 1);
-        this.cmd("CreateCircle", insertNode.internalGraphicID, insertedValue, HeapBinomial.INSERT_X, HeapBinomial.INSERT_Y);
-        this.cmd("SetForegroundColor", insertNode.internalGraphicID, HeapBinomial.FOREGROUND_COLOR);
-        this.cmd("SetBackgroundColor", insertNode.internalGraphicID, HeapBinomial.BACKGROUND_COLOR);
+        this.cmd("CreateCircle", insertNode.internalGraphicID, insertedValue, this.INSERT_X, this.INSERT_Y);
+        this.cmd("SetForegroundColor", insertNode.internalGraphicID, this.FOREGROUND_COLOR);
+        this.cmd("SetBackgroundColor", insertNode.internalGraphicID, this.BACKGROUND_COLOR);
         this.cmd("SetLayer", insertNode.internalGraphicID, 2);
-        this.cmd("CreateLabel", insertNode.degreeID, insertNode.degree, insertNode.x + HeapBinomial.DEGREE_OFFSET_X, insertNode.y + HeapBinomial.DEGREE_OFFSET_Y);
+        this.cmd("CreateLabel", insertNode.degreeID, insertNode.degree, insertNode.x + this.DEGREE_OFFSET_X, insertNode.y + this.DEGREE_OFFSET_Y);
         this.cmd("SetTextColor", insertNode.degreeID, "#0000FF");
         this.cmd("SetLayer", insertNode.degreeID, 2);
         this.cmd("Step");
 
         if (this.treeRoot == null) {
             this.treeRoot = insertNode;
-            this.setPositions(this.treeRoot, HeapBinomial.STARTING_X, HeapBinomial.STARTING_Y);
+            this.setPositions(this.treeRoot, this.STARTING_X, this.STARTING_Y);
             this.moveTree(this.treeRoot);
         } else {
             this.secondaryTreeRoot = insertNode;
@@ -295,17 +295,17 @@ class HeapBinomial extends Algorithm {
         if (this.treeRoot == null) {
             this.treeRoot = this.secondaryTreeRoot;
             this.secondaryTreeRoot = null;
-            this.setPositions(this.treeRoot, HeapBinomial.NODE_WIDTH, HeapBinomial.STARTING_Y);
+            this.setPositions(this.treeRoot, this.NODE_WIDTH, this.STARTING_Y);
             this.moveTree(this.treeRoot);
             return;
         }
-        let leftSize = this.setPositions(this.treeRoot, HeapBinomial.STARTING_X, HeapBinomial.STARTING_Y);
-        this.setPositions(this.secondaryTreeRoot, leftSize + HeapBinomial.NODE_WIDTH, HeapBinomial.STARTING_Y);
+        let leftSize = this.setPositions(this.treeRoot, this.STARTING_X, this.STARTING_Y);
+        this.setPositions(this.secondaryTreeRoot, leftSize + this.NODE_WIDTH, this.STARTING_Y);
         this.moveTree(this.secondaryTreeRoot);
         this.moveTree(this.treeRoot);
         const lineID = this.nextIndex++;
         this.cmd("CreateRectangle", lineID, "", 0, 200, leftSize, 50, "left", "top");
-        this.cmd("SetForegroundColor", lineID, HeapBinomial.MERGE_SEPARATING_LINE_COLOR);
+        this.cmd("SetForegroundColor", lineID, this.MERGE_SEPARATING_LINE_COLOR);
         this.cmd("SetLayer", lineID, 0);
         this.cmd("Step");
 
@@ -320,7 +320,7 @@ class HeapBinomial extends Algorithm {
                 this.treeRoot = tmp;
                 this.cmd("Connect", this.treeRoot.internalGraphicID,
                     this.treeRoot.rightSib.internalGraphicID,
-                    HeapBinomial.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     1, // Directed
                     ""); // Label
@@ -333,7 +333,7 @@ class HeapBinomial extends Algorithm {
                     this.cmd("Disconnect", tmp2.internalGraphicID, tmp2.rightSib.internalGraphicID);
                     this.cmd("Connect", tmp.internalGraphicID,
                         tmp2.rightSib.internalGraphicID,
-                        HeapBinomial.FOREGROUND_COLOR,
+                        this.FOREGROUND_COLOR,
                         0, // Curve
                         1, // Directed
                         ""); // Label
@@ -342,13 +342,13 @@ class HeapBinomial extends Algorithm {
                 tmp2.rightSib = tmp;
                 this.cmd("Connect", tmp2.internalGraphicID,
                     tmp.internalGraphicID,
-                    HeapBinomial.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     1, // Directed
                     ""); // Label
             }
-            leftSize = this.setPositions(this.treeRoot, HeapBinomial.STARTING_X, HeapBinomial.STARTING_Y);
-            this.setPositions(this.secondaryTreeRoot, leftSize + HeapBinomial.NODE_WIDTH, HeapBinomial.STARTING_Y);
+            leftSize = this.setPositions(this.treeRoot, this.STARTING_X, this.STARTING_Y);
+            this.setPositions(this.secondaryTreeRoot, leftSize + this.NODE_WIDTH, this.STARTING_Y);
             this.moveTree(this.secondaryTreeRoot);
             this.moveTree(this.treeRoot);
             this.cmd("Move", lineID, leftSize, 50);
@@ -380,21 +380,21 @@ class HeapBinomial extends Algorithm {
             }
             this.cmd("Connect", this.treeRoot.graphicID,
                 this.treeRoot.leftChild.graphicID,
-                HeapBinomial.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0, // Curve
                 0, // Directed
                 ""); // Label
 
             this.cmd("Connect", this.treeRoot.internalGraphicID,
                 this.treeRoot.leftChild.internalGraphicID,
-                HeapBinomial.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0.15, // Curve
                 1, // Directed
                 ""); // Label
 
             this.cmd("Connect", this.treeRoot.leftChild.internalGraphicID,
                 this.treeRoot.internalGraphicID,
-                HeapBinomial.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0, // Curve
                 1, // Directed
                 ""); // Label
@@ -402,7 +402,7 @@ class HeapBinomial extends Algorithm {
                 this.cmd("Disconnect", this.treeRoot.internalGraphicID, this.treeRoot.leftChild.rightSib.internalGraphicID);
                 this.cmd("Connect", this.treeRoot.leftChild.internalGraphicID,
                     this.treeRoot.leftChild.rightSib.internalGraphicID,
-                    HeapBinomial.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     1, // Directed
                     ""); // Label
@@ -410,7 +410,7 @@ class HeapBinomial extends Algorithm {
             if (this.treeRoot.rightSib != null) {
                 this.cmd("Connect", this.treeRoot.internalGraphicID,
                     this.treeRoot.rightSib.internalGraphicID,
-                    HeapBinomial.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     1, // Directed
                     ""); // Label
@@ -420,7 +420,7 @@ class HeapBinomial extends Algorithm {
 
             this.cmd("SetText", this.treeRoot.degreeID, this.treeRoot.degree);
 
-            this.setPositions(this.treeRoot, HeapBinomial.STARTING_X, HeapBinomial.STARTING_Y);
+            this.setPositions(this.treeRoot, this.STARTING_X, this.STARTING_Y);
             this.moveTree(this.treeRoot);
             this.cmd("Step");
         }
@@ -462,28 +462,28 @@ class HeapBinomial extends Algorithm {
                 }
                 this.cmd("Connect", tempRoot.graphicID,
                     tempRoot.leftChild.graphicID,
-                    HeapBinomial.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     0, // Directed
                     ""); // Label
 
                 this.cmd("Connect", tempRoot.internalGraphicID,
                     tempRoot.leftChild.internalGraphicID,
-                    HeapBinomial.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0.15, // Curve
                     1, // Directed
                     ""); // Label
 
                 this.cmd("Connect", tempRoot.leftChild.internalGraphicID,
                     tempRoot.internalGraphicID,
-                    HeapBinomial.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     1, // Directed
                     ""); // Label
 
                 this.cmd("Connect", tmp2.internalGraphicID,
                     tempRoot.internalGraphicID,
-                    HeapBinomial.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     1, // Directed
                     ""); // Label
@@ -492,7 +492,7 @@ class HeapBinomial extends Algorithm {
                     this.cmd("Disconnect", tempRoot.internalGraphicID, tempRoot.leftChild.rightSib.internalGraphicID);
                     this.cmd("Connect", tempRoot.leftChild.internalGraphicID,
                         tempRoot.leftChild.rightSib.internalGraphicID,
-                        HeapBinomial.FOREGROUND_COLOR,
+                        this.FOREGROUND_COLOR,
                         0, // Curve
                         1, // Directed
                         ""); // Label);
@@ -500,13 +500,13 @@ class HeapBinomial extends Algorithm {
                 if (tempRoot.rightSib != null) {
                     this.cmd("Connect", tempRoot.internalGraphicID,
                         tempRoot.rightSib.internalGraphicID,
-                        HeapBinomial.FOREGROUND_COLOR,
+                        this.FOREGROUND_COLOR,
                         0, // Curve
                         1, // Directed
                         ""); // Label);
                 }
 
-                this.setPositions(this.treeRoot, HeapBinomial.STARTING_X, HeapBinomial.STARTING_Y);
+                this.setPositions(this.treeRoot, this.STARTING_X, this.STARTING_Y);
                 this.moveTree(this.treeRoot);
                 this.cmd("Step");
             }

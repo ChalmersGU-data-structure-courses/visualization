@@ -53,32 +53,32 @@ class RedBlackNode {
 
 
 class TreeRedBlack extends Algorithm {
-    static FOREGROUND_RED = "#770000";
-    static BACKGROUND_RED = "#FFBBBB";
-    static FOREGROUND_BLACK = "#000000";
-    static BACKGROUND_BLACK = "#CCCCCC";
-    static BACKGROUND_DOUBLE_BLACK = "#777777";
-    static BACKGROUND_NULL_LEAF = TreeRedBlack.BACKGROUND_DOUBLE_BLACK;
+    FOREGROUND_RED = "#770000";
+    BACKGROUND_RED = "#FFBBBB";
+    FOREGROUND_BLACK = "#000000";
+    BACKGROUND_BLACK = "#CCCCCC";
+    BACKGROUND_DOUBLE_BLACK = "#777777";
+    BACKGROUND_NULL_LEAF = this.BACKGROUND_DOUBLE_BLACK;
 
-    static HIGHLIGHT_LABEL_COLOR = "#FF0000";
-    static HIGHLIGHT_LINK_COLOR = TreeRedBlack.HIGHLIGHT_LABEL_COLOR;
+    HIGHLIGHT_LABEL_COLOR = "#FF0000";
+    HIGHLIGHT_LINK_COLOR = this.HIGHLIGHT_LABEL_COLOR;
 
-    static LINK_COLOR = TreeRedBlack.FOREGROUND_BLACK;
-    static HIGHLIGHT_COLOR = "#007700";
-    static PRINT_COLOR = TreeRedBlack.FOREGROUND_BLACK;
+    LINK_COLOR = this.FOREGROUND_BLACK;
+    HIGHLIGHT_COLOR = "#007700";
+    PRINT_COLOR = this.FOREGROUND_BLACK;
 
-    static NODE_SIZE = 40;
-    static NULL_LEAF_SIZE = TreeRedBlack.NODE_SIZE / 2;
-    static WIDTH_DELTA = TreeRedBlack.NODE_SIZE + 10;
-    static HEIGHT_DELTA = TreeRedBlack.NODE_SIZE + 10;
-    static STARTING_Y = 50;
+    NODE_SIZE = 40;
+    NULL_LEAF_SIZE = this.NODE_SIZE / 2;
+    WIDTH_DELTA = this.NODE_SIZE + 10;
+    HEIGHT_DELTA = this.NODE_SIZE + 10;
+    STARTING_Y = 50;
 
-    static FIRST_PRINT_POS_X = 50;
-    static PRINT_VERTICAL_GAP = 20;
-    static PRINT_HORIZONTAL_GAP = 50;
+    FIRST_PRINT_POS_X = 50;
+    PRINT_VERTICAL_GAP = 20;
+    PRINT_HORIZONTAL_GAP = 50;
 
-    static MESSAGE_X = 10;
-    static MESSAGE_Y = 10;
+    MESSAGE_X = 10;
+    MESSAGE_Y = 10;
 
     constructor(am) {
         super();
@@ -95,7 +95,7 @@ class TreeRedBlack extends Algorithm {
         this.nextIndex = 0;
         this.commands = [];
         this.messageID = this.nextIndex++;
-        this.cmd("CreateLabel", this.messageID, "", TreeRedBlack.MESSAGE_X, TreeRedBlack.MESSAGE_Y, 0);
+        this.cmd("CreateLabel", this.messageID, "", this.MESSAGE_X, this.MESSAGE_Y, 0);
 
         this.initialIndex = this.nextIndex;
         this.animationManager.StartNewAnimation(this.commands);
@@ -110,8 +110,8 @@ class TreeRedBlack extends Algorithm {
         const h = this.getCanvasHeight();
 
         this.startingX = w / 2;
-        this.firstPrintPosY = h - 3 * TreeRedBlack.PRINT_VERTICAL_GAP;
-        this.printMax = w - TreeRedBlack.PRINT_HORIZONTAL_GAP;
+        this.firstPrintPosY = h - 3 * this.PRINT_VERTICAL_GAP;
+        this.printMax = w - this.PRINT_HORIZONTAL_GAP;
 
         this.implementAction(() => {
             this.commands = [];
@@ -208,10 +208,10 @@ class TreeRedBlack extends Algorithm {
         this.commands = [];
         this.cmd("SetText", this.messageID, "Printing tree");
         this.highlightID = this.nextIndex++;
-        this.cmd("CreateHighlightCircle", this.highlightID, TreeRedBlack.HIGHLIGHT_COLOR, this.treeRoot.x, this.treeRoot.y);
+        this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_COLOR, this.treeRoot.x, this.treeRoot.y);
         const firstLabel = this.nextIndex;
 
-        this.xPosOfNextLabel = TreeRedBlack.FIRST_PRINT_POS_X;
+        this.xPosOfNextLabel = this.FIRST_PRINT_POS_X;
         this.yPosOfNextLabel = this.firstPrintPosY;
 
         this.printTreeRec(this.treeRoot);
@@ -235,14 +235,14 @@ class TreeRedBlack extends Algorithm {
         }
         const nextLabelID = this.nextIndex++;
         this.cmd("CreateLabel", nextLabelID, tree.data, tree.x, tree.y);
-        this.cmd("SetForegroundColor", nextLabelID, TreeRedBlack.PRINT_COLOR);
+        this.cmd("SetForegroundColor", nextLabelID, this.PRINT_COLOR);
         this.cmd("Move", nextLabelID, this.xPosOfNextLabel, this.yPosOfNextLabel);
         this.cmd("Step");
 
-        this.xPosOfNextLabel += TreeRedBlack.PRINT_HORIZONTAL_GAP;
+        this.xPosOfNextLabel += this.PRINT_HORIZONTAL_GAP;
         if (this.xPosOfNextLabel > this.printMax) {
-            this.xPosOfNextLabel = TreeRedBlack.FIRST_PRINT_POS_X;
-            this.yPosOfNextLabel += TreeRedBlack.PRINT_VERTICAL_GAP;
+            this.xPosOfNextLabel = this.FIRST_PRINT_POS_X;
+            this.yPosOfNextLabel += this.PRINT_VERTICAL_GAP;
         }
         if (tree.right != null && !tree.right.phantomLeaf) {
             this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
@@ -300,7 +300,7 @@ class TreeRedBlack extends Algorithm {
                 this.cmd("Step");
                 this.cmd("SetHighlight", tree.graphicID, 0);
                 if (tree.left != null) {
-                    this.cmd("CreateHighlightCircle", this.highlightID, TreeRedBlack.HIGHLIGHT_COLOR, tree.x, tree.y);
+                    this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_COLOR, tree.x, tree.y);
                     this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
                     this.cmd("Step");
                     this.cmd("Delete", this.highlightID);
@@ -311,7 +311,7 @@ class TreeRedBlack extends Algorithm {
                 this.cmd("Step");
                 this.cmd("SetHighlight", tree.graphicID, 0);
                 if (tree.right != null) {
-                    this.cmd("CreateHighlightCircle", this.highlightID, TreeRedBlack.HIGHLIGHT_COLOR, tree.x, tree.y);
+                    this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_COLOR, tree.x, tree.y);
                     this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
                     this.cmd("Step");
                     this.cmd("Delete", this.highlightID);
@@ -330,19 +330,19 @@ class TreeRedBlack extends Algorithm {
         const treeNodeID = this.nextIndex++;
 
         if (this.treeRoot == null) {
-            const x = this.startingX, y = TreeRedBlack.STARTING_Y;
+            const x = this.startingX, y = this.STARTING_Y;
             this.cmd("CreateCircle", treeNodeID, insertedValue, x, y);
-            this.cmd("SetWidth", treeNodeID, TreeRedBlack.NODE_SIZE);
-            this.cmd("SetForegroundColor", treeNodeID, TreeRedBlack.FOREGROUND_BLACK);
-            this.cmd("SetBackgroundColor", treeNodeID, TreeRedBlack.BACKGROUND_BLACK);
+            this.cmd("SetWidth", treeNodeID, this.NODE_SIZE);
+            this.cmd("SetForegroundColor", treeNodeID, this.FOREGROUND_BLACK);
+            this.cmd("SetBackgroundColor", treeNodeID, this.BACKGROUND_BLACK);
             this.treeRoot = new RedBlackNode(insertedValue, treeNodeID, 1, x, y);
             this.attachNullLeaves(this.treeRoot);
         } else {
-            const x = TreeRedBlack.STARTING_Y, y = 2 * TreeRedBlack.STARTING_Y;
+            const x = this.STARTING_Y, y = 2 * this.STARTING_Y;
             this.cmd("CreateCircle", treeNodeID, insertedValue, x, y);
-            this.cmd("SetWidth", treeNodeID, TreeRedBlack.NODE_SIZE);
-            this.cmd("SetForegroundColor", treeNodeID, TreeRedBlack.FOREGROUND_RED);
-            this.cmd("SetBackgroundColor", treeNodeID, TreeRedBlack.BACKGROUND_RED);
+            this.cmd("SetWidth", treeNodeID, this.NODE_SIZE);
+            this.cmd("SetForegroundColor", treeNodeID, this.FOREGROUND_RED);
+            this.cmd("SetBackgroundColor", treeNodeID, this.BACKGROUND_RED);
             this.cmd("Step");
             const insertElem = new RedBlackNode(insertedValue, treeNodeID, 0, x, y);
             this.cmd("SetHighlight", insertElem.graphicID, 1);
@@ -374,13 +374,13 @@ class TreeRedBlack extends Algorithm {
         // Add phantom leaf to the left or right
         const nullLeafID = this.nextIndex++;
         this.cmd("CreateCircle", nullLeafID, "", node.x, node.y);
-        this.cmd("SetWidth", nullLeafID, TreeRedBlack.NULL_LEAF_SIZE);
-        this.cmd("SetBackgroundColor", nullLeafID, TreeRedBlack.BACKGROUND_NULL_LEAF);
-        const nullLeaf = new RedBlackNode("", nullLeafID, 1, this.startingX, TreeRedBlack.STARTING_Y);
+        this.cmd("SetWidth", nullLeafID, this.NULL_LEAF_SIZE);
+        this.cmd("SetBackgroundColor", nullLeafID, this.BACKGROUND_NULL_LEAF);
+        const nullLeaf = new RedBlackNode("", nullLeafID, 1, this.startingX, this.STARTING_Y);
         nullLeaf.phantomLeaf = true;
         nullLeaf.parent = node;
         this.cmd("SetLayer", nullLeafID, 1);
-        this.cmd("Connect", node.graphicID, nullLeafID, TreeRedBlack.LINK_COLOR);
+        this.cmd("Connect", node.graphicID, nullLeafID, this.LINK_COLOR);
         if (isLeftChild) {
             node.left = nullLeaf;
         } else {
@@ -407,17 +407,17 @@ class TreeRedBlack extends Algorithm {
 
         if (t2 != null) {
             this.cmd("Disconnect", A.graphicID, t2.graphicID);
-            this.cmd("Connect", B.graphicID, t2.graphicID, TreeRedBlack.LINK_COLOR);
+            this.cmd("Connect", B.graphicID, t2.graphicID, this.LINK_COLOR);
             t2.parent = B;
         }
         this.cmd("Disconnect", B.graphicID, A.graphicID);
-        this.cmd("Connect", A.graphicID, B.graphicID, TreeRedBlack.LINK_COLOR);
+        this.cmd("Connect", A.graphicID, B.graphicID, this.LINK_COLOR);
         A.parent = B.parent;
         if (this.treeRoot === B) {
             this.treeRoot = A;
         } else {
-            this.cmd("Disconnect", B.parent.graphicID, B.graphicID, TreeRedBlack.LINK_COLOR);
-            this.cmd("Connect", B.parent.graphicID, A.graphicID, TreeRedBlack.LINK_COLOR);
+            this.cmd("Disconnect", B.parent.graphicID, B.graphicID, this.LINK_COLOR);
+            this.cmd("Connect", B.parent.graphicID, A.graphicID, this.LINK_COLOR);
             if (B.isLeftChild()) {
                 B.parent.left = A;
             } else {
@@ -444,17 +444,17 @@ class TreeRedBlack extends Algorithm {
 
         if (t2 != null) {
             this.cmd("Disconnect", B.graphicID, t2.graphicID);
-            this.cmd("Connect", A.graphicID, t2.graphicID, TreeRedBlack.LINK_COLOR);
+            this.cmd("Connect", A.graphicID, t2.graphicID, this.LINK_COLOR);
             t2.parent = A;
         }
         this.cmd("Disconnect", A.graphicID, B.graphicID);
-        this.cmd("Connect", B.graphicID, A.graphicID, TreeRedBlack.LINK_COLOR);
+        this.cmd("Connect", B.graphicID, A.graphicID, this.LINK_COLOR);
         B.parent = A.parent;
         if (this.treeRoot === A) {
             this.treeRoot = B;
         } else {
-            this.cmd("Disconnect", A.parent.graphicID, A.graphicID, TreeRedBlack.LINK_COLOR);
-            this.cmd("Connect", A.parent.graphicID, B.graphicID, TreeRedBlack.LINK_COLOR);
+            this.cmd("Disconnect", A.parent.graphicID, A.graphicID, this.LINK_COLOR);
+            this.cmd("Connect", A.parent.graphicID, B.graphicID, this.LINK_COLOR);
             if (A.isLeftChild()) {
                 A.parent.left = B;
             } else {
@@ -491,13 +491,13 @@ class TreeRedBlack extends Algorithm {
                 this.cmd("SetHighlight", elem.graphicID, 0);
                 tree.left = elem;
                 elem.parent = tree;
-                this.cmd("Connect", tree.graphicID, elem.graphicID, TreeRedBlack.LINK_COLOR);
+                this.cmd("Connect", tree.graphicID, elem.graphicID, this.LINK_COLOR);
 
                 this.attachNullLeaves(elem);
                 this.resizeTree();
                 this.fixDoubleRed(elem);
             } else {
-                this.cmd("CreateHighlightCircle", this.highlightID, TreeRedBlack.HIGHLIGHT_COLOR, tree.x, tree.y);
+                this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_COLOR, tree.x, tree.y);
                 this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
                 this.cmd("Step");
                 this.cmd("Delete", this.highlightID);
@@ -511,16 +511,16 @@ class TreeRedBlack extends Algorithm {
             this.cmd("SetHighlight", elem.graphicID, 0);
             tree.right = elem;
             elem.parent = tree;
-            this.cmd("Connect", tree.graphicID, elem.graphicID, TreeRedBlack.LINK_COLOR);
-            elem.x = tree.x + TreeRedBlack.WIDTH_DELTA / 2;
-            elem.y = tree.y + TreeRedBlack.HEIGHT_DELTA;
+            this.cmd("Connect", tree.graphicID, elem.graphicID, this.LINK_COLOR);
+            elem.x = tree.x + this.WIDTH_DELTA / 2;
+            elem.y = tree.y + this.HEIGHT_DELTA;
             this.cmd("Move", elem.graphicID, elem.x, elem.y);
 
             this.attachNullLeaves(elem);
             this.resizeTree();
             this.fixDoubleRed(elem);
         } else {
-            this.cmd("CreateHighlightCircle", this.highlightID, TreeRedBlack.HIGHLIGHT_COLOR, tree.x, tree.y);
+            this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_COLOR, tree.x, tree.y);
             this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
             this.cmd("Step");
             this.cmd("Delete", this.highlightID);
@@ -537,8 +537,8 @@ class TreeRedBlack extends Algorithm {
                 this.cmd("SetText", this.messageID, "Tree root is red: Color it black");
                 this.cmd("Step");
                 tree.parent.blackLevel = 1;
-                this.cmd("SetForegroundColor", tree.parent.graphicID, TreeRedBlack.FOREGROUND_BLACK);
-                this.cmd("SetBackgroundColor", tree.parent.graphicID, TreeRedBlack.BACKGROUND_BLACK);
+                this.cmd("SetForegroundColor", tree.parent.graphicID, this.FOREGROUND_BLACK);
+                this.cmd("SetBackgroundColor", tree.parent.graphicID, this.BACKGROUND_BLACK);
                 return;
             }
             const uncle = this.findUncle(tree);
@@ -547,16 +547,16 @@ class TreeRedBlack extends Algorithm {
                 this.cmd("Step");
 
                 uncle.blackLevel = 1;
-                this.cmd("SetForegroundColor", uncle.graphicID, TreeRedBlack.FOREGROUND_BLACK);
-                this.cmd("SetBackgroundColor", uncle.graphicID, TreeRedBlack.BACKGROUND_BLACK);
+                this.cmd("SetForegroundColor", uncle.graphicID, this.FOREGROUND_BLACK);
+                this.cmd("SetBackgroundColor", uncle.graphicID, this.BACKGROUND_BLACK);
 
                 tree.parent.blackLevel = 1;
-                this.cmd("SetForegroundColor", tree.parent.graphicID, TreeRedBlack.FOREGROUND_BLACK);
-                this.cmd("SetBackgroundColor", tree.parent.graphicID, TreeRedBlack.BACKGROUND_BLACK);
+                this.cmd("SetForegroundColor", tree.parent.graphicID, this.FOREGROUND_BLACK);
+                this.cmd("SetBackgroundColor", tree.parent.graphicID, this.BACKGROUND_BLACK);
 
                 tree.parent.parent.blackLevel = 0;
-                this.cmd("SetForegroundColor", tree.parent.parent.graphicID, TreeRedBlack.FOREGROUND_RED);
-                this.cmd("SetBackgroundColor", tree.parent.parent.graphicID, TreeRedBlack.BACKGROUND_RED);
+                this.cmd("SetForegroundColor", tree.parent.parent.graphicID, this.FOREGROUND_RED);
+                this.cmd("SetBackgroundColor", tree.parent.parent.graphicID, this.BACKGROUND_RED);
                 this.cmd("Step");
                 this.fixDoubleRed(tree.parent.parent);
             } else {
@@ -578,24 +578,24 @@ class TreeRedBlack extends Algorithm {
                     this.singleRotateRight(tree.parent.parent);
 
                     tree.parent.blackLevel = 1;
-                    this.cmd("SetForegroundColor", tree.parent.graphicID, TreeRedBlack.FOREGROUND_BLACK);
-                    this.cmd("SetBackgroundColor", tree.parent.graphicID, TreeRedBlack.BACKGROUND_BLACK);
+                    this.cmd("SetForegroundColor", tree.parent.graphicID, this.FOREGROUND_BLACK);
+                    this.cmd("SetBackgroundColor", tree.parent.graphicID, this.BACKGROUND_BLACK);
 
                     tree.parent.right.blackLevel = 0;
-                    this.cmd("SetForegroundColor", tree.parent.right.graphicID, TreeRedBlack.FOREGROUND_RED);
-                    this.cmd("SetBackgroundColor", tree.parent.right.graphicID, TreeRedBlack.BACKGROUND_RED);
+                    this.cmd("SetForegroundColor", tree.parent.right.graphicID, this.FOREGROUND_RED);
+                    this.cmd("SetBackgroundColor", tree.parent.right.graphicID, this.BACKGROUND_RED);
                 } else {
                     this.cmd("SetText", this.messageID, "Node and parent are both red, node is right child, parent is right child: \nOne left rotation can fix extra redness");
                     this.cmd("Step");
                     this.singleRotateLeft(tree.parent.parent);
 
                     tree.parent.blackLevel = 1;
-                    this.cmd("SetForegroundColor", tree.parent.graphicID, TreeRedBlack.FOREGROUND_BLACK);
-                    this.cmd("SetBackgroundColor", tree.parent.graphicID, TreeRedBlack.BACKGROUND_BLACK);
+                    this.cmd("SetForegroundColor", tree.parent.graphicID, this.FOREGROUND_BLACK);
+                    this.cmd("SetBackgroundColor", tree.parent.graphicID, this.BACKGROUND_BLACK);
 
                     tree.parent.left.blackLevel = 0;
-                    this.cmd("SetForegroundColor", tree.parent.left.graphicID, TreeRedBlack.FOREGROUND_RED);
-                    this.cmd("SetBackgroundColor", tree.parent.left.graphicID, TreeRedBlack.BACKGROUND_RED);
+                    this.cmd("SetForegroundColor", tree.parent.left.graphicID, this.FOREGROUND_RED);
+                    this.cmd("SetBackgroundColor", tree.parent.left.graphicID, this.BACKGROUND_RED);
                 }
             }
         } else if (tree.blackLevel === 0) {
@@ -603,8 +603,8 @@ class TreeRedBlack extends Algorithm {
             this.cmd("Step");
 
             tree.blackLevel = 1;
-            this.cmd("SetForegroundColor", tree.graphicID, TreeRedBlack.FOREGROUND_BLACK);
-            this.cmd("SetBackgroundColor", tree.graphicID, TreeRedBlack.BACKGROUND_BLACK);
+            this.cmd("SetForegroundColor", tree.graphicID, this.FOREGROUND_BLACK);
+            this.cmd("SetBackgroundColor", tree.graphicID, this.BACKGROUND_BLACK);
         }
     }
 
@@ -735,7 +735,7 @@ class TreeRedBlack extends Algorithm {
                 this.cmd("SetText", this.messageID, "Double black node is root: Make it single black");
                 this.cmd("Step");
                 tree.blackLevel = 1;
-                this.cmd("SetBackgroundColor", tree.graphicID, TreeRedBlack.BACKGROUND_BLACK);
+                this.cmd("SetBackgroundColor", tree.graphicID, this.BACKGROUND_BLACK);
             } else if (tree.parent.left === tree) {
                 this.fixDoubleBlackChild(tree.parent, true);
             } else {
@@ -804,7 +804,7 @@ class TreeRedBlack extends Algorithm {
 
                     if (tree.parent != null) {
                         this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
-                        this.cmd("Connect", tree.parent.graphicID, tree.right.graphicID, TreeRedBlack.LINK_COLOR);
+                        this.cmd("Connect", tree.parent.graphicID, tree.right.graphicID, this.LINK_COLOR);
                         this.cmd("Step");
                         this.cmd("Delete", tree.graphicID);
                         if (leftchild) {
@@ -831,8 +831,8 @@ class TreeRedBlack extends Algorithm {
                         this.treeRoot.parent = null;
                         if (this.treeRoot.blackLevel === 0) {
                             this.treeRoot.blackLevel = 1;
-                            this.cmd("SetForegroundColor", this.treeRoot.graphicID, TreeRedBlack.FOREGROUND_BLACK);
-                            this.cmd("SetBackgroundColor", this.treeRoot.graphicID, TreeRedBlack.BACKGROUND_BLACK);
+                            this.cmd("SetForegroundColor", this.treeRoot.graphicID, this.FOREGROUND_BLACK);
+                            this.cmd("SetBackgroundColor", this.treeRoot.graphicID, this.BACKGROUND_BLACK);
                         }
                     }
                     this.resizeTree();
@@ -844,7 +844,7 @@ class TreeRedBlack extends Algorithm {
                     }
                     if (tree.parent != null) {
                         this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
-                        this.cmd("Connect", tree.parent.graphicID, tree.left.graphicID, TreeRedBlack.LINK_COLOR);
+                        this.cmd("Connect", tree.parent.graphicID, tree.left.graphicID, this.LINK_COLOR);
                         this.cmd("Step");
                         this.cmd("Delete", tree.graphicID);
                         if (leftchild) {
@@ -883,7 +883,7 @@ class TreeRedBlack extends Algorithm {
                 } else { // tree.left != null && tree.right != null
                     this.cmd("SetText", this.messageID, "Node to delete has two childern: \nFind largest node in left subtree");
                     this.highlightID = this.nextIndex++;
-                    this.cmd("CreateHighlightCircle", this.highlightID, TreeRedBlack.HIGHLIGHT_COLOR, tree.x, tree.y);
+                    this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_COLOR, tree.x, tree.y);
                     let tmp = tree;
                     tmp = tree.left;
                     this.cmd("Move", this.highlightID, tmp.x, tmp.y);
@@ -900,7 +900,7 @@ class TreeRedBlack extends Algorithm {
                     this.cmd("SetText", tree.graphicID, " ");
                     const labelID = this.nextIndex++;
                     this.cmd("CreateLabel", labelID, tmp.data, tmp.x, tmp.y);
-                    this.cmd("SetForegroundColor", labelID, TreeRedBlack.FOREGROUND_BLACK);
+                    this.cmd("SetForegroundColor", labelID, this.FOREGROUND_BLACK);
                     tree.data = tmp.data;
                     this.cmd("Move", labelID, tree.x, tree.y);
                     this.cmd("SetText", this.messageID, "Copy largest value of left subtree into node to delete");
@@ -936,7 +936,7 @@ class TreeRedBlack extends Algorithm {
                         }
                     } else {
                         this.cmd("Disconnect", tmp.parent.graphicID, tmp.graphicID);
-                        this.cmd("Connect", tmp.parent.graphicID, tmp.left.graphicID, TreeRedBlack.LINK_COLOR);
+                        this.cmd("Connect", tmp.parent.graphicID, tmp.left.graphicID, this.LINK_COLOR);
                         this.cmd("Step");
                         this.cmd("Delete", tmp.graphicID);
 
@@ -986,7 +986,7 @@ class TreeRedBlack extends Algorithm {
                 }
             } else if (cmp < 0) {
                 if (tree.left != null) {
-                    this.cmd("CreateHighlightCircle", this.highlightID, TreeRedBlack.HIGHLIGHT_COLOR, tree.x, tree.y);
+                    this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_COLOR, tree.x, tree.y);
                     this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
                     this.cmd("Step");
                     this.cmd("Delete", this.highlightID);
@@ -994,7 +994,7 @@ class TreeRedBlack extends Algorithm {
                 this.treeDelete(tree.left, valueToDelete);
             } else {
                 if (tree.right != null) {
-                    this.cmd("CreateHighlightCircle", this.highlightID, TreeRedBlack.HIGHLIGHT_COLOR, tree.x, tree.y);
+                    this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_COLOR, tree.x, tree.y);
                     this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
                     this.cmd("Step");
                     this.cmd("Delete", this.highlightID);
@@ -1009,14 +1009,14 @@ class TreeRedBlack extends Algorithm {
 
     fixNodeColor(tree) {
         this.cmd("SetForegroundColor", tree.graphicID, (
-            tree.blackLevel === 0 ? TreeRedBlack.FOREGROUND_RED :
-            /* blackLevel >= 1 */ TreeRedBlack.FOREGROUND_BLACK
+            tree.blackLevel === 0 ? this.FOREGROUND_RED :
+            /* blackLevel >= 1 */ this.FOREGROUND_BLACK
         ));
         this.cmd("SetBackgroundColor", tree.graphicID, (
-            tree.phantomLeaf ? TreeRedBlack.BACKGROUND_NULL_LEAF :
-            tree.blackLevel === 0 ? TreeRedBlack.BACKGROUND_RED :
-            tree.blackLevel === 1 ? TreeRedBlack.BACKGROUND_BLACK :
-            /* blackLevel > 1 */ TreeRedBlack.BACKGROUND_DOUBLE_BLACK
+            tree.phantomLeaf ? this.BACKGROUND_NULL_LEAF :
+            tree.blackLevel === 0 ? this.BACKGROUND_RED :
+            tree.blackLevel === 1 ? this.BACKGROUND_BLACK :
+            /* blackLevel > 1 */ this.BACKGROUND_DOUBLE_BLACK
         ));
     }
 
@@ -1053,7 +1053,7 @@ class TreeRedBlack extends Algorithm {
             } else if (this.treeRoot.rightWidth > startingPoint) {
                 startingPoint = Math.max(this.treeRoot.leftWidth, 2 * startingPoint - this.treeRoot.rightWidth);
             }
-            this.setNewPositions(this.treeRoot, startingPoint, TreeRedBlack.STARTING_Y, 0);
+            this.setNewPositions(this.treeRoot, startingPoint, this.STARTING_Y, 0);
             this.animateNewPositions(this.treeRoot);
             this.cmd("Step");
         }
@@ -1063,7 +1063,7 @@ class TreeRedBlack extends Algorithm {
         if (tree != null) {
             tree.y = yPosition;
             if (tree.phantomLeaf) {
-                tree.y -= (TreeRedBlack.NODE_SIZE - TreeRedBlack.NULL_LEAF_SIZE) / 2;
+                tree.y -= (this.NODE_SIZE - this.NULL_LEAF_SIZE) / 2;
             }
             if (side < 0) {
                 xPosition = xPosition - tree.rightWidth;
@@ -1071,8 +1071,8 @@ class TreeRedBlack extends Algorithm {
                 xPosition = xPosition + tree.leftWidth;
             }
             tree.x = xPosition;
-            this.setNewPositions(tree.left, xPosition, yPosition + TreeRedBlack.HEIGHT_DELTA, -1);
-            this.setNewPositions(tree.right, xPosition, yPosition + TreeRedBlack.HEIGHT_DELTA, 1);
+            this.setNewPositions(tree.left, xPosition, yPosition + this.HEIGHT_DELTA, -1);
+            this.setNewPositions(tree.right, xPosition, yPosition + this.HEIGHT_DELTA, 1);
         }
     }
 
@@ -1088,11 +1088,11 @@ class TreeRedBlack extends Algorithm {
         if (tree == null) {
             return 0;
         }
-        tree.leftWidth = Math.max(this.resizeWidths(tree.left), TreeRedBlack.WIDTH_DELTA / 2);
-        tree.rightWidth = Math.max(this.resizeWidths(tree.right), TreeRedBlack.WIDTH_DELTA / 2);
+        tree.leftWidth = Math.max(this.resizeWidths(tree.left), this.WIDTH_DELTA / 2);
+        tree.rightWidth = Math.max(this.resizeWidths(tree.right), this.WIDTH_DELTA / 2);
         if (tree.phantomLeaf) {
-            tree.leftWidth -= (TreeRedBlack.NODE_SIZE - TreeRedBlack.NULL_LEAF_SIZE) / 2;
-            tree.rightWidth -= (TreeRedBlack.NODE_SIZE - TreeRedBlack.NULL_LEAF_SIZE) / 2;
+            tree.leftWidth -= (this.NODE_SIZE - this.NULL_LEAF_SIZE) / 2;
+            tree.rightWidth -= (this.NODE_SIZE - this.NULL_LEAF_SIZE) / 2;
         }
         return tree.leftWidth + tree.rightWidth;
     }

@@ -32,21 +32,21 @@
 
 
 class DisjointSet extends Algorithm {
-    static ARRAY_START_X = 50;
-    static ARRAY_WIDTH = 30;
-    static ARRAY_HEIGHT = 30;
+    ARRAY_START_X = 50;
+    ARRAY_WIDTH = 30;
+    ARRAY_HEIGHT = 30;
 
-    static TREE_START_X = 50;
-    static TREE_ELEM_WIDTH = 50;
-    static TREE_ELEM_HEIGHT = 50;
+    TREE_START_X = 50;
+    TREE_ELEM_WIDTH = 50;
+    TREE_ELEM_HEIGHT = 50;
 
-    static SIZE = 16;
+    SIZE = 16;
 
-    static LINK_COLOR = "#007700";
-    static HIGHLIGHT_CIRCLE_COLOR = "#007700";
-    static FOREGROUND_COLOR = "#007700";
-    static BACKGROUND_COLOR = "#EEFFEE";
-    static PRINT_COLOR = DisjointSet.FOREGROUND_COLOR;
+    LINK_COLOR = "#007700";
+    HIGHLIGHT_CIRCLE_COLOR = "#007700";
+    FOREGROUND_COLOR = "#007700";
+    BACKGROUND_COLOR = "#EEFFEE";
+    PRINT_COLOR = this.FOREGROUND_COLOR;
 
     constructor(am) {
         super();
@@ -104,21 +104,21 @@ class DisjointSet extends Algorithm {
         this.nextIndex = 0;
 
         const h = this.getCanvasHeight();
-        this.arrayStartY = h - 2 * DisjointSet.ARRAY_HEIGHT;
+        this.arrayStartY = h - 2 * this.ARRAY_HEIGHT;
         this.treeStartY = this.arrayStartY - 50;
 
         this.highlight1ID = this.nextIndex++;
         this.highlight2ID = this.nextIndex++;
 
-        this.arrayID = new Array(DisjointSet.SIZE);
-        this.arrayLabelID = new Array(DisjointSet.SIZE);
-        this.treeID = new Array(DisjointSet.SIZE);
-        this.setData = new Array(DisjointSet.SIZE);
-        this.treeY = new Array(DisjointSet.SIZE);
-        this.treeIndexToLocation = new Array(DisjointSet.SIZE);
-        this.locationToTreeIndex = new Array(DisjointSet.SIZE);
-        this.heights = new Array(DisjointSet.SIZE);
-        for (let i = 0; i < DisjointSet.SIZE; i++) {
+        this.arrayID = new Array(this.SIZE);
+        this.arrayLabelID = new Array(this.SIZE);
+        this.treeID = new Array(this.SIZE);
+        this.setData = new Array(this.SIZE);
+        this.treeY = new Array(this.SIZE);
+        this.treeIndexToLocation = new Array(this.SIZE);
+        this.locationToTreeIndex = new Array(this.SIZE);
+        this.heights = new Array(this.SIZE);
+        for (let i = 0; i < this.SIZE; i++) {
             this.treeIndexToLocation[i] = i;
             this.locationToTreeIndex[i] = i;
             this.arrayID[i] = this.nextIndex++;
@@ -135,14 +135,14 @@ class DisjointSet extends Algorithm {
 
         this.commands = [];
 
-        for (let i = 0; i < DisjointSet.SIZE; i++) {
-            this.cmd("CreateRectangle", this.arrayID[i], this.setData[i], DisjointSet.ARRAY_WIDTH, DisjointSet.ARRAY_HEIGHT, DisjointSet.ARRAY_START_X + i * DisjointSet.ARRAY_WIDTH, this.arrayStartY);
-            this.cmd("CreateLabel", this.arrayLabelID[i], i, DisjointSet.ARRAY_START_X + i * DisjointSet.ARRAY_WIDTH, this.arrayStartY + DisjointSet.ARRAY_HEIGHT);
+        for (let i = 0; i < this.SIZE; i++) {
+            this.cmd("CreateRectangle", this.arrayID[i], this.setData[i], this.ARRAY_WIDTH, this.ARRAY_HEIGHT, this.ARRAY_START_X + i * this.ARRAY_WIDTH, this.arrayStartY);
+            this.cmd("CreateLabel", this.arrayLabelID[i], i, this.ARRAY_START_X + i * this.ARRAY_WIDTH, this.arrayStartY + this.ARRAY_HEIGHT);
             this.cmd("SetForegroundColor", this.arrayLabelID[i], "#0000FF");
 
-            this.cmd("CreateCircle", this.treeID[i], i, DisjointSet.TREE_START_X + this.treeIndexToLocation[i] * DisjointSet.TREE_ELEM_WIDTH, this.treeY[i]);
-            this.cmd("SetForegroundColor", this.treeID[i], DisjointSet.FOREGROUND_COLOR);
-            this.cmd("SetBackgroundColor", this.treeID[i], DisjointSet.BACKGROUND_COLOR);
+            this.cmd("CreateCircle", this.treeID[i], i, this.TREE_START_X + this.treeIndexToLocation[i] * this.TREE_ELEM_WIDTH, this.treeY[i]);
+            this.cmd("SetForegroundColor", this.treeID[i], this.FOREGROUND_COLOR);
+            this.cmd("SetBackgroundColor", this.treeID[i], this.BACKGROUND_COLOR);
         }
 
         this.animationManager.StartNewAnimation(this.commands);
@@ -151,7 +151,7 @@ class DisjointSet extends Algorithm {
     }
 
     reset() {
-        for (let i = 0; i < DisjointSet.SIZE; i++) {
+        for (let i = 0; i < this.SIZE; i++) {
             this.setData[i] = -1;
         }
         this.pathCompression = false;
@@ -226,7 +226,7 @@ class DisjointSet extends Algorithm {
 
     findCallback(event) {
         const findValue = this.normalizeNumber(this.findField.value);
-        if (findValue !== "" && findValue < DisjointSet.SIZE) {
+        if (findValue !== "" && findValue < this.SIZE) {
             this.findField.value = "";
             this.implementAction(this.findElement.bind(this), findValue);
         }
@@ -243,14 +243,14 @@ class DisjointSet extends Algorithm {
     }
 
     getSizes() {
-        const sizes = new Array(DisjointSet.SIZE);
-        for (let i = 0; i < DisjointSet.SIZE; i++) {
+        const sizes = new Array(this.SIZE);
+        for (let i = 0; i < this.SIZE; i++) {
             sizes[i] = 1;
         }
         let changed = true;
         while (changed) {
             changed = false;
-            for (let i = 0; i < DisjointSet.SIZE; i++) {
+            for (let i = 0; i < this.SIZE; i++) {
                 if (sizes[i] > 0 && this.setData[i] >= 0) {
                     sizes[this.setData[i]] += sizes[i];
                     sizes[i] = 0;
@@ -265,26 +265,26 @@ class DisjointSet extends Algorithm {
         if (this.unionByRank) {
             if (!this.rankAsHeight) {
                 const sizes = this.getSizes();
-                for (let i = 0; i < DisjointSet.SIZE; i++) {
+                for (let i = 0; i < this.SIZE; i++) {
                     if (this.setData[i] < 0) {
                         this.setData[i] = -sizes[i];
                     }
                 }
             } else {
-                for (let i = 0; i < DisjointSet.SIZE; i++) {
+                for (let i = 0; i < this.SIZE; i++) {
                     if (this.setData[i] < 0) {
                         this.setData[i] = 0 - this.heights[i] - 1;
                     }
                 }
             }
         } else {
-            for (let i = 0; i < DisjointSet.SIZE; i++) {
+            for (let i = 0; i < this.SIZE; i++) {
                 if (this.setData[i] < 0) {
                     this.setData[i] = -1;
                 }
             }
         }
-        for (let i = 0; i < DisjointSet.SIZE; i++) {
+        for (let i = 0; i < this.SIZE; i++) {
             this.cmd("SetText", this.arrayID[i], this.setData[i]);
         }
     }
@@ -292,7 +292,7 @@ class DisjointSet extends Algorithm {
     unionCallback(event) {
         const union1 = this.normalizeNumber(this.unionField1.value);
         const union2 = this.normalizeNumber(this.unionField2.value);
-        if (union1 !== "" && union1 < DisjointSet.SIZE && union2 !== "" && union2 < DisjointSet.SIZE) {
+        if (union1 !== "" && union1 < this.SIZE && union2 !== "" && union2 < this.SIZE) {
             this.unionField1.value = "";
             this.unionField2.value = "";
             this.implementAction(this.doUnion.bind(this), `${union1};${union2}`);
@@ -300,7 +300,7 @@ class DisjointSet extends Algorithm {
     }
 
     clearAll() {
-        for (let i = 0; i < DisjointSet.SIZE; i++) {
+        for (let i = 0; i < this.SIZE; i++) {
             if (this.setData[i] >= 0) {
                 this.cmd("Disconnect", this.treeID[i], this.treeID[this.setData[i]]);
             }
@@ -309,7 +309,7 @@ class DisjointSet extends Algorithm {
             this.treeIndexToLocation[i] = i;
             this.locationToTreeIndex[i] = i;
             this.treeY[i] = this.treeStartY;
-            this.cmd("SetPosition", this.treeID[i], DisjointSet.TREE_START_X + this.treeIndexToLocation[i] * DisjointSet.TREE_ELEM_WIDTH, this.treeY[i]);
+            this.cmd("SetPosition", this.treeID[i], this.TREE_START_X + this.treeIndexToLocation[i] * this.TREE_ELEM_WIDTH, this.treeY[i]);
         }
     }
 
@@ -342,7 +342,7 @@ class DisjointSet extends Algorithm {
                     this.cmd("SetText", this.arrayID[elem], this.setData[elem]);
                     this.cmd("Connect", this.treeID[elem],
                         this.treeID[treeRoot],
-                        DisjointSet.FOREGROUND_COLOR,
+                        this.FOREGROUND_COLOR,
                         0, // Curve
                         1, // Directed
                         ""); // Label
@@ -367,7 +367,7 @@ class DisjointSet extends Algorithm {
             left1--;
         }
         let right1 = this.treeIndexToLocation[pos1];
-        while (right1 < DisjointSet.SIZE - 1 && this.findRoot(this.locationToTreeIndex[right1 + 1]) === pos1) {
+        while (right1 < this.SIZE - 1 && this.findRoot(this.locationToTreeIndex[right1 + 1]) === pos1) {
             right1++;
         }
         let left2 = this.treeIndexToLocation[pos2];
@@ -375,14 +375,14 @@ class DisjointSet extends Algorithm {
             left2--;
         }
         let right2 = this.treeIndexToLocation[pos2];
-        while (right2 < DisjointSet.SIZE - 1 && this.findRoot(this.locationToTreeIndex[right2 + 1]) === pos2) {
+        while (right2 < this.SIZE - 1 && this.findRoot(this.locationToTreeIndex[right2 + 1]) === pos2) {
             right2++;
         }
         if (right1 === left2 - 1) {
             return false;
         }
 
-        const tmpLocationToTreeIndex = new Array(DisjointSet.SIZE);
+        const tmpLocationToTreeIndex = new Array(this.SIZE);
         let nextInsertIndex = 0;
         for (let i = 0; i <= right1; i++) {
             tmpLocationToTreeIndex[nextInsertIndex++] = this.locationToTreeIndex[i];
@@ -393,13 +393,13 @@ class DisjointSet extends Algorithm {
         for (let i = right1 + 1; i < left2; i++) {
             tmpLocationToTreeIndex[nextInsertIndex++] = this.locationToTreeIndex[i];
         }
-        for (let i = right2 + 1; i < DisjointSet.SIZE; i++) {
+        for (let i = right2 + 1; i < this.SIZE; i++) {
             tmpLocationToTreeIndex[nextInsertIndex++] = this.locationToTreeIndex[i];
         }
-        for (let i = 0; i < DisjointSet.SIZE; i++) {
+        for (let i = 0; i < this.SIZE; i++) {
             this.locationToTreeIndex[i] = tmpLocationToTreeIndex[i];
         }
-        for (let i = 0; i < DisjointSet.SIZE; i++) {
+        for (let i = 0; i < this.SIZE; i++) {
             this.treeIndexToLocation[this.locationToTreeIndex[i]] = i;
         }
         return true;
@@ -410,10 +410,10 @@ class DisjointSet extends Algorithm {
         const args = value.split(";");
         let arg1 = this.doFind(parseInt(args[0]));
 
-        this.cmd("CreateHighlightCircle", this.highlight1ID, DisjointSet.HIGHLIGHT_CIRCLE_COLOR, DisjointSet.TREE_START_X + this.treeIndexToLocation[arg1] * DisjointSet.TREE_ELEM_WIDTH, this.treeY[arg1]);
+        this.cmd("CreateHighlightCircle", this.highlight1ID, this.HIGHLIGHT_CIRCLE_COLOR, this.TREE_START_X + this.treeIndexToLocation[arg1] * this.TREE_ELEM_WIDTH, this.treeY[arg1]);
 
         let arg2 = this.doFind(parseInt(args[1]));
-        this.cmd("CreateHighlightCircle", this.highlight2ID, DisjointSet.HIGHLIGHT_CIRCLE_COLOR, DisjointSet.TREE_START_X + this.treeIndexToLocation[arg2] * DisjointSet.TREE_ELEM_WIDTH, this.treeY[arg2]);
+        this.cmd("CreateHighlightCircle", this.highlight2ID, this.HIGHLIGHT_CIRCLE_COLOR, this.TREE_START_X + this.treeIndexToLocation[arg2] * this.TREE_ELEM_WIDTH, this.treeY[arg2]);
 
         if (arg1 === arg2) {
             this.cmd("Delete", this.highlight1ID);
@@ -448,7 +448,7 @@ class DisjointSet extends Algorithm {
 
         this.cmd("Connect", this.treeID[arg1],
             this.treeID[arg2],
-            DisjointSet.FOREGROUND_COLOR,
+            this.FOREGROUND_COLOR,
             0, // Curve
             1, // Directed
             ""); // Label
@@ -471,26 +471,26 @@ class DisjointSet extends Algorithm {
 
     adjustHeights() {
         let changed = false;
-        for (let i = 0; i < DisjointSet.SIZE; i++) {
+        for (let i = 0; i < this.SIZE; i++) {
             this.heights[i] = 0;
         }
 
-        for (let j = 0; j < DisjointSet.SIZE; j++) {
-            for (let i = 0; i < DisjointSet.SIZE; i++) {
+        for (let j = 0; j < this.SIZE; j++) {
+            for (let i = 0; i < this.SIZE; i++) {
                 if (this.setData[i] >= 0) {
                     this.heights[this.setData[i]] = Math.max(this.heights[this.setData[i]], this.heights[i] + 1);
                 }
             }
         }
-        for (let j = 0; j < DisjointSet.SIZE; j++) {
-            for (let i = 0; i < DisjointSet.SIZE; i++) {
+        for (let j = 0; j < this.SIZE; j++) {
+            for (let i = 0; i < this.SIZE; i++) {
                 if (this.setData[i] >= 0) {
                     this.heights[i] = this.heights[this.setData[i]] - 1;
                 }
             }
         }
-        for (let i = 0; i < DisjointSet.SIZE; i++) {
-            const newY = this.treeStartY - this.heights[i] * DisjointSet.TREE_ELEM_HEIGHT;
+        for (let i = 0; i < this.SIZE; i++) {
+            const newY = this.treeStartY - this.heights[i] * this.TREE_ELEM_HEIGHT;
             if (this.treeY[i] !== newY) {
                 this.treeY[i] = newY;
                 changed = true;
@@ -500,8 +500,8 @@ class DisjointSet extends Algorithm {
     }
 
     animateNewPositions() {
-        for (let i = 0; i < DisjointSet.SIZE; i++) {
-            this.cmd("Move", this.treeID[i], DisjointSet.TREE_START_X + this.treeIndexToLocation[i] * DisjointSet.TREE_ELEM_WIDTH, this.treeY[i]);
+        for (let i = 0; i < this.SIZE; i++) {
+            this.cmd("Move", this.treeID[i], this.TREE_START_X + this.treeIndexToLocation[i] * this.TREE_ELEM_WIDTH, this.treeY[i]);
         }
     }
 }

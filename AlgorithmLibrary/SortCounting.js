@@ -32,18 +32,18 @@
 
 
 class SortCounting extends Algorithm {
-    static ARRAY_ELEM_WIDTH = 30;
-    static ARRAY_ELEM_HEIGHT = 30;
-    static ARRAY_ELEM_START_X = 20;
+    ARRAY_ELEM_WIDTH = 30;
+    ARRAY_ELEM_HEIGHT = 30;
+    ARRAY_ELEM_START_X = 20;
 
-    static COUNTER_ARRAY_ELEM_WIDTH = 30;
-    static COUNTER_ARRAY_ELEM_HEIGHT = 30;
-    static COUNTER_ARRAY_ELEM_START_X = 20;
+    COUNTER_ARRAY_ELEM_WIDTH = 30;
+    COUNTER_ARRAY_ELEM_HEIGHT = 30;
+    COUNTER_ARRAY_ELEM_START_X = 20;
 
-    static MAX_DATA_VALUE = 30;
-    static COUNTER_ARRAY_SIZE = SortCounting.MAX_DATA_VALUE + 1;
+    MAX_DATA_VALUE = 30;
+    COUNTER_ARRAY_SIZE = this.MAX_DATA_VALUE + 1;
 
-    static ARRAY_SIZE = 30;
+    ARRAY_SIZE = 30;
 
     constructor(am) {
         super();
@@ -73,53 +73,53 @@ class SortCounting extends Algorithm {
         this.nextIndex = 0;
 
         const h = this.getCanvasHeight();
-        this.ARRAY_ELEM_Y = 3 * SortCounting.COUNTER_ARRAY_ELEM_HEIGHT;
+        this.ARRAY_ELEM_Y = 3 * this.COUNTER_ARRAY_ELEM_HEIGHT;
         this.COUNTER_ARRAY_ELEM_Y = Math.floor(h / 2);
-        this.SWAP_ARRAY_ELEM_Y = h - 3 * SortCounting.COUNTER_ARRAY_ELEM_HEIGHT;
+        this.SWAP_ARRAY_ELEM_Y = h - 3 * this.COUNTER_ARRAY_ELEM_HEIGHT;
 
-        this.arrayData = new Array(SortCounting.ARRAY_SIZE);
-        this.arrayRects = new Array(SortCounting.ARRAY_SIZE);
-        this.arrayIndices = new Array(SortCounting.ARRAY_SIZE);
+        this.arrayData = new Array(this.ARRAY_SIZE);
+        this.arrayRects = new Array(this.ARRAY_SIZE);
+        this.arrayIndices = new Array(this.ARRAY_SIZE);
 
-        this.counterData = new Array(SortCounting.COUNTER_ARRAY_SIZE);
-        this.counterRects = new Array(SortCounting.COUNTER_ARRAY_SIZE);
-        this.counterIndices = new Array(SortCounting.COUNTER_ARRAY_SIZE);
+        this.counterData = new Array(this.COUNTER_ARRAY_SIZE);
+        this.counterRects = new Array(this.COUNTER_ARRAY_SIZE);
+        this.counterIndices = new Array(this.COUNTER_ARRAY_SIZE);
 
-        this.swapData = new Array(SortCounting.ARRAY_SIZE);
-        this.swapRects = new Array(SortCounting.ARRAY_SIZE);
-        this.swapIndices = new Array(SortCounting.ARRAY_SIZE);
+        this.swapData = new Array(this.ARRAY_SIZE);
+        this.swapRects = new Array(this.ARRAY_SIZE);
+        this.swapIndices = new Array(this.ARRAY_SIZE);
 
         this.commands = [];
 
         this.animationManager.resetAll();
-        for (let i = 0; i < SortCounting.ARRAY_SIZE; i++) {
+        for (let i = 0; i < this.ARRAY_SIZE; i++) {
             let nextID = this.nextIndex++;
-            this.arrayData[i] = Math.floor(Math.random() * SortCounting.MAX_DATA_VALUE);
-            this.cmd("CreateRectangle", nextID, this.arrayData[i], SortCounting.ARRAY_ELEM_WIDTH, SortCounting.ARRAY_ELEM_HEIGHT, SortCounting.ARRAY_ELEM_START_X + i * SortCounting.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
+            this.arrayData[i] = Math.floor(Math.random() * this.MAX_DATA_VALUE);
+            this.cmd("CreateRectangle", nextID, this.arrayData[i], this.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_HEIGHT, this.ARRAY_ELEM_START_X + i * this.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
             this.arrayRects[i] = nextID;
 
             nextID = this.nextIndex++;
             this.arrayIndices[i] = nextID;
-            this.cmd("CreateLabel", nextID, i, SortCounting.ARRAY_ELEM_START_X + i * SortCounting.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y + SortCounting.ARRAY_ELEM_HEIGHT);
+            this.cmd("CreateLabel", nextID, i, this.ARRAY_ELEM_START_X + i * this.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y + this.ARRAY_ELEM_HEIGHT);
             this.cmd("SetForegroundColor", nextID, "#0000FF");
 
             nextID = this.nextIndex++;
-            this.cmd("CreateRectangle", nextID, "", SortCounting.ARRAY_ELEM_WIDTH, SortCounting.ARRAY_ELEM_HEIGHT, SortCounting.ARRAY_ELEM_START_X + i * SortCounting.ARRAY_ELEM_WIDTH, this.SWAP_ARRAY_ELEM_Y);
+            this.cmd("CreateRectangle", nextID, "", this.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_HEIGHT, this.ARRAY_ELEM_START_X + i * this.ARRAY_ELEM_WIDTH, this.SWAP_ARRAY_ELEM_Y);
             this.swapRects[i] = nextID;
 
             nextID = this.nextIndex++;
             this.swapIndices[i] = nextID;
-            this.cmd("CreateLabel", nextID, i, SortCounting.ARRAY_ELEM_START_X + i * SortCounting.ARRAY_ELEM_WIDTH, this.SWAP_ARRAY_ELEM_Y + SortCounting.ARRAY_ELEM_HEIGHT);
+            this.cmd("CreateLabel", nextID, i, this.ARRAY_ELEM_START_X + i * this.ARRAY_ELEM_WIDTH, this.SWAP_ARRAY_ELEM_Y + this.ARRAY_ELEM_HEIGHT);
             this.cmd("SetForegroundColor", nextID, "#0000FF");
         }
-        for (let i = SortCounting.COUNTER_ARRAY_SIZE - 1; i >= 0; i--) {
+        for (let i = this.COUNTER_ARRAY_SIZE - 1; i >= 0; i--) {
             let nextID = this.nextIndex++;
-            this.cmd("CreateRectangle", nextID, "", SortCounting.COUNTER_ARRAY_ELEM_WIDTH, SortCounting.COUNTER_ARRAY_ELEM_HEIGHT, SortCounting.COUNTER_ARRAY_ELEM_START_X + i * SortCounting.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y);
+            this.cmd("CreateRectangle", nextID, "", this.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_HEIGHT, this.COUNTER_ARRAY_ELEM_START_X + i * this.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y);
             this.counterRects[i] = nextID;
 
             nextID = this.nextIndex++;
             this.counterIndices[i] = nextID;
-            this.cmd("CreateLabel", nextID, i, SortCounting.COUNTER_ARRAY_ELEM_START_X + i * SortCounting.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y + SortCounting.COUNTER_ARRAY_ELEM_HEIGHT);
+            this.cmd("CreateLabel", nextID, i, this.COUNTER_ARRAY_ELEM_START_X + i * this.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y + this.COUNTER_ARRAY_ELEM_HEIGHT);
             this.cmd("SetForegroundColor", nextID, "#0000FF");
         }
 
@@ -139,15 +139,15 @@ class SortCounting extends Algorithm {
         const animatedCircleID2 = this.nextIndex++;
         const animatedCircleID3 = this.nextIndex++;
         const animatedCircleID4 = this.nextIndex++;
-        for (let i = 0; i < SortCounting.COUNTER_ARRAY_SIZE; i++) {
+        for (let i = 0; i < this.COUNTER_ARRAY_SIZE; i++) {
             this.counterData[i] = 0;
             this.cmd("SetText", this.counterRects[i], 0);
         }
-        for (let i = 0; i < SortCounting.ARRAY_SIZE; i++) {
-            this.cmd("CreateHighlightCircle", animatedCircleID, "#0000FF", SortCounting.ARRAY_ELEM_START_X + i * SortCounting.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
-            this.cmd("CreateHighlightCircle", animatedCircleID2, "#0000FF", SortCounting.ARRAY_ELEM_START_X + i * SortCounting.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
+        for (let i = 0; i < this.ARRAY_SIZE; i++) {
+            this.cmd("CreateHighlightCircle", animatedCircleID, "#0000FF", this.ARRAY_ELEM_START_X + i * this.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
+            this.cmd("CreateHighlightCircle", animatedCircleID2, "#0000FF", this.ARRAY_ELEM_START_X + i * this.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
             const index = this.arrayData[i];
-            this.cmd("Move", animatedCircleID, SortCounting.COUNTER_ARRAY_ELEM_START_X + index * SortCounting.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y + SortCounting.COUNTER_ARRAY_ELEM_HEIGHT);
+            this.cmd("Move", animatedCircleID, this.COUNTER_ARRAY_ELEM_START_X + index * this.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y + this.COUNTER_ARRAY_ELEM_HEIGHT);
             this.cmd("Step");
             this.counterData[index]++;
             this.cmd("SetText", this.counterRects[this.arrayData[i]], this.counterData[this.arrayData[i]]);
@@ -156,7 +156,7 @@ class SortCounting extends Algorithm {
             this.cmd("Delete", animatedCircleID);
             this.cmd("Delete", animatedCircleID2);
         }
-        for (let i = 1; i < SortCounting.COUNTER_ARRAY_SIZE; i++) {
+        for (let i = 1; i < this.COUNTER_ARRAY_SIZE; i++) {
             this.cmd("SetHighlight", this.counterRects[i - 1], 1);
             this.cmd("SetHighlight", this.counterRects[i], 1);
             this.cmd("Step");
@@ -166,31 +166,31 @@ class SortCounting extends Algorithm {
             this.cmd("SetHighlight", this.counterRects[i - 1], 0);
             this.cmd("SetHighlight", this.counterRects[i], 0);
         }
-        for (let i = SortCounting.ARRAY_SIZE - 1; i >= 0; i--) {
+        for (let i = this.ARRAY_SIZE - 1; i >= 0; i--) {
             this.cmd("SetAlpha", this.arrayRects[i], 1.0);
         }
-        for (let i = SortCounting.ARRAY_SIZE - 1; i >= 0; i--) {
-            this.cmd("CreateHighlightCircle", animatedCircleID, "#0000FF", SortCounting.ARRAY_ELEM_START_X + i * SortCounting.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
-            this.cmd("CreateHighlightCircle", animatedCircleID2, "#0000FF", SortCounting.ARRAY_ELEM_START_X + i * SortCounting.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
+        for (let i = this.ARRAY_SIZE - 1; i >= 0; i--) {
+            this.cmd("CreateHighlightCircle", animatedCircleID, "#0000FF", this.ARRAY_ELEM_START_X + i * this.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
+            this.cmd("CreateHighlightCircle", animatedCircleID2, "#0000FF", this.ARRAY_ELEM_START_X + i * this.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
 
             const index = this.arrayData[i];
-            this.cmd("Move", animatedCircleID2, SortCounting.COUNTER_ARRAY_ELEM_START_X + index * SortCounting.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y + SortCounting.COUNTER_ARRAY_ELEM_HEIGHT);
+            this.cmd("Move", animatedCircleID2, this.COUNTER_ARRAY_ELEM_START_X + index * this.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y + this.COUNTER_ARRAY_ELEM_HEIGHT);
             this.cmd("Step");
 
             const insertIndex = --this.counterData[this.arrayData[i]];
             this.cmd("SetText", this.counterRects[this.arrayData[i]], this.counterData[this.arrayData[i]]);
             this.cmd("Step");
 
-            this.cmd("CreateHighlightCircle", animatedCircleID3, "#AAAAFF", SortCounting.COUNTER_ARRAY_ELEM_START_X + index * SortCounting.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y);
-            this.cmd("CreateHighlightCircle", animatedCircleID4, "#AAAAFF", SortCounting.COUNTER_ARRAY_ELEM_START_X + index * SortCounting.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y);
+            this.cmd("CreateHighlightCircle", animatedCircleID3, "#AAAAFF", this.COUNTER_ARRAY_ELEM_START_X + index * this.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y);
+            this.cmd("CreateHighlightCircle", animatedCircleID4, "#AAAAFF", this.COUNTER_ARRAY_ELEM_START_X + index * this.COUNTER_ARRAY_ELEM_WIDTH, this.COUNTER_ARRAY_ELEM_Y);
 
-            this.cmd("Move", animatedCircleID4, SortCounting.ARRAY_ELEM_START_X + insertIndex * SortCounting.ARRAY_ELEM_WIDTH, this.SWAP_ARRAY_ELEM_Y + SortCounting.COUNTER_ARRAY_ELEM_HEIGHT);
+            this.cmd("Move", animatedCircleID4, this.ARRAY_ELEM_START_X + insertIndex * this.ARRAY_ELEM_WIDTH, this.SWAP_ARRAY_ELEM_Y + this.COUNTER_ARRAY_ELEM_HEIGHT);
             this.cmd("Step");
 
             const moveLabel = this.nextIndex++;
             this.cmd("SetText", this.arrayRects[i], "");
-            this.cmd("CreateLabel", moveLabel, this.arrayData[i], SortCounting.ARRAY_ELEM_START_X + i * SortCounting.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
-            this.cmd("Move", moveLabel, SortCounting.ARRAY_ELEM_START_X + insertIndex * SortCounting.ARRAY_ELEM_WIDTH, this.SWAP_ARRAY_ELEM_Y);
+            this.cmd("CreateLabel", moveLabel, this.arrayData[i], this.ARRAY_ELEM_START_X + i * this.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
+            this.cmd("Move", moveLabel, this.ARRAY_ELEM_START_X + insertIndex * this.ARRAY_ELEM_WIDTH, this.SWAP_ARRAY_ELEM_Y);
             this.swapData[insertIndex] = this.arrayData[i];
             this.cmd("Step");
             this.cmd("Delete", moveLabel);
@@ -201,29 +201,29 @@ class SortCounting extends Algorithm {
             this.cmd("Delete", animatedCircleID3);
             this.cmd("Delete", animatedCircleID4);
         }
-        for (let i = 0; i < SortCounting.ARRAY_SIZE; i++) {
+        for (let i = 0; i < this.ARRAY_SIZE; i++) {
             this.cmd("SetText", this.arrayRects[i], "");
         }
 
-        for (let i = 0; i < SortCounting.COUNTER_ARRAY_SIZE; i++) {
+        for (let i = 0; i < this.COUNTER_ARRAY_SIZE; i++) {
             this.cmd("SetAlpha", this.counterRects[i], 0.05);
             this.cmd("SetAlpha", this.counterIndices[i], 0.05);
         }
 
         this.cmd("Step");
         const startLab = this.nextIndex;
-        for (let i = 0; i < SortCounting.ARRAY_SIZE; i++) {
-            this.cmd("CreateLabel", startLab + i, this.swapData[i], SortCounting.ARRAY_ELEM_START_X + i * SortCounting.ARRAY_ELEM_WIDTH, this.SWAP_ARRAY_ELEM_Y);
-            this.cmd("Move", startLab + i, SortCounting.ARRAY_ELEM_START_X + i * SortCounting.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
+        for (let i = 0; i < this.ARRAY_SIZE; i++) {
+            this.cmd("CreateLabel", startLab + i, this.swapData[i], this.ARRAY_ELEM_START_X + i * this.ARRAY_ELEM_WIDTH, this.SWAP_ARRAY_ELEM_Y);
+            this.cmd("Move", startLab + i, this.ARRAY_ELEM_START_X + i * this.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_Y);
             this.cmd("SetText", this.swapRects[i], "");
         }
         this.cmd("Step");
-        for (let i = 0; i < SortCounting.ARRAY_SIZE; i++) {
+        for (let i = 0; i < this.ARRAY_SIZE; i++) {
             this.arrayData[i] = this.swapData[i];
             this.cmd("SetText", this.arrayRects[i], this.arrayData[i]);
             this.cmd("Delete", startLab + i);
         }
-        for (let i = 0; i < SortCounting.COUNTER_ARRAY_SIZE; i++) {
+        for (let i = 0; i < this.COUNTER_ARRAY_SIZE; i++) {
             this.cmd("SetAlpha", this.counterRects[i], 1);
             this.cmd("SetAlpha", this.counterIndices[i], 1);
         }
@@ -232,12 +232,12 @@ class SortCounting extends Algorithm {
 
     randomizeArray() {
         this.commands = [];
-        for (let i = 0; i < SortCounting.ARRAY_SIZE; i++) {
-            this.arrayData[i] = Math.floor(1 + Math.random() * SortCounting.MAX_DATA_VALUE);
+        for (let i = 0; i < this.ARRAY_SIZE; i++) {
+            this.arrayData[i] = Math.floor(1 + Math.random() * this.MAX_DATA_VALUE);
             this.cmd("SetText", this.arrayRects[i], this.arrayData[i]);
         }
 
-        for (let i = 0; i < SortCounting.COUNTER_ARRAY_SIZE; i++) {
+        for (let i = 0; i < this.COUNTER_ARRAY_SIZE; i++) {
             this.cmd("SetText", this.counterRects[i], "");
         }
 

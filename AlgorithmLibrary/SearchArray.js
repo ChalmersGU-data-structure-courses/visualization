@@ -32,59 +32,59 @@
 
 
 class SearchArray extends Algorithm {
-    static LOW_CIRCLE_COLOR = "#1010FF";
-    static LOW_BACKGROUND_COLOR = "#F0F0FF";
-    static MID_CIRCLE_COLOR = "#108040";
-    static MID_BACKGROUND_COLOR = "#F0FFF0";
-    static HIGH_CIRCLE_COLOR = "#C08000";
-    static HIGH_BACKGROUND_COLOR = "#FFFFE0";
-    static INDEX_CIRCLE_COLOR = SearchArray.MID_CIRCLE_COLOR;
-    static INDEX_BACKGROUND_COLOR = SearchArray.MID_BACKGROUND_COLOR;
-    static ARRAY_LABEL_FOREGROUND_COLOR = "#0000FF";
-    static CODE_HIGHLIGHT_COLOR = "#FF0000";
-    static CODE_STANDARD_COLOR = "#000000";
-    static RESULT_BOX_COLOR = SearchArray.CODE_HIGHLIGHT_COLOR;
+    LOW_CIRCLE_COLOR = "#1010FF";
+    LOW_BACKGROUND_COLOR = "#F0F0FF";
+    MID_CIRCLE_COLOR = "#108040";
+    MID_BACKGROUND_COLOR = "#F0FFF0";
+    HIGH_CIRCLE_COLOR = "#C08000";
+    HIGH_BACKGROUND_COLOR = "#FFFFE0";
+    INDEX_CIRCLE_COLOR = this.MID_CIRCLE_COLOR;
+    INDEX_BACKGROUND_COLOR = this.MID_BACKGROUND_COLOR;
+    ARRAY_LABEL_FOREGROUND_COLOR = "#0000FF";
+    CODE_HIGHLIGHT_COLOR = "#FF0000";
+    CODE_STANDARD_COLOR = "#000000";
+    RESULT_BOX_COLOR = this.CODE_HIGHLIGHT_COLOR;
 
-    static CODE_START_X = 10;
-    static CODE_START_Y = 10;
-    static CODE_LINE_HEIGHT = 15;
+    CODE_START_X = 10;
+    CODE_START_Y = 10;
+    CODE_LINE_HEIGHT = 15;
 
-    static DEFAULT_ARRAY_SIZE = 16;
-    static ARRAY_SIZES = [16, 32, 80, 192];
-    static ARRAY_SIZE_LABELS = ["Small (20)", "Medium (40)", "Large (80)", "Huge (160)"];
+    DEFAULT_ARRAY_SIZE = 16;
+    ARRAY_SIZES = [16, 32, 80, 192];
+    ARRAY_SIZE_LABELS = ["Small (20)", "Medium (40)", "Large (80)", "Huge (160)"];
 
-    static ARRAY_VALUE_MAX_INCREMENT = 5;
+    ARRAY_VALUE_MAX_INCREMENT = 5;
 
-    static EXTRA_FIELD_WIDTH = 40;
-    static EXTRA_FIELD_HEIGHT = 30;
+    EXTRA_FIELD_WIDTH = 40;
+    EXTRA_FIELD_HEIGHT = 30;
 
-    static SEARCH_FOR_X = 425;
-    static SEARCH_FOR_Y = 40;
+    SEARCH_FOR_X = 425;
+    SEARCH_FOR_Y = 40;
 
-    static RESULT_X = 550;
-    static RESULT_Y = SearchArray.SEARCH_FOR_Y;
+    RESULT_X = 550;
+    RESULT_Y = this.SEARCH_FOR_Y;
 
-    static COMPARISONS_X = SearchArray.RESULT_X;
-    static COMPARISONS_Y = 90;
+    COMPARISONS_X = this.RESULT_X;
+    COMPARISONS_Y = 90;
 
-    static INDEX_X = SearchArray.SEARCH_FOR_X;
-    static INDEX_Y = 140;
+    INDEX_X = this.SEARCH_FOR_X;
+    INDEX_Y = 140;
 
-    static LOW_POS_X = 300;
-    static LOW_POS_Y = SearchArray.INDEX_Y;
+    LOW_POS_X = 300;
+    LOW_POS_Y = this.INDEX_Y;
 
-    static MID_POS_X = SearchArray.INDEX_X;
-    static MID_POS_Y = SearchArray.INDEX_Y;
+    MID_POS_X = this.INDEX_X;
+    MID_POS_Y = this.INDEX_Y;
 
-    static HIGH_POS_X = SearchArray.RESULT_X;
-    static HIGH_POS_Y = SearchArray.INDEX_Y;
+    HIGH_POS_X = this.RESULT_X;
+    HIGH_POS_Y = this.INDEX_Y;
 
-    static HIGHLIGHT_CIRCLE_SIZE = 15;
+    HIGHLIGHT_CIRCLE_SIZE = 15;
 
-    static ARRAY_START_X = 50;
-    static ARRAY_START_Y = 200;
+    ARRAY_START_X = 50;
+    ARRAY_START_Y = 200;
 
-    static LINEAR_CODE = [
+    LINEAR_CODE = [
         ["def ", "linearSearch(array, value)", ":"],
         ["    i = 0"],
         ["    while (", "i < len(array)", " and ", "array[i] < value", "):"],
@@ -94,7 +94,7 @@ class SearchArray extends Algorithm {
         ["    return i"],
     ];
 
-    static BINARY_CODE = [
+    BINARY_CODE = [
         ["def ", "binarySearch(array, value)", ":"],
         ["    low = 0"],
         ["    high = len(array) - 1"],
@@ -134,8 +134,8 @@ class SearchArray extends Algorithm {
         this.addBreakToAlgorithmBar();
 
         this.addLabelToAlgorithmBar("Array size:");
-        this.sizeSelect = this.addSelectToAlgorithmBar(SearchArray.ARRAY_SIZES, SearchArray.ARRAY_SIZE_LABELS);
-        this.sizeSelect.value = SearchArray.DEFAULT_ARRAY_SIZE;
+        this.sizeSelect = this.addSelectToAlgorithmBar(this.ARRAY_SIZES, this.ARRAY_SIZE_LABELS);
+        this.sizeSelect.value = this.DEFAULT_ARRAY_SIZE;
         this.sizeSelect.onchange = this.resetAll.bind(this);
         this.addBreakToAlgorithmBar();
 
@@ -144,7 +144,7 @@ class SearchArray extends Algorithm {
     }
 
     getSize() {
-        return Number(this.sizeSelect.value) || SearchArray.DEFAULT_ARRAY_SIZE;
+        return Number(this.sizeSelect.value) || this.DEFAULT_ARRAY_SIZE;
     }
 
     getArrayElemWidth() {
@@ -164,12 +164,12 @@ class SearchArray extends Algorithm {
     }
 
     getIndexXY(index) {
-        let xpos = SearchArray.ARRAY_START_X;
-        let ypos = SearchArray.ARRAY_START_Y + this.getArrayElemHeight();
+        let xpos = this.ARRAY_START_X;
+        let ypos = this.ARRAY_START_Y + this.getArrayElemHeight();
         for (let i = 0; i < index; i++) {
             xpos += this.getArrayElemWidth();
             if (xpos > this.getCanvasWidth() - this.getArrayElemWidth()) {
-                xpos = SearchArray.ARRAY_START_X;
+                xpos = this.ARRAY_START_X;
                 ypos += this.getArrayLineSpacing();
             }
         }
@@ -200,7 +200,7 @@ class SearchArray extends Algorithm {
         this.arrayData = [];
         let value = 0;
         for (let i = 0; i < size; i++) {
-            value += Math.floor(1 + SearchArray.ARRAY_VALUE_MAX_INCREMENT * Math.random());
+            value += Math.floor(1 + this.ARRAY_VALUE_MAX_INCREMENT * Math.random());
             this.arrayData[i] = value;
             this.arrayID[i] = this.nextIndex++;
             this.arrayLabelID[i] = this.nextIndex++;
@@ -212,7 +212,7 @@ class SearchArray extends Algorithm {
             const yLabelPos = this.getLabelY(i);
             this.cmd("CreateRectangle", this.arrayID[i], this.arrayData[i], this.getArrayElemWidth(), this.getArrayElemHeight(), xPos, yPos);
             this.cmd("CreateLabel", this.arrayLabelID[i], i, xPos, yLabelPos);
-            this.cmd("SetForegroundColor", this.arrayLabelID[i], SearchArray.ARRAY_LABEL_FOREGROUND_COLOR);
+            this.cmd("SetForegroundColor", this.arrayLabelID[i], this.ARRAY_LABEL_FOREGROUND_COLOR);
         }
 
         this.movingLabelID = this.nextIndex++;
@@ -220,72 +220,72 @@ class SearchArray extends Algorithm {
 
         this.searchForBoxID = this.nextIndex++;
         this.searchForBoxLabel = this.nextIndex++;
-        this.cmd("CreateRectangle", this.searchForBoxID, "", SearchArray.EXTRA_FIELD_WIDTH, SearchArray.EXTRA_FIELD_HEIGHT, SearchArray.SEARCH_FOR_X, SearchArray.SEARCH_FOR_Y);
-        this.cmd("CreateLabel", this.searchForBoxLabel, "Seaching for:  ", SearchArray.SEARCH_FOR_X, SearchArray.SEARCH_FOR_Y);
+        this.cmd("CreateRectangle", this.searchForBoxID, "", this.EXTRA_FIELD_WIDTH, this.EXTRA_FIELD_HEIGHT, this.SEARCH_FOR_X, this.SEARCH_FOR_Y);
+        this.cmd("CreateLabel", this.searchForBoxLabel, "Seaching for:  ", this.SEARCH_FOR_X, this.SEARCH_FOR_Y);
         this.cmd("AlignLeft", this.searchForBoxLabel, this.searchForBoxID);
 
         this.resultBoxID = this.nextIndex++;
         this.resultBoxLabel = this.nextIndex++;
         this.resultString = this.nextIndex++;
-        this.cmd("CreateRectangle", this.resultBoxID, "", SearchArray.EXTRA_FIELD_WIDTH, SearchArray.EXTRA_FIELD_HEIGHT, SearchArray.RESULT_X, SearchArray.RESULT_Y);
-        this.cmd("CreateLabel", this.resultBoxLabel, "Result:  ", SearchArray.RESULT_X, SearchArray.RESULT_Y);
-        this.cmd("CreateLabel", this.resultString, "", SearchArray.RESULT_X, SearchArray.RESULT_Y);
+        this.cmd("CreateRectangle", this.resultBoxID, "", this.EXTRA_FIELD_WIDTH, this.EXTRA_FIELD_HEIGHT, this.RESULT_X, this.RESULT_Y);
+        this.cmd("CreateLabel", this.resultBoxLabel, "Result:  ", this.RESULT_X, this.RESULT_Y);
+        this.cmd("CreateLabel", this.resultString, "", this.RESULT_X, this.RESULT_Y);
         this.cmd("AlignLeft", this.resultBoxLabel, this.resultBoxID);
         this.cmd("AlignRight", this.resultString, this.resultBoxID);
-        this.cmd("SetTextColor", this.resultString, SearchArray.RESULT_BOX_COLOR);
+        this.cmd("SetTextColor", this.resultString, this.RESULT_BOX_COLOR);
 
         this.comparisonsBoxID = this.nextIndex++;
         this.comparisonsBoxLabel = this.nextIndex++;
-        this.cmd("CreateRectangle", this.comparisonsBoxID, "", SearchArray.EXTRA_FIELD_WIDTH, SearchArray.EXTRA_FIELD_HEIGHT, SearchArray.COMPARISONS_X, SearchArray.COMPARISONS_Y);
-        this.cmd("CreateLabel", this.comparisonsBoxLabel, "Comparisons:  ", SearchArray.COMPARISONS_X, SearchArray.COMPARISONS_Y);
+        this.cmd("CreateRectangle", this.comparisonsBoxID, "", this.EXTRA_FIELD_WIDTH, this.EXTRA_FIELD_HEIGHT, this.COMPARISONS_X, this.COMPARISONS_Y);
+        this.cmd("CreateLabel", this.comparisonsBoxLabel, "Comparisons:  ", this.COMPARISONS_X, this.COMPARISONS_Y);
         this.cmd("AlignLeft", this.comparisonsBoxLabel, this.comparisonsBoxID);
 
         this.indexBoxID = this.nextIndex++;
         this.indexBoxLabel = this.nextIndex++;
-        this.cmd("CreateRectangle", this.indexBoxID, "", SearchArray.EXTRA_FIELD_WIDTH, SearchArray.EXTRA_FIELD_HEIGHT, SearchArray.INDEX_X, SearchArray.INDEX_Y);
-        this.cmd("CreateLabel", this.indexBoxLabel, "Index:  ", SearchArray.INDEX_X, SearchArray.INDEX_Y);
+        this.cmd("CreateRectangle", this.indexBoxID, "", this.EXTRA_FIELD_WIDTH, this.EXTRA_FIELD_HEIGHT, this.INDEX_X, this.INDEX_Y);
+        this.cmd("CreateLabel", this.indexBoxLabel, "Index:  ", this.INDEX_X, this.INDEX_Y);
         this.cmd("AlignLeft", this.indexBoxLabel, this.indexBoxID);
-        this.cmd("SetTextColor", this.indexBoxID, SearchArray.INDEX_CIRCLE_COLOR);
-        this.cmd("SetBackgroundColor", this.indexBoxID, SearchArray.INDEX_BACKGROUND_COLOR);
+        this.cmd("SetTextColor", this.indexBoxID, this.INDEX_CIRCLE_COLOR);
+        this.cmd("SetBackgroundColor", this.indexBoxID, this.INDEX_BACKGROUND_COLOR);
 
         this.indexCircleID = this.nextIndex++;
-        this.cmd("CreateHighlightCircle", this.indexCircleID, SearchArray.INDEX_CIRCLE_COLOR, 0, 0, SearchArray.HIGHLIGHT_CIRCLE_SIZE);
+        this.cmd("CreateHighlightCircle", this.indexCircleID, this.INDEX_CIRCLE_COLOR, 0, 0, this.HIGHLIGHT_CIRCLE_SIZE);
 
         this.midBoxID = this.nextIndex++;
         this.midBoxLabel = this.nextIndex++;
-        this.cmd("CreateRectangle", this.midBoxID, "", SearchArray.EXTRA_FIELD_WIDTH, SearchArray.EXTRA_FIELD_HEIGHT, SearchArray.MID_POS_X, SearchArray.MID_POS_Y);
-        this.cmd("CreateLabel", this.midBoxLabel, "Mid:  ", SearchArray.MID_POS_X, SearchArray.MID_POS_Y);
+        this.cmd("CreateRectangle", this.midBoxID, "", this.EXTRA_FIELD_WIDTH, this.EXTRA_FIELD_HEIGHT, this.MID_POS_X, this.MID_POS_Y);
+        this.cmd("CreateLabel", this.midBoxLabel, "Mid:  ", this.MID_POS_X, this.MID_POS_Y);
         this.cmd("AlignLeft", this.midBoxLabel, this.midBoxID);
-        // this.cmd("SetForegroundColor", this.midBoxID, Search.MID_CIRCLE_COLOR);
-        this.cmd("SetTextColor", this.midBoxID, SearchArray.MID_CIRCLE_COLOR);
-        this.cmd("SetBackgroundColor", this.midBoxID, SearchArray.MID_BACKGROUND_COLOR);
+        // this.cmd("SetForegroundColor", this.midBoxID, this.MID_CIRCLE_COLOR);
+        this.cmd("SetTextColor", this.midBoxID, this.MID_CIRCLE_COLOR);
+        this.cmd("SetBackgroundColor", this.midBoxID, this.MID_BACKGROUND_COLOR);
 
         this.midCircleID = this.nextIndex++;
-        this.cmd("CreateHighlightCircle", this.midCircleID, SearchArray.MID_CIRCLE_COLOR, 0, 0, SearchArray.HIGHLIGHT_CIRCLE_SIZE);
+        this.cmd("CreateHighlightCircle", this.midCircleID, this.MID_CIRCLE_COLOR, 0, 0, this.HIGHLIGHT_CIRCLE_SIZE);
 
         this.lowBoxID = this.nextIndex++;
         this.lowBoxLabel = this.nextIndex++;
-        this.cmd("CreateRectangle", this.lowBoxID, "", SearchArray.EXTRA_FIELD_WIDTH, SearchArray.EXTRA_FIELD_HEIGHT, SearchArray.LOW_POS_X, SearchArray.LOW_POS_Y);
-        this.cmd("CreateLabel", this.lowBoxLabel, "Low:  ", SearchArray.LOW_POS_X, SearchArray.LOW_POS_Y);
+        this.cmd("CreateRectangle", this.lowBoxID, "", this.EXTRA_FIELD_WIDTH, this.EXTRA_FIELD_HEIGHT, this.LOW_POS_X, this.LOW_POS_Y);
+        this.cmd("CreateLabel", this.lowBoxLabel, "Low:  ", this.LOW_POS_X, this.LOW_POS_Y);
         this.cmd("AlignLeft", this.lowBoxLabel, this.lowBoxID);
-        // this.cmd("SetForegroundColor", this.lowBoxID, Search.LOW_CIRCLE_COLOR);
-        this.cmd("SetTextColor", this.lowBoxID, SearchArray.LOW_CIRCLE_COLOR);
-        this.cmd("SetBackgroundColor", this.lowBoxID, SearchArray.LOW_BACKGROUND_COLOR);
+        // this.cmd("SetForegroundColor", this.lowBoxID, this.LOW_CIRCLE_COLOR);
+        this.cmd("SetTextColor", this.lowBoxID, this.LOW_CIRCLE_COLOR);
+        this.cmd("SetBackgroundColor", this.lowBoxID, this.LOW_BACKGROUND_COLOR);
 
         this.lowCircleID = this.nextIndex++;
-        this.cmd("CreateHighlightCircle", this.lowCircleID, SearchArray.LOW_CIRCLE_COLOR, 0, 0, SearchArray.HIGHLIGHT_CIRCLE_SIZE);
+        this.cmd("CreateHighlightCircle", this.lowCircleID, this.LOW_CIRCLE_COLOR, 0, 0, this.HIGHLIGHT_CIRCLE_SIZE);
 
         this.highBoxID = this.nextIndex++;
         this.highBoxLabel = this.nextIndex++;
-        this.cmd("CreateRectangle", this.highBoxID, "", SearchArray.EXTRA_FIELD_WIDTH, SearchArray.EXTRA_FIELD_HEIGHT, SearchArray.HIGH_POS_X, SearchArray.HIGH_POS_Y);
-        this.cmd("CreateLabel", this.highBoxLabel, "High:  ", SearchArray.HIGH_POS_X, SearchArray.HIGH_POS_Y);
+        this.cmd("CreateRectangle", this.highBoxID, "", this.EXTRA_FIELD_WIDTH, this.EXTRA_FIELD_HEIGHT, this.HIGH_POS_X, this.HIGH_POS_Y);
+        this.cmd("CreateLabel", this.highBoxLabel, "High:  ", this.HIGH_POS_X, this.HIGH_POS_Y);
         this.cmd("AlignLeft", this.highBoxLabel, this.highBoxID);
-        // this.cmd("SetForegroundColor", this.highBoxID, Search.HIGH_CIRCLE_COLOR);
-        this.cmd("SetTextColor", this.highBoxID, SearchArray.HIGH_CIRCLE_COLOR);
-        this.cmd("SetBackgroundColor", this.highBoxID, SearchArray.HIGH_BACKGROUND_COLOR);
+        // this.cmd("SetForegroundColor", this.highBoxID, this.HIGH_CIRCLE_COLOR);
+        this.cmd("SetTextColor", this.highBoxID, this.HIGH_CIRCLE_COLOR);
+        this.cmd("SetBackgroundColor", this.highBoxID, this.HIGH_BACKGROUND_COLOR);
 
         this.highCircleID = this.nextIndex++;
-        this.cmd("CreateHighlightCircle", this.highCircleID, SearchArray.HIGH_CIRCLE_COLOR, 0, 0, SearchArray.HIGHLIGHT_CIRCLE_SIZE);
+        this.cmd("CreateHighlightCircle", this.highCircleID, this.HIGH_CIRCLE_COLOR, 0, 0, this.HIGHLIGHT_CIRCLE_SIZE);
 
         this.cmd("SetAlpha", this.lowBoxID, 0);
         this.cmd("SetAlpha", this.lowBoxLabel, 0);
@@ -300,8 +300,8 @@ class SearchArray extends Algorithm {
         this.cmd("SetAlpha", this.indexBoxLabel, 0);
         this.cmd("SetAlpha", this.indexCircleID, 0);
 
-        this.binaryCodeID = this.addCodeToCanvasBase(SearchArray.BINARY_CODE, SearchArray.CODE_START_X, SearchArray.CODE_START_Y, SearchArray.CODE_LINE_HEIGHT, SearchArray.CODE_STANDARD_COLOR);
-        this.linearCodeID = this.addCodeToCanvasBase(SearchArray.LINEAR_CODE, SearchArray.CODE_START_X, SearchArray.CODE_START_Y, SearchArray.CODE_LINE_HEIGHT, SearchArray.CODE_STANDARD_COLOR);
+        this.binaryCodeID = this.addCodeToCanvasBase(this.BINARY_CODE, this.CODE_START_X, this.CODE_START_Y, this.CODE_LINE_HEIGHT, this.CODE_STANDARD_COLOR);
+        this.linearCodeID = this.addCodeToCanvasBase(this.LINEAR_CODE, this.CODE_START_X, this.CODE_START_Y, this.CODE_LINE_HEIGHT, this.CODE_STANDARD_COLOR);
 
         this.setCodeAlpha(this.binaryCodeID, 0);
         this.setCodeAlpha(this.linearCodeID, 0);
@@ -349,9 +349,9 @@ class SearchArray extends Algorithm {
         this.cmd("SetAlpha", this.indexBoxLabel, 0);
         this.cmd("SetAlpha", this.indexCircleID, 0);
 
-        this.cmd("SetPosition", this.lowCircleID, SearchArray.LOW_POS_X, SearchArray.LOW_POS_Y);
-        this.cmd("SetPosition", this.midCircleID, SearchArray.MID_POS_X, SearchArray.MID_POS_Y);
-        this.cmd("SetPosition", this.highCircleID, SearchArray.HIGH_POS_X, SearchArray.HIGH_POS_Y);
+        this.cmd("SetPosition", this.lowCircleID, this.LOW_POS_X, this.LOW_POS_Y);
+        this.cmd("SetPosition", this.midCircleID, this.MID_POS_X, this.MID_POS_Y);
+        this.cmd("SetPosition", this.highCircleID, this.HIGH_POS_X, this.HIGH_POS_Y);
 
         this.cmd("SetText", this.resultString, "");
         this.cmd("SetText", this.resultBoxID, "");
@@ -362,18 +362,18 @@ class SearchArray extends Algorithm {
         let high = size - 1;
         this.cmd("Move", this.lowCircleID, this.getIndexX(low), this.getLabelY(low));
         this.cmd("SetText", this.searchForBoxID, searchVal);
-        this.cmd("SetForegroundColor", this.binaryCodeID[1][0], SearchArray.CODE_HIGHLIGHT_COLOR);
+        this.cmd("SetForegroundColor", this.binaryCodeID[1][0], this.CODE_HIGHLIGHT_COLOR);
         this.cmd("SetHighlight", this.lowBoxID, 1);
         this.cmd("SetText", this.lowBoxID, low);
         this.cmd("Step");
-        this.cmd("SetForegroundColor", this.binaryCodeID[1][0], SearchArray.CODE_STANDARD_COLOR);
+        this.cmd("SetForegroundColor", this.binaryCodeID[1][0], this.CODE_STANDARD_COLOR);
         this.cmd("SetHighlight", this.lowBoxID, 0);
-        this.cmd("SetForegroundColor", this.binaryCodeID[2][0], SearchArray.CODE_HIGHLIGHT_COLOR);
+        this.cmd("SetForegroundColor", this.binaryCodeID[2][0], this.CODE_HIGHLIGHT_COLOR);
         this.cmd("SetHighlight", this.highBoxID, 1);
         this.cmd("SetText", this.highBoxID, high);
         this.cmd("Move", this.highCircleID, this.getIndexX(high), this.getLabelY(high));
         this.cmd("Step");
-        this.cmd("SetForegroundColor", this.binaryCodeID[2][0], SearchArray.CODE_STANDARD_COLOR);
+        this.cmd("SetForegroundColor", this.binaryCodeID[2][0], this.CODE_STANDARD_COLOR);
         this.cmd("SetHighlight", this.highBoxID, 0);
 
         let mid;
@@ -381,49 +381,49 @@ class SearchArray extends Algorithm {
         while (true) {
             this.cmd("SetHighlight", this.highBoxID, 1);
             this.cmd("SetHighlight", this.lowBoxID, 1);
-            this.cmd("SetForegroundColor", this.binaryCodeID[3][1], SearchArray.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.binaryCodeID[3][1], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
             this.cmd("SetHighlight", this.highBoxID, 0);
             this.cmd("SetHighlight", this.lowBoxID, 0);
-            this.cmd("SetForegroundColor", this.binaryCodeID[3][1], SearchArray.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.binaryCodeID[3][1], this.CODE_STANDARD_COLOR);
             if (low > high) {
                 break;
             } else {
                 mid = Math.floor((high + low) / 2);
-                this.cmd("SetForegroundColor", this.binaryCodeID[4][0], SearchArray.CODE_HIGHLIGHT_COLOR);
+                this.cmd("SetForegroundColor", this.binaryCodeID[4][0], this.CODE_HIGHLIGHT_COLOR);
                 this.cmd("SetHighlight", this.highBoxID, 1);
                 this.cmd("SetHighlight", this.lowBoxID, 1);
                 this.cmd("SetHighlight", this.midBoxID, 1);
                 this.cmd("SetText", this.midBoxID, mid);
                 this.cmd("Move", this.midCircleID, this.getIndexX(mid), this.getLabelY(mid));
                 this.cmd("Step");
-                this.cmd("SetForegroundColor", this.binaryCodeID[4][0], SearchArray.CODE_STANDARD_COLOR);
+                this.cmd("SetForegroundColor", this.binaryCodeID[4][0], this.CODE_STANDARD_COLOR);
                 this.cmd("SetHighlight", this.midBoxID, 0);
                 this.cmd("SetHighlight", this.highBoxID, 0);
                 this.cmd("SetHighlight", this.lowBoxID, 0);
                 this.cmd("SetHighlight", this.searchForBoxID, 1);
                 this.cmd("SetHighlight", this.arrayID[mid], 1);
-                this.cmd("SetForegroundColor", this.binaryCodeID[5][1], SearchArray.CODE_HIGHLIGHT_COLOR);
+                this.cmd("SetForegroundColor", this.binaryCodeID[5][1], this.CODE_HIGHLIGHT_COLOR);
                 this.cmd("Step");
                 this.cmd("SetHighlight", this.searchForBoxID, 0);
                 this.cmd("SetHighlight", this.arrayID[mid], 0);
-                this.cmd("SetForegroundColor", this.binaryCodeID[5][1], SearchArray.CODE_STANDARD_COLOR);
+                this.cmd("SetForegroundColor", this.binaryCodeID[5][1], this.CODE_STANDARD_COLOR);
                 const cmp = this.compare(this.arrayData[mid], searchVal);
                 comparisons++;
                 this.cmd("SetText", this.comparisonsBoxID, comparisons);
                 if (cmp === 0) {
                     break;
                 } else {
-                    this.cmd("SetForegroundColor", this.binaryCodeID[7][1], SearchArray.CODE_HIGHLIGHT_COLOR);
+                    this.cmd("SetForegroundColor", this.binaryCodeID[7][1], this.CODE_HIGHLIGHT_COLOR);
                     this.cmd("SetHighlight", this.searchForBoxID, 1);
                     this.cmd("SetHighlight", this.arrayID[mid], 1);
                     this.cmd("Step");
-                    this.cmd("SetForegroundColor", this.binaryCodeID[7][1], SearchArray.CODE_STANDARD_COLOR);
+                    this.cmd("SetForegroundColor", this.binaryCodeID[7][1], this.CODE_STANDARD_COLOR);
                     this.cmd("SetHighlight", this.searchForBoxID, 0);
                     this.cmd("SetHighlight", this.arrayID[mid], 0);
                     if (cmp < 0) {
                         low = mid + 1;
-                        this.cmd("SetForegroundColor", this.binaryCodeID[8][0], SearchArray.CODE_HIGHLIGHT_COLOR);
+                        this.cmd("SetForegroundColor", this.binaryCodeID[8][0], this.CODE_HIGHLIGHT_COLOR);
                         this.cmd("SetHighlight", this.lowID, 1);
                         this.cmd("SetText", this.lowBoxID, low);
                         this.cmd("Move", this.lowCircleID, this.getIndexX(low), this.getLabelY(low));
@@ -431,11 +431,11 @@ class SearchArray extends Algorithm {
                             this.cmd("SetAlpha", this.arrayID[i], 0.2);
                         }
                         this.cmd("Step");
-                        this.cmd("SetForegroundColor", this.binaryCodeID[8][0], SearchArray.CODE_STANDARD_COLOR);
+                        this.cmd("SetForegroundColor", this.binaryCodeID[8][0], this.CODE_STANDARD_COLOR);
                         this.cmd("SetHighlight", this.lowBoxID, 0);
                     } else {
                         high = mid - 1;
-                        this.cmd("SetForegroundColor", this.binaryCodeID[10][0], SearchArray.CODE_HIGHLIGHT_COLOR);
+                        this.cmd("SetForegroundColor", this.binaryCodeID[10][0], this.CODE_HIGHLIGHT_COLOR);
                         this.cmd("SetHighlight", this.highBoxID, 1);
                         this.cmd("SetText", this.highBoxID, high);
                         this.cmd("Move", this.highCircleID, this.getIndexX(high), this.getLabelY(high));
@@ -443,7 +443,7 @@ class SearchArray extends Algorithm {
                             this.cmd("SetAlpha", this.arrayID[i], 0.2);
                         }
                         this.cmd("Step");
-                        this.cmd("SetForegroundColor", this.binaryCodeID[10][0], SearchArray.CODE_STANDARD_COLOR);
+                        this.cmd("SetForegroundColor", this.binaryCodeID[10][0], this.CODE_STANDARD_COLOR);
                         this.cmd("SetHighlight", this.midBoxID, 0);
                     }
                 }
@@ -454,18 +454,18 @@ class SearchArray extends Algorithm {
             this.cmd("SetText", this.resultString, "   Element not found!");
             this.cmd("SetText", this.resultBoxID, -1);
             this.cmd("AlignRight", this.resultString, this.resultBoxID);
-            this.cmd("SetForegroundColor", this.binaryCodeID[11][0], SearchArray.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.binaryCodeID[11][0], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.binaryCodeID[11][0], SearchArray.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.binaryCodeID[11][0], this.CODE_STANDARD_COLOR);
         } else {
             this.cmd("SetText", this.resultString, "   Element found!");
             this.cmd("SetText", this.movingLabelID, mid);
             this.cmd("SetPosition", this.movingLabelID, this.getIndexX(mid), this.getIndexY(mid));
-            this.cmd("Move", this.movingLabelID, SearchArray.RESULT_X, SearchArray.RESULT_Y);
+            this.cmd("Move", this.movingLabelID, this.RESULT_X, this.RESULT_Y);
             this.cmd("AlignRight", this.resultString, this.resultBoxID);
-            this.cmd("SetForegroundColor", this.binaryCodeID[6][0], SearchArray.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.binaryCodeID[6][0], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.binaryCodeID[6][0], SearchArray.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.binaryCodeID[6][0], this.CODE_STANDARD_COLOR);
         }
 
         for (let i = 0; i < size; i++) {
@@ -492,20 +492,20 @@ class SearchArray extends Algorithm {
         this.cmd("SetAlpha", this.indexBoxLabel, 1);
         this.cmd("SetAlpha", this.indexCircleID, 1);
 
-        this.cmd("SetPosition", this.indexCircleID, SearchArray.INDEX_X, SearchArray.INDEX_Y);
+        this.cmd("SetPosition", this.indexCircleID, this.INDEX_X, this.INDEX_Y);
 
         this.cmd("SetText", this.resultString, "");
         this.cmd("SetText", this.resultBoxID, "");
         this.cmd("SetText", this.movingLabelID, "");
 
         this.cmd("SetText", this.searchForBoxID, searchVal);
-        this.cmd("SetForegroundColor", this.linearCodeID[1][0], SearchArray.CODE_HIGHLIGHT_COLOR);
+        this.cmd("SetForegroundColor", this.linearCodeID[1][0], this.CODE_HIGHLIGHT_COLOR);
         this.cmd("SetHighlight", this.indexBoxID, 1);
         this.cmd("SetText", this.indexBoxID, 0);
         this.cmd("Move", this.indexCircleID, this.getIndexX(0), this.getLabelY(0));
 
         this.cmd("Step");
-        this.cmd("SetForegroundColor", this.linearCodeID[1][0], SearchArray.CODE_STANDARD_COLOR);
+        this.cmd("SetForegroundColor", this.linearCodeID[1][0], this.CODE_STANDARD_COLOR);
         this.cmd("SetHighlight", this.indexBoxID, 0);
 
         const size = this.getSize();
@@ -513,17 +513,17 @@ class SearchArray extends Algorithm {
         let foundIndex = 0;
         while (true) {
             if (foundIndex === size) {
-                this.cmd("SetForegroundColor", this.linearCodeID[2][1], SearchArray.CODE_HIGHLIGHT_COLOR);
+                this.cmd("SetForegroundColor", this.linearCodeID[2][1], this.CODE_HIGHLIGHT_COLOR);
                 this.cmd("Step");
-                this.cmd("SetForegroundColor", this.linearCodeID[2][1], SearchArray.CODE_STANDARD_COLOR);
+                this.cmd("SetForegroundColor", this.linearCodeID[2][1], this.CODE_STANDARD_COLOR);
                 break;
             }
 
             this.cmd("SetHighlight", this.arrayID[foundIndex], 1);
             this.cmd("SetHighlight", this.searchForBoxID, 1);
-            this.cmd("SetForegroundColor", this.linearCodeID[2][3], SearchArray.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.linearCodeID[2][3], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.linearCodeID[2][3], SearchArray.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.linearCodeID[2][3], this.CODE_STANDARD_COLOR);
             this.cmd("SetHighlight", this.arrayID[foundIndex], 0);
             this.cmd("SetHighlight", this.searchForBoxID, 0);
 
@@ -534,19 +534,19 @@ class SearchArray extends Algorithm {
             }
 
             foundIndex++;
-            this.cmd("SetForegroundColor", this.linearCodeID[3][0], SearchArray.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.linearCodeID[3][0], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("SetHighlight", this.indexBoxID, 1);
             this.cmd("SetText", this.indexBoxID, foundIndex);
             this.cmd("Move", this.indexCircleID, this.getIndexX(foundIndex), this.getLabelY(foundIndex));
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.linearCodeID[3][0], SearchArray.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.linearCodeID[3][0], this.CODE_STANDARD_COLOR);
             this.cmd("SetHighlight", this.indexBoxID, 0);
         }
 
         if (foundIndex < size && this.compare(this.arrayData[foundIndex], searchVal) === 0) {
-            this.cmd("SetForegroundColor", this.linearCodeID[4][1], SearchArray.CODE_HIGHLIGHT_COLOR);
-            this.cmd("SetForegroundColor", this.linearCodeID[4][2], SearchArray.CODE_HIGHLIGHT_COLOR);
-            this.cmd("SetForegroundColor", this.linearCodeID[4][3], SearchArray.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.linearCodeID[4][1], this.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.linearCodeID[4][2], this.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.linearCodeID[4][3], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("SetHighlight", this.arrayID[foundIndex], 1);
             this.cmd("SetHighlight", this.searchForBoxID, 1);
             this.cmd("Step");
@@ -554,37 +554,37 @@ class SearchArray extends Algorithm {
             this.cmd("SetHighlight", this.arrayID[foundIndex], 0);
             this.cmd("SetHighlight", this.searchForBoxID, 0);
 
-            this.cmd("SetForegroundColor", this.linearCodeID[4][1], SearchArray.CODE_STANDARD_COLOR);
-            this.cmd("SetForegroundColor", this.linearCodeID[4][2], SearchArray.CODE_STANDARD_COLOR);
-            this.cmd("SetForegroundColor", this.linearCodeID[4][3], SearchArray.CODE_STANDARD_COLOR);
-            this.cmd("SetForegroundColor", this.linearCodeID[6][0], SearchArray.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.linearCodeID[4][1], this.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.linearCodeID[4][2], this.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.linearCodeID[4][3], this.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.linearCodeID[6][0], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("SetText", this.resultString, "   Element found!");
             this.cmd("SetText", this.movingLabelID, foundIndex);
             this.cmd("SetPosition", this.movingLabelID, this.getIndexX(foundIndex), this.getIndexY(foundIndex));
-            this.cmd("Move", this.movingLabelID, SearchArray.RESULT_X, SearchArray.RESULT_Y);
+            this.cmd("Move", this.movingLabelID, this.RESULT_X, this.RESULT_Y);
             this.cmd("AlignRight", this.resultString, this.resultBoxID);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.linearCodeID[6][0], SearchArray.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.linearCodeID[6][0], this.CODE_STANDARD_COLOR);
         } else {
             if (foundIndex === size) {
-                this.cmd("SetForegroundColor", this.linearCodeID[4][1], SearchArray.CODE_HIGHLIGHT_COLOR);
+                this.cmd("SetForegroundColor", this.linearCodeID[4][1], this.CODE_HIGHLIGHT_COLOR);
                 this.cmd("Step");
-                this.cmd("SetForegroundColor", this.linearCodeID[4][1], SearchArray.CODE_STANDARD_COLOR);
+                this.cmd("SetForegroundColor", this.linearCodeID[4][1], this.CODE_STANDARD_COLOR);
             } else {
                 this.cmd("SetHighlight", this.arrayID[foundIndex], 1);
                 this.cmd("SetHighlight", this.searchForBoxID, 1);
-                this.cmd("SetForegroundColor", this.linearCodeID[4][3], SearchArray.CODE_HIGHLIGHT_COLOR);
+                this.cmd("SetForegroundColor", this.linearCodeID[4][3], this.CODE_HIGHLIGHT_COLOR);
                 this.cmd("Step");
                 this.cmd("SetHighlight", this.arrayID[foundIndex], 0);
                 this.cmd("SetHighlight", this.searchForBoxID, 0);
-                this.cmd("SetForegroundColor", this.linearCodeID[4][3], SearchArray.CODE_STANDARD_COLOR);
+                this.cmd("SetForegroundColor", this.linearCodeID[4][3], this.CODE_STANDARD_COLOR);
             }
-            this.cmd("SetForegroundColor", this.linearCodeID[5][0], SearchArray.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.linearCodeID[5][0], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("SetText", this.resultString, "   Element not found!");
             this.cmd("SetText", this.resultBoxID, -1);
             this.cmd("AlignRight", this.resultString, this.resultBoxID);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.linearCodeID[5][0], SearchArray.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.linearCodeID[5][0], this.CODE_STANDARD_COLOR);
         }
         return this.commands;
     }

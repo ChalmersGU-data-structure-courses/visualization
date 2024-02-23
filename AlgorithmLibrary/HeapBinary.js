@@ -32,7 +32,7 @@
 
 
 class HeapBinary extends Algorithm {
-    static HEAP_X_POSITIONS = [
+    HEAP_X_POSITIONS = [
         null, 0.50, 0.26, 0.74, 0.14, 0.38, 0.62, 0.86,
         0.08, 0.20, 0.32, 0.44, 0.56, 0.68, 0.80, 0.92,
         0.05, 0.11, 0.17, 0.23, 0.29, 0.35, 0.41, 0.47,
@@ -40,22 +40,22 @@ class HeapBinary extends Algorithm {
 
     ];
 
-    static HEAP_Y_POSITIONS = [
+    HEAP_Y_POSITIONS = [
         null, 0.00, 0.20, 0.20, 0.40, 0.40, 0.40, 0.40,
         0.60, 0.60, 0.60, 0.60, 0.60, 0.60, 0.60, 0.60,
         0.80, 0.80, 0.80, 0.80, 0.80, 0.80, 0.80, 0.80,
         0.80, 0.80, 0.80, 0.80, 0.80, 0.80, 0.80, 0.80,
     ];
 
-    static ARRAY_SIZE = HeapBinary.HEAP_X_POSITIONS.length;
+    ARRAY_SIZE = this.HEAP_X_POSITIONS.length;
 
-    static LABEL_COLOR = "blue";
+    LABEL_COLOR = "blue";
 
-    static ARRAY_INITIAL_X = 30;
-    static DESCRIPT_LABEL_X = 20;
+    ARRAY_INITIAL_X = 30;
+    DESCRIPT_LABEL_X = 20;
 
-    static REVERSED_ARRAY = "reversed";
-    static RANDOM_ARRAY = "random";
+    REVERSED_ARRAY = "reversed";
+    RANDOM_ARRAY = "random";
 
     constructor(am) {
         super();
@@ -85,9 +85,9 @@ class HeapBinary extends Algorithm {
 
         this.addLabelToAlgorithmBar("Build heap from: ");
         this.buildHeapButton = this.addControlToAlgorithmBar("Button", "Reversed array");
-        this.buildHeapButton.onclick = this.buildHeapCallback.bind(this, HeapBinary.REVERSED_ARRAY);
+        this.buildHeapButton.onclick = this.buildHeapCallback.bind(this, this.REVERSED_ARRAY);
         this.buildHeapButton = this.addControlToAlgorithmBar("Button", "Random array");
-        this.buildHeapButton.onclick = this.buildHeapCallback.bind(this, HeapBinary.RANDOM_ARRAY);
+        this.buildHeapButton.onclick = this.buildHeapCallback.bind(this, this.RANDOM_ARRAY);
     }
 
     sizeChanged() {
@@ -105,13 +105,13 @@ class HeapBinary extends Algorithm {
         this.circleObjs = [];
         this.currentHeapSize = 0;
 
-        for (let i = 0; i < HeapBinary.ARRAY_SIZE; i++) {
+        for (let i = 0; i < this.ARRAY_SIZE; i++) {
             this.arrayLabels[i] = this.nextIndex++;
             this.arrayRects[i] = this.nextIndex++;
             this.circleObjs[i] = this.nextIndex++;
             this.cmd("CreateRectangle", this.arrayRects[i], "", this.getArrayElemWidth(), this.getArrayElemHeight(), this.getArrayX(i), this.getArrayY(i));
             this.cmd("CreateLabel", this.arrayLabels[i], i, this.getArrayX(i), this.getArrayY(i) + this.getArrayElemHeight() * 0.9);
-            this.cmd("SetForegroundColor", this.arrayLabels[i], HeapBinary.LABEL_COLOR);
+            this.cmd("SetForegroundColor", this.arrayLabels[i], this.LABEL_COLOR);
         }
         this.cmd("SetNull", this.arrayRects[0], 1);
 
@@ -122,7 +122,7 @@ class HeapBinary extends Algorithm {
         this.descriptLabel1 = this.nextIndex++;
         this.descriptLabel2 = this.nextIndex++;
         this.descriptLabel3 = this.nextIndex++;
-        this.cmd("CreateLabel", this.descriptLabel1, "", HeapBinary.DESCRIPT_LABEL_X, this.getDescriptionY(), 0);
+        this.cmd("CreateLabel", this.descriptLabel1, "", this.DESCRIPT_LABEL_X, this.getDescriptionY(), 0);
 
         this.initialIndex = this.nextIndex;
         this.animationManager.StartNewAnimation(this.commands);
@@ -139,12 +139,12 @@ class HeapBinary extends Algorithm {
     // Calculating canvas positions and sizes
 
     getHeapX(i) {
-        return HeapBinary.HEAP_X_POSITIONS[i] * this.getCanvasWidth();
+        return this.HEAP_X_POSITIONS[i] * this.getCanvasWidth();
     }
 
     getHeapY(i) {
         const startY = 6 * this.getArrayElemHeight();
-        return startY + HeapBinary.HEAP_Y_POSITIONS[i] * (Math.min(500, this.getCanvasHeight()) - startY);
+        return startY + this.HEAP_Y_POSITIONS[i] * (Math.min(500, this.getCanvasHeight()) - startY);
     }
 
     getArrayX(i) {
@@ -156,12 +156,12 @@ class HeapBinary extends Algorithm {
     }
 
     getArrayXY(i) {
-        let x = HeapBinary.ARRAY_INITIAL_X;
+        let x = this.ARRAY_INITIAL_X;
         let y = 1.5 * this.getArrayElemHeight();
         for (let k = 0; k < i; k++) {
             x += this.getArrayElemWidth();
             if (x + this.getArrayElemWidth() > this.getCanvasWidth()) {
-                x = HeapBinary.ARRAY_INITIAL_X;
+                x = this.ARRAY_INITIAL_X;
                 y += this.getArrayElemHeight() * 2;
             }
         }
@@ -171,7 +171,7 @@ class HeapBinary extends Algorithm {
     getArrayElemWidth() {
         let nrows = 1;
         while (true) {
-            const w = nrows * (this.getCanvasWidth() - HeapBinary.ARRAY_INITIAL_X) / HeapBinary.ARRAY_SIZE;
+            const w = nrows * (this.getCanvasWidth() - this.ARRAY_INITIAL_X) / this.ARRAY_SIZE;
             if (w >= 25) return w;
             nrows++;
         }
@@ -227,7 +227,7 @@ class HeapBinary extends Algorithm {
 
     insertElement(insertedValue) {
         this.commands = [];
-        if (this.currentHeapSize >= HeapBinary.ARRAY_SIZE - 1) {
+        if (this.currentHeapSize >= this.ARRAY_SIZE - 1) {
             this.cmd("SetText", this.descriptLabel1, "Heap Full!");
             return this.commands;
         }
@@ -325,20 +325,20 @@ class HeapBinary extends Algorithm {
                 this.arrayData[i + 1] = data[i];
             }
             this.currentHeapSize = data.length;
-        } else if (data === HeapBinary.RANDOM_ARRAY) {
+        } else if (data === this.RANDOM_ARRAY) {
             // Using the "inside-out" variant of Fisher-Yates shuffle:
             // https://en.wikipedia.org/wiki/Fisher–Yates_shuffle#The_%22inside-out%22_algorithm
-            for (let i = 0; i < HeapBinary.ARRAY_SIZE; i++) {
+            for (let i = 0; i < this.ARRAY_SIZE; i++) {
                 const j = Math.floor(Math.random() * (i + 1));
                 if (j !== i) this.arrayData[i] = this.arrayData[j];
                 this.arrayData[j] = i + 1;
             }
-            this.currentHeapSize = HeapBinary.ARRAY_SIZE - 1;
-        } else { // data === Heap.REVERSED_ARRAY
-            for (let i = 1; i < HeapBinary.ARRAY_SIZE; i++) {
-                this.arrayData[i] = HeapBinary.ARRAY_SIZE - i;
+            this.currentHeapSize = this.ARRAY_SIZE - 1;
+        } else { // data === this.REVERSED_ARRAY
+            for (let i = 1; i < this.ARRAY_SIZE; i++) {
+                this.arrayData[i] = this.ARRAY_SIZE - i;
             }
-            this.currentHeapSize = HeapBinary.ARRAY_SIZE - 1;
+            this.currentHeapSize = this.ARRAY_SIZE - 1;
         }
 
         for (let i = 1; i <= this.currentHeapSize; i++) {

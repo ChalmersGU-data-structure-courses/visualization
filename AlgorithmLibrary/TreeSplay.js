@@ -54,24 +54,24 @@ class SplayNode {
 
 
 class TreeSplay extends Algorithm {
-    static FOREGROUND_COLOR = "#007700";
-    static BACKGROUND_COLOR = "#EEFFEE";
+    FOREGROUND_COLOR = "#007700";
+    BACKGROUND_COLOR = "#EEFFEE";
 
-    static LINK_COLOR = TreeSplay.FOREGROUND_COLOR;
-    static HIGHLIGHT_CIRCLE_COLOR = TreeSplay.FOREGROUND_COLOR;
-    static PRINT_COLOR = TreeSplay.FOREGROUND_COLOR;
+    LINK_COLOR = this.FOREGROUND_COLOR;
+    HIGHLIGHT_CIRCLE_COLOR = this.FOREGROUND_COLOR;
+    PRINT_COLOR = this.FOREGROUND_COLOR;
 
-    static NODE_SIZE = 40;
-    static WIDTH_DELTA = TreeSplay.NODE_SIZE + 10;
-    static HEIGHT_DELTA = TreeSplay.NODE_SIZE + 10;
-    static STARTING_Y = 50;
+    NODE_SIZE = 40;
+    WIDTH_DELTA = this.NODE_SIZE + 10;
+    HEIGHT_DELTA = this.NODE_SIZE + 10;
+    STARTING_Y = 50;
 
-    static FIRST_PRINT_POS_X = 50;
-    static PRINT_VERTICAL_GAP = 20;
-    static PRINT_HORIZONTAL_GAP = 50;
+    FIRST_PRINT_POS_X = 50;
+    PRINT_VERTICAL_GAP = 20;
+    PRINT_HORIZONTAL_GAP = 50;
 
-    static MESSAGE_X = 10;
-    static MESSAGE_Y = 10;
+    MESSAGE_X = 10;
+    MESSAGE_Y = 10;
 
     constructor(am) {
         super();
@@ -88,7 +88,7 @@ class TreeSplay extends Algorithm {
         this.nextIndex = 0;
         this.commands = [];
         this.messageID = this.nextIndex++;
-        this.cmd("CreateLabel", this.messageID, "", TreeSplay.MESSAGE_X, TreeSplay.MESSAGE_Y, 0);
+        this.cmd("CreateLabel", this.messageID, "", this.MESSAGE_X, this.MESSAGE_Y, 0);
 
         this.initialIndex = this.nextIndex;
         this.animationManager.StartNewAnimation(this.commands);
@@ -103,8 +103,8 @@ class TreeSplay extends Algorithm {
         const h = this.getCanvasHeight();
 
         this.startingX = w / 2;
-        this.firstPrintPosY = h - 3 * TreeSplay.PRINT_VERTICAL_GAP;
-        this.printMax = w - TreeSplay.PRINT_HORIZONTAL_GAP;
+        this.firstPrintPosY = h - 3 * this.PRINT_VERTICAL_GAP;
+        this.printMax = w - this.PRINT_HORIZONTAL_GAP;
 
         this.implementAction(() => {
             this.commands = [];
@@ -188,10 +188,10 @@ class TreeSplay extends Algorithm {
         this.commands = [];
         this.cmd("SetText", this.messageID, "Printing tree");
         this.highlightID = this.nextIndex++;
-        this.cmd("CreateHighlightCircle", this.highlightID, TreeSplay.HIGHLIGHT_CIRCLE_COLOR, this.treeRoot.x, this.treeRoot.y);
+        this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, this.treeRoot.x, this.treeRoot.y);
         const firstLabel = this.nextIndex;
 
-        this.xPosOfNextLabel = TreeSplay.FIRST_PRINT_POS_X;
+        this.xPosOfNextLabel = this.FIRST_PRINT_POS_X;
         this.yPosOfNextLabel = this.firstPrintPosY;
 
         this.printTreeRec(this.treeRoot);
@@ -215,14 +215,14 @@ class TreeSplay extends Algorithm {
         }
         const nextLabelID = this.nextIndex++;
         this.cmd("CreateLabel", nextLabelID, tree.data, tree.x, tree.y);
-        this.cmd("SetForegroundColor", nextLabelID, TreeSplay.PRINT_COLOR);
+        this.cmd("SetForegroundColor", nextLabelID, this.PRINT_COLOR);
         this.cmd("Move", nextLabelID, this.xPosOfNextLabel, this.yPosOfNextLabel);
         this.cmd("Step");
 
-        this.xPosOfNextLabel += TreeSplay.PRINT_HORIZONTAL_GAP;
+        this.xPosOfNextLabel += this.PRINT_HORIZONTAL_GAP;
         if (this.xPosOfNextLabel > this.printMax) {
-            this.xPosOfNextLabel = TreeSplay.FIRST_PRINT_POS_X;
-            this.yPosOfNextLabel += TreeSplay.PRINT_VERTICAL_GAP;
+            this.xPosOfNextLabel = this.FIRST_PRINT_POS_X;
+            this.yPosOfNextLabel += this.PRINT_VERTICAL_GAP;
         }
         if (tree.right != null) {
             this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
@@ -283,7 +283,7 @@ class TreeSplay extends Algorithm {
                 this.cmd("Step");
                 this.cmd("SetHighlight", tree.graphicID, 0);
                 if (tree.left != null) {
-                    this.cmd("CreateHighlightCircle", this.highlightID, TreeSplay.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+                    this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
                     this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
                     this.cmd("Step");
                     this.cmd("Delete", this.highlightID);
@@ -299,7 +299,7 @@ class TreeSplay extends Algorithm {
                 this.cmd("Step");
                 this.cmd("SetHighlight", tree.graphicID, 0);
                 if (tree.right != null) {
-                    this.cmd("CreateHighlightCircle", this.highlightID, TreeSplay.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+                    this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
                     this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
                     this.cmd("Step");
                     this.cmd("Delete", this.highlightID);
@@ -323,17 +323,17 @@ class TreeSplay extends Algorithm {
         const treeNodeID = this.nextIndex++;
 
         if (this.treeRoot == null) {
-            const x = this.startingX, y = TreeSplay.STARTING_Y;
+            const x = this.startingX, y = this.STARTING_Y;
             this.cmd("CreateCircle", treeNodeID, insertedValue, x, y);
-            this.cmd("SetForegroundColor", treeNodeID, TreeSplay.FOREGROUND_COLOR);
-            this.cmd("SetBackgroundColor", treeNodeID, TreeSplay.BACKGROUND_COLOR);
+            this.cmd("SetForegroundColor", treeNodeID, this.FOREGROUND_COLOR);
+            this.cmd("SetBackgroundColor", treeNodeID, this.BACKGROUND_COLOR);
             this.cmd("Step");
             this.treeRoot = new SplayNode(insertedValue, treeNodeID, x, y);
         } else {
-            const x = TreeSplay.STARTING_Y, y = 2 * TreeSplay.STARTING_Y;
+            const x = this.STARTING_Y, y = 2 * this.STARTING_Y;
             this.cmd("CreateCircle", treeNodeID, insertedValue, x, y);
-            this.cmd("SetForegroundColor", treeNodeID, TreeSplay.FOREGROUND_COLOR);
-            this.cmd("SetBackgroundColor", treeNodeID, TreeSplay.BACKGROUND_COLOR);
+            this.cmd("SetForegroundColor", treeNodeID, this.FOREGROUND_COLOR);
+            this.cmd("SetBackgroundColor", treeNodeID, this.BACKGROUND_COLOR);
             this.cmd("Step");
             const insertElem = new SplayNode(insertedValue, treeNodeID, x, y);
             this.cmd("SetHighlight", insertElem.graphicID, 1);
@@ -368,9 +368,9 @@ class TreeSplay extends Algorithm {
                 this.cmd("SetHighlight", elem.graphicID, 0);
                 tree.left = elem;
                 elem.parent = tree;
-                this.cmd("Connect", tree.graphicID, elem.graphicID, TreeSplay.LINK_COLOR);
+                this.cmd("Connect", tree.graphicID, elem.graphicID, this.LINK_COLOR);
             } else {
-                this.cmd("CreateHighlightCircle", this.highlightID, TreeSplay.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+                this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
                 this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
                 this.cmd("Step");
                 this.cmd("Delete", this.highlightID);
@@ -381,12 +381,12 @@ class TreeSplay extends Algorithm {
             this.cmd("SetHighlight", elem.graphicID, 0);
             tree.right = elem;
             elem.parent = tree;
-            this.cmd("Connect", tree.graphicID, elem.graphicID, TreeSplay.LINK_COLOR);
-            elem.x = tree.x + TreeSplay.WIDTH_DELTA / 2;
-            elem.y = tree.y + TreeSplay.HEIGHT_DELTA;
+            this.cmd("Connect", tree.graphicID, elem.graphicID, this.LINK_COLOR);
+            elem.x = tree.x + this.WIDTH_DELTA / 2;
+            elem.y = tree.y + this.HEIGHT_DELTA;
             this.cmd("Move", elem.graphicID, elem.x, elem.y);
         } else {
-            this.cmd("CreateHighlightCircle", this.highlightID, TreeSplay.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+            this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
             this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
             this.cmd("Step");
             this.cmd("Delete", this.highlightID);
@@ -443,7 +443,7 @@ class TreeSplay extends Algorithm {
                 this.splayUp(largestLeft);
                 this.cmd("SetText", this.messageID, "Left tree now has no right subtree, connect left and right trees");
                 this.cmd("Step");
-                this.cmd("Connect", largestLeft.graphicID, right.graphicID, TreeSplay.LINK_COLOR);
+                this.cmd("Connect", largestLeft.graphicID, right.graphicID, this.LINK_COLOR);
                 largestLeft.parent = null;
                 largestLeft.right = right;
                 right.parent = largestLeft;
@@ -457,7 +457,7 @@ class TreeSplay extends Algorithm {
     findMax(tree) {
         if (tree.right != null) {
             this.highlightID = this.nextIndex++;
-            this.cmd("CreateHighlightCircle", this.highlightID, TreeSplay.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+            this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
             this.cmd("Step");
             while (tree.right != null) {
                 this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
@@ -482,17 +482,17 @@ class TreeSplay extends Algorithm {
 
         if (t2 != null) {
             this.cmd("Disconnect", A.graphicID, t2.graphicID);
-            this.cmd("Connect", B.graphicID, t2.graphicID, TreeSplay.LINK_COLOR);
+            this.cmd("Connect", B.graphicID, t2.graphicID, this.LINK_COLOR);
             t2.parent = B;
         }
         this.cmd("Disconnect", B.graphicID, A.graphicID);
-        this.cmd("Connect", A.graphicID, B.graphicID, TreeSplay.LINK_COLOR);
+        this.cmd("Connect", A.graphicID, B.graphicID, this.LINK_COLOR);
         A.parent = B.parent;
         if (B.parent == null) {
             this.treeRoot = A;
         } else {
-            this.cmd("Disconnect", B.parent.graphicID, B.graphicID, TreeSplay.LINK_COLOR);
-            this.cmd("Connect", B.parent.graphicID, A.graphicID, TreeSplay.LINK_COLOR);
+            this.cmd("Disconnect", B.parent.graphicID, B.graphicID, this.LINK_COLOR);
+            this.cmd("Connect", B.parent.graphicID, A.graphicID, this.LINK_COLOR);
             if (B.isLeftChild()) {
                 B.parent.left = A;
             } else {
@@ -518,17 +518,17 @@ class TreeSplay extends Algorithm {
 
         if (t2 != null) {
             this.cmd("Disconnect", B.graphicID, t2.graphicID);
-            this.cmd("Connect", A.graphicID, t2.graphicID, TreeSplay.LINK_COLOR);
+            this.cmd("Connect", A.graphicID, t2.graphicID, this.LINK_COLOR);
             t2.parent = A;
         }
         this.cmd("Disconnect", A.graphicID, B.graphicID);
-        this.cmd("Connect", B.graphicID, A.graphicID, TreeSplay.LINK_COLOR);
+        this.cmd("Connect", B.graphicID, A.graphicID, this.LINK_COLOR);
         B.parent = A.parent;
         if (A.parent == null) {
             this.treeRoot = B;
         } else {
-            this.cmd("Disconnect", A.parent.graphicID, A.graphicID, TreeSplay.LINK_COLOR);
-            this.cmd("Connect", A.parent.graphicID, B.graphicID, TreeSplay.LINK_COLOR);
+            this.cmd("Disconnect", A.parent.graphicID, A.graphicID, this.LINK_COLOR);
+            this.cmd("Connect", A.parent.graphicID, B.graphicID, this.LINK_COLOR);
             if (A.isLeftChild()) {
                 A.parent.left = B;
             } else {
@@ -559,20 +559,20 @@ class TreeSplay extends Algorithm {
             this.cmd("Disconnect", B.graphicID, t2.graphicID);
             t2.parent = A;
             A.right = t2;
-            this.cmd("Connect", A.graphicID, t2.graphicID, TreeSplay.LINK_COLOR);
+            this.cmd("Connect", A.graphicID, t2.graphicID, this.LINK_COLOR);
         }
         if (t3 != null) {
             this.cmd("Disconnect", B.graphicID, t3.graphicID);
             t3.parent = C;
             C.left = t2;
-            this.cmd("Connect", C.graphicID, t3.graphicID, TreeSplay.LINK_COLOR);
+            this.cmd("Connect", C.graphicID, t3.graphicID, this.LINK_COLOR);
         }
         if (C.parent == null) {
             B.parent = null;
             this.treeRoot = B;
         } else {
             this.cmd("Disconnect", C.parent.graphicID, C.graphicID);
-            this.cmd("Connect", C.parent.graphicID, B.graphicID, TreeSplay.LINK_COLOR);
+            this.cmd("Connect", C.parent.graphicID, B.graphicID, this.LINK_COLOR);
             if (C.isLeftChild()) {
                 C.parent.left = B;
             } else {
@@ -583,8 +583,8 @@ class TreeSplay extends Algorithm {
         }
         this.cmd("Disconnect", C.graphicID, A.graphicID);
         this.cmd("Disconnect", A.graphicID, B.graphicID);
-        this.cmd("Connect", B.graphicID, A.graphicID, TreeSplay.LINK_COLOR);
-        this.cmd("Connect", B.graphicID, C.graphicID, TreeSplay.LINK_COLOR);
+        this.cmd("Connect", B.graphicID, A.graphicID, this.LINK_COLOR);
+        this.cmd("Connect", B.graphicID, C.graphicID, this.LINK_COLOR);
 
         B.left = A;
         A.parent = B;
@@ -613,13 +613,13 @@ class TreeSplay extends Algorithm {
             this.cmd("Disconnect", B.graphicID, t2.graphicID);
             t2.parent = A;
             A.right = t2;
-            this.cmd("Connect", A.graphicID, t2.graphicID, TreeSplay.LINK_COLOR);
+            this.cmd("Connect", A.graphicID, t2.graphicID, this.LINK_COLOR);
         }
         if (t3 != null) {
             this.cmd("Disconnect", B.graphicID, t3.graphicID);
             t3.parent = C;
             C.left = t2;
-            this.cmd("Connect", C.graphicID, t3.graphicID, TreeSplay.LINK_COLOR);
+            this.cmd("Connect", C.graphicID, t3.graphicID, this.LINK_COLOR);
         }
 
         if (A.parent == null) {
@@ -627,7 +627,7 @@ class TreeSplay extends Algorithm {
             this.treeRoot = B;
         } else {
             this.cmd("Disconnect", A.parent.graphicID, A.graphicID);
-            this.cmd("Connect", A.parent.graphicID, B.graphicID, TreeSplay.LINK_COLOR);
+            this.cmd("Connect", A.parent.graphicID, B.graphicID, this.LINK_COLOR);
             if (A.isLeftChild()) {
                 A.parent.left = B;
             } else {
@@ -638,8 +638,8 @@ class TreeSplay extends Algorithm {
         }
         this.cmd("Disconnect", A.graphicID, C.graphicID);
         this.cmd("Disconnect", C.graphicID, B.graphicID);
-        this.cmd("Connect", B.graphicID, A.graphicID, TreeSplay.LINK_COLOR);
-        this.cmd("Connect", B.graphicID, C.graphicID, TreeSplay.LINK_COLOR);
+        this.cmd("Connect", B.graphicID, A.graphicID, this.LINK_COLOR);
+        this.cmd("Connect", B.graphicID, C.graphicID, this.LINK_COLOR);
 
         B.left = A;
         A.parent = B;
@@ -668,7 +668,7 @@ class TreeSplay extends Algorithm {
 
         if (C.parent != null) {
             this.cmd("Disconnect", C.parent.graphicID, C.graphicID);
-            this.cmd("Connect", C.parent.graphicID, A.graphicID, TreeSplay.LINK_COLOR);
+            this.cmd("Connect", C.parent.graphicID, A.graphicID, this.LINK_COLOR);
             if (C.isLeftChild()) {
                 C.parent.left = A;
             } else {
@@ -680,18 +680,18 @@ class TreeSplay extends Algorithm {
 
         if (t2 != null) {
             this.cmd("Disconnect", A.graphicID, t2.graphicID);
-            this.cmd("Connect", B.graphicID, t2.graphicID, TreeSplay.LINK_COLOR);
+            this.cmd("Connect", B.graphicID, t2.graphicID, this.LINK_COLOR);
             t2.parent = B;
         }
         if (t3 != null) {
             this.cmd("Disconnect", B.graphicID, t3.graphicID);
-            this.cmd("Connect", C.graphicID, t3.graphicID, TreeSplay.LINK_COLOR);
+            this.cmd("Connect", C.graphicID, t3.graphicID, this.LINK_COLOR);
             t3.parent = C;
         }
         this.cmd("Disconnect", B.graphicID, A.graphicID);
-        this.cmd("Connect", A.graphicID, B.graphicID, TreeSplay.LINK_COLOR);
+        this.cmd("Connect", A.graphicID, B.graphicID, this.LINK_COLOR);
         this.cmd("Disconnect", C.graphicID, B.graphicID);
-        this.cmd("Connect", B.graphicID, C.graphicID, TreeSplay.LINK_COLOR);
+        this.cmd("Connect", B.graphicID, C.graphicID, this.LINK_COLOR);
 
         A.right = B;
         A.parent = C.parent;
@@ -721,7 +721,7 @@ class TreeSplay extends Algorithm {
 
         if (A.parent != null) {
             this.cmd("Disconnect", A.parent.graphicID, A.graphicID);
-            this.cmd("Connect", A.parent.graphicID, C.graphicID, TreeSplay.LINK_COLOR);
+            this.cmd("Connect", A.parent.graphicID, C.graphicID, this.LINK_COLOR);
             if (A.isLeftChild()) {
                 A.parent.left = C;
             } else {
@@ -733,18 +733,18 @@ class TreeSplay extends Algorithm {
 
         if (t2 != null) {
             this.cmd("Disconnect", B.graphicID, t2.graphicID);
-            this.cmd("Connect", A.graphicID, t2.graphicID, TreeSplay.LINK_COLOR);
+            this.cmd("Connect", A.graphicID, t2.graphicID, this.LINK_COLOR);
             t2.parent = A;
         }
         if (t3 != null) {
             this.cmd("Disconnect", C.graphicID, t3.graphicID);
-            this.cmd("Connect", B.graphicID, t3.graphicID, TreeSplay.LINK_COLOR);
+            this.cmd("Connect", B.graphicID, t3.graphicID, this.LINK_COLOR);
             t3.parent = B;
         }
         this.cmd("Disconnect", A.graphicID, B.graphicID);
         this.cmd("Disconnect", B.graphicID, C.graphicID);
-        this.cmd("Connect", C.graphicID, B.graphicID, TreeSplay.LINK_COLOR);
-        this.cmd("Connect", B.graphicID, A.graphicID, TreeSplay.LINK_COLOR);
+        this.cmd("Connect", C.graphicID, B.graphicID, this.LINK_COLOR);
+        this.cmd("Connect", B.graphicID, A.graphicID, this.LINK_COLOR);
 
         C.parent = A.parent;
         A.right = t2;
@@ -849,7 +849,7 @@ class TreeSplay extends Algorithm {
             } else if (this.treeRoot.rightWidth > startingPoint) {
                 startingPoint = Math.max(this.treeRoot.leftWidth, 2 * startingPoint - this.treeRoot.rightWidth);
             }
-            this.setNewPositions(this.treeRoot, startingPoint, TreeSplay.STARTING_Y, 0);
+            this.setNewPositions(this.treeRoot, startingPoint, this.STARTING_Y, 0);
             this.animateNewPositions(this.treeRoot);
             this.cmd("Step");
         }
@@ -864,8 +864,8 @@ class TreeSplay extends Algorithm {
                 xPosition = xPosition + tree.leftWidth;
             }
             tree.x = xPosition;
-            this.setNewPositions(tree.left, xPosition, yPosition + TreeSplay.HEIGHT_DELTA, -1);
-            this.setNewPositions(tree.right, xPosition, yPosition + TreeSplay.HEIGHT_DELTA, 1);
+            this.setNewPositions(tree.left, xPosition, yPosition + this.HEIGHT_DELTA, -1);
+            this.setNewPositions(tree.right, xPosition, yPosition + this.HEIGHT_DELTA, 1);
         }
     }
 
@@ -881,8 +881,8 @@ class TreeSplay extends Algorithm {
         if (tree == null) {
             return 0;
         }
-        tree.leftWidth = Math.max(this.resizeWidths(tree.left), TreeSplay.WIDTH_DELTA / 2);
-        tree.rightWidth = Math.max(this.resizeWidths(tree.right), TreeSplay.WIDTH_DELTA / 2);
+        tree.leftWidth = Math.max(this.resizeWidths(tree.left), this.WIDTH_DELTA / 2);
+        tree.rightWidth = Math.max(this.resizeWidths(tree.right), this.WIDTH_DELTA / 2);
         return tree.leftWidth + tree.rightWidth;
     }
 }

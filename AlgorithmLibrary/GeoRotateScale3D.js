@@ -32,27 +32,27 @@
 
 
 class GeoRotateScale3D extends Geometric {
-    static XAxisYPos = 300;
-    static XAxisStart = 100;
-    static XAxisEnd = 700;
+    XAxisYPos = 300;
+    XAxisStart = 100;
+    XAxisEnd = 700;
 
-    static MATRIX_START_X = 10;
-    static MATRIX_START_Y = 10;
-    static MATRIX_MULTIPLY_SPACING = 10;
-    static EQUALS_SPACING = 30;
+    MATRIX_START_X = 10;
+    MATRIX_START_Y = 10;
+    MATRIX_MULTIPLY_SPACING = 10;
+    EQUALS_SPACING = 30;
 
-    static AXIS_SIZE = 200;
+    AXIS_SIZE = 200;
 
-    static AXIS_ALPHA = 0.7;
+    AXIS_ALPHA = 0.7;
 
-    static YAxisXPos = 400;
-    static YAxisStart = 100;
-    static YAxisEnd = 500;
+    YAxisXPos = 400;
+    YAxisStart = 100;
+    YAxisEnd = 500;
 
-    static MATRIX_ELEM_WIDTH = 50;
-    static MATRIX_ELEM_HEIGHT = 20;
+    MATRIX_ELEM_WIDTH = 50;
+    MATRIX_ELEM_HEIGHT = 20;
 
-    static OBJECTS = [
+    OBJECTS = [
         [[100, 100, 100], [-100, 100, 100], [-100, -100, 100], [100, -100, 100],
             [100, -100, -100], [100, 100, -100], [-100, 100, -100], [-100, -100, -100],
         ], // Cube
@@ -65,45 +65,45 @@ class GeoRotateScale3D extends Geometric {
         ], // Star
     ];
 
-    static EXTRA_CONNECTIONS = [
+    EXTRA_CONNECTIONS = [
         [[3, 0], [5, 0], [6, 1], [7, 2], [4, 7]], // Cube
         [[5, 0], [6, 11], [0, 7], [1, 8], [2, 9], [3, 10], [4, 11]], // L
         [[4, 0]], // Pentagon
         [[9, 0]], // Star
     ];
 
-    static CAMERA_Z_ROT = Geometric.toRadians(-10);
-    static CAMERA_X_ROT = Geometric.toRadians(10);
+    CAMERA_Z_ROT = this.toRadians(-10);
+    CAMERA_X_ROT = this.toRadians(10);
 
-    static CAMERA_TRANS_ANGLE = Geometric.toRadians(30);
-    static L = 0.5;
+    CAMERA_TRANS_ANGLE = this.toRadians(30);
+    L = 0.5;
 
-    static CAMERA_TRANSFORM = [[1, 0, 0],
-        [GeoRotateScale3D.L * Math.cos(GeoRotateScale3D.CAMERA_TRANS_ANGLE), 0, GeoRotateScale3D.L * Math.sin(GeoRotateScale3D.CAMERA_TRANS_ANGLE)],
+    CAMERA_TRANSFORM = [[1, 0, 0],
+        [this.L * Math.cos(this.CAMERA_TRANS_ANGLE), 0, this.L * Math.sin(this.CAMERA_TRANS_ANGLE)],
         [0, 0, 1]];
 
-    static CAMERA_TRANSFORM2 = [[Math.cos(GeoRotateScale3D.CAMERA_Z_ROT), Math.sin(GeoRotateScale3D.CAMERA_Z_ROT), 0],
-        [-Math.sin(GeoRotateScale3D.CAMERA_Z_ROT), Math.cos(GeoRotateScale3D.CAMERA_Z_ROT), 0],
+    CAMERA_TRANSFORM2 = [[Math.cos(this.CAMERA_Z_ROT), Math.sin(this.CAMERA_Z_ROT), 0],
+        [-Math.sin(this.CAMERA_Z_ROT), Math.cos(this.CAMERA_Z_ROT), 0],
         [0, 0, 1]];
 
-    static CAMERA_TRANSFORM1 = [[1, 0, 0],
-        [0, Math.cos(GeoRotateScale3D.CAMERA_X_ROT), Math.sin(GeoRotateScale3D.CAMERA_X_ROT)],
-        [0, -Math.sin(GeoRotateScale3D.CAMERA_X_ROT), Math.cos(GeoRotateScale3D.CAMERA_X_ROT)],
+    CAMERA_TRANSFORM1 = [[1, 0, 0],
+        [0, Math.cos(this.CAMERA_X_ROT), Math.sin(this.CAMERA_X_ROT)],
+        [0, -Math.sin(this.CAMERA_X_ROT), Math.cos(this.CAMERA_X_ROT)],
     ];
 
-    static AXIS_COLOR = "#0000FF";
-    static VERTEX_FOREGORUND_COLOR = "#000000";
-    static VERTEX_BACKGROUND_COLOR = GeoRotateScale3D.VERTEX_FOREGORUND_COLOR;
-    static EDGE_COLOR = "#000000";
+    AXIS_COLOR = "#0000FF";
+    VERTEX_FOREGORUND_COLOR = "#000000";
+    VERTEX_BACKGROUND_COLOR = this.VERTEX_FOREGORUND_COLOR;
+    EDGE_COLOR = "#000000";
 
-    static TRANSFORMED_VERTEX_FOREGORUND_COLOR = "#66FF66";
-    static TRANSFORMED_VERTEX_BACKGROUND_COLOR = GeoRotateScale3D.VERTEX_FOREGORUND_COLOR;
-    static TRANSFORMED_EDGE_COLOR = "#66FF66";
+    TRANSFORMED_VERTEX_FOREGORUND_COLOR = "#66FF66";
+    TRANSFORMED_VERTEX_BACKGROUND_COLOR = this.VERTEX_FOREGORUND_COLOR;
+    TRANSFORMED_EDGE_COLOR = "#66FF66";
 
-    static VECTOR_COLOR = "#FF0000";
+    VECTOR_COLOR = "#FF0000";
 
-    static VERTEX_WIDTH = 3;
-    static VERTEX_HEIGHT = GeoRotateScale3D.VERTEX_WIDTH;
+    VERTEX_WIDTH = 3;
+    VERTEX_HEIGHT = this.VERTEX_WIDTH;
 
     constructor(am) {
         super();
@@ -112,8 +112,8 @@ class GeoRotateScale3D extends Geometric {
 
     init(am) {
         super.init(am);
-        this.cameraTransform = GeoRotateScale3D.CAMERA_TRANSFORM;
-        // this.cameraTransform = Geometric.multiply(RotateScale3D.CAMERA_TRANSFORM1, RotateScale3D.CAMERA_TRANSFORM2);
+        this.cameraTransform = this.CAMERA_TRANSFORM;
+        // this.cameraTransform = this.multiply(RotateScale3D.CAMERA_TRANSFORM1, RotateScale3D.CAMERA_TRANSFORM2);
         this.rowMajor = true;
         this.posYUp = true;
         this.rotateFirst = true;
@@ -154,70 +154,70 @@ class GeoRotateScale3D extends Geometric {
 
         this.cmd("CreateRectangle", this.originID, "", 0, 0, point[0], point[1]);
 
-        point = this.worldToScreenSpace([-GeoRotateScale3D.AXIS_SIZE, 0, 0]);
+        point = this.worldToScreenSpace([-this.AXIS_SIZE, 0, 0]);
         this.cmd("CreateRectangle", this.xAxisMinID, "", 0, 0, point[0], point[1]);
         this.cmd("SetAlpha", this.xAxisMinID, 0);
 
-        point = this.worldToScreenSpace([GeoRotateScale3D.AXIS_SIZE, 0, 0]);
+        point = this.worldToScreenSpace([this.AXIS_SIZE, 0, 0]);
         this.cmd("CreateRectangle", this.xAxisMaxID, "", 0, 0, point[0], point[1]);
         this.cmd("SetAlpha", this.xAxisMaxID, 0);
 
-        this.cmd("Connect", this.xAxisMinID, this.xAxisMaxID, GeoRotateScale3D.AXIS_COLOR, 0, 1, "");
-        this.cmd("Connect", this.xAxisMaxID, this.xAxisMinID, GeoRotateScale3D.AXIS_COLOR, 0, 1, "");
-        this.cmd("SetEdgeAlpha", this.xAxisMaxID, this.xAxisMinID, GeoRotateScale3D.AXIS_ALPHA);
-        this.cmd("SetEdgeAlpha", this.xAxisMinID, this.xAxisMaxID, GeoRotateScale3D.AXIS_ALPHA);
+        this.cmd("Connect", this.xAxisMinID, this.xAxisMaxID, this.AXIS_COLOR, 0, 1, "");
+        this.cmd("Connect", this.xAxisMaxID, this.xAxisMinID, this.AXIS_COLOR, 0, 1, "");
+        this.cmd("SetEdgeAlpha", this.xAxisMaxID, this.xAxisMinID, this.AXIS_ALPHA);
+        this.cmd("SetEdgeAlpha", this.xAxisMinID, this.xAxisMaxID, this.AXIS_ALPHA);
 
-        point = this.worldToScreenSpace([0, -GeoRotateScale3D.AXIS_SIZE, 0]);
+        point = this.worldToScreenSpace([0, -this.AXIS_SIZE, 0]);
         this.cmd("CreateRectangle", this.yAxisMinID, "", 0, 0, point[0], point[1]);
         this.cmd("SetAlpha", this.yAxisMinID, 0);
 
-        point = this.worldToScreenSpace([0, GeoRotateScale3D.AXIS_SIZE, 0]);
+        point = this.worldToScreenSpace([0, this.AXIS_SIZE, 0]);
         this.cmd("CreateRectangle", this.yAxisMaxID, "", 0, 0, point[0], point[1]);
         this.cmd("SetAlpha", this.yAxisMaxID, 0);
 
-        this.cmd("Connect", this.yAxisMinID, this.yAxisMaxID, GeoRotateScale3D.AXIS_COLOR, 0, 1, "");
-        this.cmd("Connect", this.yAxisMaxID, this.yAxisMinID, GeoRotateScale3D.AXIS_COLOR, 0, 1, "");
-        this.cmd("SetEdgeAlpha", this.yAxisMaxID, this.yAxisMinID, GeoRotateScale3D.AXIS_ALPHA);
-        this.cmd("SetEdgeAlpha", this.yAxisMinID, this.yAxisMaxID, GeoRotateScale3D.AXIS_ALPHA);
+        this.cmd("Connect", this.yAxisMinID, this.yAxisMaxID, this.AXIS_COLOR, 0, 1, "");
+        this.cmd("Connect", this.yAxisMaxID, this.yAxisMinID, this.AXIS_COLOR, 0, 1, "");
+        this.cmd("SetEdgeAlpha", this.yAxisMaxID, this.yAxisMinID, this.AXIS_ALPHA);
+        this.cmd("SetEdgeAlpha", this.yAxisMinID, this.yAxisMaxID, this.AXIS_ALPHA);
 
-        point = this.worldToScreenSpace([0, 0, -GeoRotateScale3D.AXIS_SIZE]);
+        point = this.worldToScreenSpace([0, 0, -this.AXIS_SIZE]);
         this.cmd("CreateRectangle", this.zAxisMinID, "", 0, 0, point[0], point[1]);
         this.cmd("SetAlpha", this.zAxisMinID, 0);
 
-        point = this.worldToScreenSpace([0, 0, GeoRotateScale3D.AXIS_SIZE]);
+        point = this.worldToScreenSpace([0, 0, this.AXIS_SIZE]);
         this.cmd("CreateRectangle", this.zAxisMaxID, "", 0, 0, point[0], point[1]);
         this.cmd("SetAlpha", this.zAxisMaxID, 0);
 
-        this.cmd("Connect", this.zAxisMinID, this.zAxisMaxID, GeoRotateScale3D.AXIS_COLOR, 0, 1, "");
-        this.cmd("Connect", this.zAxisMaxID, this.zAxisMinID, GeoRotateScale3D.AXIS_COLOR, 0, 1, "");
+        this.cmd("Connect", this.zAxisMinID, this.zAxisMaxID, this.AXIS_COLOR, 0, 1, "");
+        this.cmd("Connect", this.zAxisMaxID, this.zAxisMinID, this.AXIS_COLOR, 0, 1, "");
 
-        this.cmd("SetEdgeAlpha", this.zAxisMaxID, this.zAxisMinID, GeoRotateScale3D.AXIS_ALPHA);
-        this.cmd("SetEdgeAlpha", this.zAxisMinID, this.zAxisMaxID, GeoRotateScale3D.AXIS_ALPHA);
+        this.cmd("SetEdgeAlpha", this.zAxisMaxID, this.zAxisMinID, this.AXIS_ALPHA);
+        this.cmd("SetEdgeAlpha", this.zAxisMinID, this.zAxisMaxID, this.AXIS_ALPHA);
 
-        point = this.worldToScreenSpace([GeoRotateScale3D.AXIS_SIZE, 0, -10]);
+        point = this.worldToScreenSpace([this.AXIS_SIZE, 0, -10]);
         this.cmd("CreateLabel", this.xAxisLabel, "+x", point[0], point[1]);
 
-        point = this.worldToScreenSpace([+10, GeoRotateScale3D.AXIS_SIZE, 0]);
+        point = this.worldToScreenSpace([+10, this.AXIS_SIZE, 0]);
         this.cmd("CreateLabel", this.yAxisLabel, "+y", point[0], point[1]);
 
-        point = this.worldToScreenSpace([+10, 0, GeoRotateScale3D.AXIS_SIZE]);
+        point = this.worldToScreenSpace([+10, 0, this.AXIS_SIZE]);
         this.cmd("CreateLabel", this.zAxisLabel, "+z", point[0], point[1]);
 
-        this.cmd("SetForegroundColor", this.yAxisLabel, GeoRotateScale3D.AXIS_COLOR);
-        this.cmd("SetForegroundColor", this.xAxisLabel, GeoRotateScale3D.AXIS_COLOR);
-        this.cmd("SetForegroundColor", this.zAxisLabel, GeoRotateScale3D.AXIS_COLOR);
+        this.cmd("SetForegroundColor", this.yAxisLabel, this.AXIS_COLOR);
+        this.cmd("SetForegroundColor", this.xAxisLabel, this.AXIS_COLOR);
+        this.cmd("SetForegroundColor", this.zAxisLabel, this.AXIS_COLOR);
     }
 
     setupObject() {
-        this.objectVertexPosition = GeoRotateScale3D.OBJECTS[this.currentShape].slice(0);
-        this.extraConnections = GeoRotateScale3D.EXTRA_CONNECTIONS[this.currentShape].slice(0);
+        this.objectVertexPosition = this.OBJECTS[this.currentShape].slice(0);
+        this.extraConnections = this.EXTRA_CONNECTIONS[this.currentShape].slice(0);
     }
 
     worldToScreenSpace(point) {
-        const transformedPoint = Geometric.multiply([point], this.cameraTransform)[0];
+        const transformedPoint = this.multiply([point], this.cameraTransform)[0];
         const worldSpace = new Array(2);
-        worldSpace[0] = transformedPoint[0] + GeoRotateScale3D.YAxisXPos;
-        worldSpace[1] = GeoRotateScale3D.XAxisYPos - transformedPoint[2];
+        worldSpace[0] = transformedPoint[0] + this.YAxisXPos;
+        worldSpace[1] = this.XAxisYPos - transformedPoint[2];
 
         return worldSpace;
     }
@@ -236,16 +236,16 @@ class GeoRotateScale3D extends Geometric {
             this.objectVertexID[i] = this.nextIndex++;
             const point = this.worldToScreenSpace(this.objectVertexPosition[i]);
 
-            this.cmd("CreateRectangle", this.objectVertexID[i], "", GeoRotateScale3D.VERTEX_WIDTH, GeoRotateScale3D.VERTEX_HEIGHT, point[0], point[1]);
-            this.cmd("SetForegroundColor", this.objectVertexID[i], GeoRotateScale3D.VERTEX_FOREGORUND_COLOR);
-            this.cmd("SetBackgroundColor", this.objectVertexID[i], GeoRotateScale3D.VERTEX_BACKGROUND_COLOR);
+            this.cmd("CreateRectangle", this.objectVertexID[i], "", this.VERTEX_WIDTH, this.VERTEX_HEIGHT, point[0], point[1]);
+            this.cmd("SetForegroundColor", this.objectVertexID[i], this.VERTEX_FOREGORUND_COLOR);
+            this.cmd("SetBackgroundColor", this.objectVertexID[i], this.VERTEX_BACKGROUND_COLOR);
         }
         for (let i = 1; i < this.objectVertexID.length; i++) {
-            this.cmd("Connect", this.objectVertexID[i - 1], this.objectVertexID[i], GeoRotateScale3D.EDGE_COLOR, 0, 0, "");
+            this.cmd("Connect", this.objectVertexID[i - 1], this.objectVertexID[i], this.EDGE_COLOR, 0, 0, "");
         }
 
         for (let i = 0; i < this.extraConnections.length; i++) {
-            this.cmd("Connect", this.objectVertexID[this.extraConnections[i][0]], this.objectVertexID[this.extraConnections[i][1]], GeoRotateScale3D.EDGE_COLOR, 0, 0, "");
+            this.cmd("Connect", this.objectVertexID[this.extraConnections[i][0]], this.objectVertexID[this.extraConnections[i][1]], this.EDGE_COLOR, 0, 0, "");
         }
     }
 
@@ -331,9 +331,9 @@ class GeoRotateScale3D extends Geometric {
             this.posYDownButton.checked = !this.posYUp;
         }
         if (this.posYUp) {
-            this.cmd("Move", this.yAxisLabel, GeoRotateScale3D.YAxisXPos + 10, GeoRotateScale3D.YAxisStart + 10);
+            this.cmd("Move", this.yAxisLabel, this.YAxisXPos + 10, this.YAxisStart + 10);
         } else {
-            this.cmd("Move", this.yAxisLabel, GeoRotateScale3D.YAxisXPos + 10, GeoRotateScale3D.YAxisEnd - 10);
+            this.cmd("Move", this.yAxisLabel, this.YAxisXPos + 10, this.YAxisEnd - 10);
         }
 
         this.moveObjectToNewPosition();
@@ -391,7 +391,7 @@ class GeoRotateScale3D extends Geometric {
             this.cmd("Delete", this.objectVertexID[i]);
         }
         this.currentShape++;
-        if (this.currentShape >= GeoRotateScale3D.OBJECTS.length) {
+        if (this.currentShape >= this.OBJECTS.length) {
             this.currentShape = 0;
         }
         this.setupObject();
@@ -425,10 +425,10 @@ class GeoRotateScale3D extends Geometric {
         const scaleY = parseFloat(inputs[1]);
         const scaleZ = parseFloat(inputs[2]);
 
-        let xpos = GeoRotateScale3D.MATRIX_START_X;
-        const ypos = GeoRotateScale3D.MATRIX_START_Y;
+        let xpos = this.MATRIX_START_X;
+        const ypos = this.MATRIX_START_Y;
 
-        xpos += 3 * GeoRotateScale3D.MATRIX_ELEM_WIDTH + GeoRotateScale3D.MATRIX_MULTIPLY_SPACING;
+        xpos += 3 * this.MATRIX_ELEM_WIDTH + this.MATRIX_MULTIPLY_SPACING;
 
         const transformMatrix = this.createMatrix([[scaleX, 0, 0],
             [0, scaleY, 0],
@@ -445,25 +445,25 @@ class GeoRotateScale3D extends Geometric {
 
         let xyz;
         if (this.rowMajor) {
-            xyz = this.createMatrix([["x", "y", "z"]], GeoRotateScale3D.MATRIX_START_X, GeoRotateScale3D.MATRIX_START_Y);
-            this.cmd("CreateLabel", explainID, "", GeoRotateScale3D.MATRIX_START_X + 6 * GeoRotateScale3D.MATRIX_ELEM_WIDTH + GeoRotateScale3D.MATRIX_MULTIPLY_SPACING + GeoRotateScale3D.EQUALS_SPACING,
-                GeoRotateScale3D.MATRIX_START_Y + 1.5 * GeoRotateScale3D.MATRIX_ELEM_HEIGHT, 0);
-            this.cmd("CreateLabel", equalID, "=", GeoRotateScale3D.MATRIX_START_X + 6 * GeoRotateScale3D.MATRIX_ELEM_WIDTH + GeoRotateScale3D.MATRIX_MULTIPLY_SPACING + GeoRotateScale3D.EQUALS_SPACING / 2,
-                GeoRotateScale3D.MATRIX_START_Y + 0.5 * GeoRotateScale3D.MATRIX_ELEM_HEIGHT);
+            xyz = this.createMatrix([["x", "y", "z"]], this.MATRIX_START_X, this.MATRIX_START_Y);
+            this.cmd("CreateLabel", explainID, "", this.MATRIX_START_X + 6 * this.MATRIX_ELEM_WIDTH + this.MATRIX_MULTIPLY_SPACING + this.EQUALS_SPACING,
+                this.MATRIX_START_Y + 1.5 * this.MATRIX_ELEM_HEIGHT, 0);
+            this.cmd("CreateLabel", equalID, "=", this.MATRIX_START_X + 6 * this.MATRIX_ELEM_WIDTH + this.MATRIX_MULTIPLY_SPACING + this.EQUALS_SPACING / 2,
+                this.MATRIX_START_Y + 0.5 * this.MATRIX_ELEM_HEIGHT);
         } else {
-            xyz = this.createMatrix([["x"], ["y"], ["z"]], GeoRotateScale3D.MATRIX_START_X + 6 * GeoRotateScale3D.MATRIX_ELEM_WIDTH + 2 * GeoRotateScale3D.MATRIX_MULTIPLY_SPACING,
-                GeoRotateScale3D.MATRIX_START_Y);
-            this.cmd("CreateLabel", explainID, "", GeoRotateScale3D.MATRIX_START_X + 7 * GeoRotateScale3D.MATRIX_ELEM_WIDTH + 2 * GeoRotateScale3D.MATRIX_MULTIPLY_SPACING + GeoRotateScale3D.EQUALS_SPACING,
-                GeoRotateScale3D.MATRIX_START_Y + 3 * GeoRotateScale3D.MATRIX_ELEM_HEIGHT + 2, 0);
-            this.cmd("CreateLabel", equalID, "=", GeoRotateScale3D.MATRIX_START_X + 7 * GeoRotateScale3D.MATRIX_ELEM_WIDTH + 2 * GeoRotateScale3D.MATRIX_MULTIPLY_SPACING + GeoRotateScale3D.EQUALS_SPACING / 2,
-                GeoRotateScale3D.MATRIX_START_Y + 1.5 * GeoRotateScale3D.MATRIX_ELEM_HEIGHT);
+            xyz = this.createMatrix([["x"], ["y"], ["z"]], this.MATRIX_START_X + 6 * this.MATRIX_ELEM_WIDTH + 2 * this.MATRIX_MULTIPLY_SPACING,
+                this.MATRIX_START_Y);
+            this.cmd("CreateLabel", explainID, "", this.MATRIX_START_X + 7 * this.MATRIX_ELEM_WIDTH + 2 * this.MATRIX_MULTIPLY_SPACING + this.EQUALS_SPACING,
+                this.MATRIX_START_Y + 3 * this.MATRIX_ELEM_HEIGHT + 2, 0);
+            this.cmd("CreateLabel", equalID, "=", this.MATRIX_START_X + 7 * this.MATRIX_ELEM_WIDTH + 2 * this.MATRIX_MULTIPLY_SPACING + this.EQUALS_SPACING / 2,
+                this.MATRIX_START_Y + 1.5 * this.MATRIX_ELEM_HEIGHT);
         }
         this.cmd("Step");
 
         const transformedObjectID = new Array(this.objectVertexID.length);
 
         for (let i = 0; i < this.objectVertexID.length; i++) {
-            this.cmd("Connect", this.originID, this.objectVertexID[i], GeoRotateScale3D.VECTOR_COLOR, 0, 1, "");
+            this.cmd("Connect", this.originID, this.objectVertexID[i], this.VECTOR_COLOR, 0, 1, "");
             if (this.rowMajor) {
                 xyz.data = [this.objectVertexPosition[i].slice(0)];
             } else {
@@ -477,13 +477,13 @@ class GeoRotateScale3D extends Geometric {
             let output;
             if (this.rowMajor) {
                 output = this.createMatrix([["", "", ""]],
-                    GeoRotateScale3D.MATRIX_START_X + 6 * GeoRotateScale3D.MATRIX_ELEM_WIDTH + GeoRotateScale3D.MATRIX_MULTIPLY_SPACING + GeoRotateScale3D.EQUALS_SPACING,
-                    GeoRotateScale3D.MATRIX_START_Y);
+                    this.MATRIX_START_X + 6 * this.MATRIX_ELEM_WIDTH + this.MATRIX_MULTIPLY_SPACING + this.EQUALS_SPACING,
+                    this.MATRIX_START_Y);
                 this.multiplyMatrix(xyz, transformMatrix, output, explainID);
             } else {
                 output = this.createMatrix([[""], [""], [""]],
-                    GeoRotateScale3D.MATRIX_START_X + 7 * GeoRotateScale3D.MATRIX_ELEM_WIDTH + 2 * GeoRotateScale3D.MATRIX_MULTIPLY_SPACING + GeoRotateScale3D.EQUALS_SPACING,
-                    GeoRotateScale3D.MATRIX_START_Y);
+                    this.MATRIX_START_X + 7 * this.MATRIX_ELEM_WIDTH + 2 * this.MATRIX_MULTIPLY_SPACING + this.EQUALS_SPACING,
+                    this.MATRIX_START_Y);
 
                 this.multiplyMatrix(transformMatrix, xyz, output, explainID);
             }
@@ -496,20 +496,20 @@ class GeoRotateScale3D extends Geometric {
                 point = this.worldToScreenSpace([output.data[0][0], output.data[1][0], output.data[2][0]]);
             }
 
-            this.cmd("CreateRectangle", transformedObjectID[i], "", GeoRotateScale3D.VERTEX_WIDTH, GeoRotateScale3D.VERTEX_HEIGHT, point[0], point[1]);
-            this.cmd("SetForegroundColor", transformedObjectID[i], GeoRotateScale3D.TRANSFORMED_VERTEX_FOREGORUND_COLOR);
-            this.cmd("SetBackgroundColor", transformedObjectID[i], GeoRotateScale3D.TRANSFORMED_VERTEX_BACKGROUND_COLOR);
-            this.cmd("Connect", this.originID, transformedObjectID[i], GeoRotateScale3D.TRANSFORMED_EDGE_COLOR, 0, 1, "");
+            this.cmd("CreateRectangle", transformedObjectID[i], "", this.VERTEX_WIDTH, this.VERTEX_HEIGHT, point[0], point[1]);
+            this.cmd("SetForegroundColor", transformedObjectID[i], this.TRANSFORMED_VERTEX_FOREGORUND_COLOR);
+            this.cmd("SetBackgroundColor", transformedObjectID[i], this.TRANSFORMED_VERTEX_BACKGROUND_COLOR);
+            this.cmd("Connect", this.originID, transformedObjectID[i], this.TRANSFORMED_EDGE_COLOR, 0, 1, "");
             this.cmd("Step");
             this.cmd("Disconnect", this.originID, transformedObjectID[i]);
 
             if (i > 0) {
-                this.cmd("Connect", transformedObjectID[i - 1], transformedObjectID[i], GeoRotateScale3D.TRANSFORMED_EDGE_COLOR, 0, 0, "");
+                this.cmd("Connect", transformedObjectID[i - 1], transformedObjectID[i], this.TRANSFORMED_EDGE_COLOR, 0, 0, "");
             }
             for (let j = 0; j < this.extraConnections.length; j++) {
                 if ((this.extraConnections[j][0] === i && this.extraConnections[j][1] < i) ||
                   (this.extraConnections[j][1] === i && this.extraConnections[j][0] < i)) {
-                    this.cmd("Connect", transformedObjectID[this.extraConnections[j][0]], transformedObjectID[this.extraConnections[j][1]], GeoRotateScale3D.TRANSFORMED_EDGE_COLOR, 0, 0, "");
+                    this.cmd("Connect", transformedObjectID[this.extraConnections[j][0]], transformedObjectID[this.extraConnections[j][1]], this.TRANSFORMED_EDGE_COLOR, 0, 0, "");
                 }
             }
 
@@ -524,7 +524,7 @@ class GeoRotateScale3D extends Geometric {
         }
         this.cmd("Step");
 
-        this.cmd("Connect", transformedObjectID[0], transformedObjectID[transformedObjectID.length - 1], GeoRotateScale3D.TRANSFORMED_EDGE_COLOR, 0, 0, "");
+        this.cmd("Connect", transformedObjectID[0], transformedObjectID[transformedObjectID.length - 1], this.TRANSFORMED_EDGE_COLOR, 0, 0, "");
 
         this.cmd("Step", "B");
         this.moveObjectToNewPosition();
@@ -543,14 +543,14 @@ class GeoRotateScale3D extends Geometric {
         // const oldNextIndex = this.nextIndex;
         this.commands = [];
         const inputs = input.split(";");
-        const rotateAngle1 = Geometric.toRadians(parseFloat(inputs[0]));
-        const rotateAngle2 = Geometric.toRadians(parseFloat(inputs[1]));
-        const rotateAngle3 = Geometric.toRadians(parseFloat(inputs[2]));
+        const rotateAngle1 = this.toRadians(parseFloat(inputs[0]));
+        const rotateAngle2 = this.toRadians(parseFloat(inputs[1]));
+        const rotateAngle3 = this.toRadians(parseFloat(inputs[2]));
 
-        let xpos = GeoRotateScale3D.MATRIX_START_X;
-        const ypos = GeoRotateScale3D.MATRIX_START_Y;
+        let xpos = this.MATRIX_START_X;
+        const ypos = this.MATRIX_START_Y;
 
-        xpos += 3 * GeoRotateScale3D.MATRIX_ELEM_WIDTH + GeoRotateScale3D.MATRIX_MULTIPLY_SPACING;
+        xpos += 3 * this.MATRIX_ELEM_WIDTH + this.MATRIX_MULTIPLY_SPACING;
 
         let matrix1Data = [["cos \u0398z", "sin \u0398z", 0],
             ["-sin \u0398z", "cos \u0398z", 0],
@@ -569,13 +569,13 @@ class GeoRotateScale3D extends Geometric {
         }
 
         const firstMat = this.createMatrix(matrix1Data, xpos, ypos);
-        xpos += firstMat.data[0].length * GeoRotateScale3D.MATRIX_ELEM_WIDTH + GeoRotateScale3D.MATRIX_MULTIPLY_SPACING;
+        xpos += firstMat.data[0].length * this.MATRIX_ELEM_WIDTH + this.MATRIX_MULTIPLY_SPACING;
 
         const secondMat = this.createMatrix(matrix2Data, xpos, ypos);
-        xpos += secondMat.data[0].length * GeoRotateScale3D.MATRIX_ELEM_WIDTH + GeoRotateScale3D.MATRIX_MULTIPLY_SPACING;
+        xpos += secondMat.data[0].length * this.MATRIX_ELEM_WIDTH + this.MATRIX_MULTIPLY_SPACING;
 
         const thirdMat = this.createMatrix(matrix3Data, xpos, ypos);
-        xpos += secondMat.data[0].length * GeoRotateScale3D.MATRIX_ELEM_WIDTH;
+        xpos += secondMat.data[0].length * this.MATRIX_ELEM_WIDTH;
 
         if (!this.rowMajor) {
             firstMat.transpose();
@@ -647,27 +647,27 @@ class GeoRotateScale3D extends Geometric {
         const paren4 = this.nextIndex++;
         this.cmd("step");
 
-        let parenX = xpos - 6 * GeoRotateScale3D.MATRIX_ELEM_WIDTH - GeoRotateScale3D.MATRIX_MULTIPLY_SPACING - 2;
+        let parenX = xpos - 6 * this.MATRIX_ELEM_WIDTH - this.MATRIX_MULTIPLY_SPACING - 2;
 
-        this.cmd("CreateRectangle", paren1, "", 0, 0, parenX, GeoRotateScale3D.MATRIX_START_Y, "center", "center");
-        this.cmd("CreateRectangle", paren2, "", 0, 0, parenX, GeoRotateScale3D.MATRIX_START_Y + 3 * GeoRotateScale3D.MATRIX_ELEM_HEIGHT, "center", "center");
+        this.cmd("CreateRectangle", paren1, "", 0, 0, parenX, this.MATRIX_START_Y, "center", "center");
+        this.cmd("CreateRectangle", paren2, "", 0, 0, parenX, this.MATRIX_START_Y + 3 * this.MATRIX_ELEM_HEIGHT, "center", "center");
         this.cmd("Connect", paren1, paren2, "#000000", 0.2, 0, "");
 
         parenX = xpos;
 
-        this.cmd("CreateRectangle", paren3, "", 0, 0, parenX, GeoRotateScale3D.MATRIX_START_Y, "center", "center");
-        this.cmd("CreateRectangle", paren4, "", 0, 0, parenX, GeoRotateScale3D.MATRIX_START_Y + 3 * GeoRotateScale3D.MATRIX_ELEM_HEIGHT, "center", "center");
+        this.cmd("CreateRectangle", paren3, "", 0, 0, parenX, this.MATRIX_START_Y, "center", "center");
+        this.cmd("CreateRectangle", paren4, "", 0, 0, parenX, this.MATRIX_START_Y + 3 * this.MATRIX_ELEM_HEIGHT, "center", "center");
 
         this.cmd("Connect", paren3, paren4, "#000000", -0.2, 0, "");
 
         this.cmd("Step");
-        const tmpMat = this.createMatrix([["", "", ""], ["", "", ""], ["", "", ""]], xpos + GeoRotateScale3D.EQUALS_SPACING, ypos);
+        const tmpMat = this.createMatrix([["", "", ""], ["", "", ""], ["", "", ""]], xpos + this.EQUALS_SPACING, ypos);
 
         const explainID = this.nextIndex++;
-        this.cmd("CreateLabel", explainID, "", xpos + GeoRotateScale3D.EQUALS_SPACING, ypos + GeoRotateScale3D.MATRIX_ELEM_HEIGHT * 3 + 5, 0);
+        this.cmd("CreateLabel", explainID, "", xpos + this.EQUALS_SPACING, ypos + this.MATRIX_ELEM_HEIGHT * 3 + 5, 0);
 
         const equalID = this.nextIndex++;
-        this.cmd("CreateLabel", equalID, "=", xpos + GeoRotateScale3D.EQUALS_SPACING / 2, ypos + GeoRotateScale3D.MATRIX_ELEM_HEIGHT * 1.5);
+        this.cmd("CreateLabel", equalID, "=", xpos + this.EQUALS_SPACING / 2, ypos + this.MATRIX_ELEM_HEIGHT * 1.5);
         this.multiplyMatrix(secondMat, thirdMat, tmpMat, explainID);
 
         this.cmd("Step");
@@ -680,17 +680,17 @@ class GeoRotateScale3D extends Geometric {
         this.cmd("Delete", equalID);
         this.cmd("Delete", explainID);
 
-        this.moveMatrix(tmpMat, GeoRotateScale3D.MATRIX_START_X + 6 * GeoRotateScale3D.MATRIX_ELEM_WIDTH + 2 * GeoRotateScale3D.MATRIX_MULTIPLY_SPACING, ypos);
+        this.moveMatrix(tmpMat, this.MATRIX_START_X + 6 * this.MATRIX_ELEM_WIDTH + 2 * this.MATRIX_MULTIPLY_SPACING, ypos);
 
         this.cmd("Step");
 
         this.setMatrixAlpha(firstMat, 1);
-        xpos = GeoRotateScale3D.MATRIX_START_X + 9 * GeoRotateScale3D.MATRIX_ELEM_WIDTH + 2 * GeoRotateScale3D.MATRIX_MULTIPLY_SPACING;
+        xpos = this.MATRIX_START_X + 9 * this.MATRIX_ELEM_WIDTH + 2 * this.MATRIX_MULTIPLY_SPACING;
 
-        const transformMatrix = this.createMatrix([["", "", ""], ["", "", ""], ["", "", ""]], xpos + GeoRotateScale3D.EQUALS_SPACING, ypos);
+        const transformMatrix = this.createMatrix([["", "", ""], ["", "", ""], ["", "", ""]], xpos + this.EQUALS_SPACING, ypos);
 
-        this.cmd("CreateLabel", explainID, "", xpos + GeoRotateScale3D.EQUALS_SPACING, ypos + GeoRotateScale3D.MATRIX_ELEM_HEIGHT * 3 + 5, 0);
-        this.cmd("CreateLabel", equalID, "=", xpos + GeoRotateScale3D.EQUALS_SPACING / 2, ypos + GeoRotateScale3D.MATRIX_ELEM_HEIGHT * 1.5);
+        this.cmd("CreateLabel", explainID, "", xpos + this.EQUALS_SPACING, ypos + this.MATRIX_ELEM_HEIGHT * 3 + 5, 0);
+        this.cmd("CreateLabel", equalID, "=", xpos + this.EQUALS_SPACING / 2, ypos + this.MATRIX_ELEM_HEIGHT * 1.5);
 
         this.multiplyMatrix(firstMat, tmpMat, transformMatrix, explainID);
 
@@ -699,7 +699,7 @@ class GeoRotateScale3D extends Geometric {
         this.cmd("Delete", equalID);
         this.cmd("Delete", explainID);
 
-        this.moveMatrix(transformMatrix, GeoRotateScale3D.MATRIX_START_X + 3 * GeoRotateScale3D.MATRIX_ELEM_WIDTH + GeoRotateScale3D.MATRIX_MULTIPLY_SPACING, ypos);
+        this.moveMatrix(transformMatrix, this.MATRIX_START_X + 3 * this.MATRIX_ELEM_WIDTH + this.MATRIX_MULTIPLY_SPACING, ypos);
         this.cmd("Step");
 
         this.transformPoints(transformMatrix);
@@ -767,17 +767,17 @@ class GeoRotateScale3D extends Geometric {
 
         this.cmd("Move", mat.leftBrack1, x, y);
         this.cmd("Move", mat.leftBrack2, x, y);
-        this.cmd("Move", mat.leftBrack3, x, y + height * GeoRotateScale3D.MATRIX_ELEM_HEIGHT);
+        this.cmd("Move", mat.leftBrack3, x, y + height * this.MATRIX_ELEM_HEIGHT);
 
-        this.cmd("Move", mat.rightBrack1, x + width * GeoRotateScale3D.MATRIX_ELEM_WIDTH, y);
-        this.cmd("Move", mat.rightBrack2, x + width * GeoRotateScale3D.MATRIX_ELEM_WIDTH, y);
-        this.cmd("Move", mat.rightBrack3, x + width * GeoRotateScale3D.MATRIX_ELEM_WIDTH, y + height * GeoRotateScale3D.MATRIX_ELEM_HEIGHT);
+        this.cmd("Move", mat.rightBrack1, x + width * this.MATRIX_ELEM_WIDTH, y);
+        this.cmd("Move", mat.rightBrack2, x + width * this.MATRIX_ELEM_WIDTH, y);
+        this.cmd("Move", mat.rightBrack3, x + width * this.MATRIX_ELEM_WIDTH, y + height * this.MATRIX_ELEM_HEIGHT);
 
         for (let i = 0; i < mat.data.length; i++) {
             for (let j = 0; j < mat.data[i].length; j++) {
                 this.cmd("Move", mat.dataID[i][j],
-                    x + j * GeoRotateScale3D.MATRIX_ELEM_WIDTH + GeoRotateScale3D.MATRIX_ELEM_WIDTH / 2,
-                    y + i * GeoRotateScale3D.MATRIX_ELEM_HEIGHT + GeoRotateScale3D.MATRIX_ELEM_HEIGHT / 2);
+                    x + j * this.MATRIX_ELEM_WIDTH + this.MATRIX_ELEM_WIDTH / 2,
+                    y + i * this.MATRIX_ELEM_HEIGHT + this.MATRIX_ELEM_HEIGHT / 2);
             }
         }
     }
@@ -854,18 +854,18 @@ class GeoRotateScale3D extends Geometric {
         }
 
         this.cmd("CreateRectangle", mat.leftBrack1, "", 5, 1, x, y, "left", "center");
-        this.cmd("CreateRectangle", mat.leftBrack2, "", 1, height * GeoRotateScale3D.MATRIX_ELEM_HEIGHT, x, y, "center", "top");
-        this.cmd("CreateRectangle", mat.leftBrack3, "", 5, 1, x, y + height * GeoRotateScale3D.MATRIX_ELEM_HEIGHT, "left", "center");
+        this.cmd("CreateRectangle", mat.leftBrack2, "", 1, height * this.MATRIX_ELEM_HEIGHT, x, y, "center", "top");
+        this.cmd("CreateRectangle", mat.leftBrack3, "", 5, 1, x, y + height * this.MATRIX_ELEM_HEIGHT, "left", "center");
 
-        this.cmd("CreateRectangle", mat.rightBrack1, "", 5, 1, x + width * GeoRotateScale3D.MATRIX_ELEM_WIDTH, y, "right", "center");
-        this.cmd("CreateRectangle", mat.rightBrack2, "", 1, height * GeoRotateScale3D.MATRIX_ELEM_HEIGHT, x + width * GeoRotateScale3D.MATRIX_ELEM_WIDTH, y, "center", "top");
-        this.cmd("CreateRectangle", mat.rightBrack3, "", 5, 1, x + width * GeoRotateScale3D.MATRIX_ELEM_WIDTH, y + height * GeoRotateScale3D.MATRIX_ELEM_HEIGHT, "right", "center");
+        this.cmd("CreateRectangle", mat.rightBrack1, "", 5, 1, x + width * this.MATRIX_ELEM_WIDTH, y, "right", "center");
+        this.cmd("CreateRectangle", mat.rightBrack2, "", 1, height * this.MATRIX_ELEM_HEIGHT, x + width * this.MATRIX_ELEM_WIDTH, y, "center", "top");
+        this.cmd("CreateRectangle", mat.rightBrack3, "", 5, 1, x + width * this.MATRIX_ELEM_WIDTH, y + height * this.MATRIX_ELEM_HEIGHT, "right", "center");
 
         for (let i = 0; i < mat.data.length; i++) {
             for (let j = 0; j < mat.data[i].length; j++) {
                 this.cmd("CreateLabel", mat.dataID[i][j], mat.data[i][j],
-                    x + j * GeoRotateScale3D.MATRIX_ELEM_WIDTH + GeoRotateScale3D.MATRIX_ELEM_WIDTH / 2,
-                    y + i * GeoRotateScale3D.MATRIX_ELEM_HEIGHT + GeoRotateScale3D.MATRIX_ELEM_HEIGHT / 2);
+                    x + j * this.MATRIX_ELEM_WIDTH + this.MATRIX_ELEM_WIDTH / 2,
+                    y + i * this.MATRIX_ELEM_HEIGHT + this.MATRIX_ELEM_HEIGHT / 2);
             }
         }
         return mat;

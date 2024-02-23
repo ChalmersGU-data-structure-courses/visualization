@@ -56,7 +56,7 @@ class Matrix {
 
 class Geometric extends Algorithm {
     // Multiply two (data only!) matrices (not complete matrix object with graphics, just the data
-    static multiply(lhs, rhs) {
+    multiply(lhs, rhs) {
         const resultMat = new Array(lhs.length);
         for (let i = 0; i < lhs.length; i++) {
             resultMat[i] = new Array(rhs[0].length);
@@ -74,7 +74,7 @@ class Geometric extends Algorithm {
     }
 
     // Add two (data only!) matrices (not complete matrix object with graphics, just the data)
-    static add(lhs, rhs) {
+    add(lhs, rhs) {
         const resultMat = new Array(lhs.length);
         for (let i = 0; i < lhs.length; i++) {
             resultMat[i] = new Array(lhs[i].length);
@@ -85,7 +85,7 @@ class Geometric extends Algorithm {
         return resultMat;
     }
 
-    static toRadians(degrees) {
+    toRadians(degrees) {
         return (degrees * 2 * Math.PI) / 360.0;
     }
 }

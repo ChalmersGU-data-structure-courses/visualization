@@ -50,27 +50,27 @@ class TernaryNode {
 
 
 class TreeTernary extends Algorithm {
-    static FOREGROUND_COLOR = "#007700";
-    static BACKGROUND_COLOR = "#CCFFCC";
+    FOREGROUND_COLOR = "#007700";
+    BACKGROUND_COLOR = "#CCFFCC";
 
-    static CENTER_LINK_COLOR = TreeTernary.FOREGROUND_COLOR;
-    static SIDE_LINK_COLOR = "#8888AA";
-    static HIGHLIGHT_CIRCLE_COLOR = TreeTernary.FOREGROUND_COLOR;
-    static PRINT_COLOR = TreeTernary.FOREGROUND_COLOR;
-    static TRUE_COLOR = TreeTernary.BACKGROUND_COLOR;
-    static FALSE_COLOR = "#FFFFFF";
+    CENTER_LINK_COLOR = this.FOREGROUND_COLOR;
+    SIDE_LINK_COLOR = "#8888AA";
+    HIGHLIGHT_CIRCLE_COLOR = this.FOREGROUND_COLOR;
+    PRINT_COLOR = this.FOREGROUND_COLOR;
+    TRUE_COLOR = this.BACKGROUND_COLOR;
+    FALSE_COLOR = "#FFFFFF";
 
-    static NODE_WIDTH = 30;
+    NODE_WIDTH = 30;
 
-    static WIDTH_DELTA = 50;
-    static HEIGHT_DELTA = 50;
-    static STARTING_Y = 20;
-    static LeftMargin = 300;
-    static NEW_NODE_Y = 100;
-    static NEW_NODE_X = 50;
-    static FIRST_PRINT_POS_X = 50;
-    static PRINT_VERTICAL_GAP = 20;
-    static PRINT_HORIZONTAL_GAP = 50;
+    WIDTH_DELTA = 50;
+    HEIGHT_DELTA = 50;
+    STARTING_Y = 20;
+    LEFT_MARGIN = 300;
+    NEW_NODE_Y = 100;
+    NEW_NODE_X = 50;
+    FIRST_PRINT_POS_X = 50;
+    PRINT_VERTICAL_GAP = 20;
+    PRINT_HORIZONTAL_GAP = 50;
 
     constructor(am) {
         super();
@@ -100,7 +100,7 @@ class TreeTernary extends Algorithm {
         const h = this.getCanvasHeight();
 
         this.startingX = w / 2;
-        this.firstPrintPosY = h - 2 * TreeTernary.PRINT_VERTICAL_GAP;
+        this.firstPrintPosY = h - 2 * this.PRINT_VERTICAL_GAP;
         this.printMax = w - 10;
 
         this.implementAction(() => {
@@ -202,21 +202,21 @@ class TreeTernary extends Algorithm {
                 child.parent = null;
             } else if (tree.parent.left === tree) {
                 this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
-                this.cmd("Connect", tree.parent.graphicID, child.graphicID, TreeTernary.SIDE_LINK_COLOR, 0.0001, false, `<${tree.parent.nextChar}`);
+                this.cmd("Connect", tree.parent.graphicID, child.graphicID, this.SIDE_LINK_COLOR, 0.0001, false, `<${tree.parent.nextChar}`);
                 tree.parent.left = child;
                 child.parent = tree.parent;
                 this.cmd("Step");
                 this.cmd("Delete", tree.graphicID);
             } else if (tree.parent.right === tree) {
                 this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
-                this.cmd("Connect", tree.parent.graphicID, child.graphicID, TreeTernary.SIDE_LINK_COLOR, -0.0001, false, `>${tree.parent.nextChar}`);
+                this.cmd("Connect", tree.parent.graphicID, child.graphicID, this.SIDE_LINK_COLOR, -0.0001, false, `>${tree.parent.nextChar}`);
                 tree.parent.right = child;
                 child.parent = tree.parent;
                 this.cmd("Step");
                 this.cmd("Delete", tree.graphicID);
             } else if (tree.parent.center === tree) {
                 this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
-                this.cmd("Connect", tree.parent.graphicID, child.graphicID, TreeTernary.CENTER_LINK_COLOR, 0.0001, false, `=${tree.parent.nextChar}`);
+                this.cmd("Connect", tree.parent.graphicID, child.graphicID, this.CENTER_LINK_COLOR, 0.0001, false, `=${tree.parent.nextChar}`);
                 child.parent = tree.parent;
                 tree.parent.center = child;
                 this.cmd("Step");
@@ -226,8 +226,8 @@ class TreeTernary extends Algorithm {
             }
         } else if (tree.left != null && tree.center == null && tree.right != null) {
             let node = tree.left;
-            this.cmd("CreateHighlightCircle", this.highlightID, TreeTernary.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
-            this.cmd("SetWidth", this.highlightID, TreeTernary.NODE_WIDTH);
+            this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+            this.cmd("SetWidth", this.highlightID, this.NODE_WIDTH);
             this.cmd("Move", this.highlightID, node.x, node.y);
             this.cmd("Step");
             while (node.right != null) {
@@ -241,7 +241,7 @@ class TreeTernary extends Algorithm {
                 if (node.left != null) {
                     node.left.parent = node.parent;
                     this.cmd("Disconnect", node.graphicID, node.left.graphicID);
-                    this.cmd("Connect", node.parent.graphicID, node.left.graphicID, TreeTernary.CENTER_LINK_COLOR, -0.0001, false, `>${node.parent.nextChar}`);
+                    this.cmd("Connect", node.parent.graphicID, node.left.graphicID, this.CENTER_LINK_COLOR, -0.0001, false, `>${node.parent.nextChar}`);
                 }
                 this.cmd("Disconnect", tree.graphicID, tree.right.graphicID);
                 this.cmd("Disconnect", tree.graphicID, tree.left.graphicID);
@@ -249,14 +249,14 @@ class TreeTernary extends Algorithm {
                 node.left = tree.left;
                 tree.right.parent = node;
                 tree.left.parent = node;
-                this.cmd("Connect", node.graphicID, node.left.graphicID, TreeTernary.SIDE_LINK_COLOR, 0.0001, false, `<${node.nextChar}`);
-                this.cmd("Connect", node.graphicID, node.right.graphicID, TreeTernary.SIDE_LINK_COLOR, -0.0001, false, `>${node.nextChar}`);
+                this.cmd("Connect", node.graphicID, node.left.graphicID, this.SIDE_LINK_COLOR, 0.0001, false, `<${node.nextChar}`);
+                this.cmd("Connect", node.graphicID, node.right.graphicID, this.SIDE_LINK_COLOR, -0.0001, false, `>${node.nextChar}`);
             } else {
                 this.cmd("Disconnect", tree.graphicID, tree.left.graphicID);
                 this.cmd("Disconnect", tree.graphicID, tree.right.graphicID);
                 node.right = tree.right;
                 node.right.parent = node;
-                this.cmd("Connect", node.graphicID, node.right.graphicID, TreeTernary.SIDE_LINK_COLOR, -0.0001, false, `>${node.nextChar}`);
+                this.cmd("Connect", node.graphicID, node.right.graphicID, this.SIDE_LINK_COLOR, -0.0001, false, `>${node.nextChar}`);
             }
             this.cmd("Delete", this.highlightID);
             this.cmd("Delete", tree.graphicID);
@@ -269,15 +269,15 @@ class TreeTernary extends Algorithm {
                 if (tree.parent.left === tree) {
                     tree.parent.left = node;
                     node.parent = tree.parent;
-                    this.cmd("Connect", node.parent.graphicID, node.graphicID, TreeTernary.SIDE_LINK_COLOR, 0.0001, false, `<${node.parent.nextChar}`);
+                    this.cmd("Connect", node.parent.graphicID, node.graphicID, this.SIDE_LINK_COLOR, 0.0001, false, `<${node.parent.nextChar}`);
                 } else if (tree.parent.right === tree) {
                     tree.parent.right = node;
                     node.parent = tree.parent;
-                    this.cmd("Connect", node.parent.graphicID, node.graphicID, TreeTernary.SIDE_LINK_COLOR, -0.0001, false, `>${node.parent.nextChar}`);
+                    this.cmd("Connect", node.parent.graphicID, node.graphicID, this.SIDE_LINK_COLOR, -0.0001, false, `>${node.parent.nextChar}`);
                 } else if (tree.parent.center === tree) {
                     tree.parent.center = node;
                     node.parent = tree.parent;
-                    this.cmd("Connect", node.parent.graphicID, node.graphicID, TreeTernary.CENTER_LINK_COLOR, 0.0001, false, `=${node.parent.nextChar}`);
+                    this.cmd("Connect", node.parent.graphicID, node.graphicID, this.CENTER_LINK_COLOR, 0.0001, false, `=${node.parent.nextChar}`);
                 }
             }
         }
@@ -295,7 +295,7 @@ class TreeTernary extends Algorithm {
             this.cmd("SetHighlight", node.graphicID, 1);
             this.cmd("SetText", 2, `Found "${word}", setting value in tree to False`);
             this.cmd("Step");
-            this.cmd("SetBackgroundColor", node.graphicID, TreeTernary.FALSE_COLOR);
+            this.cmd("SetBackgroundColor", node.graphicID, this.FALSE_COLOR);
             node.isword = false;
             this.cmd("SetHighlight", node.graphicID, 0);
             this.cleanupAfterDelete(node);
@@ -323,13 +323,13 @@ class TreeTernary extends Algorithm {
             this.printLabel1 = this.nextIndex++;
             this.printLabel2 = this.nextIndex++;
             const firstLabel = this.nextIndex++;
-            this.cmd("CreateLabel", firstLabel, "Output: ", TreeTernary.FIRST_PRINT_POS_X, this.firstPrintPosY);
-            this.cmd("CreateHighlightCircle", this.highlightID, TreeTernary.HIGHLIGHT_CIRCLE_COLOR, this.root.x, this.root.y);
-            this.cmd("SetWidth", this.highlightID, TreeTernary.NODE_WIDTH);
+            this.cmd("CreateLabel", firstLabel, "Output: ", this.FIRST_PRINT_POS_X, this.firstPrintPosY);
+            this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, this.root.x, this.root.y);
+            this.cmd("SetWidth", this.highlightID, this.NODE_WIDTH);
             this.cmd("CreateLabel", this.printLabel1, "Current String: ", 20, 10, 0);
             this.cmd("CreateLabel", this.printLabel2, "", 20, 10, 0);
             this.cmd("AlignRight", this.printLabel2, this.printLabel1);
-            this.xPosOfNextLabel = TreeTernary.FIRST_PRINT_POS_X;
+            this.xPosOfNextLabel = this.FIRST_PRINT_POS_X;
             this.yPosOfNextLabel = this.firstPrintPosY;
             this.printTreeRec(this.root, "");
 
@@ -352,15 +352,15 @@ class TreeTernary extends Algorithm {
         if (tree.isword) {
             const nextLabelID = this.nextIndex++;
             this.cmd("CreateLabel", nextLabelID, `${stringSoFar}  `, 20, 10, 0);
-            this.cmd("SetForegroundColor", nextLabelID, TreeTernary.PRINT_COLOR);
-            this.cmd("AlignRight", nextLabelID, this.printLabel1, TreeTernary.PRINT_COLOR);
+            this.cmd("SetForegroundColor", nextLabelID, this.PRINT_COLOR);
+            this.cmd("AlignRight", nextLabelID, this.printLabel1, this.PRINT_COLOR);
             this.cmd("MoveToAlignRight", nextLabelID, nextLabelID - 1);
             this.cmd("Step");
 
-            this.xPosOfNextLabel += TreeTernary.PRINT_HORIZONTAL_GAP;
+            this.xPosOfNextLabel += this.PRINT_HORIZONTAL_GAP;
             if (this.xPosOfNextLabel > this.printMax) {
-                this.xPosOfNextLabel = TreeTernary.FIRST_PRINT_POS_X;
-                this.yPosOfNextLabel += TreeTernary.PRINT_VERTICAL_GAP;
+                this.xPosOfNextLabel = this.FIRST_PRINT_POS_X;
+                this.yPosOfNextLabel += this.PRINT_VERTICAL_GAP;
             }
         }
         if (tree.left != null) {
@@ -473,8 +473,8 @@ class TreeTernary extends Algorithm {
                 this.cmd("SetText", 1, `"${s}"`);
                 this.cmd("SetHighlightIndex", 1, -1);
 
-                this.cmd("CreateHighlightCircle", this.highlightID, TreeTernary.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
-                this.cmd("SetWidth", this.highlightID, TreeTernary.NODE_WIDTH);
+                this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+                this.cmd("SetWidth", this.highlightID, this.NODE_WIDTH);
                 this.cmd("SetHighlight", tree.graphicID, 0);
 
                 this.cmd("Move", this.highlightID, child.x, child.y);
@@ -498,14 +498,14 @@ class TreeTernary extends Algorithm {
     resizeTree() {
         this.resizeWidths(this.root);
         if (this.root != null) {
-            let startingPoint = TreeTernary.LeftMargin;
+            let startingPoint = this.LEFT_MARGIN;
             if (this.root.left == null) {
-                startingPoint += TreeTernary.NODE_WIDTH / 2;
+                startingPoint += this.NODE_WIDTH / 2;
             } else {
                 startingPoint += this.root.left.width;
             }
-            // const startingPoint = this.root.width / 2 + 1 + Ternary.LeftMargin;
-            this.setNewPositions(this.root, startingPoint, TreeTernary.STARTING_Y);
+            // const startingPoint = this.root.width / 2 + 1 + this.LEFT_MARGIN;
+            this.setNewPositions(this.root, startingPoint, this.STARTING_Y);
             this.animateNewPositions(this.root);
             this.cmd("Step");
         }
@@ -518,12 +518,12 @@ class TreeTernary extends Algorithm {
         this.cmd("AlignRight", 1, 0);
         this.cmd("Step");
         if (this.root == null) {
-            this.cmd("CreateCircle", this.nextIndex, " ", TreeTernary.NEW_NODE_X, TreeTernary.NEW_NODE_Y);
-            this.cmd("SetForegroundColor", this.nextIndex, TreeTernary.FOREGROUND_COLOR);
-            this.cmd("SetBackgroundColor", this.nextIndex, TreeTernary.FALSE_COLOR);
-            this.cmd("SetWidth", this.nextIndex, TreeTernary.NODE_WIDTH);
+            this.cmd("CreateCircle", this.nextIndex, " ", this.NEW_NODE_X, this.NEW_NODE_Y);
+            this.cmd("SetForegroundColor", this.nextIndex, this.FOREGROUND_COLOR);
+            this.cmd("SetBackgroundColor", this.nextIndex, this.FALSE_COLOR);
+            this.cmd("SetWidth", this.nextIndex, this.NODE_WIDTH);
             this.cmd("SetText", 2, "Creating a new root");
-            this.root = new TernaryNode(" ", this.nextIndex, TreeTernary.NEW_NODE_X, TreeTernary.NEW_NODE_Y);
+            this.root = new TernaryNode(" ", this.nextIndex, this.NEW_NODE_X, this.NEW_NODE_Y);
             this.cmd("Step");
             this.resizeTree();
             this.cmd("SetText", 2, "");
@@ -539,22 +539,22 @@ class TreeTernary extends Algorithm {
 
     createIfNotExtant(tree, child, label) {
         if (child == null) {
-            this.cmd("CreateCircle", this.nextIndex, " ", TreeTernary.NEW_NODE_X, TreeTernary.NEW_NODE_Y);
-            this.cmd("SetForegroundColor", this.nextIndex, TreeTernary.FOREGROUND_COLOR);
-            this.cmd("SetBackgroundColor", this.nextIndex, TreeTernary.FALSE_COLOR);
-            this.cmd("SetWidth", this.nextIndex, TreeTernary.NODE_WIDTH);
+            this.cmd("CreateCircle", this.nextIndex, " ", this.NEW_NODE_X, this.NEW_NODE_Y);
+            this.cmd("SetForegroundColor", this.nextIndex, this.FOREGROUND_COLOR);
+            this.cmd("SetBackgroundColor", this.nextIndex, this.FALSE_COLOR);
+            this.cmd("SetWidth", this.nextIndex, this.NODE_WIDTH);
             this.cmd("SetText", 2, "Creating a new node");
-            child = new TernaryNode(" ", this.nextIndex, TreeTernary.NEW_NODE_X, TreeTernary.NEW_NODE_Y);
+            child = new TernaryNode(" ", this.nextIndex, this.NEW_NODE_X, this.NEW_NODE_Y);
             this.cmd("Step");
             let dir = 0.0001;
             if (label.charAt(0) === ">") {
                 dir = -0.0001;
             }
-            let color = TreeTernary.FOREGROUND_COLOR;
+            let color = this.FOREGROUND_COLOR;
             if (label.charAt(0) === "=") {
-                color = TreeTernary.CENTER_LINK_COLOR;
+                color = this.CENTER_LINK_COLOR;
             } else {
-                color = TreeTernary.SIDE_LINK_COLOR;
+                color = this.SIDE_LINK_COLOR;
             }
             this.cmd("Connect", tree.graphicID, this.nextIndex, color, dir, false, label);
             this.cmd("SetText", 2, "");
@@ -569,7 +569,7 @@ class TreeTernary extends Algorithm {
         if (s.length === 0) {
             this.cmd("SetText", 2, "Reached the end of the string \nSet current node to true");
             this.cmd("Step");
-            this.cmd("SetBackgroundColor", tree.graphicID, TreeTernary.TRUE_COLOR);
+            this.cmd("SetBackgroundColor", tree.graphicID, this.TRUE_COLOR);
             this.cmd("SetHighlight", tree.graphicID, 0);
             tree.isword = true;
             return;
@@ -589,16 +589,16 @@ class TreeTernary extends Algorithm {
                 this.cmd("SetHighlight", tree.graphicID, 0);
                 this.cmd("SetText", 1, `"${s.substring(1)}"`);
 
-                this.cmd("CreateHighlightCircle", this.highlightID, TreeTernary.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
-                this.cmd("SetWidth", this.highlightID, TreeTernary.NODE_WIDTH);
+                this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+                this.cmd("SetWidth", this.highlightID, this.NODE_WIDTH);
                 this.cmd("Move", this.highlightID, tree.center.x, tree.center.y);
                 this.cmd("Step");
                 this.cmd("Delete", this.highlightID);
 
                 this.addR(s.substring(1), tree.center);
             } else if (tree.nextChar === s.charAt(0)) {
-                this.cmd("CreateHighlightCircle", this.highlightID, TreeTernary.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
-                this.cmd("SetWidth", this.highlightID, TreeTernary.NODE_WIDTH);
+                this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+                this.cmd("SetWidth", this.highlightID, this.NODE_WIDTH);
                 this.cmd("SetText", 2, `Making recursive call to center child, passing in "${s.substring(1)}"`);
                 this.cmd("Step");
                 this.cmd("SetHighlight", tree.graphicID, 0);
@@ -626,8 +626,8 @@ class TreeTernary extends Algorithm {
                     child = tree.right;
                     this.resizeTree();
                 }
-                this.cmd("CreateHighlightCircle", this.highlightID, TreeTernary.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
-                this.cmd("SetWidth", this.highlightID, TreeTernary.NODE_WIDTH);
+                this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+                this.cmd("SetWidth", this.highlightID, this.NODE_WIDTH);
                 this.cmd("Step");
                 this.cmd("SetHighlight", tree.graphicID, 0);
                 this.cmd("SetHighlightIndex", 1, -1);
@@ -642,9 +642,9 @@ class TreeTernary extends Algorithm {
 
     setNewPositions(tree, xLeft, yPosition) {
         if (tree != null) {
-            tree.x = xLeft + TreeTernary.NODE_WIDTH / 2;
+            tree.x = xLeft + this.NODE_WIDTH / 2;
             tree.y = yPosition;
-            const newYPos = yPosition + TreeTernary.HEIGHT_DELTA;
+            const newYPos = yPosition + this.HEIGHT_DELTA;
             if (tree.left != null) {
                 this.setNewPositions(tree.left, xLeft, newYPos);
             }
@@ -674,7 +674,7 @@ class TreeTernary extends Algorithm {
         tree.leftWidth = (this.resizeWidths(tree.left));
         tree.centerWidth = (this.resizeWidths(tree.center));
         tree.rightWidth = (this.resizeWidths(tree.right));
-        tree.width = Math.max(tree.leftWidth + tree.centerWidth + tree.rightWidth, TreeTernary.NODE_WIDTH + 4);
+        tree.width = Math.max(tree.leftWidth + tree.centerWidth + tree.rightWidth, this.NODE_WIDTH + 4);
         return tree.width;
     }
 }

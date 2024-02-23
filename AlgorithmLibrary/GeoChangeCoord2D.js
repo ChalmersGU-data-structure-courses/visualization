@@ -32,83 +32,83 @@
 
 
 class GeoChangeCoord2D extends Geometric {
-    static XAxisYPos = 300;
-    static XAxisStart = 100;
-    static XAxisEnd = 700;
+    XAxisYPos = 300;
+    XAxisStart = 100;
+    XAxisEnd = 700;
 
-    static MATRIX_ELEM_WIDTH = 50;
-    static MATRIX_ELEM_HEIGHT = 15;
+    MATRIX_ELEM_WIDTH = 50;
+    MATRIX_ELEM_HEIGHT = 15;
 
-    static MATRIX_MULTIPLY_SPACING = 10;
-    static EQUALS_SPACING = 30;
+    MATRIX_MULTIPLY_SPACING = 10;
+    EQUALS_SPACING = 30;
 
-    static ROBOT_MATRIX_START_X = 10 + 2 * GeoChangeCoord2D.MATRIX_ELEM_WIDTH + GeoChangeCoord2D.MATRIX_MULTIPLY_SPACING;
-    static ROBOT_MATRIX_START_Y = 30;
+    ROBOT_MATRIX_START_X = 10 + 2 * this.MATRIX_ELEM_WIDTH + this.MATRIX_MULTIPLY_SPACING;
+    ROBOT_MATRIX_START_Y = 30;
 
-    static HAND_MATRIX_START_X = 10 + 2 * GeoChangeCoord2D.MATRIX_ELEM_WIDTH + GeoChangeCoord2D.MATRIX_MULTIPLY_SPACING;
-    static HAND_MATRIX_START_Y = 10 + 25 + 20 + 3 * GeoChangeCoord2D.MATRIX_ELEM_HEIGHT;
+    HAND_MATRIX_START_X = 10 + 2 * this.MATRIX_ELEM_WIDTH + this.MATRIX_MULTIPLY_SPACING;
+    HAND_MATRIX_START_Y = 10 + 25 + 20 + 3 * this.MATRIX_ELEM_HEIGHT;
 
-    static ROBOT_POSITION_START_X = GeoChangeCoord2D.ROBOT_MATRIX_START_X + 4 * GeoChangeCoord2D.MATRIX_ELEM_WIDTH + 100;
-    static HAND_POSITION_START_X = GeoChangeCoord2D.HAND_MATRIX_START_X + 4 * GeoChangeCoord2D.MATRIX_ELEM_WIDTH + 100;
+    ROBOT_POSITION_START_X = this.ROBOT_MATRIX_START_X + 4 * this.MATRIX_ELEM_WIDTH + 100;
+    HAND_POSITION_START_X = this.HAND_MATRIX_START_X + 4 * this.MATRIX_ELEM_WIDTH + 100;
 
-    static ROBOT_POSITION_START_Y = GeoChangeCoord2D.ROBOT_MATRIX_START_Y;
-    static HAND_POSITION_START_Y = GeoChangeCoord2D.HAND_MATRIX_START_Y;
+    ROBOT_POSITION_START_Y = this.ROBOT_MATRIX_START_Y;
+    HAND_POSITION_START_Y = this.HAND_MATRIX_START_Y;
 
-    static YAxisXPos = 400;
-    static YAxisStart = 100;
-    static YAxisEnd = 500;
+    YAxisXPos = 400;
+    YAxisStart = 100;
+    YAxisEnd = 500;
 
-    static ROBOT_POINTS = [
+    ROBOT_POINTS = [
         [-15, 100], [15, 100], [15, 80], [30, 80], [30, -10], [15, -10], [15, -100], [0, -100],
         [0, -30], [0, -100], [-15, -100], [-15, -10], [-30, -10], [-30, 80], [-15, 80],
     ];
 
-    static HAND_POINTS = [[0, 0], [-10, 0], [-10, 10], [-6, 10], [-6, 6], [6, 6], [6, 10], [10, 10], [10, 0]];
+    HAND_POINTS = [[0, 0], [-10, 0], [-10, 10], [-6, 10], [-6, 6], [6, 6], [6, 10], [10, 10], [10, 0]];
 
-    static ROBOT_HAND_ATTACH_POINT = [0, 40];
+    ROBOT_HAND_ATTACH_POINT = [0, 40];
 
-    static ROBOT_MATRIX_VALUES = [
+    ROBOT_MATRIX_VALUES = [
         [[Math.cos(Math.PI / 8), Math.sin(Math.PI / 8)], [-Math.sin(Math.PI / 8), Math.cos(Math.PI / 8)]],
         [[Math.cos(Math.PI / 4), Math.sin(Math.PI / 4)], [-Math.sin(Math.PI / 4), Math.cos(Math.PI / 4)]],
         [[Math.cos(0), Math.sin(0)], [-Math.sin(0), Math.cos(0)]],
         [[Math.cos(3 * Math.PI / 4), Math.sin(3 * Math.PI / 4)], [-Math.sin(3 * Math.PI / 4), Math.cos(3 * Math.PI / 4)]],
     ];
 
-    static ROBOT_POSITION_VALUES = [[75, 50], [200, 100], [100, 100], [100, 200]];
+    ROBOT_POSITION_VALUES = [[75, 50], [200, 100], [100, 100], [100, 200]];
 
-    static HAND_MATRIX_VALUES = [
+    HAND_MATRIX_VALUES = [
         [[Math.cos(-Math.PI / 6), Math.sin(-Math.PI / 6)], [-Math.sin(-Math.PI / 6), Math.cos(-Math.PI / 6)]],
         [[Math.cos(Math.PI / 4), Math.sin(Math.PI / 4)], [-Math.sin(Math.PI / 4), Math.cos(-Math.PI / 4)]],
         [[Math.cos(0), Math.sin(0)], [-Math.sin(0), Math.cos(0)]],
         [[Math.cos(Math.PI / 2), Math.sin(Math.PI / 2)], [-Math.sin(Math.PI / 2), Math.cos(Math.PI / 2)]],
     ];
 
-    static HAND_POSITION_VALUES = [[80, 30], [30, 90], [100, 100], [-50, -20]];
+    HAND_POSITION_VALUES = [[80, 30], [30, 90], [100, 100], [-50, -20]];
 
-    static AXIS_CENTER = [[750, 470], [750, 150], [100, 550]];
+    AXIS_CENTER = [[750, 470], [750, 150], [100, 550]];
 
-    static AXIS_COLOR_0 = "#990000";
-    static AXIS_COLOR_1 = "#009900";
-    static AXIS_COLOR_2 = "#000099";
+    AXIS_COLOR_0 = "#990000";
+    AXIS_COLOR_1 = "#009900";
+    AXIS_COLOR_2 = "#000099";
 
-    static LOCAL_VERTEX_FOREGORUND_COLOR = "#000000";
-    static LOCAL_VERTEX_BACKGROUND_COLOR = GeoChangeCoord2D.LOCAL_VERTEX_FOREGORUND_COLOR;
-    static LOCAL_EDGE_COLOR = "#000000";
+    LOCAL_VERTEX_FOREGORUND_COLOR = "#000000";
+    LOCAL_VERTEX_BACKGROUND_COLOR = this.LOCAL_VERTEX_FOREGORUND_COLOR;
+    LOCAL_EDGE_COLOR = "#000000";
 
-    static GLOBAL_VERTEX_FOREGORUND_COLOR = "#00FF00";
-    static GLOBAL_VERTEX_BACKGROUND_COLOR = GeoChangeCoord2D.GLOBAL_VERTEX_FOREGORUND_COLOR;
-    static GLOBAL_EDGE_COLOR = "#00FF00";
+    GLOBAL_VERTEX_FOREGORUND_COLOR = "#00FF00";
+    GLOBAL_VERTEX_BACKGROUND_COLOR = this.GLOBAL_VERTEX_FOREGORUND_COLOR;
+    GLOBAL_EDGE_COLOR = "#00FF00";
 
-    static TRANSFORMED_VERTEX_FOREGORUND_COLOR = "#66FF66";
-    static TRANSFORMED_VERTEX_BACKGROUND_COLOR = GeoChangeCoord2D.VERTEX_FOREGORUND_COLOR;
-    static TRANSFORMED_EDGE_COLOR = "#66FF66";
+    TRANSFORMED_VERTEX_FOREGORUND_COLOR = "#66FF66";
+    TRANSFORMED_VERTEX_BACKGROUND_COLOR = this.VERTEX_FOREGORUND_COLOR;
+    TRANSFORMED_EDGE_COLOR = "#66FF66";
 
-    static TRANSFORMED_POINT_COLORS = ["#990000", "#009900", "#000099"];
+    TRANSFORMED_POINT_COLORS = ["#990000", "#009900", "#000099"];
 
-    static VECTOR_COLOR = "#FF0000";
+    VECTOR_COLOR = "#FF0000";
 
-    static VERTEX_WIDTH = 3;
-    static VERTEX_HEIGHT = GeoChangeCoord2D.VERTEX_WIDTH;
+    VERTEX_WIDTH = 3;
+    VERTEX_HEIGHT = this.VERTEX_WIDTH;
 
     constructor(am) {
         super();
@@ -128,10 +128,10 @@ class GeoChangeCoord2D extends Geometric {
 
         this.PositionIndex = 0;
 
-        this.RobotPositionValues = GeoChangeCoord2D.ROBOT_POSITION_VALUES[this.PositionIndex];
-        this.RobotMatrixValues = GeoChangeCoord2D.ROBOT_MATRIX_VALUES[this.PositionIndex];
-        this.HandPositionValues = GeoChangeCoord2D.HAND_POSITION_VALUES[this.PositionIndex];
-        this.HandMatrixValues = GeoChangeCoord2D.HAND_MATRIX_VALUES[this.PositionIndex];
+        this.RobotPositionValues = this.ROBOT_POSITION_VALUES[this.PositionIndex];
+        this.RobotMatrixValues = this.ROBOT_MATRIX_VALUES[this.PositionIndex];
+        this.HandPositionValues = this.HAND_POSITION_VALUES[this.PositionIndex];
+        this.HandMatrixValues = this.HAND_MATRIX_VALUES[this.PositionIndex];
 
         this.setupAxis();
 
@@ -140,40 +140,40 @@ class GeoChangeCoord2D extends Geometric {
         this.robotLabel2ID = this.nextIndex++;
         this.handLabel2ID = this.nextIndex++;
 
-        this.cmd("CreateLabel", this.robotLabel1ID, "Robot Space to World Space\n(Orientation)", GeoChangeCoord2D.ROBOT_MATRIX_START_X, GeoChangeCoord2D.ROBOT_MATRIX_START_Y - 25, 0);
+        this.cmd("CreateLabel", this.robotLabel1ID, "Robot Space to World Space\n(Orientation)", this.ROBOT_MATRIX_START_X, this.ROBOT_MATRIX_START_Y - 25, 0);
         this.cmd("SetForegroundColor", this.robotLabel1ID, "#0000FF");
 
-        this.cmd("CreateLabel", this.robotLabel2ID, "Robot Space to World Space\n(Position)", GeoChangeCoord2D.ROBOT_POSITION_START_X, GeoChangeCoord2D.ROBOT_MATRIX_START_Y - 25, 0);
+        this.cmd("CreateLabel", this.robotLabel2ID, "Robot Space to World Space\n(Position)", this.ROBOT_POSITION_START_X, this.ROBOT_MATRIX_START_Y - 25, 0);
         this.cmd("SetForegroundColor", this.robotLabel2ID, "#0000FF");
 
-        this.RobotMatrix = this.createMatrix(this.RobotMatrixValues, GeoChangeCoord2D.ROBOT_MATRIX_START_X, GeoChangeCoord2D.ROBOT_MATRIX_START_Y);
+        this.RobotMatrix = this.createMatrix(this.RobotMatrixValues, this.ROBOT_MATRIX_START_X, this.ROBOT_MATRIX_START_Y);
         this.resetMatrixLabels(this.RobotMatrix);
-        this.HandMatrix = this.createMatrix(this.HandMatrixValues, GeoChangeCoord2D.HAND_MATRIX_START_X, GeoChangeCoord2D.HAND_MATRIX_START_Y);
+        this.HandMatrix = this.createMatrix(this.HandMatrixValues, this.HAND_MATRIX_START_X, this.HAND_MATRIX_START_Y);
         this.resetMatrixLabels(this.HandMatrix);
 
-        this.cmd("CreateLabel", this.handLabel1ID, "Hand Space to Robot Space\n(Orientation)", GeoChangeCoord2D.HAND_MATRIX_START_X, GeoChangeCoord2D.HAND_MATRIX_START_Y - 25, 0);
+        this.cmd("CreateLabel", this.handLabel1ID, "Hand Space to Robot Space\n(Orientation)", this.HAND_MATRIX_START_X, this.HAND_MATRIX_START_Y - 25, 0);
         this.cmd("SetForegroundColor", this.handLabel1ID, "#0000FF");
 
-        this.cmd("CreateLabel", this.handLabel2ID, "Hand Space to Robot Space\n(Position)", GeoChangeCoord2D.HAND_POSITION_START_X, GeoChangeCoord2D.HAND_MATRIX_START_Y - 25, 0);
+        this.cmd("CreateLabel", this.handLabel2ID, "Hand Space to Robot Space\n(Position)", this.HAND_POSITION_START_X, this.HAND_MATRIX_START_Y - 25, 0);
         this.cmd("SetForegroundColor", this.handLabel2ID, "#0000FF");
 
-        this.RobotPosition = this.createMatrix([this.RobotPositionValues], GeoChangeCoord2D.ROBOT_POSITION_START_X, GeoChangeCoord2D.ROBOT_POSITION_START_Y);
+        this.RobotPosition = this.createMatrix([this.RobotPositionValues], this.ROBOT_POSITION_START_X, this.ROBOT_POSITION_START_Y);
         this.resetMatrixLabels(this.RobotMatrix);
-        this.HandPosition = this.createMatrix([this.HandPositionValues], GeoChangeCoord2D.HAND_POSITION_START_X, GeoChangeCoord2D.HAND_POSITION_START_Y);
+        this.HandPosition = this.createMatrix([this.HandPositionValues], this.HAND_POSITION_START_X, this.HAND_POSITION_START_Y);
         this.resetMatrixLabels(this.HandMatrix);
 
-        this.RobotPointWorldIDs = new Array(GeoChangeCoord2D.ROBOT_POINTS.length);
-        this.RobotPointRobotIDs = new Array(GeoChangeCoord2D.ROBOT_POINTS.length);
-        this.HandPointWorldIDs = new Array(GeoChangeCoord2D.HAND_POINTS.length);
-        this.HandPointRobotIDs = new Array(GeoChangeCoord2D.HAND_POINTS.length);
-        this.HandPointHandIDs = new Array(GeoChangeCoord2D.HAND_POINTS.length);
+        this.RobotPointWorldIDs = new Array(this.ROBOT_POINTS.length);
+        this.RobotPointRobotIDs = new Array(this.ROBOT_POINTS.length);
+        this.HandPointWorldIDs = new Array(this.HAND_POINTS.length);
+        this.HandPointRobotIDs = new Array(this.HAND_POINTS.length);
+        this.HandPointHandIDs = new Array(this.HAND_POINTS.length);
         this.RobotHandAttachRobotID = this.nextIndex++;
         this.RobotHandAttachWorldID = this.nextIndex++;
-        for (let i = 0; i < GeoChangeCoord2D.ROBOT_POINTS.length; i++) {
+        for (let i = 0; i < this.ROBOT_POINTS.length; i++) {
             this.RobotPointWorldIDs[i] = this.nextIndex++;
             this.RobotPointRobotIDs[i] = this.nextIndex++;
         }
-        for (let i = 0; i < GeoChangeCoord2D.HAND_POINTS.length; i++) {
+        for (let i = 0; i < this.HAND_POINTS.length; i++) {
             this.HandPointWorldIDs[i] = this.nextIndex++;
             this.HandPointRobotIDs[i] = this.nextIndex++;
             this.HandPointHandIDs[i] = this.nextIndex++;
@@ -236,7 +236,7 @@ class GeoChangeCoord2D extends Geometric {
     }
 
     transformPoint(point, matrix, position) {
-        return Geometric.add(Geometric.multiply([point], matrix), [position])[0];
+        return this.add(this.multiply([point], matrix), [position])[0];
     }
 
     setupExtraAxes() {
@@ -253,7 +253,7 @@ class GeoChangeCoord2D extends Geometric {
             this.worldToScreenSpace(x2, 2),
             this.worldToScreenSpace(y1, 2),
             this.worldToScreenSpace(y2, 2),
-            GeoChangeCoord2D.AXIS_COLOR_1);
+            this.AXIS_COLOR_1);
 
         this.otherAxes.push(tmpAxis);
 
@@ -273,7 +273,7 @@ class GeoChangeCoord2D extends Geometric {
             this.worldToScreenSpace(x2, 1),
             this.worldToScreenSpace(y1, 1),
             this.worldToScreenSpace(y2, 1),
-            GeoChangeCoord2D.AXIS_COLOR_0);
+            this.AXIS_COLOR_0);
 
         for (let i = 0; i < tmpAxis.length; i++) {
             this.cmd("SetLayer", tmpAxis[i], 1);
@@ -293,7 +293,7 @@ class GeoChangeCoord2D extends Geometric {
             this.worldToScreenSpace(x2, 2),
             this.worldToScreenSpace(y1, 2),
             this.worldToScreenSpace(y2, 2),
-            GeoChangeCoord2D.AXIS_COLOR_0);
+            this.AXIS_COLOR_0);
         for (let i = 0; i < tmpAxis.length; i++) {
             this.cmd("SetLayer", tmpAxis[i], 1);
         }
@@ -309,7 +309,7 @@ class GeoChangeCoord2D extends Geometric {
             this.worldToScreenSpace([150, 0], 0),
             this.worldToScreenSpace([0, -150], 0),
             this.worldToScreenSpace([0, 150], 0),
-            GeoChangeCoord2D.AXIS_COLOR_0);
+            this.AXIS_COLOR_0);
         this.setAxisAlpha(this.axisHand, 0.5);
 
         this.axisRobot = this.addAxis(this.worldToScreenSpace([0, 0], 1),
@@ -317,7 +317,7 @@ class GeoChangeCoord2D extends Geometric {
             this.worldToScreenSpace([150, 0], 1),
             this.worldToScreenSpace([0, -150], 1),
             this.worldToScreenSpace([0, 150], 1),
-            GeoChangeCoord2D.AXIS_COLOR_1);
+            this.AXIS_COLOR_1);
         this.setAxisAlpha(this.axisRobot, 0.5);
 
         this.axisWorld = this.addAxis(this.worldToScreenSpace([0, 0], 2),
@@ -325,7 +325,7 @@ class GeoChangeCoord2D extends Geometric {
             this.worldToScreenSpace([400, 0], 2),
             this.worldToScreenSpace([0, -50], 2),
             this.worldToScreenSpace([0, 400], 2),
-            GeoChangeCoord2D.AXIS_COLOR_2);
+            this.AXIS_COLOR_2);
         this.setAxisAlpha(this.axisWorld, 0.5);
 
         this.setupExtraAxes();
@@ -342,14 +342,14 @@ class GeoChangeCoord2D extends Geometric {
 
     setupObjects() {
         let point;
-        for (let i = 0; i < GeoChangeCoord2D.ROBOT_POINTS.length; i++) {
-            point = this.worldToScreenSpace(GeoChangeCoord2D.ROBOT_POINTS[i], 1);
+        for (let i = 0; i < this.ROBOT_POINTS.length; i++) {
+            point = this.worldToScreenSpace(this.ROBOT_POINTS[i], 1);
             this.cmd("CreateRectangle", this.RobotPointRobotIDs[i], "", 0, 0, point[0], point[1]);
             if (i > 0) {
                 this.cmd("Connect", this.RobotPointRobotIDs[i - 1], this.RobotPointRobotIDs[i], "#000000", 0, 0);
             }
 
-            point = this.transformPoint(GeoChangeCoord2D.ROBOT_POINTS[i], this.RobotMatrixValues, this.RobotPositionValues);
+            point = this.transformPoint(this.ROBOT_POINTS[i], this.RobotMatrixValues, this.RobotPositionValues);
             point = this.worldToScreenSpace(point, 2);
 
             this.cmd("CreateRectangle", this.RobotPointWorldIDs[i], "", 0, 0, point[0], point[1]);
@@ -360,14 +360,14 @@ class GeoChangeCoord2D extends Geometric {
         this.cmd("Connect", this.RobotPointRobotIDs[this.RobotPointRobotIDs.length - 1], this.RobotPointRobotIDs[0], "#000000", 0, 0);
         this.cmd("Connect", this.RobotPointWorldIDs[this.RobotPointWorldIDs.length - 1], this.RobotPointWorldIDs[0], "#000000", 0, 0);
 
-        for (let i = 0; i < GeoChangeCoord2D.HAND_POINTS.length; i++) {
-            point = this.worldToScreenSpace(GeoChangeCoord2D.HAND_POINTS[i], 0);
+        for (let i = 0; i < this.HAND_POINTS.length; i++) {
+            point = this.worldToScreenSpace(this.HAND_POINTS[i], 0);
             this.cmd("CreateRectangle", this.HandPointHandIDs[i], "", 0, 0, point[0], point[1]);
             if (i > 0) {
                 this.cmd("Connect", this.HandPointHandIDs[i - 1], this.HandPointHandIDs[i], "#000000", 0, 0);
             }
 
-            point = this.transformPoint(GeoChangeCoord2D.HAND_POINTS[i], this.HandMatrixValues, this.HandPositionValues);
+            point = this.transformPoint(this.HAND_POINTS[i], this.HandMatrixValues, this.HandPositionValues);
             const point2 = this.worldToScreenSpace(point, 1);
 
             this.cmd("CreateRectangle", this.HandPointRobotIDs[i], "", 0, 0, point2[0], point2[1]);
@@ -388,19 +388,19 @@ class GeoChangeCoord2D extends Geometric {
         this.cmd("Connect", this.HandPointRobotIDs[this.HandPointRobotIDs.length - 1], this.HandPointRobotIDs[0], "#000000", 0, 0);
         this.cmd("Connect", this.HandPointWorldIDs[this.HandPointWorldIDs.length - 1], this.HandPointWorldIDs[0], "#000000", 0, 0);
 
-        point = this.worldToScreenSpace(GeoChangeCoord2D.ROBOT_HAND_ATTACH_POINT, 1);
+        point = this.worldToScreenSpace(this.ROBOT_HAND_ATTACH_POINT, 1);
         this.cmd("CreateRectangle", this.RobotHandAttachRobotID, "", 0, 0, point[0], point[1]);
         this.cmd("Connect", this.RobotHandAttachRobotID, this.HandPointRobotIDs[0], "#000000", 0, 0);
 
-        point = this.transformPoint(GeoChangeCoord2D.ROBOT_HAND_ATTACH_POINT, this.RobotMatrixValues, this.RobotPositionValues);
+        point = this.transformPoint(this.ROBOT_HAND_ATTACH_POINT, this.RobotMatrixValues, this.RobotPositionValues);
         point = this.worldToScreenSpace(point, 2);
         this.cmd("CreateRectangle", this.RobotHandAttachWorldID, "", 0, 0, point[0], point[1]);
         this.cmd("Connect", this.RobotHandAttachWorldID, this.HandPointWorldIDs[0], "#000000", 0, 0);
     }
 
     worldToScreenSpace(point, space) {
-        return [point[0] + GeoChangeCoord2D.AXIS_CENTER[space][0],
-            -point[1] + GeoChangeCoord2D.AXIS_CENTER[space][1]];
+        return [point[0] + this.AXIS_CENTER[space][0],
+            -point[1] + this.AXIS_CENTER[space][1]];
     }
 
     removeOldIDs() {
@@ -500,15 +500,15 @@ class GeoChangeCoord2D extends Geometric {
                     moveLabels.push(moveLabel1);
                     moveLabels.push(moveLabel2);
                     this.cmd("CreateLabel", moveLabel1,
-                        matrix.data[i][j], matrix.x + GeoChangeCoord2D.MATRIX_ELEM_WIDTH / 2 + i * GeoChangeCoord2D.MATRIX_ELEM_WIDTH,
-                        matrix.y + GeoChangeCoord2D.MATRIX_ELEM_HEIGHT / 2 + j * GeoChangeCoord2D.MATRIX_ELEM_HEIGHT);
+                        matrix.data[i][j], matrix.x + this.MATRIX_ELEM_WIDTH / 2 + i * this.MATRIX_ELEM_WIDTH,
+                        matrix.y + this.MATRIX_ELEM_HEIGHT / 2 + j * this.MATRIX_ELEM_HEIGHT);
                     this.cmd("CreateLabel", moveLabel2,
-                        matrix.data[j][i], matrix.x + GeoChangeCoord2D.MATRIX_ELEM_WIDTH / 2 + j * GeoChangeCoord2D.MATRIX_ELEM_WIDTH,
-                        matrix.y + GeoChangeCoord2D.MATRIX_ELEM_HEIGHT / 2 + i * GeoChangeCoord2D.MATRIX_ELEM_HEIGHT);
-                    this.cmd("Move", moveLabel1, matrix.x + GeoChangeCoord2D.MATRIX_ELEM_WIDTH / 2 + j * GeoChangeCoord2D.MATRIX_ELEM_WIDTH,
-                        matrix.y + GeoChangeCoord2D.MATRIX_ELEM_HEIGHT / 2 + i * GeoChangeCoord2D.MATRIX_ELEM_HEIGHT);
-                    this.cmd("Move", moveLabel2, matrix.x + GeoChangeCoord2D.MATRIX_ELEM_WIDTH / 2 + i * GeoChangeCoord2D.MATRIX_ELEM_WIDTH,
-                        matrix.y + GeoChangeCoord2D.MATRIX_ELEM_HEIGHT / 2 + j * GeoChangeCoord2D.MATRIX_ELEM_HEIGHT);
+                        matrix.data[j][i], matrix.x + this.MATRIX_ELEM_WIDTH / 2 + j * this.MATRIX_ELEM_WIDTH,
+                        matrix.y + this.MATRIX_ELEM_HEIGHT / 2 + i * this.MATRIX_ELEM_HEIGHT);
+                    this.cmd("Move", moveLabel1, matrix.x + this.MATRIX_ELEM_WIDTH / 2 + j * this.MATRIX_ELEM_WIDTH,
+                        matrix.y + this.MATRIX_ELEM_HEIGHT / 2 + i * this.MATRIX_ELEM_HEIGHT);
+                    this.cmd("Move", moveLabel2, matrix.x + this.MATRIX_ELEM_WIDTH / 2 + i * this.MATRIX_ELEM_WIDTH,
+                        matrix.y + this.MATRIX_ELEM_HEIGHT / 2 + j * this.MATRIX_ELEM_HEIGHT);
                     const tmp = matrix.data[i][j];
                     matrix.data[i][j] = matrix.data[j][i];
                     matrix.data[j][i] = tmp;
@@ -577,16 +577,16 @@ class GeoChangeCoord2D extends Geometric {
     rotatePoint(point, matrix, xPos, yPos, fromSpace, toSpace) {
         const descriptLabel = this.nextIndex++;
         // this.oldIDs.push(descriptLabel);
-        this.cmd("CreateLabel", descriptLabel, "", xPos + 2 * GeoChangeCoord2D.MATRIX_ELEM_WIDTH + GeoChangeCoord2D.EQUALS_SPACING,
-            yPos + 2 * GeoChangeCoord2D.MATRIX_ELEM_HEIGHT + 3, 0);
+        this.cmd("CreateLabel", descriptLabel, "", xPos + 2 * this.MATRIX_ELEM_WIDTH + this.EQUALS_SPACING,
+            yPos + 2 * this.MATRIX_ELEM_HEIGHT + 3, 0);
 
         let inertialPositionMatrix;
         if (this.rowMajor) {
-            inertialPositionMatrix = this.createMatrix([["", ""]], xPos + 2 * GeoChangeCoord2D.MATRIX_ELEM_WIDTH + GeoChangeCoord2D.EQUALS_SPACING,
+            inertialPositionMatrix = this.createMatrix([["", ""]], xPos + 2 * this.MATRIX_ELEM_WIDTH + this.EQUALS_SPACING,
                 yPos);
         } else {
             inertialPositionMatrix = this.createMatrix([[""], [""]],
-                xPos + 3 * GeoChangeCoord2D.MATRIX_ELEM_WIDTH + GeoChangeCoord2D.EQUALS_SPACING + GeoChangeCoord2D.MATRIX_MULTIPLY_SPACING,
+                xPos + 3 * this.MATRIX_ELEM_WIDTH + this.EQUALS_SPACING + this.MATRIX_MULTIPLY_SPACING,
                 yPos);
         }
         const equalLabel1 = this.nextIndex++;
@@ -594,11 +594,11 @@ class GeoChangeCoord2D extends Geometric {
 
         let opX, opY;
         if (this.rowMajor) {
-            opX = xPos + 2 * GeoChangeCoord2D.MATRIX_ELEM_WIDTH + GeoChangeCoord2D.EQUALS_SPACING / 2;
-            opY = yPos + GeoChangeCoord2D.MATRIX_ELEM_HEIGHT / 2;
+            opX = xPos + 2 * this.MATRIX_ELEM_WIDTH + this.EQUALS_SPACING / 2;
+            opY = yPos + this.MATRIX_ELEM_HEIGHT / 2;
         } else {
-            opX = xPos + 3 * GeoChangeCoord2D.MATRIX_ELEM_WIDTH + GeoChangeCoord2D.EQUALS_SPACING / 2 + GeoChangeCoord2D.MATRIX_MULTIPLY_SPACING;
-            opY = yPos + GeoChangeCoord2D.MATRIX_ELEM_HEIGHT;
+            opX = xPos + 3 * this.MATRIX_ELEM_WIDTH + this.EQUALS_SPACING / 2 + this.MATRIX_MULTIPLY_SPACING;
+            opY = yPos + this.MATRIX_ELEM_HEIGHT;
         }
         this.cmd("CreateLabel", equalLabel1, "=", opX, opY);
         if (this.rowMajor) {
@@ -618,14 +618,14 @@ class GeoChangeCoord2D extends Geometric {
         const screenPoint = this.worldToScreenSpace(logicalPoint, fromSpace);
 
         this.cmd("CreateCircle", inertialPositionID, "", screenPoint[0], screenPoint[1]);
-        this.cmd("SetWidth", inertialPositionID, GeoChangeCoord2D.VERTEX_WIDTH);
+        this.cmd("SetWidth", inertialPositionID, this.VERTEX_WIDTH);
 
         const originID = this.nextIndex++;
         this.oldIDs.push(originID);
         const origin = this.worldToScreenSpace([0, 0], fromSpace);
 
         this.cmd("CreateRectangle", originID, "", 0, 0, origin[0], origin[1]);
-        this.cmd("Connect", originID, inertialPositionID, GeoChangeCoord2D.TRANSFORMED_POINT_COLORS[toSpace], 0, 1, "");
+        this.cmd("Connect", originID, inertialPositionID, this.TRANSFORMED_POINT_COLORS[toSpace], 0, 1, "");
         return [inertialPositionMatrix, inertialPositionID, originID];
     }
 
@@ -636,12 +636,12 @@ class GeoChangeCoord2D extends Geometric {
         if (this.rowMajor) {
             logicalPoint[0] = point.data[0][0] + transVector.data[0][0];
             logicalPoint[1] = point.data[0][1] + transVector.data[0][1];
-            robotPositionMatrix = this.createMatrix([["", ""]], xPos + 2 * GeoChangeCoord2D.MATRIX_ELEM_WIDTH + GeoChangeCoord2D.EQUALS_SPACING,
+            robotPositionMatrix = this.createMatrix([["", ""]], xPos + 2 * this.MATRIX_ELEM_WIDTH + this.EQUALS_SPACING,
                 yPos);
         } else {
             logicalPoint[0] = point.data[0][0] + transVector.data[0][0];
             logicalPoint[1] = point.data[1][0] + transVector.data[1][0];
-            robotPositionMatrix = this.createMatrix([[""], [""]], xPos + GeoChangeCoord2D.MATRIX_ELEM_WIDTH + GeoChangeCoord2D.EQUALS_SPACING,
+            robotPositionMatrix = this.createMatrix([[""], [""]], xPos + this.MATRIX_ELEM_WIDTH + this.EQUALS_SPACING,
                 yPos);
         }
 
@@ -652,15 +652,15 @@ class GeoChangeCoord2D extends Geometric {
 
         let opX, opY, op2X, op2Y;
         if (this.rowMajor) {
-            opX = xPos + 2 * GeoChangeCoord2D.MATRIX_ELEM_WIDTH + GeoChangeCoord2D.EQUALS_SPACING / 2;
-            opY = yPos + GeoChangeCoord2D.MATRIX_ELEM_HEIGHT / 2;
-            op2X = xPos - GeoChangeCoord2D.EQUALS_SPACING / 2;
-            op2Y = yPos + GeoChangeCoord2D.MATRIX_ELEM_HEIGHT / 2;
+            opX = xPos + 2 * this.MATRIX_ELEM_WIDTH + this.EQUALS_SPACING / 2;
+            opY = yPos + this.MATRIX_ELEM_HEIGHT / 2;
+            op2X = xPos - this.EQUALS_SPACING / 2;
+            op2Y = yPos + this.MATRIX_ELEM_HEIGHT / 2;
         } else {
-            opX = xPos + GeoChangeCoord2D.MATRIX_ELEM_WIDTH + GeoChangeCoord2D.EQUALS_SPACING / 2;
-            opY = yPos + GeoChangeCoord2D.MATRIX_ELEM_HEIGHT;
-            op2X = xPos - GeoChangeCoord2D.EQUALS_SPACING / 2;
-            op2Y = yPos + GeoChangeCoord2D.MATRIX_ELEM_HEIGHT;
+            opX = xPos + this.MATRIX_ELEM_WIDTH + this.EQUALS_SPACING / 2;
+            opY = yPos + this.MATRIX_ELEM_HEIGHT;
+            op2X = xPos - this.EQUALS_SPACING / 2;
+            op2Y = yPos + this.MATRIX_ELEM_HEIGHT;
         }
         this.cmd("CreateLabel", equalLabel3, "=", opX, opY);
         this.cmd("CreateLabel", addLabel1, "+", op2X, op2Y);
@@ -673,9 +673,9 @@ class GeoChangeCoord2D extends Geometric {
         const robotPositionID = this.nextIndex++;
 
         this.cmd("CreateCircle", robotPositionID, "", screenPoint[0], screenPoint[1]);
-        this.cmd("SetWidth", robotPositionID, GeoChangeCoord2D.VERTEX_WIDTH);
+        this.cmd("SetWidth", robotPositionID, this.VERTEX_WIDTH);
 
-        this.cmd("Connect", pointID, robotPositionID, GeoChangeCoord2D.TRANSFORMED_POINT_COLORS[toSpace], 0, 1, "");
+        this.cmd("Connect", pointID, robotPositionID, this.TRANSFORMED_POINT_COLORS[toSpace], 0, 1, "");
         this.cmd("Step");
 
         const originID = this.nextIndex++;
@@ -686,7 +686,7 @@ class GeoChangeCoord2D extends Geometric {
         this.cmd("SetWidth", originID, 0);
         this.cmd("SetAlpha", originID, 0);
 
-        this.cmd("Connect", originID, robotPositionID, GeoChangeCoord2D.TRANSFORMED_POINT_COLORS[toSpace], 0, 1, "");
+        this.cmd("Connect", originID, robotPositionID, this.TRANSFORMED_POINT_COLORS[toSpace], 0, 1, "");
 
         return [robotPositionMatrix, robotPositionID, originID];
     }
@@ -702,9 +702,9 @@ class GeoChangeCoord2D extends Geometric {
         this.cmd("Disconnect", initialPointID, pointID);
 
         if (this.rowMajor) {
-            this.moveMatrix(newPosition, rotX - 2 * GeoChangeCoord2D.MATRIX_ELEM_WIDTH - GeoChangeCoord2D.MATRIX_MULTIPLY_SPACING, transY);
+            this.moveMatrix(newPosition, rotX - 2 * this.MATRIX_ELEM_WIDTH - this.MATRIX_MULTIPLY_SPACING, transY);
         } else {
-            this.moveMatrix(newPosition, rotX + 2 * GeoChangeCoord2D.MATRIX_ELEM_WIDTH + GeoChangeCoord2D.MATRIX_MULTIPLY_SPACING, transY);
+            this.moveMatrix(newPosition, rotX + 2 * this.MATRIX_ELEM_WIDTH + this.MATRIX_MULTIPLY_SPACING, transY);
         }
 
         const rotateMatrixAndPointID = this.rotatePoint(newPosition, rotMatrix, rotX, rotY, fromSpace, toSpace);
@@ -739,9 +739,9 @@ class GeoChangeCoord2D extends Geometric {
         this.cmd("Step");
 
         if (this.rowMajor) {
-            this.moveMatrix(inertialPositionMatrix, transX - 2 * GeoChangeCoord2D.MATRIX_ELEM_WIDTH - GeoChangeCoord2D.EQUALS_SPACING, transY);
+            this.moveMatrix(inertialPositionMatrix, transX - 2 * this.MATRIX_ELEM_WIDTH - this.EQUALS_SPACING, transY);
         } else {
-            this.moveMatrix(inertialPositionMatrix, transX - GeoChangeCoord2D.MATRIX_ELEM_WIDTH - GeoChangeCoord2D.EQUALS_SPACING, transY);
+            this.moveMatrix(inertialPositionMatrix, transX - this.MATRIX_ELEM_WIDTH - this.EQUALS_SPACING, transY);
         }
 
         const translateMatrixAndPointID = this.translatePoint(inertialPositionMatrix, transVector, transX, transY, fromSpace, toSpace, inertialPositionID);
@@ -783,35 +783,35 @@ class GeoChangeCoord2D extends Geometric {
         this.oldIDs.push(pointInHandSpaceID);
 
         this.cmd("CreateCircle", pointInHandSpaceID, "", screenPoint[0], screenPoint[1]);
-        this.cmd("SetWidth", pointInHandSpaceID, GeoChangeCoord2D.VERTEX_WIDTH);
+        this.cmd("SetWidth", pointInHandSpaceID, this.VERTEX_WIDTH);
 
-        this.cmd("Connect", this.axisHand[0], pointInHandSpaceID, GeoChangeCoord2D.TRANSFORMED_POINT_COLORS[0], 0, 1, "");
+        this.cmd("Connect", this.axisHand[0], pointInHandSpaceID, this.TRANSFORMED_POINT_COLORS[0], 0, 1, "");
 
         let initialPointMatrix;
         if (this.rowMajor) {
-            initialPointMatrix = this.createMatrix([[x, y]], GeoChangeCoord2D.HAND_MATRIX_START_X - 2 * GeoChangeCoord2D.MATRIX_ELEM_WIDTH - GeoChangeCoord2D.MATRIX_MULTIPLY_SPACING, GeoChangeCoord2D.HAND_MATRIX_START_Y);
+            initialPointMatrix = this.createMatrix([[x, y]], this.HAND_MATRIX_START_X - 2 * this.MATRIX_ELEM_WIDTH - this.MATRIX_MULTIPLY_SPACING, this.HAND_MATRIX_START_Y);
         } else {
-            initialPointMatrix = this.createMatrix([[x], [y]], GeoChangeCoord2D.HAND_MATRIX_START_X + 2 * GeoChangeCoord2D.MATRIX_ELEM_WIDTH + GeoChangeCoord2D.MATRIX_MULTIPLY_SPACING, GeoChangeCoord2D.HAND_MATRIX_START_Y);
+            initialPointMatrix = this.createMatrix([[x], [y]], this.HAND_MATRIX_START_X + 2 * this.MATRIX_ELEM_WIDTH + this.MATRIX_MULTIPLY_SPACING, this.HAND_MATRIX_START_Y);
         }
         this.addMatrixIDsToList(initialPointMatrix, this.oldIDs);
         this.cmd("Step");
 
         const robotPositionMatrix = this.multiplyAdd(initialPointMatrix, this.HandMatrix, this.HandPosition,
-            GeoChangeCoord2D.HAND_MATRIX_START_X, GeoChangeCoord2D.HAND_MATRIX_START_Y,
-            GeoChangeCoord2D.HAND_POSITION_START_X, GeoChangeCoord2D.HAND_POSITION_START_Y,
+            this.HAND_MATRIX_START_X, this.HAND_MATRIX_START_Y,
+            this.HAND_POSITION_START_X, this.HAND_POSITION_START_Y,
             0, 1);
 
         if (this.rowMajor) {
-            this.moveMatrix(robotPositionMatrix, GeoChangeCoord2D.ROBOT_MATRIX_START_X - 2 * GeoChangeCoord2D.MATRIX_ELEM_WIDTH - GeoChangeCoord2D.MATRIX_MULTIPLY_SPACING,
-                GeoChangeCoord2D.ROBOT_MATRIX_START_Y);
+            this.moveMatrix(robotPositionMatrix, this.ROBOT_MATRIX_START_X - 2 * this.MATRIX_ELEM_WIDTH - this.MATRIX_MULTIPLY_SPACING,
+                this.ROBOT_MATRIX_START_Y);
         } else {
-            this.moveMatrix(robotPositionMatrix, GeoChangeCoord2D.ROBOT_MATRIX_START_X + 2 * GeoChangeCoord2D.MATRIX_ELEM_WIDTH + GeoChangeCoord2D.MATRIX_MULTIPLY_SPACING,
-                GeoChangeCoord2D.ROBOT_MATRIX_START_Y);
+            this.moveMatrix(robotPositionMatrix, this.ROBOT_MATRIX_START_X + 2 * this.MATRIX_ELEM_WIDTH + this.MATRIX_MULTIPLY_SPACING,
+                this.ROBOT_MATRIX_START_Y);
         }
 
         this.multiplyAdd(robotPositionMatrix, this.RobotMatrix, this.RobotPosition,
-            GeoChangeCoord2D.ROBOT_MATRIX_START_X, GeoChangeCoord2D.ROBOT_MATRIX_START_Y,
-            GeoChangeCoord2D.ROBOT_POSITION_START_X, GeoChangeCoord2D.ROBOT_POSITION_START_Y,
+            this.ROBOT_MATRIX_START_X, this.ROBOT_MATRIX_START_Y,
+            this.ROBOT_POSITION_START_X, this.ROBOT_POSITION_START_Y,
             1, 2);
 
         return this.commands;
@@ -857,29 +857,29 @@ class GeoChangeCoord2D extends Geometric {
         this.cmd("Step");
 
         if (globalToLocal) {
-            this.cmd("Move", this.robotLabel1ID, GeoChangeCoord2D.ROBOT_POSITION_START_X, GeoChangeCoord2D.ROBOT_POSITION_START_Y - 25);
-            this.moveMatrix(this.RobotMatrix, GeoChangeCoord2D.ROBOT_POSITION_START_X, GeoChangeCoord2D.ROBOT_POSITION_START_Y);
+            this.cmd("Move", this.robotLabel1ID, this.ROBOT_POSITION_START_X, this.ROBOT_POSITION_START_Y - 25);
+            this.moveMatrix(this.RobotMatrix, this.ROBOT_POSITION_START_X, this.ROBOT_POSITION_START_Y);
 
-            this.cmd("Move", this.robotLabel2ID, GeoChangeCoord2D.ROBOT_MATRIX_START_X + GeoChangeCoord2D.EQUALS_SPACING, GeoChangeCoord2D.ROBOT_MATRIX_START_Y - 25);
-            this.moveMatrix(this.RobotPosition, GeoChangeCoord2D.ROBOT_MATRIX_START_X + GeoChangeCoord2D.EQUALS_SPACING, GeoChangeCoord2D.ROBOT_MATRIX_START_Y);
+            this.cmd("Move", this.robotLabel2ID, this.ROBOT_MATRIX_START_X + this.EQUALS_SPACING, this.ROBOT_MATRIX_START_Y - 25);
+            this.moveMatrix(this.RobotPosition, this.ROBOT_MATRIX_START_X + this.EQUALS_SPACING, this.ROBOT_MATRIX_START_Y);
 
-            this.cmd("Move", this.handLabel1ID, GeoChangeCoord2D.HAND_POSITION_START_X, GeoChangeCoord2D.HAND_POSITION_START_Y - 25);
-            this.moveMatrix(this.HandMatrix, GeoChangeCoord2D.HAND_POSITION_START_X, GeoChangeCoord2D.HAND_POSITION_START_Y);
+            this.cmd("Move", this.handLabel1ID, this.HAND_POSITION_START_X, this.HAND_POSITION_START_Y - 25);
+            this.moveMatrix(this.HandMatrix, this.HAND_POSITION_START_X, this.HAND_POSITION_START_Y);
 
-            this.cmd("Move", this.handLabel2ID, GeoChangeCoord2D.HAND_MATRIX_START_X + GeoChangeCoord2D.EQUALS_SPACING, GeoChangeCoord2D.HAND_MATRIX_START_Y - 25);
-            this.moveMatrix(this.HandPosition, GeoChangeCoord2D.HAND_MATRIX_START_X + GeoChangeCoord2D.EQUALS_SPACING, GeoChangeCoord2D.HAND_MATRIX_START_Y);
+            this.cmd("Move", this.handLabel2ID, this.HAND_MATRIX_START_X + this.EQUALS_SPACING, this.HAND_MATRIX_START_Y - 25);
+            this.moveMatrix(this.HandPosition, this.HAND_MATRIX_START_X + this.EQUALS_SPACING, this.HAND_MATRIX_START_Y);
         } else {
-            this.cmd("Move", this.robotLabel1ID, GeoChangeCoord2D.ROBOT_MATRIX_START_X, GeoChangeCoord2D.ROBOT_MATRIX_START_Y - 25);
-            this.moveMatrix(this.RobotMatrix, GeoChangeCoord2D.ROBOT_MATRIX_START_X, GeoChangeCoord2D.ROBOT_MATRIX_START_Y);
+            this.cmd("Move", this.robotLabel1ID, this.ROBOT_MATRIX_START_X, this.ROBOT_MATRIX_START_Y - 25);
+            this.moveMatrix(this.RobotMatrix, this.ROBOT_MATRIX_START_X, this.ROBOT_MATRIX_START_Y);
 
-            this.cmd("Move", this.robotLabel2ID, GeoChangeCoord2D.ROBOT_POSITION_START_X, GeoChangeCoord2D.ROBOT_POSITION_START_Y - 25);
-            this.moveMatrix(this.RobotPosition, GeoChangeCoord2D.ROBOT_POSITION_START_X, GeoChangeCoord2D.ROBOT_POSITION_START_Y);
+            this.cmd("Move", this.robotLabel2ID, this.ROBOT_POSITION_START_X, this.ROBOT_POSITION_START_Y - 25);
+            this.moveMatrix(this.RobotPosition, this.ROBOT_POSITION_START_X, this.ROBOT_POSITION_START_Y);
 
-            this.cmd("Move", this.handLabel1ID, GeoChangeCoord2D.HAND_MATRIX_START_X, GeoChangeCoord2D.HAND_MATRIX_START_Y - 25);
-            this.moveMatrix(this.HandMatrix, GeoChangeCoord2D.HAND_MATRIX_START_X, GeoChangeCoord2D.HAND_MATRIX_START_Y);
+            this.cmd("Move", this.handLabel1ID, this.HAND_MATRIX_START_X, this.HAND_MATRIX_START_Y - 25);
+            this.moveMatrix(this.HandMatrix, this.HAND_MATRIX_START_X, this.HAND_MATRIX_START_Y);
 
-            this.cmd("Move", this.handLabel2ID, GeoChangeCoord2D.HAND_POSITION_START_X, GeoChangeCoord2D.HAND_POSITION_START_Y - 25);
-            this.moveMatrix(this.HandPosition, GeoChangeCoord2D.HAND_POSITION_START_X, GeoChangeCoord2D.HAND_POSITION_START_Y);
+            this.cmd("Move", this.handLabel2ID, this.HAND_POSITION_START_X, this.HAND_POSITION_START_Y - 25);
+            this.moveMatrix(this.HandPosition, this.HAND_POSITION_START_X, this.HAND_POSITION_START_Y);
         }
         return this.commands;
     }
@@ -906,23 +906,23 @@ class GeoChangeCoord2D extends Geometric {
         const pointInWorldSpaceID = this.nextIndex++;
         this.oldIDs.push(pointInWorldSpaceID);
         this.cmd("CreateCircle", pointInWorldSpaceID, "", screenPoint[0], screenPoint[1]);
-        this.cmd("SetWidth", pointInWorldSpaceID, GeoChangeCoord2D.VERTEX_WIDTH);
-        this.cmd("Connect", this.axisWorld[0], pointInWorldSpaceID, GeoChangeCoord2D.TRANSFORMED_POINT_COLORS[2], 0, 1, "");
+        this.cmd("SetWidth", pointInWorldSpaceID, this.VERTEX_WIDTH);
+        this.cmd("Connect", this.axisWorld[0], pointInWorldSpaceID, this.TRANSFORMED_POINT_COLORS[2], 0, 1, "");
 
         let initialPointMatrix;
         if (this.rowMajor) {
-            initialPointMatrix = this.createMatrix([[x, y]], GeoChangeCoord2D.ROBOT_MATRIX_START_X - 2 * GeoChangeCoord2D.MATRIX_ELEM_WIDTH,
-                GeoChangeCoord2D.ROBOT_MATRIX_START_Y);
+            initialPointMatrix = this.createMatrix([[x, y]], this.ROBOT_MATRIX_START_X - 2 * this.MATRIX_ELEM_WIDTH,
+                this.ROBOT_MATRIX_START_Y);
         } else {
-            initialPointMatrix = this.createMatrix([[x], [y]], GeoChangeCoord2D.ROBOT_MATRIX_START_X - GeoChangeCoord2D.MATRIX_ELEM_WIDTH,
-                GeoChangeCoord2D.ROBOT_MATRIX_START_Y);
+            initialPointMatrix = this.createMatrix([[x], [y]], this.ROBOT_MATRIX_START_X - this.MATRIX_ELEM_WIDTH,
+                this.ROBOT_MATRIX_START_Y);
         }
         this.addMatrixIDsToList(initialPointMatrix, this.oldIDs);
         this.cmd("Step");
 
         const positionAndID = this.addMultiply(initialPointMatrix, this.RobotPosition, this.RobotMatrix,
-            GeoChangeCoord2D.ROBOT_MATRIX_START_X + GeoChangeCoord2D.EQUALS_SPACING, GeoChangeCoord2D.ROBOT_MATRIX_START_Y,
-            GeoChangeCoord2D.ROBOT_POSITION_START_X, GeoChangeCoord2D.ROBOT_POSITION_START_Y,
+            this.ROBOT_MATRIX_START_X + this.EQUALS_SPACING, this.ROBOT_MATRIX_START_Y,
+            this.ROBOT_POSITION_START_X, this.ROBOT_POSITION_START_Y,
             pointInWorldSpaceID,
             2, 1);
 
@@ -930,15 +930,15 @@ class GeoChangeCoord2D extends Geometric {
         const newPositionID = positionAndID[1];
 
         if (this.rowMajor) {
-            this.moveMatrix(robotPositionMatrix, GeoChangeCoord2D.HAND_MATRIX_START_X - 2 * GeoChangeCoord2D.MATRIX_ELEM_WIDTH,
-                GeoChangeCoord2D.HAND_MATRIX_START_Y);
+            this.moveMatrix(robotPositionMatrix, this.HAND_MATRIX_START_X - 2 * this.MATRIX_ELEM_WIDTH,
+                this.HAND_MATRIX_START_Y);
         } else {
-            this.moveMatrix(robotPositionMatrix, GeoChangeCoord2D.HAND_MATRIX_START_X - GeoChangeCoord2D.MATRIX_ELEM_WIDTH,
-                GeoChangeCoord2D.HAND_MATRIX_START_Y);
+            this.moveMatrix(robotPositionMatrix, this.HAND_MATRIX_START_X - this.MATRIX_ELEM_WIDTH,
+                this.HAND_MATRIX_START_Y);
         }
         this.addMultiply(robotPositionMatrix, this.HandPosition, this.HandMatrix,
-            GeoChangeCoord2D.HAND_MATRIX_START_X + GeoChangeCoord2D.EQUALS_SPACING, GeoChangeCoord2D.HAND_MATRIX_START_Y,
-            GeoChangeCoord2D.HAND_POSITION_START_X, GeoChangeCoord2D.HAND_POSITION_START_Y,
+            this.HAND_MATRIX_START_X + this.EQUALS_SPACING, this.HAND_MATRIX_START_Y,
+            this.HAND_POSITION_START_X, this.HAND_POSITION_START_Y,
             newPositionID,
             1, 0);
         return this.commands;
@@ -957,11 +957,11 @@ class GeoChangeCoord2D extends Geometric {
                 this.cmd("Delete", this.otherAxes[i][j]);
             }
         }
-        for (let i = 0; i < GeoChangeCoord2D.ROBOT_POINTS.length; i++) {
+        for (let i = 0; i < this.ROBOT_POINTS.length; i++) {
             this.cmd("Delete", this.RobotPointRobotIDs[i]);
             this.cmd("Delete", this.RobotPointWorldIDs[i]);
         }
-        for (let i = 0; i < GeoChangeCoord2D.HAND_POINTS.length; i++) {
+        for (let i = 0; i < this.HAND_POINTS.length; i++) {
             this.cmd("Delete", this.HandPointHandIDs[i]);
             this.cmd("Delete", this.HandPointRobotIDs[i]);
             this.cmd("Delete", this.HandPointWorldIDs[i]);
@@ -969,14 +969,14 @@ class GeoChangeCoord2D extends Geometric {
         this.cmd("Delete", this.RobotHandAttachRobotID);
         this.cmd("Delete", this.RobotHandAttachWorldID);
         this.PositionIndex++;
-        if (this.PositionIndex >= GeoChangeCoord2D.ROBOT_POSITION_VALUES.length) {
+        if (this.PositionIndex >= this.ROBOT_POSITION_VALUES.length) {
             this.PositionIndex = 0;
         }
 
-        this.RobotPositionValues = GeoChangeCoord2D.ROBOT_POSITION_VALUES[this.PositionIndex];
-        this.RobotMatrixValues = GeoChangeCoord2D.ROBOT_MATRIX_VALUES[this.PositionIndex];
-        this.HandPositionValues = GeoChangeCoord2D.HAND_POSITION_VALUES[this.PositionIndex];
-        this.HandMatrixValues = GeoChangeCoord2D.HAND_MATRIX_VALUES[this.PositionIndex];
+        this.RobotPositionValues = this.ROBOT_POSITION_VALUES[this.PositionIndex];
+        this.RobotMatrixValues = this.ROBOT_MATRIX_VALUES[this.PositionIndex];
+        this.HandPositionValues = this.HAND_POSITION_VALUES[this.PositionIndex];
+        this.HandMatrixValues = this.HAND_MATRIX_VALUES[this.PositionIndex];
 
         this.setupExtraAxes();
         this.setupObjects();
@@ -1069,17 +1069,17 @@ class GeoChangeCoord2D extends Geometric {
 
         this.cmd("Move", mat.leftBrack1, x, y);
         this.cmd("Move", mat.leftBrack2, x, y);
-        this.cmd("Move", mat.leftBrack3, x, y + height * GeoChangeCoord2D.MATRIX_ELEM_HEIGHT);
+        this.cmd("Move", mat.leftBrack3, x, y + height * this.MATRIX_ELEM_HEIGHT);
 
-        this.cmd("Move", mat.rightBrack1, x + width * GeoChangeCoord2D.MATRIX_ELEM_WIDTH, y);
-        this.cmd("Move", mat.rightBrack2, x + width * GeoChangeCoord2D.MATRIX_ELEM_WIDTH, y);
-        this.cmd("Move", mat.rightBrack3, x + width * GeoChangeCoord2D.MATRIX_ELEM_WIDTH, y + height * GeoChangeCoord2D.MATRIX_ELEM_HEIGHT);
+        this.cmd("Move", mat.rightBrack1, x + width * this.MATRIX_ELEM_WIDTH, y);
+        this.cmd("Move", mat.rightBrack2, x + width * this.MATRIX_ELEM_WIDTH, y);
+        this.cmd("Move", mat.rightBrack3, x + width * this.MATRIX_ELEM_WIDTH, y + height * this.MATRIX_ELEM_HEIGHT);
 
         for (let i = 0; i < mat.data.length; i++) {
             for (let j = 0; j < mat.data[i].length; j++) {
                 this.cmd("Move", mat.dataID[i][j],
-                    x + j * GeoChangeCoord2D.MATRIX_ELEM_WIDTH + GeoChangeCoord2D.MATRIX_ELEM_WIDTH / 2,
-                    y + i * GeoChangeCoord2D.MATRIX_ELEM_HEIGHT + GeoChangeCoord2D.MATRIX_ELEM_HEIGHT / 2);
+                    x + j * this.MATRIX_ELEM_WIDTH + this.MATRIX_ELEM_WIDTH / 2,
+                    y + i * this.MATRIX_ELEM_HEIGHT + this.MATRIX_ELEM_HEIGHT / 2);
             }
         }
         mat.x = x;
@@ -1144,18 +1144,18 @@ class GeoChangeCoord2D extends Geometric {
         }
 
         this.cmd("CreateRectangle", mat.leftBrack1, "", 5, 1, x, y, "left", "center");
-        this.cmd("CreateRectangle", mat.leftBrack2, "", 1, height * GeoChangeCoord2D.MATRIX_ELEM_HEIGHT, x, y, "center", "top");
-        this.cmd("CreateRectangle", mat.leftBrack3, "", 5, 1, x, y + height * GeoChangeCoord2D.MATRIX_ELEM_HEIGHT, "left", "center");
+        this.cmd("CreateRectangle", mat.leftBrack2, "", 1, height * this.MATRIX_ELEM_HEIGHT, x, y, "center", "top");
+        this.cmd("CreateRectangle", mat.leftBrack3, "", 5, 1, x, y + height * this.MATRIX_ELEM_HEIGHT, "left", "center");
 
-        this.cmd("CreateRectangle", mat.rightBrack1, "", 5, 1, x + width * GeoChangeCoord2D.MATRIX_ELEM_WIDTH, y, "right", "center");
-        this.cmd("CreateRectangle", mat.rightBrack2, "", 1, height * GeoChangeCoord2D.MATRIX_ELEM_HEIGHT, x + width * GeoChangeCoord2D.MATRIX_ELEM_WIDTH, y, "center", "top");
-        this.cmd("CreateRectangle", mat.rightBrack3, "", 5, 1, x + width * GeoChangeCoord2D.MATRIX_ELEM_WIDTH, y + height * GeoChangeCoord2D.MATRIX_ELEM_HEIGHT, "right", "center");
+        this.cmd("CreateRectangle", mat.rightBrack1, "", 5, 1, x + width * this.MATRIX_ELEM_WIDTH, y, "right", "center");
+        this.cmd("CreateRectangle", mat.rightBrack2, "", 1, height * this.MATRIX_ELEM_HEIGHT, x + width * this.MATRIX_ELEM_WIDTH, y, "center", "top");
+        this.cmd("CreateRectangle", mat.rightBrack3, "", 5, 1, x + width * this.MATRIX_ELEM_WIDTH, y + height * this.MATRIX_ELEM_HEIGHT, "right", "center");
 
         for (let i = 0; i < mat.data.length; i++) {
             for (let j = 0; j < mat.data[i].length; j++) {
                 this.cmd("CreateLabel", mat.dataID[i][j], mat.data[i][j],
-                    x + j * GeoChangeCoord2D.MATRIX_ELEM_WIDTH + GeoChangeCoord2D.MATRIX_ELEM_WIDTH / 2,
-                    y + i * GeoChangeCoord2D.MATRIX_ELEM_HEIGHT + GeoChangeCoord2D.MATRIX_ELEM_HEIGHT / 2);
+                    x + j * this.MATRIX_ELEM_WIDTH + this.MATRIX_ELEM_WIDTH / 2,
+                    y + i * this.MATRIX_ELEM_HEIGHT + this.MATRIX_ELEM_HEIGHT / 2);
             }
         }
         return mat;

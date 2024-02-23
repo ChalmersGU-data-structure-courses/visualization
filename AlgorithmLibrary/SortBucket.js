@@ -42,27 +42,27 @@ class BucketLinkedListNode {
 
 
 class SortBucket extends Algorithm {
-    static ARRAY_ELEM_WIDTH_SMALL = 30;
-    static ARRAY_ELEM_HEIGHT_SMALL = 30;
-    static ARRAY_ELEM_START_X_SMALL = 20;
+    ARRAY_ELEM_WIDTH_SMALL = 30;
+    ARRAY_ELEM_HEIGHT_SMALL = 30;
+    ARRAY_ELEM_START_X_SMALL = 20;
 
-    static ARRAY_ELEMENT_Y_SMALL = 150;
+    ARRAY_ELEMENT_Y_SMALL = 150;
 
-    static POINTER_ARRAY_ELEM_WIDTH_SMALL = 30;
-    static POINTER_ARRAY_ELEM_HEIGHT_SMALL = 30;
-    static POINTER_ARRAY_ELEM_START_X_SMALL = 20;
+    POINTER_ARRAY_ELEM_WIDTH_SMALL = 30;
+    POINTER_ARRAY_ELEM_HEIGHT_SMALL = 30;
+    POINTER_ARRAY_ELEM_START_X_SMALL = 20;
 
-    static LINKED_ITEM_HEIGHT_SMALL = 30;
-    static LINKED_ITEM_WIDTH_SMALL = 24;
+    LINKED_ITEM_HEIGHT_SMALL = 30;
+    LINKED_ITEM_WIDTH_SMALL = 24;
 
-    static LINKED_ITEM_Y_DELTA_SMALL = 50;
-    static LINKED_ITEM_POINTER_PERCENT_SMALL = 0.25;
+    LINKED_ITEM_Y_DELTA_SMALL = 50;
+    LINKED_ITEM_POINTER_PERCENT_SMALL = 0.25;
 
-    static MAX_DATA_VALUE = 999;
+    MAX_DATA_VALUE = 999;
 
-    static ARRAY_SIZE_SMALL = 30;
+    ARRAY_SIZE_SMALL = 30;
 
-    static ARRAY_Y_POS = 350;
+    ARRAY_Y_POS = 350;
 
     constructor(am) {
         super();
@@ -94,33 +94,33 @@ class SortBucket extends Algorithm {
         const h = this.getCanvasHeight();
         this.pointerArrayElemYSmall = h - 50;
 
-        this.arrayData = new Array(SortBucket.ARRAY_SIZE_SMALL);
-        this.arrayRects = new Array(SortBucket.ARRAY_SIZE_SMALL);
-        this.linkedListRects = new Array(SortBucket.ARRAY_SIZE_SMALL);
-        this.linkedListData = new Array(SortBucket.ARRAY_SIZE_SMALL);
-        this.upperIndices = new Array(SortBucket.ARRAY_SIZE_SMALL);
-        this.lowerIndices = new Array(SortBucket.ARRAY_SIZE_SMALL);
+        this.arrayData = new Array(this.ARRAY_SIZE_SMALL);
+        this.arrayRects = new Array(this.ARRAY_SIZE_SMALL);
+        this.linkedListRects = new Array(this.ARRAY_SIZE_SMALL);
+        this.linkedListData = new Array(this.ARRAY_SIZE_SMALL);
+        this.upperIndices = new Array(this.ARRAY_SIZE_SMALL);
+        this.lowerIndices = new Array(this.ARRAY_SIZE_SMALL);
         this.commands = [];
-        this.oldData = new Array(SortBucket.ARRAY_SIZE_SMALL);
+        this.oldData = new Array(this.ARRAY_SIZE_SMALL);
 
-        for (let i = 0; i < SortBucket.ARRAY_SIZE_SMALL; i++) {
+        for (let i = 0; i < this.ARRAY_SIZE_SMALL; i++) {
             let nextID = this.nextIndex++;
-            this.arrayData[i] = Math.floor(Math.random() * SortBucket.MAX_DATA_VALUE);
+            this.arrayData[i] = Math.floor(Math.random() * this.MAX_DATA_VALUE);
             this.oldData[i] = this.arrayData[i];
-            this.cmd("CreateRectangle", nextID, this.arrayData[i], SortBucket.ARRAY_ELEM_WIDTH_SMALL, SortBucket.ARRAY_ELEM_HEIGHT_SMALL, SortBucket.ARRAY_ELEM_START_X_SMALL + i * SortBucket.ARRAY_ELEM_WIDTH_SMALL, SortBucket.ARRAY_ELEMENT_Y_SMALL);
+            this.cmd("CreateRectangle", nextID, this.arrayData[i], this.ARRAY_ELEM_WIDTH_SMALL, this.ARRAY_ELEM_HEIGHT_SMALL, this.ARRAY_ELEM_START_X_SMALL + i * this.ARRAY_ELEM_WIDTH_SMALL, this.ARRAY_ELEMENT_Y_SMALL);
             this.arrayRects[i] = nextID;
             nextID = this.nextIndex++;
-            this.cmd("CreateRectangle", nextID, "", SortBucket.POINTER_ARRAY_ELEM_WIDTH_SMALL, SortBucket.POINTER_ARRAY_ELEM_HEIGHT_SMALL, SortBucket.POINTER_ARRAY_ELEM_START_X_SMALL + i * SortBucket.POINTER_ARRAY_ELEM_WIDTH_SMALL, this.pointerArrayElemYSmall);
+            this.cmd("CreateRectangle", nextID, "", this.POINTER_ARRAY_ELEM_WIDTH_SMALL, this.POINTER_ARRAY_ELEM_HEIGHT_SMALL, this.POINTER_ARRAY_ELEM_START_X_SMALL + i * this.POINTER_ARRAY_ELEM_WIDTH_SMALL, this.pointerArrayElemYSmall);
             this.linkedListRects[i] = nextID;
             this.cmd("SetNull", this.linkedListRects[i], 1);
             nextID = this.nextIndex++;
             this.upperIndices[i] = nextID;
-            this.cmd("CreateLabel", nextID, i, SortBucket.ARRAY_ELEM_START_X_SMALL + i * SortBucket.ARRAY_ELEM_WIDTH_SMALL, SortBucket.ARRAY_ELEMENT_Y_SMALL + SortBucket.ARRAY_ELEM_HEIGHT_SMALL);
+            this.cmd("CreateLabel", nextID, i, this.ARRAY_ELEM_START_X_SMALL + i * this.ARRAY_ELEM_WIDTH_SMALL, this.ARRAY_ELEMENT_Y_SMALL + this.ARRAY_ELEM_HEIGHT_SMALL);
             this.cmd("SetForegroundColor", nextID, "#0000FF");
 
             nextID = this.nextIndex++;
             this.lowerIndices[i] = nextID;
-            this.cmd("CreateLabel", nextID, i, SortBucket.POINTER_ARRAY_ELEM_START_X_SMALL + i * SortBucket.POINTER_ARRAY_ELEM_WIDTH_SMALL, this.pointerArrayElemYSmall + SortBucket.POINTER_ARRAY_ELEM_HEIGHT_SMALL);
+            this.cmd("CreateLabel", nextID, i, this.POINTER_ARRAY_ELEM_START_X_SMALL + i * this.POINTER_ARRAY_ELEM_WIDTH_SMALL, this.pointerArrayElemYSmall + this.POINTER_ARRAY_ELEM_HEIGHT_SMALL);
             this.cmd("SetForegroundColor", nextID, "#0000FF");
         }
 
@@ -132,29 +132,29 @@ class SortBucket extends Algorithm {
     bucketSortCallback(event) {
         const savedIndex = this.nextIndex;
         this.commands = [];
-        const linkedListData = new Array(SortBucket.ARRAY_SIZE_SMALL);
+        const linkedListData = new Array(this.ARRAY_SIZE_SMALL);
 
-        for (let i = 0; i < SortBucket.ARRAY_SIZE_SMALL; i++) {
+        for (let i = 0; i < this.ARRAY_SIZE_SMALL; i++) {
             const labelID = this.nextIndex++;
             const label2ID = this.nextIndex++;
             const label3ID = this.nextIndex++;
             const label4ID = this.nextIndex++;
             const node = new BucketLinkedListNode(this.arrayData[i], this.nextIndex++, 100, 75);
-            this.cmd("CreateLinkedList", node.graphicID, "", SortBucket.LINKED_ITEM_WIDTH_SMALL, SortBucket.LINKED_ITEM_HEIGHT_SMALL, 100, 75);
+            this.cmd("CreateLinkedList", node.graphicID, "", this.LINKED_ITEM_WIDTH_SMALL, this.LINKED_ITEM_HEIGHT_SMALL, 100, 75);
             this.cmd("SetNull", node.graphicID, 1);
 
-            this.cmd("CreateLabel", labelID, this.arrayData[i], SortBucket.ARRAY_ELEM_START_X_SMALL + i * SortBucket.ARRAY_ELEM_WIDTH_SMALL, SortBucket.ARRAY_ELEMENT_Y_SMALL);
+            this.cmd("CreateLabel", labelID, this.arrayData[i], this.ARRAY_ELEM_START_X_SMALL + i * this.ARRAY_ELEM_WIDTH_SMALL, this.ARRAY_ELEMENT_Y_SMALL);
             this.cmd("SetText", node.graphicID, "");
             this.cmd("SetText", this.arrayRects[i], "");
             this.cmd("Move", labelID, 100, 75);
             this.cmd("Step");
             this.cmd("SetText", node.graphicID, this.arrayData[i]);
             this.cmd("Delete", labelID);
-            const index = Math.floor((this.arrayData[i] * SortBucket.ARRAY_SIZE_SMALL) / (SortBucket.MAX_DATA_VALUE + 1));
+            const index = Math.floor((this.arrayData[i] * this.ARRAY_SIZE_SMALL) / (this.MAX_DATA_VALUE + 1));
 
             this.cmd("CreateLabel", labelID, "Linked List Array index = ", 300, 20, 0);
-            this.cmd("CreateLabel", label2ID, "Value * BucketSort.NUMBER_OF_ELEMENTS / (BucketSort.MAXIMUM_ARRAY_VALUE + 1)) = ", 300, 40, 0);
-            this.cmd("CreateLabel", label3ID, `(${String(this.arrayData[i])} * ${String(SortBucket.ARRAY_SIZE_SMALL)}) / ${String(SortBucket.MAX_DATA_VALUE + 1)} = `, 300, 60, 0);
+            this.cmd("CreateLabel", label2ID, "Value * NUMBER_OF_ELEMENTS / (MAXIMUM_ARRAY_VALUE + 1)) = ", 300, 40, 0);
+            this.cmd("CreateLabel", label3ID, `(${String(this.arrayData[i])} * ${String(this.ARRAY_SIZE_SMALL)}) / ${String(this.MAX_DATA_VALUE + 1)} = `, 300, 60, 0);
             this.cmd("CreateLabel", label4ID, index, 305, 85);
             this.cmd("SetForegroundColor", labelID, "#000000");
             this.cmd("SetForegroundColor", label2ID, "#000000");
@@ -163,7 +163,7 @@ class SortBucket extends Algorithm {
 
             const highlightCircle = this.nextIndex++;
             this.cmd("CreateHighlightCircle", highlightCircle, "#0000FF", 305, 100);
-            this.cmd("Move", highlightCircle, SortBucket.POINTER_ARRAY_ELEM_START_X_SMALL + index * SortBucket.POINTER_ARRAY_ELEM_WIDTH_SMALL, this.pointerArrayElemYSmall + SortBucket.POINTER_ARRAY_ELEM_HEIGHT_SMALL);
+            this.cmd("Move", highlightCircle, this.POINTER_ARRAY_ELEM_START_X_SMALL + index * this.POINTER_ARRAY_ELEM_WIDTH_SMALL, this.pointerArrayElemYSmall + this.POINTER_ARRAY_ELEM_HEIGHT_SMALL);
             this.cmd("Step");
             this.cmd("Delete", labelID);
             this.cmd("Delete", label2ID);
@@ -176,8 +176,8 @@ class SortBucket extends Algorithm {
                 this.cmd("Connect", this.linkedListRects[index], node.graphicID);
                 this.cmd("SetNull", this.linkedListRects[index], 0);
 
-                node.x = SortBucket.POINTER_ARRAY_ELEM_START_X_SMALL + index * SortBucket.POINTER_ARRAY_ELEM_WIDTH_SMALL;
-                node.y = this.pointerArrayElemYSmall - SortBucket.LINKED_ITEM_Y_DELTA_SMALL;
+                node.x = this.POINTER_ARRAY_ELEM_START_X_SMALL + index * this.POINTER_ARRAY_ELEM_WIDTH_SMALL;
+                node.y = this.pointerArrayElemYSmall - this.LINKED_ITEM_Y_DELTA_SMALL;
                 this.cmd("Move", node.graphicID, node.x, node.y);
             } else {
                 let tmp = linkedListData[index];
@@ -226,26 +226,26 @@ class SortBucket extends Algorithm {
                     this.cmd("Connect", tmp.graphicID, node.graphicID);
                 }
                 tmp = linkedListData[index];
-                const startX = SortBucket.POINTER_ARRAY_ELEM_START_X_SMALL + index * SortBucket.POINTER_ARRAY_ELEM_WIDTH_SMALL;
-                let startY = this.pointerArrayElemYSmall - SortBucket.LINKED_ITEM_Y_DELTA_SMALL;
+                const startX = this.POINTER_ARRAY_ELEM_START_X_SMALL + index * this.POINTER_ARRAY_ELEM_WIDTH_SMALL;
+                let startY = this.pointerArrayElemYSmall - this.LINKED_ITEM_Y_DELTA_SMALL;
                 while (tmp != null) {
                     tmp.x = startX;
                     tmp.y = startY;
                     this.cmd("Move", tmp.graphicID, tmp.x, tmp.y);
-                    startY = startY - SortBucket.LINKED_ITEM_Y_DELTA_SMALL;
+                    startY = startY - this.LINKED_ITEM_Y_DELTA_SMALL;
                     tmp = tmp.next;
                 }
             }
             this.cmd("Step");
         }
         let insertIndex = 0;
-        for (let i = 0; i < SortBucket.ARRAY_SIZE_SMALL; i++) {
+        for (let i = 0; i < this.ARRAY_SIZE_SMALL; i++) {
             for (let tmp = linkedListData[i]; tmp != null; tmp = tmp.next) {
                 const moveLabelID = this.nextIndex++;
                 this.cmd("SetText", tmp.graphicID, "");
                 this.cmd("SetText", this.arrayRects[insertIndex], "");
                 this.cmd("CreateLabel", moveLabelID, tmp.data, tmp.x, tmp.y);
-                this.cmd("Move", moveLabelID, SortBucket.ARRAY_ELEM_START_X_SMALL + insertIndex * SortBucket.ARRAY_ELEM_WIDTH_SMALL, SortBucket.ARRAY_ELEMENT_Y_SMALL);
+                this.cmd("Move", moveLabelID, this.ARRAY_ELEM_START_X_SMALL + insertIndex * this.ARRAY_ELEM_WIDTH_SMALL, this.ARRAY_ELEMENT_Y_SMALL);
                 this.cmd("Step");
                 this.cmd("Delete", moveLabelID);
                 this.cmd("SetText", this.arrayRects[insertIndex], tmp.data);
@@ -265,8 +265,8 @@ class SortBucket extends Algorithm {
 
     randomizeArray() {
         this.commands = [];
-        for (let i = 0; i < SortBucket.ARRAY_SIZE_SMALL; i++) {
-            this.arrayData[i] = Math.floor(1 + Math.random() * SortBucket.MAX_DATA_VALUE);
+        for (let i = 0; i < this.ARRAY_SIZE_SMALL; i++) {
+            this.arrayData[i] = Math.floor(1 + Math.random() * this.MAX_DATA_VALUE);
             this.oldData[i] = this.arrayData[i];
             this.cmd("SetText", this.arrayRects[i], this.arrayData[i]);
         }
@@ -279,7 +279,7 @@ class SortBucket extends Algorithm {
     // We want to (mostly) ignore resets, since we are disallowing undoing
     reset() {
         this.commands = [];
-        for (let i = 0; i < SortBucket.ARRAY_SIZE_SMALL; i++) {
+        for (let i = 0; i < this.ARRAY_SIZE_SMALL; i++) {
             this.arrayData[i] = this.oldData[i];
         }
     }

@@ -32,47 +32,47 @@
 
 
 class GeoRotateTranslate2D extends Geometric {
-    static XAxisYPos = 300;
-    static XAxisStart = 100;
-    static XAxisEnd = 700;
+    XAxisYPos = 300;
+    XAxisStart = 100;
+    XAxisEnd = 700;
 
-    static MATRIX_ELEM_WIDTH = 50;
-    static MATRIX_ELEM_HEIGHT = 20;
+    MATRIX_ELEM_WIDTH = 50;
+    MATRIX_ELEM_HEIGHT = 20;
 
-    static MATRIX_MULTIPLY_SPACING = 10;
-    static EQUALS_SPACING = 30;
-    static MATRIX_START_X = 10 + 3 * GeoRotateTranslate2D.MATRIX_ELEM_WIDTH + GeoRotateTranslate2D.MATRIX_MULTIPLY_SPACING;
-    static MATRIX_START_Y = 10;
+    MATRIX_MULTIPLY_SPACING = 10;
+    EQUALS_SPACING = 30;
+    MATRIX_START_X = 10 + 3 * this.MATRIX_ELEM_WIDTH + this.MATRIX_MULTIPLY_SPACING;
+    MATRIX_START_Y = 10;
 
-    static YAxisXPos = 400;
-    static YAxisStart = 100;
-    static YAxisEnd = 500;
+    YAxisXPos = 400;
+    YAxisStart = 100;
+    YAxisEnd = 500;
 
-    static OBJECTS = [
+    OBJECTS = [
         [[100, 100], [-100, 100], [-100, -100], [100, -100]], // Square
         [[10, 100], [-10, 100], [-10, -100], [100, -100], [100, -80], [10, -80]], // L
         [[0, 141], [-134, 44], [-83, -114], [83, -114], [134, 44]], // Pentagon
         [[0, 141], [-35, 48], [-134, 44], [-57, -19], [-83, -114], [0, -60], [83, -114], [57, -19], [134, 44], [35, 48]], // Star
     ];
 
-    static AXIS_COLOR = "#9999FF";
+    AXIS_COLOR = "#9999FF";
 
-    static LOCAL_VERTEX_FOREGORUND_COLOR = "#000000";
-    static LOCAL_VERTEX_BACKGROUND_COLOR = GeoRotateTranslate2D.LOCAL_VERTEX_FOREGORUND_COLOR;
-    static LOCAL_EDGE_COLOR = "#000000";
+    LOCAL_VERTEX_FOREGORUND_COLOR = "#000000";
+    LOCAL_VERTEX_BACKGROUND_COLOR = this.LOCAL_VERTEX_FOREGORUND_COLOR;
+    LOCAL_EDGE_COLOR = "#000000";
 
-    static GLOBAL_VERTEX_FOREGORUND_COLOR = "#00FF00";
-    static GLOBAL_VERTEX_BACKGROUND_COLOR = GeoRotateTranslate2D.GLOBAL_VERTEX_FOREGORUND_COLOR;
-    static GLOBAL_EDGE_COLOR = "#00FF00";
+    GLOBAL_VERTEX_FOREGORUND_COLOR = "#00FF00";
+    GLOBAL_VERTEX_BACKGROUND_COLOR = this.GLOBAL_VERTEX_FOREGORUND_COLOR;
+    GLOBAL_EDGE_COLOR = "#00FF00";
 
-    static TRANSFORMED_VERTEX_FOREGORUND_COLOR = "#66FF66";
-    static TRANSFORMED_VERTEX_BACKGROUND_COLOR = GeoRotateTranslate2D.TRANSFORMED_VERTEX_FOREGORUND_COLOR;
-    static TRANSFORMED_EDGE_COLOR = "#66FF66";
+    TRANSFORMED_VERTEX_FOREGORUND_COLOR = "#66FF66";
+    TRANSFORMED_VERTEX_BACKGROUND_COLOR = this.TRANSFORMED_VERTEX_FOREGORUND_COLOR;
+    TRANSFORMED_EDGE_COLOR = "#66FF66";
 
-    static VECTOR_COLOR = "#FF0000";
+    VECTOR_COLOR = "#FF0000";
 
-    static VERTEX_WIDTH = 3;
-    static VERTEX_HEIGHT = GeoRotateTranslate2D.VERTEX_WIDTH;
+    VERTEX_WIDTH = 3;
+    VERTEX_HEIGHT = this.VERTEX_WIDTH;
 
     constructor(am) {
         super();
@@ -92,7 +92,7 @@ class GeoRotateTranslate2D extends Geometric {
 
         this.setupAxis();
 
-        this.transformMatrix = this.createMatrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]], GeoRotateTranslate2D.MATRIX_START_X, GeoRotateTranslate2D.MATRIX_START_Y);
+        this.transformMatrix = this.createMatrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]], this.MATRIX_START_X, this.MATRIX_START_Y);
 
         this.savedNextIndex = this.nextIndex;
         this.setupObject();
@@ -115,47 +115,47 @@ class GeoRotateTranslate2D extends Geometric {
 
         this.originID = this.nextIndex++;
 
-        this.cmd("CreateRectangle", this.originID, "", 0, 0, GeoRotateTranslate2D.YAxisXPos, GeoRotateTranslate2D.XAxisYPos);
+        this.cmd("CreateRectangle", this.originID, "", 0, 0, this.YAxisXPos, this.XAxisYPos);
 
-        this.cmd("CreateRectangle", this.xAxisLeft, "", 0, 0, GeoRotateTranslate2D.XAxisStart, GeoRotateTranslate2D.XAxisYPos);
+        this.cmd("CreateRectangle", this.xAxisLeft, "", 0, 0, this.XAxisStart, this.XAxisYPos);
         this.cmd("SetAlpha", this.xAxisLeft, 0);
-        this.cmd("CreateRectangle", this.xAxisRight, "", 0, 0, GeoRotateTranslate2D.XAxisEnd, GeoRotateTranslate2D.XAxisYPos);
+        this.cmd("CreateRectangle", this.xAxisRight, "", 0, 0, this.XAxisEnd, this.XAxisYPos);
         this.cmd("SetAlpha", this.xAxisRight, 0);
-        this.cmd("Connect", this.xAxisLeft, this.xAxisRight, GeoRotateTranslate2D.AXIS_COLOR, 0, 1, "");
-        this.cmd("Connect", this.xAxisRight, this.xAxisLeft, GeoRotateTranslate2D.AXIS_COLOR, 0, 1, "");
+        this.cmd("Connect", this.xAxisLeft, this.xAxisRight, this.AXIS_COLOR, 0, 1, "");
+        this.cmd("Connect", this.xAxisRight, this.xAxisLeft, this.AXIS_COLOR, 0, 1, "");
 
-        this.cmd("CreateRectangle", this.yAxisTop, "", 0, 0, GeoRotateTranslate2D.YAxisXPos, GeoRotateTranslate2D.YAxisStart);
+        this.cmd("CreateRectangle", this.yAxisTop, "", 0, 0, this.YAxisXPos, this.YAxisStart);
         this.cmd("SetAlpha", this.yAxisTop, 0);
-        this.cmd("CreateRectangle", this.yAxisBottom, "", 0, 0, GeoRotateTranslate2D.YAxisXPos, GeoRotateTranslate2D.YAxisEnd);
+        this.cmd("CreateRectangle", this.yAxisBottom, "", 0, 0, this.YAxisXPos, this.YAxisEnd);
         this.cmd("SetAlpha", this.yAxisBottom, 0);
-        this.cmd("Connect", this.yAxisTop, this.yAxisBottom, GeoRotateTranslate2D.AXIS_COLOR, 0, 1, "");
-        this.cmd("Connect", this.yAxisBottom, this.yAxisTop, GeoRotateTranslate2D.AXIS_COLOR, 0, 1, "");
+        this.cmd("Connect", this.yAxisTop, this.yAxisBottom, this.AXIS_COLOR, 0, 1, "");
+        this.cmd("Connect", this.yAxisBottom, this.yAxisTop, this.AXIS_COLOR, 0, 1, "");
         if (this.posYUp) {
-            this.cmd("CreateLabel", this.yAxisLabel, "+y", GeoRotateTranslate2D.YAxisXPos + 10, GeoRotateTranslate2D.YAxisStart + 10);
+            this.cmd("CreateLabel", this.yAxisLabel, "+y", this.YAxisXPos + 10, this.YAxisStart + 10);
         } else {
-            this.cmd("CreateLabel", this.yAxisLabel, "+y", GeoRotateTranslate2D.YAxisXPos + 10, GeoRotateTranslate2D.YAxisEnd - 10);
+            this.cmd("CreateLabel", this.yAxisLabel, "+y", this.YAxisXPos + 10, this.YAxisEnd - 10);
         }
-        this.cmd("CreateLabel", this.xAxisLabel, "+x", GeoRotateTranslate2D.XAxisEnd - 10, GeoRotateTranslate2D.XAxisYPos - 10);
-        this.cmd("SetForegroundColor", this.yAxisLabel, GeoRotateTranslate2D.AXIS_COLOR);
-        this.cmd("SetForegroundColor", this.xAxisLabel, GeoRotateTranslate2D.AXIS_COLOR);
+        this.cmd("CreateLabel", this.xAxisLabel, "+x", this.XAxisEnd - 10, this.XAxisYPos - 10);
+        this.cmd("SetForegroundColor", this.yAxisLabel, this.AXIS_COLOR);
+        this.cmd("SetForegroundColor", this.xAxisLabel, this.AXIS_COLOR);
     }
 
     setupObject() {
-        this.objectVertexLocalPosition = new Array(GeoRotateTranslate2D.OBJECTS[this.currentShape].length);
-        this.objectVertexWorldPosition = new Array(GeoRotateTranslate2D.OBJECTS[this.currentShape].length);
-        for (let i = 0; i < GeoRotateTranslate2D.OBJECTS[this.currentShape].length; i++) {
-            this.objectVertexLocalPosition[i] = GeoRotateTranslate2D.OBJECTS[this.currentShape][i].slice(0);
-            this.objectVertexWorldPosition[i] = GeoRotateTranslate2D.OBJECTS[this.currentShape][i].slice(0);
+        this.objectVertexLocalPosition = new Array(this.OBJECTS[this.currentShape].length);
+        this.objectVertexWorldPosition = new Array(this.OBJECTS[this.currentShape].length);
+        for (let i = 0; i < this.OBJECTS[this.currentShape].length; i++) {
+            this.objectVertexLocalPosition[i] = this.OBJECTS[this.currentShape][i].slice(0);
+            this.objectVertexWorldPosition[i] = this.OBJECTS[this.currentShape][i].slice(0);
         }
     }
 
     worldToScreenSpace(point) {
         const transformedPoint = new Array(2);
-        transformedPoint[0] = point[0] + GeoRotateTranslate2D.YAxisXPos;
+        transformedPoint[0] = point[0] + this.YAxisXPos;
         if (this.posYUp) {
-            transformedPoint[1] = GeoRotateTranslate2D.XAxisYPos - point[1];
+            transformedPoint[1] = this.XAxisYPos - point[1];
         } else {
-            transformedPoint[1] = GeoRotateTranslate2D.XAxisYPos + point[1];
+            transformedPoint[1] = this.XAxisYPos + point[1];
         }
         return transformedPoint;
     }
@@ -183,35 +183,35 @@ class GeoRotateTranslate2D extends Geometric {
             xLocal = Math.min(xLocal, point[0]);
             yLocal = Math.max(yLocal, point[1]);
 
-            this.cmd("CreateRectangle", this.objectVertexLocalID[i], "", GeoRotateTranslate2D.VERTEX_WIDTH, GeoRotateTranslate2D.VERTEX_HEIGHT, point[0], point[1]);
-            this.cmd("SetForegroundColor", this.objectVertexLocalID[i], GeoRotateTranslate2D.LOCAL_VERTEX_FOREGORUND_COLOR);
-            this.cmd("SetBackgroundColor", this.objectVertexLocalID[i], GeoRotateTranslate2D.LOCAL_VERTEX_BACKGROUND_COLOR);
+            this.cmd("CreateRectangle", this.objectVertexLocalID[i], "", this.VERTEX_WIDTH, this.VERTEX_HEIGHT, point[0], point[1]);
+            this.cmd("SetForegroundColor", this.objectVertexLocalID[i], this.LOCAL_VERTEX_FOREGORUND_COLOR);
+            this.cmd("SetBackgroundColor", this.objectVertexLocalID[i], this.LOCAL_VERTEX_BACKGROUND_COLOR);
 
             point = this.worldToScreenSpace(this.objectVertexWorldPosition[i]);
 
             xGlobal = Math.min(xGlobal, point[0]);
             yGlobal = Math.min(yGlobal, point[1]);
 
-            this.cmd("CreateRectangle", this.objectVertexWorldID[i], "", GeoRotateTranslate2D.VERTEX_WIDTH, GeoRotateTranslate2D.VERTEX_HEIGHT, point[0], point[1]);
-            this.cmd("SetForegroundColor", this.objectVertexWorldID[i], GeoRotateTranslate2D.GLOBAL_VERTEX_FOREGORUND_COLOR);
-            this.cmd("SetBackgroundColor", this.objectVertexWorldID[i], GeoRotateTranslate2D.GLOBAL_VERTEX_BACKGROUND_COLOR);
+            this.cmd("CreateRectangle", this.objectVertexWorldID[i], "", this.VERTEX_WIDTH, this.VERTEX_HEIGHT, point[0], point[1]);
+            this.cmd("SetForegroundColor", this.objectVertexWorldID[i], this.GLOBAL_VERTEX_FOREGORUND_COLOR);
+            this.cmd("SetBackgroundColor", this.objectVertexWorldID[i], this.GLOBAL_VERTEX_BACKGROUND_COLOR);
         }
         for (let i = 1; i < this.objectVertexLocalID.length; i++) {
-            this.cmd("Connect", this.objectVertexLocalID[i - 1], this.objectVertexLocalID[i], GeoRotateTranslate2D.LOCAL_EDGE_COLOR, 0, 0, "");
-            this.cmd("Connect", this.objectVertexWorldID[i - 1], this.objectVertexWorldID[i], GeoRotateTranslate2D.GLOBAL_EDGE_COLOR, 0, 0, "");
+            this.cmd("Connect", this.objectVertexLocalID[i - 1], this.objectVertexLocalID[i], this.LOCAL_EDGE_COLOR, 0, 0, "");
+            this.cmd("Connect", this.objectVertexWorldID[i - 1], this.objectVertexWorldID[i], this.GLOBAL_EDGE_COLOR, 0, 0, "");
         }
-        this.cmd("Connect", this.objectVertexLocalID[this.objectVertexLocalID.length - 1], this.objectVertexLocalID[0], GeoRotateTranslate2D.LOCAL_EDGE_COLOR, 0, 0, "");
-        this.cmd("Connect", this.objectVertexWorldID[this.objectVertexWorldID.length - 1], this.objectVertexWorldID[0], GeoRotateTranslate2D.GLOBAL_EDGE_COLOR, 0, 0, "");
+        this.cmd("Connect", this.objectVertexLocalID[this.objectVertexLocalID.length - 1], this.objectVertexLocalID[0], this.LOCAL_EDGE_COLOR, 0, 0, "");
+        this.cmd("Connect", this.objectVertexWorldID[this.objectVertexWorldID.length - 1], this.objectVertexWorldID[0], this.GLOBAL_EDGE_COLOR, 0, 0, "");
         this.localLabelID = this.nextIndex++;
         this.globalLabelID = this.nextIndex++;
 
         this.cmd("CreateLabel", this.localLabelID, "Local Space", xLocal, yLocal + 2, 0);
-        this.cmd("SetForegroundColor", this.localLabelID, GeoRotateTranslate2D.LOCAL_VERTEX_FOREGORUND_COLOR);
+        this.cmd("SetForegroundColor", this.localLabelID, this.LOCAL_VERTEX_FOREGORUND_COLOR);
 
         // const labelPos = this.worldToScreenSpace([xGlobal, yGlobal]);
 
         this.cmd("CreateLabel", this.globalLabelID, "World Space", xGlobal, yGlobal - 12, 0);
-        this.cmd("SetForegroundColor", this.globalLabelID, GeoRotateTranslate2D.GLOBAL_VERTEX_FOREGORUND_COLOR);
+        this.cmd("SetForegroundColor", this.globalLabelID, this.GLOBAL_VERTEX_FOREGORUND_COLOR);
     }
 
     addControls() {
@@ -292,9 +292,9 @@ class GeoRotateTranslate2D extends Geometric {
             this.posYDownButton.checked = !this.posYUp;
         }
         if (this.posYUp) {
-            this.cmd("Move", this.yAxisLabel, GeoRotateTranslate2D.YAxisXPos + 10, GeoRotateTranslate2D.YAxisStart + 10);
+            this.cmd("Move", this.yAxisLabel, this.YAxisXPos + 10, this.YAxisStart + 10);
         } else {
-            this.cmd("Move", this.yAxisLabel, GeoRotateTranslate2D.YAxisXPos + 10, GeoRotateTranslate2D.YAxisEnd - 10);
+            this.cmd("Move", this.yAxisLabel, this.YAxisXPos + 10, this.YAxisEnd - 10);
         }
 
         this.moveObjectToNewPosition(this.objectVertexLocalPosition, this.objectVertexLocalID, this.localLabelID, false);
@@ -375,7 +375,7 @@ class GeoRotateTranslate2D extends Geometric {
         this.cmd("Delete", this.localLabelID);
         this.cmd("Delete", this.globalLabelID);
         this.currentShape++;
-        if (this.currentShape >= GeoRotateTranslate2D.OBJECTS.length) {
+        if (this.currentShape >= this.OBJECTS.length) {
             this.currentShape = 0;
         }
         this.transformMatrix.data = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
@@ -392,17 +392,17 @@ class GeoRotateTranslate2D extends Geometric {
         const rotateDegree = parseFloat(inputs[0]);
         const deltaX = parseFloat(inputs[1]);
         const deltaY = parseFloat(inputs[2]);
-        const rotateRadians = Geometric.toRadians(rotateDegree);
+        const rotateRadians = this.toRadians(rotateDegree);
 
         let deltaMatrix;
         if (this.rowMajor) {
             deltaMatrix = this.createMatrix([["cos \u0398", "sin \u0398", 0], ["-sin \u0398", "cos \u0398", 0], ["\u0394x", "\u0394y", "1"]],
-                GeoRotateTranslate2D.MATRIX_START_X + 3 * GeoRotateTranslate2D.MATRIX_ELEM_WIDTH + GeoRotateTranslate2D.MATRIX_MULTIPLY_SPACING,
-                GeoRotateTranslate2D.MATRIX_START_Y);
+                this.MATRIX_START_X + 3 * this.MATRIX_ELEM_WIDTH + this.MATRIX_MULTIPLY_SPACING,
+                this.MATRIX_START_Y);
         } else {
             deltaMatrix = this.createMatrix([["cos \u0398", "-sin \u0398", "\u0394x"], ["sin \u0398", "cos \u0398", "\u0394y"], [0, 0, 1]],
-                GeoRotateTranslate2D.MATRIX_START_X - 3 * GeoRotateTranslate2D.MATRIX_ELEM_WIDTH - GeoRotateTranslate2D.MATRIX_MULTIPLY_SPACING,
-                GeoRotateTranslate2D.MATRIX_START_Y);
+                this.MATRIX_START_X - 3 * this.MATRIX_ELEM_WIDTH - this.MATRIX_MULTIPLY_SPACING,
+                this.MATRIX_START_Y);
         }
         this.cmd("Step");
 
@@ -428,17 +428,17 @@ class GeoRotateTranslate2D extends Geometric {
 
         let resultXPos;
         if (this.rowMajor) {
-            resultXPos = GeoRotateTranslate2D.MATRIX_START_X + 6 * GeoRotateTranslate2D.MATRIX_ELEM_WIDTH + GeoRotateTranslate2D.MATRIX_MULTIPLY_SPACING;
+            resultXPos = this.MATRIX_START_X + 6 * this.MATRIX_ELEM_WIDTH + this.MATRIX_MULTIPLY_SPACING;
         } else {
-            resultXPos = GeoRotateTranslate2D.MATRIX_START_X + 3 * GeoRotateTranslate2D.MATRIX_ELEM_WIDTH;
+            resultXPos = this.MATRIX_START_X + 3 * this.MATRIX_ELEM_WIDTH;
         }
         const resultMatrix = this.createMatrix([["", "", ""], ["", "", ""], ["", "", ""]],
-            resultXPos + GeoRotateTranslate2D.EQUALS_SPACING,
-            GeoRotateTranslate2D.MATRIX_START_Y);
-        this.cmd("CreateLabel", equalLabel, "=", resultXPos + GeoRotateTranslate2D.EQUALS_SPACING / 2,
-            GeoRotateTranslate2D.MATRIX_START_Y + 1.5 * GeoRotateTranslate2D.MATRIX_ELEM_HEIGHT);
+            resultXPos + this.EQUALS_SPACING,
+            this.MATRIX_START_Y);
+        this.cmd("CreateLabel", equalLabel, "=", resultXPos + this.EQUALS_SPACING / 2,
+            this.MATRIX_START_Y + 1.5 * this.MATRIX_ELEM_HEIGHT);
 
-        this.cmd("CreateLabel", explainID, "", resultXPos + GeoRotateTranslate2D.EQUALS_SPACING, GeoRotateTranslate2D.MATRIX_START_Y + 3 * GeoRotateTranslate2D.MATRIX_ELEM_HEIGHT + 5, 0);
+        this.cmd("CreateLabel", explainID, "", resultXPos + this.EQUALS_SPACING, this.MATRIX_START_Y + 3 * this.MATRIX_ELEM_HEIGHT + 5, 0);
 
         this.cmd("Step"); // TODO:  Remove this?
         if (this.rowMajor) {
@@ -450,7 +450,7 @@ class GeoRotateTranslate2D extends Geometric {
         this.setMatrixAlpha(this.transformMatrix, 0);
         this.transformMatrix.data = resultMatrix.data;
         this.resetMatrixLabels(this.transformMatrix);
-        this.moveMatrix(resultMatrix, GeoRotateTranslate2D.MATRIX_START_X, GeoRotateTranslate2D.MATRIX_START_Y);
+        this.moveMatrix(resultMatrix, this.MATRIX_START_X, this.MATRIX_START_Y);
         this.deleteMatrix(deltaMatrix);
         this.cmd("Delete", equalLabel);
         this.cmd("SetText", explainID, "");
@@ -462,26 +462,26 @@ class GeoRotateTranslate2D extends Geometric {
 
         let xy;
         if (this.rowMajor) {
-            xy = this.createMatrix([["x", "y", 1]], GeoRotateTranslate2D.MATRIX_START_X - 3 * GeoRotateTranslate2D.MATRIX_ELEM_WIDTH - GeoRotateTranslate2D.MATRIX_MULTIPLY_SPACING,
-                GeoRotateTranslate2D.MATRIX_START_Y);
+            xy = this.createMatrix([["x", "y", 1]], this.MATRIX_START_X - 3 * this.MATRIX_ELEM_WIDTH - this.MATRIX_MULTIPLY_SPACING,
+                this.MATRIX_START_Y);
         } else {
-            xy = this.createMatrix([["x"], ["y"], [1]], GeoRotateTranslate2D.MATRIX_START_X + 3 * GeoRotateTranslate2D.MATRIX_ELEM_WIDTH + GeoRotateTranslate2D.MATRIX_MULTIPLY_SPACING,
-                GeoRotateTranslate2D.MATRIX_START_Y);
+            xy = this.createMatrix([["x"], ["y"], [1]], this.MATRIX_START_X + 3 * this.MATRIX_ELEM_WIDTH + this.MATRIX_MULTIPLY_SPACING,
+                this.MATRIX_START_Y);
         }
         this.cmd("Step");
 
         let equalX, equalY;
         if (this.rowMajor) {
-            equalX = GeoRotateTranslate2D.MATRIX_START_X + 3 * GeoRotateTranslate2D.MATRIX_ELEM_WIDTH + GeoRotateTranslate2D.EQUALS_SPACING / 2;
-            equalY = GeoRotateTranslate2D.MATRIX_START_Y + 0.5 * GeoRotateTranslate2D.MATRIX_ELEM_HEIGHT;
-            this.cmd("SetPosition", explainID, equalX + GeoRotateTranslate2D.EQUALS_SPACING / 2, GeoRotateTranslate2D.MATRIX_START_Y + GeoRotateTranslate2D.MATRIX_ELEM_HEIGHT + 10);
+            equalX = this.MATRIX_START_X + 3 * this.MATRIX_ELEM_WIDTH + this.EQUALS_SPACING / 2;
+            equalY = this.MATRIX_START_Y + 0.5 * this.MATRIX_ELEM_HEIGHT;
+            this.cmd("SetPosition", explainID, equalX + this.EQUALS_SPACING / 2, this.MATRIX_START_Y + this.MATRIX_ELEM_HEIGHT + 10);
         } else {
-            equalX = GeoRotateTranslate2D.MATRIX_START_X + 4 * GeoRotateTranslate2D.MATRIX_ELEM_WIDTH + GeoRotateTranslate2D.MATRIX_MULTIPLY_SPACING + GeoRotateTranslate2D.EQUALS_SPACING / 2;
-            equalY = GeoRotateTranslate2D.MATRIX_START_Y + 1.5 * GeoRotateTranslate2D.MATRIX_ELEM_HEIGHT;
-            this.cmd("SetPosition", explainID, equalX + GeoRotateTranslate2D.EQUALS_SPACING / 2, GeoRotateTranslate2D.MATRIX_START_Y + 3 * GeoRotateTranslate2D.MATRIX_ELEM_HEIGHT + 10);
+            equalX = this.MATRIX_START_X + 4 * this.MATRIX_ELEM_WIDTH + this.MATRIX_MULTIPLY_SPACING + this.EQUALS_SPACING / 2;
+            equalY = this.MATRIX_START_Y + 1.5 * this.MATRIX_ELEM_HEIGHT;
+            this.cmd("SetPosition", explainID, equalX + this.EQUALS_SPACING / 2, this.MATRIX_START_Y + 3 * this.MATRIX_ELEM_HEIGHT + 10);
         }
         for (let i = 0; i < this.objectVertexLocalPosition.length; i++) {
-            this.cmd("Connect", this.originID, this.objectVertexLocalID[i], GeoRotateTranslate2D.VECTOR_COLOR, 0, 1, "");
+            this.cmd("Connect", this.originID, this.objectVertexLocalID[i], this.VECTOR_COLOR, 0, 1, "");
             if (this.rowMajor) {
                 xy.data[0][0] = this.objectVertexLocalPosition[i][0];
                 xy.data[0][1] = this.objectVertexLocalPosition[i][1];
@@ -497,10 +497,10 @@ class GeoRotateTranslate2D extends Geometric {
             this.cmd("CreateLabel", equalLabel, "=", equalX, equalY);
             let output;
             if (this.rowMajor) {
-                output = this.createMatrix([["", "", ""]], equalX + GeoRotateTranslate2D.EQUALS_SPACING / 2, GeoRotateTranslate2D.MATRIX_START_Y);
+                output = this.createMatrix([["", "", ""]], equalX + this.EQUALS_SPACING / 2, this.MATRIX_START_Y);
                 this.multiplyMatrix(xy, this.transformMatrix, output, explainID);
             } else {
-                output = this.createMatrix([[""], [""], [""]], equalX + GeoRotateTranslate2D.EQUALS_SPACING / 2, GeoRotateTranslate2D.MATRIX_START_Y);
+                output = this.createMatrix([[""], [""], [""]], equalX + this.EQUALS_SPACING / 2, this.MATRIX_START_Y);
                 this.multiplyMatrix(this.transformMatrix, xy, output, explainID);
             }
 
@@ -512,15 +512,15 @@ class GeoRotateTranslate2D extends Geometric {
                 point = this.worldToScreenSpace([output.data[0][0], output.data[1][0]]);
             }
 
-            this.cmd("CreateRectangle", transformedObjectID[i], "", GeoRotateTranslate2D.VERTEX_WIDTH, GeoRotateTranslate2D.VERTEX_HEIGHT, point[0], point[1]);
-            this.cmd("SetForegroundColor", transformedObjectID[i], GeoRotateTranslate2D.TRANSFORMED_VERTEX_FOREGORUND_COLOR);
-            this.cmd("SetBackgroundColor", transformedObjectID[i], GeoRotateTranslate2D.TRANSFORMED_VERTEX_BACKGROUND_COLOR);
-            this.cmd("Connect", this.originID, transformedObjectID[i], GeoRotateTranslate2D.TRANSFORMED_EDGE_COLOR, 0, 1, "");
+            this.cmd("CreateRectangle", transformedObjectID[i], "", this.VERTEX_WIDTH, this.VERTEX_HEIGHT, point[0], point[1]);
+            this.cmd("SetForegroundColor", transformedObjectID[i], this.TRANSFORMED_VERTEX_FOREGORUND_COLOR);
+            this.cmd("SetBackgroundColor", transformedObjectID[i], this.TRANSFORMED_VERTEX_BACKGROUND_COLOR);
+            this.cmd("Connect", this.originID, transformedObjectID[i], this.TRANSFORMED_EDGE_COLOR, 0, 1, "");
             this.cmd("Step");
             this.cmd("Disconnect", this.originID, transformedObjectID[i]);
 
             if (i > 0) {
-                this.cmd("Connect", transformedObjectID[i - 1], transformedObjectID[i], GeoRotateTranslate2D.TRANSFORMED_EDGE_COLOR, 0, 0, "");
+                this.cmd("Connect", transformedObjectID[i - 1], transformedObjectID[i], this.TRANSFORMED_EDGE_COLOR, 0, 0, "");
             }
 
             this.cmd("Disconnect", this.originID, this.objectVertexLocalID[i]);
@@ -535,7 +535,7 @@ class GeoRotateTranslate2D extends Geometric {
             this.deleteMatrix(output);
         }
         this.cmd("Step");
-        this.cmd("Connect", transformedObjectID[transformedObjectID.length - 1], transformedObjectID[0], GeoRotateTranslate2D.TRANSFORMED_EDGE_COLOR, 0, 0, "");
+        this.cmd("Connect", transformedObjectID[transformedObjectID.length - 1], transformedObjectID[0], this.TRANSFORMED_EDGE_COLOR, 0, 0, "");
 
         this.cmd("Step", "B");
         this.moveObjectToNewPosition(this.objectVertexWorldPosition, this.objectVertexWorldID, this.globalLabelID, true);
@@ -606,17 +606,17 @@ class GeoRotateTranslate2D extends Geometric {
 
         this.cmd("Move", mat.leftBrack1, x, y);
         this.cmd("Move", mat.leftBrack2, x, y);
-        this.cmd("Move", mat.leftBrack3, x, y + height * GeoRotateTranslate2D.MATRIX_ELEM_HEIGHT);
+        this.cmd("Move", mat.leftBrack3, x, y + height * this.MATRIX_ELEM_HEIGHT);
 
-        this.cmd("Move", mat.rightBrack1, x + width * GeoRotateTranslate2D.MATRIX_ELEM_WIDTH, y);
-        this.cmd("Move", mat.rightBrack2, x + width * GeoRotateTranslate2D.MATRIX_ELEM_WIDTH, y);
-        this.cmd("Move", mat.rightBrack3, x + width * GeoRotateTranslate2D.MATRIX_ELEM_WIDTH, y + height * GeoRotateTranslate2D.MATRIX_ELEM_HEIGHT);
+        this.cmd("Move", mat.rightBrack1, x + width * this.MATRIX_ELEM_WIDTH, y);
+        this.cmd("Move", mat.rightBrack2, x + width * this.MATRIX_ELEM_WIDTH, y);
+        this.cmd("Move", mat.rightBrack3, x + width * this.MATRIX_ELEM_WIDTH, y + height * this.MATRIX_ELEM_HEIGHT);
 
         for (let i = 0; i < mat.data.length; i++) {
             for (let j = 0; j < mat.data[i].length; j++) {
                 this.cmd("Move", mat.dataID[i][j],
-                    x + j * GeoRotateTranslate2D.MATRIX_ELEM_WIDTH + GeoRotateTranslate2D.MATRIX_ELEM_WIDTH / 2,
-                    y + i * GeoRotateTranslate2D.MATRIX_ELEM_HEIGHT + GeoRotateTranslate2D.MATRIX_ELEM_HEIGHT / 2);
+                    x + j * this.MATRIX_ELEM_WIDTH + this.MATRIX_ELEM_WIDTH / 2,
+                    y + i * this.MATRIX_ELEM_HEIGHT + this.MATRIX_ELEM_HEIGHT / 2);
             }
         }
     }
@@ -672,18 +672,18 @@ class GeoRotateTranslate2D extends Geometric {
         }
 
         this.cmd("CreateRectangle", mat.leftBrack1, "", 5, 1, x, y, "left", "center");
-        this.cmd("CreateRectangle", mat.leftBrack2, "", 1, height * GeoRotateTranslate2D.MATRIX_ELEM_HEIGHT, x, y, "center", "top");
-        this.cmd("CreateRectangle", mat.leftBrack3, "", 5, 1, x, y + height * GeoRotateTranslate2D.MATRIX_ELEM_HEIGHT, "left", "center");
+        this.cmd("CreateRectangle", mat.leftBrack2, "", 1, height * this.MATRIX_ELEM_HEIGHT, x, y, "center", "top");
+        this.cmd("CreateRectangle", mat.leftBrack3, "", 5, 1, x, y + height * this.MATRIX_ELEM_HEIGHT, "left", "center");
 
-        this.cmd("CreateRectangle", mat.rightBrack1, "", 5, 1, x + width * GeoRotateTranslate2D.MATRIX_ELEM_WIDTH, y, "right", "center");
-        this.cmd("CreateRectangle", mat.rightBrack2, "", 1, height * GeoRotateTranslate2D.MATRIX_ELEM_HEIGHT, x + width * GeoRotateTranslate2D.MATRIX_ELEM_WIDTH, y, "center", "top");
-        this.cmd("CreateRectangle", mat.rightBrack3, "", 5, 1, x + width * GeoRotateTranslate2D.MATRIX_ELEM_WIDTH, y + height * GeoRotateTranslate2D.MATRIX_ELEM_HEIGHT, "right", "center");
+        this.cmd("CreateRectangle", mat.rightBrack1, "", 5, 1, x + width * this.MATRIX_ELEM_WIDTH, y, "right", "center");
+        this.cmd("CreateRectangle", mat.rightBrack2, "", 1, height * this.MATRIX_ELEM_HEIGHT, x + width * this.MATRIX_ELEM_WIDTH, y, "center", "top");
+        this.cmd("CreateRectangle", mat.rightBrack3, "", 5, 1, x + width * this.MATRIX_ELEM_WIDTH, y + height * this.MATRIX_ELEM_HEIGHT, "right", "center");
 
         for (let i = 0; i < mat.data.length; i++) {
             for (let j = 0; j < mat.data[i].length; j++) {
                 this.cmd("CreateLabel", mat.dataID[i][j], mat.data[i][j],
-                    x + j * GeoRotateTranslate2D.MATRIX_ELEM_WIDTH + GeoRotateTranslate2D.MATRIX_ELEM_WIDTH / 2,
-                    y + i * GeoRotateTranslate2D.MATRIX_ELEM_HEIGHT + GeoRotateTranslate2D.MATRIX_ELEM_HEIGHT / 2);
+                    x + j * this.MATRIX_ELEM_WIDTH + this.MATRIX_ELEM_WIDTH / 2,
+                    y + i * this.MATRIX_ELEM_HEIGHT + this.MATRIX_ELEM_HEIGHT / 2);
             }
         }
         return mat;

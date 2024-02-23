@@ -53,34 +53,34 @@ class BTreeNode {
 
 
 class TreeB extends Algorithm {
-    static MAX_DEGREES = [3, 4, 5, 6, 7];
-    static MAX_DEGREE_LABELS = ["2/3-tree", "2/3/4-tree", "Max. degree 5", "Max. degree 6", "Max. degree 7"];
-    static INITIAL_MAX_DEGREE = 3;
+    MAX_DEGREES = [3, 4, 5, 6, 7];
+    MAX_DEGREE_LABELS = ["2/3-tree", "2/3/4-tree", "Max. degree 5", "Max. degree 6", "Max. degree 7"];
+    INITIAL_MAX_DEGREE = 3;
 
-    static FOREGROUND_COLOR = "#007700";
-    static BACKGROUND_COLOR = "#EEFFEE";
-    static HIGHLIGHT_COLOR = "#FF0000";
+    FOREGROUND_COLOR = "#007700";
+    BACKGROUND_COLOR = "#EEFFEE";
+    HIGHLIGHT_COLOR = "#FF0000";
 
-    static LINK_COLOR = TreeB.FOREGROUND_COLOR;
-    static HIGHLIGHT_CIRCLE_COLOR = TreeB.FOREGROUND_COLOR;
-    static PRINT_COLOR = TreeB.FOREGROUND_COLOR;
+    LINK_COLOR = this.FOREGROUND_COLOR;
+    HIGHLIGHT_CIRCLE_COLOR = this.FOREGROUND_COLOR;
+    PRINT_COLOR = this.FOREGROUND_COLOR;
 
-    static WIDTH_PER_ELEM = 40;
-    static NODE_HEIGHT = 30;
-    static NODE_SPACING = 20;
-    static HEIGHT_DELTA = TreeB.NODE_HEIGHT + 20;
-    static STARTING_Y = 50;
+    WIDTH_PER_ELEM = 40;
+    NODE_HEIGHT = 30;
+    NODE_SPACING = 20;
+    HEIGHT_DELTA = this.NODE_HEIGHT + 20;
+    STARTING_Y = 50;
 
-    static FIRST_PRINT_POS_X = 50;
-    static PRINT_VERTICAL_GAP = 20;
-    static PRINT_HORIZONTAL_GAP = 50;
+    FIRST_PRINT_POS_X = 50;
+    PRINT_VERTICAL_GAP = 20;
+    PRINT_HORIZONTAL_GAP = 50;
 
-    static MESSAGE_X = 10;
-    static MESSAGE_Y = 10;
+    MESSAGE_X = 10;
+    MESSAGE_Y = 10;
 
     constructor(am, maxDegree) {
         super();
-        this.initialMaxDegree = maxDegree || TreeB.INITIAL_MAX_DEGREE;
+        this.initialMaxDegree = maxDegree || this.INITIAL_MAX_DEGREE;
         this.init(am);
     }
 
@@ -94,7 +94,7 @@ class TreeB extends Algorithm {
         this.nextIndex = 0;
         this.commands = [];
         this.messageID = this.nextIndex++;
-        this.cmd("CreateLabel", this.messageID, "", TreeB.MESSAGE_X, TreeB.MESSAGE_Y, 0);
+        this.cmd("CreateLabel", this.messageID, "", this.MESSAGE_X, this.MESSAGE_Y, 0);
         this.moveLabel1ID = this.nextIndex++;
         this.moveLabel2ID = this.nextIndex++;
 
@@ -112,8 +112,8 @@ class TreeB extends Algorithm {
         const h = this.getCanvasHeight();
 
         this.startingX = w / 2;
-        this.firstPrintPosY = h - 3 * TreeB.PRINT_VERTICAL_GAP;
-        this.printMax = w - TreeB.PRINT_HORIZONTAL_GAP;
+        this.firstPrintPosY = h - 3 * this.PRINT_VERTICAL_GAP;
+        this.printMax = w - this.PRINT_HORIZONTAL_GAP;
 
         this.implementAction(() => {
             this.commands = [];
@@ -149,7 +149,7 @@ class TreeB extends Algorithm {
         this.clearButton.onclick = this.clearCallback.bind(this);
         this.addBreakToAlgorithmBar();
 
-        this.maxDegreeSelect = this.addSelectToAlgorithmBar(TreeB.MAX_DEGREES, TreeB.MAX_DEGREE_LABELS);
+        this.maxDegreeSelect = this.addSelectToAlgorithmBar(this.MAX_DEGREES, this.MAX_DEGREE_LABELS);
         this.maxDegreeSelect.value = this.initialMaxDegree;
         this.maxDegreeSelect.onchange = this.maxDegreeChangedHandler.bind(this);
         this.addBreakToAlgorithmBar();
@@ -245,7 +245,7 @@ class TreeB extends Algorithm {
         this.cmd("SetText", this.messageID, "Printing tree");
         const firstLabel = this.nextIndex;
 
-        this.xPosOfNextLabel = TreeB.FIRST_PRINT_POS_X;
+        this.xPosOfNextLabel = this.FIRST_PRINT_POS_X;
         this.yPosOfNextLabel = this.firstPrintPosY;
 
         this.printTreeRec(this.treeRoot);
@@ -265,13 +265,13 @@ class TreeB extends Algorithm {
             for (let i = 0; i < tree.numKeys; i++) {
                 const nextLabelID = this.nextIndex++;
                 this.cmd("CreateLabel", nextLabelID, tree.keys[i], this.getLabelX(tree, i), tree.y);
-                this.cmd("SetForegroundColor", nextLabelID, TreeB.PRINT_COLOR);
+                this.cmd("SetForegroundColor", nextLabelID, this.PRINT_COLOR);
                 this.cmd("Move", nextLabelID, this.xPosOfNextLabel, this.yPosOfNextLabel);
                 this.cmd("Step");
-                this.xPosOfNextLabel += TreeB.PRINT_HORIZONTAL_GAP;
+                this.xPosOfNextLabel += this.PRINT_HORIZONTAL_GAP;
                 if (this.xPosOfNextLabel > this.printMax) {
-                    this.xPosOfNextLabel = TreeB.FIRST_PRINT_POS_X;
-                    this.yPosOfNextLabel += TreeB.PRINT_VERTICAL_GAP;
+                    this.xPosOfNextLabel = this.FIRST_PRINT_POS_X;
+                    this.yPosOfNextLabel += this.PRINT_VERTICAL_GAP;
                 }
             }
             this.cmd("SetHighlight", tree.graphicID, 0);
@@ -285,13 +285,13 @@ class TreeB extends Algorithm {
                 this.cmd("SetHighlight", tree.graphicID, 1);
                 const nextLabelID = this.nextIndex++;
                 this.cmd("CreateLabel", nextLabelID, tree.keys[i], this.getLabelX(tree, i), tree.y);
-                this.cmd("SetForegroundColor", nextLabelID, TreeB.PRINT_COLOR);
+                this.cmd("SetForegroundColor", nextLabelID, this.PRINT_COLOR);
                 this.cmd("Move", nextLabelID, this.xPosOfNextLabel, this.yPosOfNextLabel);
                 this.cmd("Step");
-                this.xPosOfNextLabel += TreeB.PRINT_HORIZONTAL_GAP;
+                this.xPosOfNextLabel += this.PRINT_HORIZONTAL_GAP;
                 if (this.xPosOfNextLabel > this.printMax) {
-                    this.xPosOfNextLabel = TreeB.FIRST_PRINT_POS_X;
-                    this.yPosOfNextLabel += TreeB.PRINT_VERTICAL_GAP;
+                    this.xPosOfNextLabel = this.FIRST_PRINT_POS_X;
+                    this.yPosOfNextLabel += this.PRINT_VERTICAL_GAP;
                 }
                 this.cmd("SetEdgeHighlight", tree.graphicID, tree.children[i + 1].graphicID, 1);
                 this.cmd("Step");
@@ -358,10 +358,10 @@ class TreeB extends Algorithm {
                     return false;
                 }
             } else {
-                this.cmd("SetTextColor", tree.graphicID, TreeB.HIGHLIGHT_COLOR, i);
+                this.cmd("SetTextColor", tree.graphicID, this.HIGHLIGHT_COLOR, i);
                 this.cmd("SetText", this.messageID, `Element ${value} found`);
                 this.cmd("Step");
-                this.cmd("SetTextColor", tree.graphicID, TreeB.FOREGROUND_COLOR, i);
+                this.cmd("SetTextColor", tree.graphicID, this.FOREGROUND_COLOR, i);
                 this.cmd("SetHighlight", tree.graphicID, 0);
                 this.cmd("Step");
                 return true;
@@ -377,17 +377,17 @@ class TreeB extends Algorithm {
         this.cmd("Step");
 
         if (this.treeRoot == null) {
-            this.treeRoot = new BTreeNode(this.nextIndex++, this.startingX, TreeB.STARTING_Y);
+            this.treeRoot = new BTreeNode(this.nextIndex++, this.startingX, this.STARTING_Y);
             this.cmd(
                 "CreateBTreeNode",
                 this.treeRoot.graphicID,
-                TreeB.WIDTH_PER_ELEM,
-                TreeB.NODE_HEIGHT,
+                this.WIDTH_PER_ELEM,
+                this.NODE_HEIGHT,
                 1,
                 this.startingX,
-                TreeB.STARTING_Y,
-                TreeB.BACKGROUND_COLOR,
-                TreeB.FOREGROUND_COLOR,
+                this.STARTING_Y,
+                this.BACKGROUND_COLOR,
+                this.FOREGROUND_COLOR,
             );
             this.treeRoot.keys[0] = insertedValue;
             this.treeRoot.numKeys = 1;
@@ -511,7 +511,7 @@ class TreeB extends Algorithm {
                     "Connect",
                     currentParent.graphicID,
                     currentParent.children[i].graphicID,
-                    TreeB.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     0, // Directed
                     "", // Label
@@ -525,7 +525,7 @@ class TreeB extends Algorithm {
             this.cmd("SetText", currentParent.graphicID, "", parentIndex);
             this.moveLabel1ID = this.nextIndex++;
             this.cmd("CreateLabel", this.moveLabel1ID, risingNode, this.getLabelX(tree, this.getSplitIndex()), tree.y);
-            this.cmd("SetForegroundColor", this.moveLabel1ID, TreeB.FOREGROUND_COLOR);
+            this.cmd("SetForegroundColor", this.moveLabel1ID, this.FOREGROUND_COLOR);
             this.cmd("Move", this.moveLabel1ID, this.getLabelX(currentParent, parentIndex), currentParent.y);
             currentParent.children[parentIndex + 1] = rightNode;
             rightNode.parent = currentParent;
@@ -535,13 +535,13 @@ class TreeB extends Algorithm {
         this.cmd(
             "CreateBTreeNode",
             rightNode.graphicID,
-            TreeB.WIDTH_PER_ELEM,
-            TreeB.NODE_HEIGHT,
+            this.WIDTH_PER_ELEM,
+            this.NODE_HEIGHT,
             rightNode.numKeys,
             tree.x,
             tree.y,
-            TreeB.BACKGROUND_COLOR,
-            TreeB.FOREGROUND_COLOR,
+            this.BACKGROUND_COLOR,
+            this.FOREGROUND_COLOR,
         );
         for (let i = this.getSplitIndex() + 1; i <= tree.numKeys; i++) {
             const j = i - this.getSplitIndex() - 1;
@@ -557,7 +557,7 @@ class TreeB extends Algorithm {
                     "Connect",
                     rightNode.graphicID,
                     rightNode.children[j].graphicID,
-                    TreeB.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     0, // Directed
                     "", // Label
@@ -580,7 +580,7 @@ class TreeB extends Algorithm {
                 "Connect",
                 currentParent.graphicID,
                 rightNode.graphicID,
-                TreeB.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0, // Curve
                 0, // Directed
                 "", // Label
@@ -592,17 +592,17 @@ class TreeB extends Algorithm {
             this.cmd("SetText", currentParent.graphicID, risingNode, parentIndex);
             return tree.parent;
         } else { // if (tree.parent == null)
-            this.treeRoot = new BTreeNode(this.nextIndex++, this.startingX, TreeB.STARTING_Y);
+            this.treeRoot = new BTreeNode(this.nextIndex++, this.startingX, this.STARTING_Y);
             this.cmd(
                 "CreateBTreeNode",
                 this.treeRoot.graphicID,
-                TreeB.WIDTH_PER_ELEM,
-                TreeB.NODE_HEIGHT,
+                this.WIDTH_PER_ELEM,
+                this.NODE_HEIGHT,
                 1,
                 this.startingX,
-                TreeB.STARTING_Y,
-                TreeB.BACKGROUND_COLOR,
-                TreeB.FOREGROUND_COLOR,
+                this.STARTING_Y,
+                this.BACKGROUND_COLOR,
+                this.FOREGROUND_COLOR,
             );
             this.treeRoot.keys[0] = risingNode;
             this.treeRoot.numKeys = 1;
@@ -615,7 +615,7 @@ class TreeB extends Algorithm {
                 "Connect",
                 this.treeRoot.graphicID,
                 leftNode.graphicID,
-                TreeB.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0, // Curve
                 0, // Directed
                 "", // Label
@@ -625,7 +625,7 @@ class TreeB extends Algorithm {
                 "Connect",
                 this.treeRoot.graphicID,
                 rightNode.graphicID,
-                TreeB.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0, // Curve
                 0, // Directed
                 "", // Label
@@ -710,10 +710,10 @@ class TreeB extends Algorithm {
                     this.cmd("SetHighlight", tree.graphicID, 0);
                 }
             } else {
-                this.cmd("SetTextColor", tree.graphicID, TreeB.HIGHLIGHT_COLOR, i);
+                this.cmd("SetTextColor", tree.graphicID, this.HIGHLIGHT_COLOR, i);
                 this.cmd("Step");
                 if (tree.isLeaf) {
-                    this.cmd("SetTextColor", tree.graphicID, TreeB.FOREGROUND_COLOR, i);
+                    this.cmd("SetTextColor", tree.graphicID, this.FOREGROUND_COLOR, i);
                     for (let j = i; j < tree.numKeys - 1; j++) {
                         tree.keys[j] = tree.keys[j + 1];
                         this.cmd("SetText", tree.graphicID, tree.keys[j], j);
@@ -744,7 +744,7 @@ class TreeB extends Algorithm {
                             this.cmd("SetText", this.messageID,
                                 "Neither subtree has extra nodes. Merging around the key to delete, \nand recursively deleting ...");
                             this.cmd("Step");
-                            this.cmd("SetTextColor", tree.graphicID, TreeB.FOREGROUND_COLOR, i);
+                            this.cmd("SetTextColor", tree.graphicID, this.FOREGROUND_COLOR, i);
                             const nextNode = this.mergeRight(tree.children[i]);
                             this.doDeleteNotEmpty(nextNode, val);
                             return;
@@ -771,7 +771,7 @@ class TreeB extends Algorithm {
 
                             this.cmd("SetHighlight", minNode.graphicID, 1);
                             tree.keys[i] = minNode.keys[0];
-                            this.cmd("SetTextColor", tree.graphicID, TreeB.FOREGROUND_COLOR, i);
+                            this.cmd("SetTextColor", tree.graphicID, this.FOREGROUND_COLOR, i);
                             this.cmd("SetText", tree.graphicID, "", i);
                             this.cmd("SetText", minNode.graphicID, "", 0);
 
@@ -815,7 +815,7 @@ class TreeB extends Algorithm {
                         }
                         this.cmd("SetHighlight", maxNode.graphicID, 1);
                         tree.keys[i] = maxNode.keys[maxNode.numKeys - 1];
-                        this.cmd("SetTextColor", tree.graphicID, TreeB.FOREGROUND_COLOR, i);
+                        this.cmd("SetTextColor", tree.graphicID, this.FOREGROUND_COLOR, i);
                         this.cmd("SetText", tree.graphicID, "", i);
                         this.cmd("SetText", maxNode.graphicID, "", maxNode.numKeys - 1);
                         this.cmd("CreateLabel", this.moveLabel1ID, tree.keys[i], this.getLabelX(maxNode, maxNode.numKeys - 1), maxNode.y);
@@ -865,10 +865,10 @@ class TreeB extends Algorithm {
                     this.cmd("SetHighlight", tree.graphicID, 0);
                 }
             } else {
-                this.cmd("SetTextColor", tree.graphicID, TreeB.HIGHLIGHT_COLOR, i);
+                this.cmd("SetTextColor", tree.graphicID, this.HIGHLIGHT_COLOR, i);
                 this.cmd("Step");
                 if (tree.isLeaf) {
-                    this.cmd("SetTextColor", tree.graphicID, TreeB.FOREGROUND_COLOR, i);
+                    this.cmd("SetTextColor", tree.graphicID, this.FOREGROUND_COLOR, i);
                     for (let j = i; j < tree.numKeys - 1; j++) {
                         tree.keys[j] = tree.keys[j + 1];
                         this.cmd("SetText", tree.graphicID, tree.keys[j], j);
@@ -889,7 +889,7 @@ class TreeB extends Algorithm {
                     }
                     this.cmd("SetHighlight", maxNode.graphicID, 1);
                     tree.keys[i] = maxNode.keys[maxNode.numKeys - 1];
-                    this.cmd("SetTextColor", tree.graphicID, TreeB.FOREGROUND_COLOR, i);
+                    this.cmd("SetTextColor", tree.graphicID, this.FOREGROUND_COLOR, i);
                     this.cmd("SetText", tree.graphicID, "", i);
                     this.cmd("SetText", maxNode.graphicID, "", maxNode.numKeys - 1);
                     this.cmd("CreateLabel", this.moveLabel1ID, tree.keys[i], this.getLabelX(maxNode, maxNode.numKeys - 1), maxNode.y);
@@ -943,7 +943,7 @@ class TreeB extends Algorithm {
                     "Connect",
                     tree.graphicID,
                     tree.children[j].graphicID,
-                    TreeB.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     0, // Directed
                     "", // Label
@@ -959,7 +959,7 @@ class TreeB extends Algorithm {
                 "Connect",
                 parentNode.graphicID,
                 parentNode.children[i].graphicID,
-                TreeB.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0, // Curve
                 0, // Directed
                 "", // Label
@@ -1009,8 +1009,8 @@ class TreeB extends Algorithm {
         const tmpLabel2 = this.nextIndex++;
         this.cmd("CreateLabel", tmpLabel1, rightSib.keys[0], this.getLabelX(rightSib, 0), rightSib.y);
         this.cmd("CreateLabel", tmpLabel2, parentNode.keys[parentIndex], this.getLabelX(parentNode, parentIndex), parentNode.y);
-        this.cmd("SetForegroundColor", tmpLabel1, TreeB.FOREGROUND_COLOR);
-        this.cmd("SetForegroundColor", tmpLabel2, TreeB.FOREGROUND_COLOR);
+        this.cmd("SetForegroundColor", tmpLabel1, this.FOREGROUND_COLOR);
+        this.cmd("SetForegroundColor", tmpLabel2, this.FOREGROUND_COLOR);
 
         this.cmd("Move", tmpLabel1, this.getLabelX(parentNode, parentIndex), parentNode.y);
         this.cmd("Move", tmpLabel2, this.getLabelX(tree, tree.numKeys - 1), tree.y);
@@ -1030,7 +1030,7 @@ class TreeB extends Algorithm {
                 "Connect",
                 tree.graphicID,
                 tree.children[tree.numKeys].graphicID,
-                TreeB.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0, // Curve
                 0, // Directed
                 "", // Label
@@ -1043,7 +1043,7 @@ class TreeB extends Algorithm {
                     "Connect",
                     rightSib.graphicID,
                     rightSib.children[i - 1].graphicID,
-                    TreeB.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     0, // Directed
                     "", // Label
@@ -1088,8 +1088,8 @@ class TreeB extends Algorithm {
         const tmpLabel2 = this.nextIndex++;
         this.cmd("CreateLabel", tmpLabel1, leftSib.keys[leftSib.numKeys - 1], this.getLabelX(leftSib, leftSib.numKeys - 1), leftSib.y);
         this.cmd("CreateLabel", tmpLabel2, parentNode.keys[parentIndex - 1], this.getLabelX(parentNode, parentIndex - 1), parentNode.y);
-        this.cmd("SetForegroundColor", tmpLabel1, TreeB.FOREGROUND_COLOR);
-        this.cmd("SetForegroundColor", tmpLabel2, TreeB.FOREGROUND_COLOR);
+        this.cmd("SetForegroundColor", tmpLabel1, this.FOREGROUND_COLOR);
+        this.cmd("SetForegroundColor", tmpLabel2, this.FOREGROUND_COLOR);
 
         this.cmd("Move", tmpLabel1, this.getLabelX(parentNode, parentIndex - 1), parentNode.y);
         this.cmd("Move", tmpLabel2, this.getLabelX(tree, 0), tree.y);
@@ -1104,7 +1104,7 @@ class TreeB extends Algorithm {
                     "Connect",
                     tree.graphicID,
                     tree.children[i].graphicID,
-                    TreeB.FOREGROUND_COLOR,
+                    this.FOREGROUND_COLOR,
                     0, // Curve
                     0, // Directed
                     "", // Label
@@ -1117,7 +1117,7 @@ class TreeB extends Algorithm {
                 "Connect",
                 tree.graphicID,
                 tree.children[0].graphicID,
-                TreeB.FOREGROUND_COLOR,
+                this.FOREGROUND_COLOR,
                 0, // Curve
                 0, // Directed
                 "", // Label
@@ -1204,12 +1204,12 @@ class TreeB extends Algorithm {
     }
 
     getLabelX(tree, index) {
-        return tree.x - TreeB.WIDTH_PER_ELEM * tree.numKeys / 2 + TreeB.WIDTH_PER_ELEM / 2 + index * TreeB.WIDTH_PER_ELEM;
+        return tree.x - this.WIDTH_PER_ELEM * tree.numKeys / 2 + this.WIDTH_PER_ELEM / 2 + index * this.WIDTH_PER_ELEM;
     }
 
     resizeTree() {
         this.resizeWidths(this.treeRoot);
-        this.setNewPositions(this.treeRoot, this.startingX, TreeB.STARTING_Y);
+        this.setNewPositions(this.treeRoot, this.startingX, this.STARTING_Y);
         this.animateNewPositions(this.treeRoot);
     }
 
@@ -1224,7 +1224,7 @@ class TreeB extends Algorithm {
                     this.setNewPositions(
                         tree.children[i],
                         leftEdge + priorWidth + tree.widths[i] / 2,
-                        yPosition + TreeB.HEIGHT_DELTA,
+                        yPosition + this.HEIGHT_DELTA,
                     );
                     priorWidth += tree.widths[i];
                 }
@@ -1250,7 +1250,7 @@ class TreeB extends Algorithm {
             for (let i = 0; i < tree.numKeys + 1; i++) {
                 tree.widths[i] = 0;
             }
-            tree.width = tree.numKeys * TreeB.WIDTH_PER_ELEM + TreeB.NODE_SPACING;
+            tree.width = tree.numKeys * this.WIDTH_PER_ELEM + this.NODE_SPACING;
             return tree.width;
         } else {
             let treeWidth = 0;
@@ -1258,7 +1258,7 @@ class TreeB extends Algorithm {
                 tree.widths[i] = this.resizeWidths(tree.children[i]);
                 treeWidth = treeWidth + tree.widths[i];
             }
-            treeWidth = Math.max(treeWidth, tree.numKeys * TreeB.WIDTH_PER_ELEM + TreeB.NODE_SPACING);
+            treeWidth = Math.max(treeWidth, tree.numKeys * this.WIDTH_PER_ELEM + this.NODE_SPACING);
             tree.width = treeWidth;
             return treeWidth;
         }

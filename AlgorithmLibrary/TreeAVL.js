@@ -53,30 +53,30 @@ class AVLNode {
 
 
 class TreeAVL extends Algorithm {
-    static FOREGROUND_COLOR = "#007700";
-    static BACKGROUND_COLOR = "#EEFFEE";
+    FOREGROUND_COLOR = "#007700";
+    BACKGROUND_COLOR = "#EEFFEE";
 
-    static HIGHLIGHT_LABEL_COLOR = "#FF0000";
-    static HIGHLIGHT_LINK_COLOR = TreeAVL.HIGHLIGHT_LABEL_COLOR;
-    static HIGHLIGHT_COLOR = TreeAVL.FOREGROUND_COLOR;
-    static HEIGHT_LABEL_COLOR = TreeAVL.FOREGROUND_COLOR;
+    HIGHLIGHT_LABEL_COLOR = "#FF0000";
+    HIGHLIGHT_LINK_COLOR = this.HIGHLIGHT_LABEL_COLOR;
+    HIGHLIGHT_COLOR = this.FOREGROUND_COLOR;
+    HEIGHT_LABEL_COLOR = this.FOREGROUND_COLOR;
 
-    static LINK_COLOR = TreeAVL.FOREGROUND_COLOR;
-    static HIGHLIGHT_CIRCLE_COLOR = TreeAVL.FOREGROUND_COLOR;
-    static PRINT_COLOR = TreeAVL.FOREGROUND_COLOR;
+    LINK_COLOR = this.FOREGROUND_COLOR;
+    HIGHLIGHT_CIRCLE_COLOR = this.FOREGROUND_COLOR;
+    PRINT_COLOR = this.FOREGROUND_COLOR;
 
-    static NODE_SIZE = 40;
-    static WIDTH_DELTA = TreeAVL.NODE_SIZE + 10;
-    static HEIGHT_DELTA = TreeAVL.NODE_SIZE + 10;
-    static STARTING_Y = 50;
-    static LABEL_DISPLACE = TreeAVL.NODE_SIZE / 2;
+    NODE_SIZE = 40;
+    WIDTH_DELTA = this.NODE_SIZE + 10;
+    HEIGHT_DELTA = this.NODE_SIZE + 10;
+    STARTING_Y = 50;
+    LABEL_DISPLACE = this.NODE_SIZE / 2;
 
-    static FIRST_PRINT_POS_X = 50;
-    static PRINT_VERTICAL_GAP = 20;
-    static PRINT_HORIZONTAL_GAP = 50;
+    FIRST_PRINT_POS_X = 50;
+    PRINT_VERTICAL_GAP = 20;
+    PRINT_HORIZONTAL_GAP = 50;
 
-    static MESSAGE_X = 10;
-    static MESSAGE_Y = 10;
+    MESSAGE_X = 10;
+    MESSAGE_Y = 10;
 
     constructor(am) {
         super();
@@ -93,7 +93,7 @@ class TreeAVL extends Algorithm {
         this.nextIndex = 0;
         this.commands = [];
         this.messageID = this.nextIndex++;
-        this.cmd("CreateLabel", this.messageID, "", TreeAVL.MESSAGE_X, TreeAVL.MESSAGE_Y, 0);
+        this.cmd("CreateLabel", this.messageID, "", this.MESSAGE_X, this.MESSAGE_Y, 0);
 
         this.initialIndex = this.nextIndex;
         this.animationManager.StartNewAnimation(this.commands);
@@ -108,8 +108,8 @@ class TreeAVL extends Algorithm {
         const h = this.getCanvasHeight();
 
         this.startingX = w / 2;
-        this.firstPrintPosY = h - 3 * TreeAVL.PRINT_VERTICAL_GAP;
-        this.printMax = w - TreeAVL.PRINT_HORIZONTAL_GAP;
+        this.firstPrintPosY = h - 3 * this.PRINT_VERTICAL_GAP;
+        this.printMax = w - this.PRINT_HORIZONTAL_GAP;
 
         this.implementAction(() => {
             this.commands = [];
@@ -193,10 +193,10 @@ class TreeAVL extends Algorithm {
         this.commands = [];
         this.cmd("SetText", this.messageID, "Printing tree");
         this.highlightID = this.nextIndex++;
-        this.cmd("CreateHighlightCircle", this.highlightID, TreeAVL.HIGHLIGHT_COLOR, this.treeRoot.x, this.treeRoot.y);
+        this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_COLOR, this.treeRoot.x, this.treeRoot.y);
         const firstLabel = this.nextIndex;
 
-        this.xPosOfNextLabel = TreeAVL.FIRST_PRINT_POS_X;
+        this.xPosOfNextLabel = this.FIRST_PRINT_POS_X;
         this.yPosOfNextLabel = this.firstPrintPosY;
 
         this.printTreeRec(this.treeRoot);
@@ -220,14 +220,14 @@ class TreeAVL extends Algorithm {
         }
         const nextLabelID = this.nextIndex++;
         this.cmd("CreateLabel", nextLabelID, tree.data, tree.x, tree.y);
-        this.cmd("SetForegroundColor", nextLabelID, TreeAVL.PRINT_COLOR);
+        this.cmd("SetForegroundColor", nextLabelID, this.PRINT_COLOR);
         this.cmd("Move", nextLabelID, this.xPosOfNextLabel, this.yPosOfNextLabel);
         this.cmd("Step");
 
-        this.xPosOfNextLabel += TreeAVL.PRINT_HORIZONTAL_GAP;
+        this.xPosOfNextLabel += this.PRINT_HORIZONTAL_GAP;
         if (this.xPosOfNextLabel > this.printMax) {
-            this.xPosOfNextLabel = TreeAVL.FIRST_PRINT_POS_X;
-            this.yPosOfNextLabel += TreeAVL.PRINT_VERTICAL_GAP;
+            this.xPosOfNextLabel = this.FIRST_PRINT_POS_X;
+            this.yPosOfNextLabel += this.PRINT_VERTICAL_GAP;
         }
         if (tree.right != null) {
             this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
@@ -286,7 +286,7 @@ class TreeAVL extends Algorithm {
                 this.cmd("Step");
                 this.cmd("SetHighlight", tree.graphicID, 0);
                 if (tree.left != null) {
-                    this.cmd("CreateHighlightCircle", this.highlightID, TreeAVL.HIGHLIGHT_COLOR, tree.x, tree.y);
+                    this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_COLOR, tree.x, tree.y);
                     this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
                     this.cmd("Step");
                     this.cmd("Delete", this.highlightID);
@@ -297,7 +297,7 @@ class TreeAVL extends Algorithm {
                 this.cmd("Step");
                 this.cmd("SetHighlight", tree.graphicID, 0);
                 if (tree.right != null) {
-                    this.cmd("CreateHighlightCircle", this.highlightID, TreeAVL.HIGHLIGHT_COLOR, tree.x, tree.y);
+                    this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_COLOR, tree.x, tree.y);
                     this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
                     this.cmd("Step");
                     this.cmd("Delete", this.highlightID);
@@ -317,24 +317,24 @@ class TreeAVL extends Algorithm {
         const labelID = this.nextIndex++;
 
         if (this.treeRoot == null) {
-            const x = this.startingX, y = TreeAVL.STARTING_Y;
+            const x = this.startingX, y = this.STARTING_Y;
             this.cmd("CreateCircle", treeNodeID, insertedValue, x, y);
-            this.cmd("SetWidth", treeNodeID, TreeAVL.NODE_SIZE);
-            this.cmd("SetForegroundColor", treeNodeID, TreeAVL.FOREGROUND_COLOR);
-            this.cmd("SetBackgroundColor", treeNodeID, TreeAVL.BACKGROUND_COLOR);
-            this.cmd("CreateLabel", labelID, 1, x - TreeAVL.LABEL_DISPLACE, y - TreeAVL.LABEL_DISPLACE);
-            this.cmd("SetForegroundColor", labelID, TreeAVL.HEIGHT_LABEL_COLOR);
+            this.cmd("SetWidth", treeNodeID, this.NODE_SIZE);
+            this.cmd("SetForegroundColor", treeNodeID, this.FOREGROUND_COLOR);
+            this.cmd("SetBackgroundColor", treeNodeID, this.BACKGROUND_COLOR);
+            this.cmd("CreateLabel", labelID, 1, x - this.LABEL_DISPLACE, y - this.LABEL_DISPLACE);
+            this.cmd("SetForegroundColor", labelID, this.HEIGHT_LABEL_COLOR);
             this.cmd("Step");
             this.treeRoot = new AVLNode(insertedValue, treeNodeID, labelID, x, y);
             this.treeRoot.height = 1;
         } else {
-            const x = TreeAVL.STARTING_Y, y = 2 * TreeAVL.STARTING_Y;
+            const x = this.STARTING_Y, y = 2 * this.STARTING_Y;
             this.cmd("CreateCircle", treeNodeID, insertedValue, x, y);
-            this.cmd("SetWidth", treeNodeID, TreeAVL.NODE_SIZE);
-            this.cmd("SetForegroundColor", treeNodeID, TreeAVL.FOREGROUND_COLOR);
-            this.cmd("SetBackgroundColor", treeNodeID, TreeAVL.BACKGROUND_COLOR);
-            this.cmd("CreateLabel", labelID, "", x - TreeAVL.LABEL_DISPLACE, y - TreeAVL.LABEL_DISPLACE);
-            this.cmd("SetForegroundColor", labelID, TreeAVL.HEIGHT_LABEL_COLOR);
+            this.cmd("SetWidth", treeNodeID, this.NODE_SIZE);
+            this.cmd("SetForegroundColor", treeNodeID, this.FOREGROUND_COLOR);
+            this.cmd("SetBackgroundColor", treeNodeID, this.BACKGROUND_COLOR);
+            this.cmd("CreateLabel", labelID, "", x - this.LABEL_DISPLACE, y - this.LABEL_DISPLACE);
+            this.cmd("SetForegroundColor", labelID, this.HEIGHT_LABEL_COLOR);
             this.cmd("Step");
             const insertElem = new AVLNode(insertedValue, treeNodeID, labelID, x, y);
             insertElem.height = 1;
@@ -360,17 +360,17 @@ class TreeAVL extends Algorithm {
 
         if (t2 != null) {
             this.cmd("Disconnect", A.graphicID, t2.graphicID);
-            this.cmd("Connect", B.graphicID, t2.graphicID, TreeAVL.LINK_COLOR);
+            this.cmd("Connect", B.graphicID, t2.graphicID, this.LINK_COLOR);
             t2.parent = B;
         }
         this.cmd("Disconnect", B.graphicID, A.graphicID);
-        this.cmd("Connect", A.graphicID, B.graphicID, TreeAVL.LINK_COLOR);
+        this.cmd("Connect", A.graphicID, B.graphicID, this.LINK_COLOR);
         A.parent = B.parent;
         if (this.treeRoot === B) {
             this.treeRoot = A;
         } else {
-            this.cmd("Disconnect", B.parent.graphicID, B.graphicID, TreeAVL.LINK_COLOR);
-            this.cmd("Connect", B.parent.graphicID, A.graphicID, TreeAVL.LINK_COLOR);
+            this.cmd("Disconnect", B.parent.graphicID, B.graphicID, this.LINK_COLOR);
+            this.cmd("Connect", B.parent.graphicID, A.graphicID, this.LINK_COLOR);
             if (B.isLeftChild()) {
                 B.parent.left = A;
             } else {
@@ -398,17 +398,17 @@ class TreeAVL extends Algorithm {
 
         if (t2 != null) {
             this.cmd("Disconnect", B.graphicID, t2.graphicID);
-            this.cmd("Connect", A.graphicID, t2.graphicID, TreeAVL.LINK_COLOR);
+            this.cmd("Connect", A.graphicID, t2.graphicID, this.LINK_COLOR);
             t2.parent = A;
         }
         this.cmd("Disconnect", A.graphicID, B.graphicID);
-        this.cmd("Connect", B.graphicID, A.graphicID, TreeAVL.LINK_COLOR);
+        this.cmd("Connect", B.graphicID, A.graphicID, this.LINK_COLOR);
         B.parent = A.parent;
         if (this.treeRoot === A) {
             this.treeRoot = B;
         } else {
-            this.cmd("Disconnect", A.parent.graphicID, A.graphicID, TreeAVL.LINK_COLOR);
-            this.cmd("Connect", A.parent.graphicID, B.graphicID, TreeAVL.LINK_COLOR);
+            this.cmd("Disconnect", A.parent.graphicID, A.graphicID, this.LINK_COLOR);
+            this.cmd("Connect", A.parent.graphicID, B.graphicID, this.LINK_COLOR);
             if (A.isLeftChild()) {
                 A.parent.left = B;
             } else {
@@ -449,28 +449,28 @@ class TreeAVL extends Algorithm {
         this.cmd("SetText", this.messageID, "Double Rotate Right");
         this.cmd("Disconnect", C.graphicID, A.graphicID);
         this.cmd("Disconnect", A.graphicID, B.graphicID);
-        this.cmd("Connect", C.graphicID, A.graphicID, TreeAVL.HIGHLIGHT_LINK_COLOR);
-        this.cmd("Connect", A.graphicID, B.graphicID, TreeAVL.HIGHLIGHT_LINK_COLOR);
+        this.cmd("Connect", C.graphicID, A.graphicID, this.HIGHLIGHT_LINK_COLOR);
+        this.cmd("Connect", A.graphicID, B.graphicID, this.HIGHLIGHT_LINK_COLOR);
         this.cmd("Step");
 
         if (t2 != null) {
             this.cmd("Disconnect", B.graphicID, t2.graphicID);
             t2.parent = A;
             A.right = t2;
-            this.cmd("Connect", A.graphicID, t2.graphicID, TreeAVL.LINK_COLOR);
+            this.cmd("Connect", A.graphicID, t2.graphicID, this.LINK_COLOR);
         }
         if (t3 != null) {
             this.cmd("Disconnect", B.graphicID, t3.graphicID);
             t3.parent = C;
             C.left = t2;
-            this.cmd("Connect", C.graphicID, t3.graphicID, TreeAVL.LINK_COLOR);
+            this.cmd("Connect", C.graphicID, t3.graphicID, this.LINK_COLOR);
         }
         if (C.parent == null) {
             B.parent = null;
             this.treeRoot = B;
         } else {
             this.cmd("Disconnect", C.parent.graphicID, C.graphicID);
-            this.cmd("Connect", C.parent.graphicID, B.graphicID, TreeAVL.LINK_COLOR);
+            this.cmd("Connect", C.parent.graphicID, B.graphicID, this.LINK_COLOR);
             if (C.isLeftChild()) {
                 C.parent.left = B;
             } else {
@@ -481,8 +481,8 @@ class TreeAVL extends Algorithm {
         }
         this.cmd("Disconnect", C.graphicID, A.graphicID);
         this.cmd("Disconnect", A.graphicID, B.graphicID);
-        this.cmd("Connect", B.graphicID, A.graphicID, TreeAVL.LINK_COLOR);
-        this.cmd("Connect", B.graphicID, C.graphicID, TreeAVL.LINK_COLOR);
+        this.cmd("Connect", B.graphicID, A.graphicID, this.LINK_COLOR);
+        this.cmd("Connect", B.graphicID, C.graphicID, this.LINK_COLOR);
 
         B.left = A;
         A.parent = B;
@@ -508,28 +508,28 @@ class TreeAVL extends Algorithm {
         this.cmd("SetText", this.messageID, "Double Rotate Left");
         this.cmd("Disconnect", A.graphicID, C.graphicID);
         this.cmd("Disconnect", C.graphicID, B.graphicID);
-        this.cmd("Connect", A.graphicID, C.graphicID, TreeAVL.HIGHLIGHT_LINK_COLOR);
-        this.cmd("Connect", C.graphicID, B.graphicID, TreeAVL.HIGHLIGHT_LINK_COLOR);
+        this.cmd("Connect", A.graphicID, C.graphicID, this.HIGHLIGHT_LINK_COLOR);
+        this.cmd("Connect", C.graphicID, B.graphicID, this.HIGHLIGHT_LINK_COLOR);
         this.cmd("Step");
 
         if (t2 != null) {
             this.cmd("Disconnect", B.graphicID, t2.graphicID);
             t2.parent = A;
             A.right = t2;
-            this.cmd("Connect", A.graphicID, t2.graphicID, TreeAVL.LINK_COLOR);
+            this.cmd("Connect", A.graphicID, t2.graphicID, this.LINK_COLOR);
         }
         if (t3 != null) {
             this.cmd("Disconnect", B.graphicID, t3.graphicID);
             t3.parent = C;
             C.left = t2;
-            this.cmd("Connect", C.graphicID, t3.graphicID, TreeAVL.LINK_COLOR);
+            this.cmd("Connect", C.graphicID, t3.graphicID, this.LINK_COLOR);
         }
         if (A.parent == null) {
             B.parent = null;
             this.treeRoot = B;
         } else {
             this.cmd("Disconnect", A.parent.graphicID, A.graphicID);
-            this.cmd("Connect", A.parent.graphicID, B.graphicID, TreeAVL.LINK_COLOR);
+            this.cmd("Connect", A.parent.graphicID, B.graphicID, this.LINK_COLOR);
             if (A.isLeftChild()) {
                 A.parent.left = B;
             } else {
@@ -540,8 +540,8 @@ class TreeAVL extends Algorithm {
         }
         this.cmd("Disconnect", A.graphicID, C.graphicID);
         this.cmd("Disconnect", C.graphicID, B.graphicID);
-        this.cmd("Connect", B.graphicID, A.graphicID, TreeAVL.LINK_COLOR);
-        this.cmd("Connect", B.graphicID, C.graphicID, TreeAVL.LINK_COLOR);
+        this.cmd("Connect", B.graphicID, A.graphicID, this.LINK_COLOR);
+        this.cmd("Connect", B.graphicID, C.graphicID, this.LINK_COLOR);
 
         B.left = A;
         A.parent = B;
@@ -576,10 +576,10 @@ class TreeAVL extends Algorithm {
                 this.cmd("SetHighlight", elem.graphicID, 0);
                 tree.left = elem;
                 elem.parent = tree;
-                this.cmd("Connect", tree.graphicID, elem.graphicID, TreeAVL.LINK_COLOR);
+                this.cmd("Connect", tree.graphicID, elem.graphicID, this.LINK_COLOR);
 
                 this.resizeTree();
-                this.cmd("CreateHighlightCircle", this.highlightID, TreeAVL.HIGHLIGHT_COLOR, tree.left.x, tree.left.y);
+                this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_COLOR, tree.left.x, tree.left.y);
                 this.cmd("Move", this.highlightID, tree.x, tree.y);
                 this.cmd("SetText", this.messageID, "Unwinding Recursion");
                 this.cmd("Step");
@@ -589,18 +589,18 @@ class TreeAVL extends Algorithm {
                     tree.height = this.getHeight(tree.left) + 1;
                     this.cmd("SetText", tree.heightLabelID, tree.height);
                     this.cmd("SetText", this.messageID, "Adjusting height after recursive call");
-                    this.cmd("SetForegroundColor", tree.heightLabelID, TreeAVL.HIGHLIGHT_LABEL_COLOR);
+                    this.cmd("SetForegroundColor", tree.heightLabelID, this.HIGHLIGHT_LABEL_COLOR);
                     this.cmd("Step");
-                    this.cmd("SetForegroundColor", tree.heightLabelID, TreeAVL.HEIGHT_LABEL_COLOR);
+                    this.cmd("SetForegroundColor", tree.heightLabelID, this.HEIGHT_LABEL_COLOR);
                 }
             } else {
-                this.cmd("CreateHighlightCircle", this.highlightID, TreeAVL.HIGHLIGHT_COLOR, tree.x, tree.y);
+                this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_COLOR, tree.x, tree.y);
                 this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
                 this.cmd("Step");
                 this.cmd("Delete", this.highlightID);
                 this.insert(elem, tree.left);
 
-                this.cmd("CreateHighlightCircle", this.highlightID, TreeAVL.HIGHLIGHT_COLOR, tree.left.x, tree.left.y);
+                this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_COLOR, tree.left.x, tree.left.y);
                 this.cmd("Move", this.highlightID, tree.x, tree.y);
                 this.cmd("SetText", this.messageID, "Unwinding Recursion");
                 this.cmd("Step");
@@ -610,9 +610,9 @@ class TreeAVL extends Algorithm {
                     tree.height = this.getHeight(tree.left) + 1;
                     this.cmd("SetText", tree.heightLabelID, tree.height);
                     this.cmd("SetText", this.messageID, "Adjusting height after recursive call");
-                    this.cmd("SetForegroundColor", tree.heightLabelID, TreeAVL.HIGHLIGHT_LABEL_COLOR);
+                    this.cmd("SetForegroundColor", tree.heightLabelID, this.HIGHLIGHT_LABEL_COLOR);
                     this.cmd("Step");
-                    this.cmd("SetForegroundColor", tree.heightLabelID, TreeAVL.HEIGHT_LABEL_COLOR);
+                    this.cmd("SetForegroundColor", tree.heightLabelID, this.HEIGHT_LABEL_COLOR);
                 }
                 if (this.getHeight(tree.left) > 1 + this.getHeight(tree.right)) {
                     if (elem.data < tree.left.data) {
@@ -628,13 +628,13 @@ class TreeAVL extends Algorithm {
             this.cmd("SetHighlight", elem.graphicID, 0);
             tree.right = elem;
             elem.parent = tree;
-            this.cmd("Connect", tree.graphicID, elem.graphicID, TreeAVL.LINK_COLOR);
-            elem.x = tree.x + TreeAVL.WIDTH_DELTA / 2;
-            elem.y = tree.y + TreeAVL.HEIGHT_DELTA;
+            this.cmd("Connect", tree.graphicID, elem.graphicID, this.LINK_COLOR);
+            elem.x = tree.x + this.WIDTH_DELTA / 2;
+            elem.y = tree.y + this.HEIGHT_DELTA;
             this.cmd("Move", elem.graphicID, elem.x, elem.y);
 
             this.resizeTree();
-            this.cmd("CreateHighlightCircle", this.highlightID, TreeAVL.HIGHLIGHT_COLOR, tree.right.x, tree.right.y);
+            this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_COLOR, tree.right.x, tree.right.y);
             this.cmd("Move", this.highlightID, tree.x, tree.y);
             this.cmd("SetText", this.messageID, "Unwinding Recursion");
             this.cmd("Step");
@@ -644,18 +644,18 @@ class TreeAVL extends Algorithm {
                 tree.height = this.getHeight(tree.right) + 1;
                 this.cmd("SetText", tree.heightLabelID, tree.height);
                 this.cmd("SetText", this.messageID, "Adjusting height after recursive call");
-                this.cmd("SetForegroundColor", tree.heightLabelID, TreeAVL.HIGHLIGHT_LABEL_COLOR);
+                this.cmd("SetForegroundColor", tree.heightLabelID, this.HIGHLIGHT_LABEL_COLOR);
                 this.cmd("Step");
-                this.cmd("SetForegroundColor", tree.heightLabelID, TreeAVL.HEIGHT_LABEL_COLOR);
+                this.cmd("SetForegroundColor", tree.heightLabelID, this.HEIGHT_LABEL_COLOR);
             }
         } else {
-            this.cmd("CreateHighlightCircle", this.highlightID, TreeAVL.HIGHLIGHT_COLOR, tree.x, tree.y);
+            this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_COLOR, tree.x, tree.y);
             this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
             this.cmd("Step");
             this.cmd("Delete", this.highlightID);
             this.insert(elem, tree.right);
 
-            this.cmd("CreateHighlightCircle", this.highlightID, TreeAVL.HIGHLIGHT_COLOR, tree.right.x, tree.right.y);
+            this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_COLOR, tree.right.x, tree.right.y);
             this.cmd("Move", this.highlightID, tree.x, tree.y);
             this.cmd("SetText", this.messageID, "Unwinding Recursion");
             this.cmd("Step");
@@ -665,9 +665,9 @@ class TreeAVL extends Algorithm {
                 tree.height = this.getHeight(tree.right) + 1;
                 this.cmd("SetText", tree.heightLabelID, tree.height);
                 this.cmd("SetText", this.messageID, "Adjusting height after recursive call");
-                this.cmd("SetForegroundColor", tree.heightLabelID, TreeAVL.HIGHLIGHT_LABEL_COLOR);
+                this.cmd("SetForegroundColor", tree.heightLabelID, this.HIGHLIGHT_LABEL_COLOR);
                 this.cmd("Step");
-                this.cmd("SetForegroundColor", tree.heightLabelID, TreeAVL.HEIGHT_LABEL_COLOR);
+                this.cmd("SetForegroundColor", tree.heightLabelID, this.HEIGHT_LABEL_COLOR);
             }
             if (this.getHeight(tree.right) > 1 + this.getHeight(tree.left)) {
                 if (elem.data >= tree.right.data) {
@@ -727,7 +727,7 @@ class TreeAVL extends Algorithm {
                     this.cmd("SetText", this.messageID, "Node to delete has no left child: \nSet parent of deleted node to right child of deleted node");
                     if (tree.parent != null) {
                         this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
-                        this.cmd("Connect", tree.parent.graphicID, tree.right.graphicID, TreeAVL.LINK_COLOR);
+                        this.cmd("Connect", tree.parent.graphicID, tree.right.graphicID, this.LINK_COLOR);
                         this.cmd("Step");
                         this.cmd("Delete", tree.graphicID);
                         this.cmd("Delete", tree.heightLabelID);
@@ -748,7 +748,7 @@ class TreeAVL extends Algorithm {
                     this.cmd("SetText", this.messageID, "Node to delete has no right child: \nSet parent of deleted node to left child of deleted node");
                     if (tree.parent != null) {
                         this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
-                        this.cmd("Connect", tree.parent.graphicID, tree.left.graphicID, TreeAVL.LINK_COLOR);
+                        this.cmd("Connect", tree.parent.graphicID, tree.left.graphicID, this.LINK_COLOR);
                         this.cmd("Step");
                         this.cmd("Delete", tree.graphicID);
                         this.cmd("Delete", tree.heightLabelID);
@@ -768,7 +768,7 @@ class TreeAVL extends Algorithm {
                 } else { // tree.left != null && tree.right != null
                     this.cmd("SetText", this.messageID, "Node to delete has two children: \nFind largest node in left subtree");
                     this.highlightID = this.nextIndex++;
-                    this.cmd("CreateHighlightCircle", this.highlightID, TreeAVL.HIGHLIGHT_COLOR, tree.x, tree.y);
+                    this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_COLOR, tree.x, tree.y);
                     let tmp = tree;
                     tmp = tree.left;
                     this.cmd("Move", this.highlightID, tmp.x, tmp.y);
@@ -781,7 +781,7 @@ class TreeAVL extends Algorithm {
                     this.cmd("SetText", tree.graphicID, " ");
                     const labelID = this.nextIndex++;
                     this.cmd("CreateLabel", labelID, tmp.data, tmp.x, tmp.y);
-                    this.cmd("SetForegroundColor", labelID, TreeAVL.HEIGHT_LABEL_COLOR);
+                    this.cmd("SetForegroundColor", labelID, this.HEIGHT_LABEL_COLOR);
                     tree.data = tmp.data;
                     this.cmd("Move", labelID, tree.x, tree.y);
                     this.cmd("SetText", this.messageID, "Copy largest value of left subtree into node to delete");
@@ -804,7 +804,7 @@ class TreeAVL extends Algorithm {
                         this.resizeTree();
                     } else {
                         this.cmd("Disconnect", tmp.parent.graphicID, tmp.graphicID);
-                        this.cmd("Connect", tmp.parent.graphicID, tmp.left.graphicID, TreeAVL.LINK_COLOR);
+                        this.cmd("Connect", tmp.parent.graphicID, tmp.left.graphicID, this.LINK_COLOR);
                         this.cmd("Step");
                         this.cmd("Delete", tmp.graphicID);
                         this.cmd("Delete", tmp.heightLabelID);
@@ -823,9 +823,9 @@ class TreeAVL extends Algorithm {
                         tmp.height = Math.max(this.getHeight(tmp.left), this.getHeight(tmp.right)) + 1;
                         this.cmd("SetText", tmp.heightLabelID, tmp.height);
                         this.cmd("SetText", this.messageID, "Adjusting height after recursive call");
-                        this.cmd("SetForegroundColor", tmp.heightLabelID, TreeAVL.HIGHLIGHT_LABEL_COLOR);
+                        this.cmd("SetForegroundColor", tmp.heightLabelID, this.HIGHLIGHT_LABEL_COLOR);
                         this.cmd("Step");
-                        this.cmd("SetForegroundColor", tmp.heightLabelID, TreeAVL.HEIGHT_LABEL_COLOR);
+                        this.cmd("SetForegroundColor", tmp.heightLabelID, this.HEIGHT_LABEL_COLOR);
                     }
                     while (tmp !== tree) {
                         const tmpPar = tmp.parent;
@@ -839,9 +839,9 @@ class TreeAVL extends Algorithm {
                         }
                         if (tmpPar.right != null) {
                             if (tmpPar === tree) {
-                                this.cmd("CreateHighlightCircle", this.highlightID, TreeAVL.HIGHLIGHT_COLOR, tmpPar.left.x, tmpPar.left.y);
+                                this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_COLOR, tmpPar.left.x, tmpPar.left.y);
                             } else {
-                                this.cmd("CreateHighlightCircle", this.highlightID, TreeAVL.HIGHLIGHT_COLOR, tmpPar.right.x, tmpPar.right.y);
+                                this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_COLOR, tmpPar.right.x, tmpPar.right.y);
                             }
                             this.cmd("Move", this.highlightID, tmpPar.x, tmpPar.y);
                             this.cmd("SetText", this.messageID, "Backing up...");
@@ -850,9 +850,9 @@ class TreeAVL extends Algorithm {
                                 tmpPar.height = Math.max(this.getHeight(tmpPar.left), this.getHeight(tmpPar.right)) + 1;
                                 this.cmd("SetText", tmpPar.heightLabelID, tmpPar.height);
                                 this.cmd("SetText", this.messageID, "Adjusting height after recursive call");
-                                this.cmd("SetForegroundColor", tmpPar.heightLabelID, TreeAVL.HIGHLIGHT_LABEL_COLOR);
+                                this.cmd("SetForegroundColor", tmpPar.heightLabelID, this.HIGHLIGHT_LABEL_COLOR);
                                 this.cmd("Step");
-                                this.cmd("SetForegroundColor", tmpPar.heightLabelID, TreeAVL.HEIGHT_LABEL_COLOR);
+                                this.cmd("SetForegroundColor", tmpPar.heightLabelID, this.HEIGHT_LABEL_COLOR);
                             }
                             this.cmd("Step");
                             this.cmd("Delete", this.highlightID);
@@ -869,7 +869,7 @@ class TreeAVL extends Algorithm {
                 }
             } else if (cmp < 0) {
                 if (tree.left != null) {
-                    this.cmd("CreateHighlightCircle", this.highlightID, TreeAVL.HIGHLIGHT_COLOR, tree.x, tree.y);
+                    this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_COLOR, tree.x, tree.y);
                     this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
                     this.cmd("Step");
                     this.cmd("Delete", this.highlightID);
@@ -877,7 +877,7 @@ class TreeAVL extends Algorithm {
                 this.treeDelete(tree.left, valueToDelete);
                 if (tree.left != null) {
                     this.cmd("SetText", this.messageID, "Unwinding recursion");
-                    this.cmd("CreateHighlightCircle", this.highlightID, TreeAVL.HIGHLIGHT_COLOR, tree.left.x, tree.left.y);
+                    this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_COLOR, tree.left.x, tree.left.y);
                     this.cmd("Move", this.highlightID, tree.x, tree.y);
                     this.cmd("Step");
                     this.cmd("Delete", this.highlightID);
@@ -893,13 +893,13 @@ class TreeAVL extends Algorithm {
                     tree.height = Math.max(this.getHeight(tree.left), this.getHeight(tree.right)) + 1;
                     this.cmd("SetText", tree.heightLabelID, tree.height);
                     this.cmd("SetText", this.messageID, "Adjusting height after recursive call");
-                    this.cmd("SetForegroundColor", tree.heightLabelID, TreeAVL.HIGHLIGHT_LABEL_COLOR);
+                    this.cmd("SetForegroundColor", tree.heightLabelID, this.HIGHLIGHT_LABEL_COLOR);
                     this.cmd("Step");
-                    this.cmd("SetForegroundColor", tree.heightLabelID, TreeAVL.HEIGHT_LABEL_COLOR);
+                    this.cmd("SetForegroundColor", tree.heightLabelID, this.HEIGHT_LABEL_COLOR);
                 }
             } else {
                 if (tree.right != null) {
-                    this.cmd("CreateHighlightCircle", this.highlightID, TreeAVL.HIGHLIGHT_COLOR, tree.x, tree.y);
+                    this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_COLOR, tree.x, tree.y);
                     this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
                     this.cmd("Step");
                     this.cmd("Delete", this.highlightID);
@@ -907,7 +907,7 @@ class TreeAVL extends Algorithm {
                 this.treeDelete(tree.right, valueToDelete);
                 if (tree.right != null) {
                     this.cmd("SetText", this.messageID, "Unwinding recursion");
-                    this.cmd("CreateHighlightCircle", this.highlightID, TreeAVL.HIGHLIGHT_COLOR, tree.right.x, tree.right.y);
+                    this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_COLOR, tree.right.x, tree.right.y);
                     this.cmd("Move", this.highlightID, tree.x, tree.y);
                     this.cmd("Step");
                     this.cmd("Delete", this.highlightID);
@@ -924,9 +924,9 @@ class TreeAVL extends Algorithm {
                     tree.height = Math.max(this.getHeight(tree.left), this.getHeight(tree.right)) + 1;
                     this.cmd("SetText", tree.heightLabelID, tree.height);
                     this.cmd("SetText", this.messageID, "Adjusting height after recursive call");
-                    this.cmd("SetForegroundColor", tree.heightLabelID, TreeAVL.HIGHLIGHT_LABEL_COLOR);
+                    this.cmd("SetForegroundColor", tree.heightLabelID, this.HIGHLIGHT_LABEL_COLOR);
                     this.cmd("Step");
-                    this.cmd("SetForegroundColor", tree.heightLabelID, TreeAVL.HEIGHT_LABEL_COLOR);
+                    this.cmd("SetForegroundColor", tree.heightLabelID, this.HEIGHT_LABEL_COLOR);
                 }
             }
         } else {
@@ -959,7 +959,7 @@ class TreeAVL extends Algorithm {
             } else if (this.treeRoot.rightWidth > startingPoint) {
                 startingPoint = Math.max(this.treeRoot.leftWidth, 2 * startingPoint - this.treeRoot.rightWidth);
             }
-            this.setNewPositions(this.treeRoot, startingPoint, TreeAVL.STARTING_Y, 0);
+            this.setNewPositions(this.treeRoot, startingPoint, this.STARTING_Y, 0);
             this.animateNewPositions(this.treeRoot);
             this.cmd("Step");
         }
@@ -970,17 +970,17 @@ class TreeAVL extends Algorithm {
             tree.y = yPosition;
             if (side < 0) {
                 xPosition = xPosition - tree.rightWidth;
-                tree.heightLabelX = xPosition - TreeAVL.LABEL_DISPLACE;
+                tree.heightLabelX = xPosition - this.LABEL_DISPLACE;
             } else if (side > 0) {
                 xPosition = xPosition + tree.leftWidth;
-                tree.heightLabelX = xPosition + TreeAVL.LABEL_DISPLACE;
+                tree.heightLabelX = xPosition + this.LABEL_DISPLACE;
             } else {
-                tree.heightLabelX = xPosition - TreeAVL.LABEL_DISPLACE;
+                tree.heightLabelX = xPosition - this.LABEL_DISPLACE;
             }
             tree.x = xPosition;
-            tree.heightLabelY = tree.y - TreeAVL.LABEL_DISPLACE;
-            this.setNewPositions(tree.left, xPosition, yPosition + TreeAVL.HEIGHT_DELTA, -1);
-            this.setNewPositions(tree.right, xPosition, yPosition + TreeAVL.HEIGHT_DELTA, 1);
+            tree.heightLabelY = tree.y - this.LABEL_DISPLACE;
+            this.setNewPositions(tree.left, xPosition, yPosition + this.HEIGHT_DELTA, -1);
+            this.setNewPositions(tree.right, xPosition, yPosition + this.HEIGHT_DELTA, 1);
         }
     }
 
@@ -997,8 +997,8 @@ class TreeAVL extends Algorithm {
         if (tree == null) {
             return 0;
         }
-        tree.leftWidth = Math.max(this.resizeWidths(tree.left), TreeAVL.WIDTH_DELTA / 2);
-        tree.rightWidth = Math.max(this.resizeWidths(tree.right), TreeAVL.WIDTH_DELTA / 2);
+        tree.leftWidth = Math.max(this.resizeWidths(tree.left), this.WIDTH_DELTA / 2);
+        tree.rightWidth = Math.max(this.resizeWidths(tree.right), this.WIDTH_DELTA / 2);
         return tree.leftWidth + tree.rightWidth;
     }
 }

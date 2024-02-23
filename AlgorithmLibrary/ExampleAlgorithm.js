@@ -41,17 +41,17 @@ class SimpleStack extends Algorithm {
     // First some constants that are specific to the data structure.
     // We placed them in the function's namespace to avoid symbol clashes:
 
-    static FOREGROUND_COLOR = "#007700"; // dark green
-    static BACKGROUND_COLOR = "#EEFFEE"; // light green
+    FOREGROUND_COLOR = "#007700"; // dark green
+    BACKGROUND_COLOR = "#EEFFEE"; // light green
 
-    static ELEMENT_WIDTH = 50;
-    static ELEMENT_HEIGHT = 30;
-    static INSERT_X = SimpleStack.ELEMENT_WIDTH;
-    static INSERT_Y = SimpleStack.ELEMENT_HEIGHT;
-    static STARTING_X = SimpleStack.INSERT_X;
-    static STARTING_Y = 100;
-    static MESSAGE_X = 200;
-    static MESSAGE_Y = SimpleStack.INSERT_Y;
+    ELEMENT_WIDTH = 50;
+    ELEMENT_HEIGHT = 30;
+    INSERT_X = this.ELEMENT_WIDTH;
+    INSERT_Y = this.ELEMENT_HEIGHT;
+    STARTING_X = this.INSERT_X;
+    STARTING_Y = 100;
+    MESSAGE_X = 200;
+    MESSAGE_Y = this.INSERT_Y;
 
     constructor(am) {
         super();
@@ -210,21 +210,21 @@ class SimpleStack extends Algorithm {
         this.cmd("CreateRectangle",
             objectID,
             value,
-            SimpleStack.ELEMENT_WIDTH,
-            SimpleStack.ELEMENT_HEIGHT,
-            SimpleStack.INSERT_X,
-            SimpleStack.INSERT_Y,
+            this.ELEMENT_WIDTH,
+            this.ELEMENT_HEIGHT,
+            this.INSERT_X,
+            this.INSERT_Y,
         );
         // Set the colors of the rectangle.
-        this.cmd("SetForegroundColor", objectID, SimpleStack.FOREGROUND_COLOR);
-        this.cmd("SetBackgroundColor", objectID, SimpleStack.BACKGROUND_COLOR);
+        this.cmd("SetForegroundColor", objectID, this.FOREGROUND_COLOR);
+        this.cmd("SetBackgroundColor", objectID, this.BACKGROUND_COLOR);
         // First animation step done.
         this.cmd("Step");
 
         // Calculate the coordinates of the rectangle.
         const top = this.stack.length;
-        const nextXPos = SimpleStack.STARTING_X + top * SimpleStack.ELEMENT_WIDTH;
-        const nextYPos = SimpleStack.STARTING_Y;
+        const nextXPos = this.STARTING_X + top * this.ELEMENT_WIDTH;
+        const nextYPos = this.STARTING_Y;
         // Move it to its correct location.
         this.cmd("Move", objectID, nextXPos, nextYPos);
         // Next animation step done.
@@ -243,7 +243,7 @@ class SimpleStack extends Algorithm {
             const {id: objectID, value: value} = this.stack.pop();
 
             // First we move the rectangle to the "base" position.
-            this.cmd("Move", objectID, SimpleStack.INSERT_X, SimpleStack.INSERT_Y);
+            this.cmd("Move", objectID, this.INSERT_X, this.INSERT_Y);
             this.cmd("Step");
 
             // Then we delete the rectangle.
@@ -253,7 +253,7 @@ class SimpleStack extends Algorithm {
             // Now we want to display the value.
             // Since we just removed the rectangle we can reuse the objectID.
             const message = `Popped value: ${value}`;
-            this.cmd("CreateLabel", objectID, message, SimpleStack.MESSAGE_X, SimpleStack.MESSAGE_Y, false);
+            this.cmd("CreateLabel", objectID, message, this.MESSAGE_X, this.MESSAGE_Y, false);
             this.cmd("Step");
 
             // Finally we delete the message.

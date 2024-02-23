@@ -32,26 +32,26 @@
 
 
 class SortComparison extends Algorithm {
-    static INDEX_COLOR = "#0000FF";
-    static BAR_FOREGROUND_COLOR = SortComparison.INDEX_COLOR;
-    static BAR_BACKGROUND_COLOR = "#AAAAFF";
-    static HIGHLIGHT_BAR_COLOR = "#FF0000";
-    static HIGHLIGHT_BAR_BACKGROUND_COLOR = "#FFAAAA";
-    static QUICKSORT_LINE_COLOR = SortComparison.HIGHLIGHT_BAR_COLOR;
+    INDEX_COLOR = "#0000FF";
+    BAR_FOREGROUND_COLOR = this.INDEX_COLOR;
+    BAR_BACKGROUND_COLOR = "#AAAAFF";
+    HIGHLIGHT_BAR_COLOR = "#FF0000";
+    HIGHLIGHT_BAR_BACKGROUND_COLOR = "#FFAAAA";
+    QUICKSORT_LINE_COLOR = this.HIGHLIGHT_BAR_COLOR;
 
-    static DEFAULT_ARRAY_SIZE = 25;
-    static ARRAY_SIZES = [25, 50, 100, 200];
-    static ARRAY_SIZE_LABELS = ["Small (25)", "Medium (50)", "Large (100)", "Huge (200)"];
+    DEFAULT_ARRAY_SIZE = 25;
+    ARRAY_SIZES = [25, 50, 100, 200];
+    ARRAY_SIZE_LABELS = ["Small (25)", "Medium (50)", "Large (100)", "Huge (200)"];
 
-    static DEFAULT_ALGORITHM = "insertion";
-    static ALGORITHMS = ["insertion", "selection", "bubble", "quick", "merge", "shell"];
-    static ALGORITHM_LABELS = ["Insertion sort", "Selection sort", "Bubble sort", "Quicksort", "Merge sort", "Shellsort"];
+    DEFAULT_ALGORITHM = "insertion";
+    ALGORITHMS = ["insertion", "selection", "bubble", "quick", "merge", "shell"];
+    ALGORITHM_LABELS = ["Insertion sort", "Selection sort", "Bubble sort", "Quicksort", "Merge sort", "Shellsort"];
 
-    static Y_MARGINAL = 50;
-    static LABEL_Y_ADD = 10;
+    Y_MARGINAL = 50;
+    LABEL_Y_ADD = 10;
 
-    static MAX_VALUE = 99;
-    static MAX_SCALE_FACTOR = 2.0;
+    MAX_VALUE = 99;
+    MAX_SCALE_FACTOR = 2.0;
 
     constructor(am) {
         super();
@@ -74,14 +74,14 @@ class SortComparison extends Algorithm {
         this.addBreakToAlgorithmBar();
 
         this.addLabelToAlgorithmBar("Array size:");
-        this.sizeSelect = this.addSelectToAlgorithmBar(SortComparison.ARRAY_SIZES, SortComparison.ARRAY_SIZE_LABELS);
-        this.sizeSelect.value = SortComparison.DEFAULT_ARRAY_SIZE;
+        this.sizeSelect = this.addSelectToAlgorithmBar(this.ARRAY_SIZES, this.ARRAY_SIZE_LABELS);
+        this.sizeSelect.value = this.DEFAULT_ARRAY_SIZE;
         this.sizeSelect.onchange = this.resetAll.bind(this);
         this.addBreakToAlgorithmBar();
 
         this.addLabelToAlgorithmBar("Algorithm:");
-        this.algorithmSelect = this.addSelectToAlgorithmBar(SortComparison.ALGORITHMS, SortComparison.ALGORITHM_LABELS);
-        this.algorithmSelect.value = SortComparison.DEFAULT_ALGORITHM;
+        this.algorithmSelect = this.addSelectToAlgorithmBar(this.ALGORITHMS, this.ALGORITHM_LABELS);
+        this.algorithmSelect.value = this.DEFAULT_ALGORITHM;
         this.sortButton = this.addControlToAlgorithmBar("Button", "Run");
         this.sortButton.onclick = this.runSortCallback.bind(this);
     }
@@ -91,19 +91,19 @@ class SortComparison extends Algorithm {
         this.nextIndex = 0;
 
         this.info = {};
-        this.info.size = parseInt(this.sizeSelect.value) || SortComparison.DEFAULT_ARRAY_SIZE;
+        this.info.size = parseInt(this.sizeSelect.value) || this.DEFAULT_ARRAY_SIZE;
         this.info.width = Math.floor((this.getCanvasWidth() - 50) / this.info.size);
         this.info.initialX = Math.floor((this.getCanvasWidth() - this.info.width * (1 + this.info.size)) / 2);
         this.info.barWidth = Math.max(1, Math.floor(this.info.width * 0.8) - 2);
         this.info.labels = this.info.width >= 13;
         this.info.scaleFactor = Math.min(
-            SortComparison.MAX_SCALE_FACTOR,
-            this.getCanvasHeight() / (3 * SortComparison.MAX_VALUE),
+            this.MAX_SCALE_FACTOR,
+            this.getCanvasHeight() / (3 * this.MAX_VALUE),
         );
-        this.info.yPos = SortComparison.Y_MARGINAL + SortComparison.MAX_VALUE * this.info.scaleFactor;
+        this.info.yPos = this.Y_MARGINAL + this.MAX_VALUE * this.info.scaleFactor;
         this.info.lowerYPos = Math.min(
             2 * this.info.yPos,
-            this.getCanvasHeight() - SortComparison.Y_MARGINAL - SortComparison.LABEL_Y_ADD,
+            this.getCanvasHeight() - this.Y_MARGINAL - this.LABEL_Y_ADD,
         );
 
         this.createVisualObjects();
@@ -128,27 +128,27 @@ class SortComparison extends Algorithm {
 
         let xPos = this.info.initialX;
         const yPos = this.info.yPos;
-        const yLabelPos = yPos + SortComparison.LABEL_Y_ADD;
+        const yLabelPos = yPos + this.LABEL_Y_ADD;
 
         this.commands = [];
         for (let i = 0; i < size; i++) {
             xPos = xPos + this.info.width;
             this.barPositionsX[i] = xPos;
             this.obscureObject[i] = false;
-            this.oldArrayData[i] = this.arrayData[i] = Math.floor(1 + Math.random() * SortComparison.MAX_VALUE);
+            this.oldArrayData[i] = this.arrayData[i] = Math.floor(1 + Math.random() * this.MAX_VALUE);
 
             const rectID = this.nextIndex++;
             const barHeight = this.arrayData[i] * this.info.scaleFactor;
             this.cmd("CreateRectangle", rectID, "", this.info.barWidth, barHeight, xPos, yPos, "center", "bottom");
-            this.cmd("SetForegroundColor", rectID, SortComparison.BAR_FOREGROUND_COLOR);
-            this.cmd("SetBackgroundColor", rectID, SortComparison.BAR_BACKGROUND_COLOR);
+            this.cmd("SetForegroundColor", rectID, this.BAR_FOREGROUND_COLOR);
+            this.cmd("SetBackgroundColor", rectID, this.BAR_BACKGROUND_COLOR);
             this.oldBarObjects[i] = this.barObjects[i] = rectID;
 
             const labelID = this.nextIndex++;
             const label = this.info.labels ? this.arrayData[i] : "";
             this.cmd("CreateLabel", labelID, label, xPos, yLabelPos);
             this.cmd("SetHeight", labelID, 10); // this.array.barWidth);
-            this.cmd("SetForegroundColor", labelID, SortComparison.INDEX_COLOR);
+            this.cmd("SetForegroundColor", labelID, this.INDEX_COLOR);
             this.oldBarLabels[i] = this.barLabels[i] = labelID;
         }
         this.animationManager.StartNewAnimation(this.commands);
@@ -206,46 +206,46 @@ class SortComparison extends Algorithm {
     selectionSort() {
         for (let i = 0; i < this.info.size - 1; i++) {
             let smallestIndex = i;
-            this.cmd("SetForegroundColor", this.barObjects[smallestIndex], SortComparison.HIGHLIGHT_BAR_COLOR);
-            this.cmd("SetBackgroundColor", this.barObjects[smallestIndex], SortComparison.HIGHLIGHT_BAR_BACKGROUND_COLOR);
+            this.cmd("SetForegroundColor", this.barObjects[smallestIndex], this.HIGHLIGHT_BAR_COLOR);
+            this.cmd("SetBackgroundColor", this.barObjects[smallestIndex], this.HIGHLIGHT_BAR_BACKGROUND_COLOR);
             for (let j = i + 1; j < this.info.size; j++) {
-                this.cmd("SetForegroundColor", this.barObjects[j], SortComparison.HIGHLIGHT_BAR_COLOR);
-                this.cmd("SetBackgroundColor", this.barObjects[j], SortComparison.HIGHLIGHT_BAR_BACKGROUND_COLOR);
+                this.cmd("SetForegroundColor", this.barObjects[j], this.HIGHLIGHT_BAR_COLOR);
+                this.cmd("SetBackgroundColor", this.barObjects[j], this.HIGHLIGHT_BAR_BACKGROUND_COLOR);
                 this.cmd("Step");
                 if (this.compare(this.arrayData[j], this.arrayData[smallestIndex]) < 0) {
-                    this.cmd("SetForegroundColor", this.barObjects[smallestIndex], SortComparison.BAR_FOREGROUND_COLOR);
-                    this.cmd("SetBackgroundColor", this.barObjects[smallestIndex], SortComparison.BAR_BACKGROUND_COLOR);
+                    this.cmd("SetForegroundColor", this.barObjects[smallestIndex], this.BAR_FOREGROUND_COLOR);
+                    this.cmd("SetBackgroundColor", this.barObjects[smallestIndex], this.BAR_BACKGROUND_COLOR);
                     smallestIndex = j;
                 } else {
-                    this.cmd("SetForegroundColor", this.barObjects[j], SortComparison.BAR_FOREGROUND_COLOR);
-                    this.cmd("SetBackgroundColor", this.barObjects[j], SortComparison.BAR_BACKGROUND_COLOR);
+                    this.cmd("SetForegroundColor", this.barObjects[j], this.BAR_FOREGROUND_COLOR);
+                    this.cmd("SetBackgroundColor", this.barObjects[j], this.BAR_BACKGROUND_COLOR);
                 }
             }
             if (smallestIndex !== i) {
                 this.swap(smallestIndex, i);
             }
-            this.cmd("SetForegroundColor", this.barObjects[i], SortComparison.BAR_FOREGROUND_COLOR);
-            this.cmd("SetBackgroundColor", this.barObjects[i], SortComparison.BAR_BACKGROUND_COLOR);
+            this.cmd("SetForegroundColor", this.barObjects[i], this.BAR_FOREGROUND_COLOR);
+            this.cmd("SetBackgroundColor", this.barObjects[i], this.BAR_BACKGROUND_COLOR);
         }
     }
 
     bubbleSort() {
         for (let i = this.info.size - 1; i > 0; i--) {
             for (let j = 0; j < i; j++) {
-                this.cmd("SetForegroundColor", this.barObjects[j], SortComparison.HIGHLIGHT_BAR_COLOR);
-                this.cmd("SetBackgroundColor", this.barObjects[j], SortComparison.HIGHLIGHT_BAR_BACKGROUND_COLOR);
+                this.cmd("SetForegroundColor", this.barObjects[j], this.HIGHLIGHT_BAR_COLOR);
+                this.cmd("SetBackgroundColor", this.barObjects[j], this.HIGHLIGHT_BAR_BACKGROUND_COLOR);
 
-                this.cmd("SetForegroundColor", this.barObjects[j + 1], SortComparison.HIGHLIGHT_BAR_COLOR);
-                this.cmd("SetBackgroundColor", this.barObjects[j + 1], SortComparison.HIGHLIGHT_BAR_BACKGROUND_COLOR);
+                this.cmd("SetForegroundColor", this.barObjects[j + 1], this.HIGHLIGHT_BAR_COLOR);
+                this.cmd("SetBackgroundColor", this.barObjects[j + 1], this.HIGHLIGHT_BAR_BACKGROUND_COLOR);
                 this.cmd("Step");
                 if (this.compare(this.arrayData[j], this.arrayData[j + 1]) > 0) {
                     this.swap(j, j + 1);
                 }
-                this.cmd("SetForegroundColor", this.barObjects[j], SortComparison.BAR_FOREGROUND_COLOR);
-                this.cmd("SetBackgroundColor", this.barObjects[j], SortComparison.BAR_BACKGROUND_COLOR);
+                this.cmd("SetForegroundColor", this.barObjects[j], this.BAR_FOREGROUND_COLOR);
+                this.cmd("SetBackgroundColor", this.barObjects[j], this.BAR_BACKGROUND_COLOR);
 
-                this.cmd("SetForegroundColor", this.barObjects[j + 1], SortComparison.BAR_FOREGROUND_COLOR);
-                this.cmd("SetBackgroundColor", this.barObjects[j + 1], SortComparison.BAR_BACKGROUND_COLOR);
+                this.cmd("SetForegroundColor", this.barObjects[j + 1], this.BAR_FOREGROUND_COLOR);
+                this.cmd("SetBackgroundColor", this.barObjects[j + 1], this.BAR_BACKGROUND_COLOR);
             }
         }
     }
@@ -257,13 +257,13 @@ class SortComparison extends Algorithm {
     quickSort() {
         this.iID = this.nextIndex++;
         this.jID = this.nextIndex++;
-        this.info.yIJPos = this.info.yPos + SortComparison.LABEL_Y_ADD * (this.info.labels ? 3 : 1);
+        this.info.yIJPos = this.info.yPos + this.LABEL_Y_ADD * (this.info.labels ? 3 : 1);
         this.cmd("CreateLabel", this.iID, "↑", this.barPositionsX[0], this.info.yIJPos);
         this.cmd("CreateLabel", this.jID, "↑", this.barPositionsX[this.info.size - 1], this.info.yIJPos);
-        this.cmd("SetForegroundColor", this.iID, SortComparison.HIGHLIGHT_BAR_COLOR);
-        this.cmd("SetBackgroundColor", this.iID, SortComparison.HIGHLIGHT_BAR_BACKGROUND_COLOR);
-        this.cmd("SetForegroundColor", this.jID, SortComparison.HIGHLIGHT_BAR_COLOR);
-        this.cmd("SetBackgroundColor", this.jID, SortComparison.HIGHLIGHT_BAR_BACKGROUND_COLOR);
+        this.cmd("SetForegroundColor", this.iID, this.HIGHLIGHT_BAR_COLOR);
+        this.cmd("SetBackgroundColor", this.iID, this.HIGHLIGHT_BAR_BACKGROUND_COLOR);
+        this.cmd("SetForegroundColor", this.jID, this.HIGHLIGHT_BAR_COLOR);
+        this.cmd("SetBackgroundColor", this.jID, this.HIGHLIGHT_BAR_BACKGROUND_COLOR);
         this.recursiveQuickSort(0, this.info.size - 1);
         this.cmd("Delete", this.iID);
         this.cmd("Delete", this.jID);
@@ -288,7 +288,7 @@ class SortComparison extends Algorithm {
             "left",
             "bottom",
         );
-        this.cmd("SetForegroundColor", lineID, SortComparison.QUICKSORT_LINE_COLOR);
+        this.cmd("SetForegroundColor", lineID, this.QUICKSORT_LINE_COLOR);
         let i = low + 1;
         let j = high;
 
@@ -297,59 +297,59 @@ class SortComparison extends Algorithm {
         this.cmd("Step");
 
         while (i <= j) {
-            this.cmd("SetForegroundColor", this.barObjects[i], SortComparison.HIGHLIGHT_BAR_COLOR);
-            this.cmd("SetBackgroundColor", this.barObjects[i], SortComparison.HIGHLIGHT_BAR_BACKGROUND_COLOR);
-            this.cmd("SetForegroundColor", this.barObjects[low], SortComparison.HIGHLIGHT_BAR_COLOR);
-            this.cmd("SetBackgroundColor", this.barObjects[low], SortComparison.HIGHLIGHT_BAR_BACKGROUND_COLOR);
+            this.cmd("SetForegroundColor", this.barObjects[i], this.HIGHLIGHT_BAR_COLOR);
+            this.cmd("SetBackgroundColor", this.barObjects[i], this.HIGHLIGHT_BAR_BACKGROUND_COLOR);
+            this.cmd("SetForegroundColor", this.barObjects[low], this.HIGHLIGHT_BAR_COLOR);
+            this.cmd("SetBackgroundColor", this.barObjects[low], this.HIGHLIGHT_BAR_BACKGROUND_COLOR);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.barObjects[low], SortComparison.BAR_FOREGROUND_COLOR);
-            this.cmd("SetBackgroundColor", this.barObjects[low], SortComparison.BAR_BACKGROUND_COLOR);
+            this.cmd("SetForegroundColor", this.barObjects[low], this.BAR_FOREGROUND_COLOR);
+            this.cmd("SetBackgroundColor", this.barObjects[low], this.BAR_BACKGROUND_COLOR);
 
-            this.cmd("SetForegroundColor", this.barObjects[i], SortComparison.BAR_FOREGROUND_COLOR);
-            this.cmd("SetBackgroundColor", this.barObjects[i], SortComparison.BAR_BACKGROUND_COLOR);
+            this.cmd("SetForegroundColor", this.barObjects[i], this.BAR_FOREGROUND_COLOR);
+            this.cmd("SetBackgroundColor", this.barObjects[i], this.BAR_BACKGROUND_COLOR);
             while (i <= j && this.compare(this.arrayData[i], pivot) < 0) {
                 ++i;
                 this.cmd("Move", this.iID, this.barPositionsX[i], this.info.yIJPos);
                 this.cmd("Step");
-                this.cmd("SetForegroundColor", this.barObjects[low], SortComparison.HIGHLIGHT_BAR_COLOR);
-                this.cmd("SetBackgroundColor", this.barObjects[low], SortComparison.HIGHLIGHT_BAR_BACKGROUND_COLOR);
-                this.cmd("SetForegroundColor", this.barObjects[i], SortComparison.HIGHLIGHT_BAR_COLOR);
-                this.cmd("SetBackgroundColor", this.barObjects[i], SortComparison.HIGHLIGHT_BAR_BACKGROUND_COLOR);
+                this.cmd("SetForegroundColor", this.barObjects[low], this.HIGHLIGHT_BAR_COLOR);
+                this.cmd("SetBackgroundColor", this.barObjects[low], this.HIGHLIGHT_BAR_BACKGROUND_COLOR);
+                this.cmd("SetForegroundColor", this.barObjects[i], this.HIGHLIGHT_BAR_COLOR);
+                this.cmd("SetBackgroundColor", this.barObjects[i], this.HIGHLIGHT_BAR_BACKGROUND_COLOR);
                 this.cmd("Step");
-                this.cmd("SetForegroundColor", this.barObjects[low], SortComparison.BAR_FOREGROUND_COLOR);
-                this.cmd("SetBackgroundColor", this.barObjects[low], SortComparison.BAR_BACKGROUND_COLOR);
+                this.cmd("SetForegroundColor", this.barObjects[low], this.BAR_FOREGROUND_COLOR);
+                this.cmd("SetBackgroundColor", this.barObjects[low], this.BAR_BACKGROUND_COLOR);
 
-                this.cmd("SetForegroundColor", this.barObjects[i], SortComparison.BAR_FOREGROUND_COLOR);
-                this.cmd("SetBackgroundColor", this.barObjects[i], SortComparison.BAR_BACKGROUND_COLOR);
+                this.cmd("SetForegroundColor", this.barObjects[i], this.BAR_FOREGROUND_COLOR);
+                this.cmd("SetBackgroundColor", this.barObjects[i], this.BAR_BACKGROUND_COLOR);
             }
-            this.cmd("SetForegroundColor", this.barObjects[j], SortComparison.HIGHLIGHT_BAR_COLOR);
-            this.cmd("SetBackgroundColor", this.barObjects[j], SortComparison.HIGHLIGHT_BAR_BACKGROUND_COLOR);
+            this.cmd("SetForegroundColor", this.barObjects[j], this.HIGHLIGHT_BAR_COLOR);
+            this.cmd("SetBackgroundColor", this.barObjects[j], this.HIGHLIGHT_BAR_BACKGROUND_COLOR);
 
-            this.cmd("SetForegroundColor", this.barObjects[low], SortComparison.HIGHLIGHT_BAR_COLOR);
-            this.cmd("SetBackgroundColor", this.barObjects[low], SortComparison.HIGHLIGHT_BAR_BACKGROUND_COLOR);
+            this.cmd("SetForegroundColor", this.barObjects[low], this.HIGHLIGHT_BAR_COLOR);
+            this.cmd("SetBackgroundColor", this.barObjects[low], this.HIGHLIGHT_BAR_BACKGROUND_COLOR);
 
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.barObjects[j], SortComparison.BAR_FOREGROUND_COLOR);
-            this.cmd("SetBackgroundColor", this.barObjects[j], SortComparison.BAR_BACKGROUND_COLOR);
+            this.cmd("SetForegroundColor", this.barObjects[j], this.BAR_FOREGROUND_COLOR);
+            this.cmd("SetBackgroundColor", this.barObjects[j], this.BAR_BACKGROUND_COLOR);
 
-            this.cmd("SetForegroundColor", this.barObjects[low], SortComparison.BAR_FOREGROUND_COLOR);
-            this.cmd("SetBackgroundColor", this.barObjects[low], SortComparison.BAR_BACKGROUND_COLOR);
+            this.cmd("SetForegroundColor", this.barObjects[low], this.BAR_FOREGROUND_COLOR);
+            this.cmd("SetBackgroundColor", this.barObjects[low], this.BAR_BACKGROUND_COLOR);
 
             while (j >= i && this.compare(this.arrayData[j], pivot) > 0) {
                 --j;
                 this.cmd("Move", this.jID, this.barPositionsX[j], this.info.yIJPos);
                 this.cmd("Step");
-                this.cmd("SetForegroundColor", this.barObjects[j], SortComparison.HIGHLIGHT_BAR_COLOR);
-                this.cmd("SetBackgroundColor", this.barObjects[j], SortComparison.HIGHLIGHT_BAR_BACKGROUND_COLOR);
+                this.cmd("SetForegroundColor", this.barObjects[j], this.HIGHLIGHT_BAR_COLOR);
+                this.cmd("SetBackgroundColor", this.barObjects[j], this.HIGHLIGHT_BAR_BACKGROUND_COLOR);
 
-                this.cmd("SetForegroundColor", this.barObjects[low], SortComparison.HIGHLIGHT_BAR_COLOR);
-                this.cmd("SetBackgroundColor", this.barObjects[low], SortComparison.HIGHLIGHT_BAR_BACKGROUND_COLOR);
+                this.cmd("SetForegroundColor", this.barObjects[low], this.HIGHLIGHT_BAR_COLOR);
+                this.cmd("SetBackgroundColor", this.barObjects[low], this.HIGHLIGHT_BAR_BACKGROUND_COLOR);
 
                 this.cmd("Step");
-                this.cmd("SetForegroundColor", this.barObjects[j], SortComparison.BAR_FOREGROUND_COLOR);
-                this.cmd("SetBackgroundColor", this.barObjects[j], SortComparison.BAR_BACKGROUND_COLOR);
-                this.cmd("SetForegroundColor", this.barObjects[low], SortComparison.BAR_FOREGROUND_COLOR);
-                this.cmd("SetBackgroundColor", this.barObjects[low], SortComparison.BAR_BACKGROUND_COLOR);
+                this.cmd("SetForegroundColor", this.barObjects[j], this.BAR_FOREGROUND_COLOR);
+                this.cmd("SetBackgroundColor", this.barObjects[j], this.BAR_BACKGROUND_COLOR);
+                this.cmd("SetForegroundColor", this.barObjects[low], this.BAR_FOREGROUND_COLOR);
+                this.cmd("SetBackgroundColor", this.barObjects[low], this.BAR_BACKGROUND_COLOR);
             }
             if (i <= j) {
                 this.cmd("Move", this.jID, this.barPositionsX[j - 1], this.info.yIJPos);
@@ -360,12 +360,12 @@ class SortComparison extends Algorithm {
             }
         }
         if (i >= low) {
-            this.cmd("SetForegroundColor", this.barObjects[i], SortComparison.BAR_FOREGROUND_COLOR);
-            this.cmd("SetBackgroundColor", this.barObjects[i], SortComparison.BAR_BACKGROUND_COLOR);
+            this.cmd("SetForegroundColor", this.barObjects[i], this.BAR_FOREGROUND_COLOR);
+            this.cmd("SetBackgroundColor", this.barObjects[i], this.BAR_BACKGROUND_COLOR);
         }
         if (j <= high) {
-            this.cmd("SetForegroundColor", this.barObjects[j], SortComparison.BAR_FOREGROUND_COLOR);
-            this.cmd("SetBackgroundColor", this.barObjects[j], SortComparison.BAR_BACKGROUND_COLOR);
+            this.cmd("SetForegroundColor", this.barObjects[j], this.BAR_FOREGROUND_COLOR);
+            this.cmd("SetBackgroundColor", this.barObjects[j], this.BAR_BACKGROUND_COLOR);
         }
         this.swap(low, j);
 
@@ -391,7 +391,7 @@ class SortComparison extends Algorithm {
                 if (leftIndex <= mid && (rightIndex > high || this.compare(this.arrayData[leftIndex], this.arrayData[rightIndex]) <= 0)) {
                     this.arraySwap[insertIndex] = this.arrayData[leftIndex];
                     this.cmd("Move", this.barObjects[leftIndex], this.barPositionsX[insertIndex], this.info.lowerYPos);
-                    this.cmd("Move", this.barLabels[leftIndex], this.barPositionsX[insertIndex], this.info.lowerYPos + SortComparison.LABEL_Y_ADD);
+                    this.cmd("Move", this.barLabels[leftIndex], this.barPositionsX[insertIndex], this.info.lowerYPos + this.LABEL_Y_ADD);
                     this.cmd("Step");
                     this.labelsSwap[insertIndex] = this.barLabels[leftIndex];
                     this.objectsSwap[insertIndex] = this.barObjects[leftIndex];
@@ -399,7 +399,7 @@ class SortComparison extends Algorithm {
                 } else {
                     this.arraySwap[insertIndex] = this.arrayData[rightIndex];
                     this.cmd("Move", this.barObjects[rightIndex], this.barPositionsX[insertIndex], this.info.lowerYPos);
-                    this.cmd("Move", this.barLabels[rightIndex], this.barPositionsX[insertIndex], this.info.lowerYPos + SortComparison.LABEL_Y_ADD);
+                    this.cmd("Move", this.barLabels[rightIndex], this.barPositionsX[insertIndex], this.info.lowerYPos + this.LABEL_Y_ADD);
                     this.cmd("Step");
                     this.labelsSwap[insertIndex] = this.barLabels[rightIndex];
                     this.objectsSwap[insertIndex] = this.barObjects[rightIndex];
@@ -411,7 +411,7 @@ class SortComparison extends Algorithm {
                 this.barLabels[insertIndex] = this.labelsSwap[insertIndex];
                 this.arrayData[insertIndex] = this.arraySwap[insertIndex];
                 this.cmd("Move", this.barObjects[insertIndex], this.barPositionsX[insertIndex], this.info.yPos);
-                this.cmd("Move", this.barLabels[insertIndex], this.barPositionsX[insertIndex], this.info.yPos + SortComparison.LABEL_Y_ADD);
+                this.cmd("Move", this.barLabels[insertIndex], this.barPositionsX[insertIndex], this.info.yPos + this.LABEL_Y_ADD);
             }
             this.cmd("Step");
         } else {
@@ -445,23 +445,23 @@ class SortComparison extends Algorithm {
         for (let i = inc + offset; i < this.info.size; i = i + inc) {
             let j = i;
             while (j > inc - 1) {
-                this.cmd("SetForegroundColor", this.barObjects[j], SortComparison.HIGHLIGHT_BAR_COLOR);
-                this.cmd("SetForegroundColor", this.barObjects[j - inc], SortComparison.HIGHLIGHT_BAR_COLOR);
-                this.cmd("SetBackgroundColor", this.barObjects[j], SortComparison.HIGHLIGHT_BAR_BACKGROUND_COLOR);
-                this.cmd("SetBackgroundColor", this.barObjects[j - inc], SortComparison.HIGHLIGHT_BAR_BACKGROUND_COLOR);
+                this.cmd("SetForegroundColor", this.barObjects[j], this.HIGHLIGHT_BAR_COLOR);
+                this.cmd("SetForegroundColor", this.barObjects[j - inc], this.HIGHLIGHT_BAR_COLOR);
+                this.cmd("SetBackgroundColor", this.barObjects[j], this.HIGHLIGHT_BAR_BACKGROUND_COLOR);
+                this.cmd("SetBackgroundColor", this.barObjects[j - inc], this.HIGHLIGHT_BAR_BACKGROUND_COLOR);
                 this.cmd("Step");
                 if (this.compare(this.arrayData[j - inc], this.arrayData[j]) <= 0) {
-                    this.cmd("SetForegroundColor", this.barObjects[j], SortComparison.BAR_FOREGROUND_COLOR);
-                    this.cmd("SetForegroundColor", this.barObjects[j - inc], SortComparison.BAR_FOREGROUND_COLOR);
-                    this.cmd("SetBackgroundColor", this.barObjects[j], SortComparison.BAR_BACKGROUND_COLOR);
-                    this.cmd("SetBackgroundColor", this.barObjects[j - inc], SortComparison.BAR_BACKGROUND_COLOR);
+                    this.cmd("SetForegroundColor", this.barObjects[j], this.BAR_FOREGROUND_COLOR);
+                    this.cmd("SetForegroundColor", this.barObjects[j - inc], this.BAR_FOREGROUND_COLOR);
+                    this.cmd("SetBackgroundColor", this.barObjects[j], this.BAR_BACKGROUND_COLOR);
+                    this.cmd("SetBackgroundColor", this.barObjects[j - inc], this.BAR_BACKGROUND_COLOR);
                     break;
                 }
                 this.swap(j, j - inc);
-                this.cmd("SetForegroundColor", this.barObjects[j], SortComparison.BAR_FOREGROUND_COLOR);
-                this.cmd("SetForegroundColor", this.barObjects[j - inc], SortComparison.BAR_FOREGROUND_COLOR);
-                this.cmd("SetBackgroundColor", this.barObjects[j], SortComparison.BAR_BACKGROUND_COLOR);
-                this.cmd("SetBackgroundColor", this.barObjects[j - inc], SortComparison.BAR_BACKGROUND_COLOR);
+                this.cmd("SetForegroundColor", this.barObjects[j], this.BAR_FOREGROUND_COLOR);
+                this.cmd("SetForegroundColor", this.barObjects[j - inc], this.BAR_FOREGROUND_COLOR);
+                this.cmd("SetBackgroundColor", this.barObjects[j], this.BAR_BACKGROUND_COLOR);
+                this.cmd("SetBackgroundColor", this.barObjects[j - inc], this.BAR_BACKGROUND_COLOR);
                 j = j - inc;
             }
         }
@@ -482,8 +482,8 @@ class SortComparison extends Algorithm {
 
         this.cmd("Move", this.barObjects[index1], this.barPositionsX[index1], this.info.yPos);
         this.cmd("Move", this.barObjects[index2], this.barPositionsX[index2], this.info.yPos);
-        this.cmd("Move", this.barLabels[index1], this.barPositionsX[index1], this.info.yPos + SortComparison.LABEL_Y_ADD);
-        this.cmd("Move", this.barLabels[index2], this.barPositionsX[index2], this.info.yPos + SortComparison.LABEL_Y_ADD);
+        this.cmd("Move", this.barLabels[index1], this.barPositionsX[index1], this.info.yPos + this.LABEL_Y_ADD);
+        this.cmd("Move", this.barLabels[index2], this.barPositionsX[index2], this.info.yPos + this.LABEL_Y_ADD);
         this.cmd("Step");
     }
 

@@ -63,9 +63,9 @@ function initCanvas(canvas, generalControlBar, algorithmControlBar) {
 
 
 class AnimationManager extends EventListener {
-    static DEFAULT_ANIMATION_SPEED = 75;
-    static DEFAULT_CANVAS_SIZE = "750:450";
-    static DEFAULT_PAUSED_VALUE = false;
+    DEFAULT_ANIMATION_SPEED = 75;
+    DEFAULT_CANVAS_SIZE = "750:450";
+    DEFAULT_PAUSED_VALUE = false;
 
     constructor(canvas, controlBars, animationSpeeds, canvasSizes) {
         super();
@@ -228,25 +228,25 @@ class AnimationManager extends EventListener {
     }
 
     animationPaused() {
-        return this.playPauseBackButton?.value || AnimationManager.DEFAULT_PAUSED_VALUE;
+        return this.playPauseBackButton?.value || this.DEFAULT_PAUSED_VALUE;
     }
 
     updateAnimationSpeed() {
-        const speed = this.speedSelector?.value || AnimationManager.DEFAULT_ANIMATION_SPEED;
+        const speed = this.speedSelector?.value || this.DEFAULT_ANIMATION_SPEED;
         this.setCookie("VisualizationSpeed", speed, 30);
         // console.log(`New animation speed: ${speed}`);
     }
 
     animationBlockLength() {
-        const speed = Number(this.speedSelector?.value) || AnimationManager.DEFAULT_ANIMATION_SPEED;
+        const speed = Number(this.speedSelector?.value) || this.DEFAULT_ANIMATION_SPEED;
         return Math.floor((100 - speed) / 2);
     }
 
     updateCanvasSize() {
-        const size = this.sizeSelector?.value || AnimationManager.DEFAULT_CANVAS_SIZE;
+        const size = this.sizeSelector?.value || this.DEFAULT_CANVAS_SIZE;
         let [w, h] = size.split(":").map(n => parseInt(n));
         if (isNaN(w) || isNaN(h)) {
-            [w, h] = AnimationManager.DEFAULT_CANVAS_SIZE.split(":").map(n => parseInt(n));
+            [w, h] = this.DEFAULT_CANVAS_SIZE.split(":").map(n => parseInt(n));
         }
         this.canvas.width = w;
         this.canvas.height = h;

@@ -32,15 +32,15 @@
 
 
 class GraphDFS extends Graph {
-    static AUX_ARRAY_WIDTH = 25;
-    static AUX_ARRAY_HEIGHT = 25;
-    static AUX_ARRAY_START_Y = 50;
+    AUX_ARRAY_WIDTH = 25;
+    AUX_ARRAY_HEIGHT = 25;
+    AUX_ARRAY_START_Y = 50;
 
-    static VISITED_START_X = 475;
-    static PARENT_START_X = 400;
+    VISITED_START_X = 475;
+    PARENT_START_X = 400;
 
-    static HIGHLIGHT_CIRCLE_COLOR = "#000000";
-    static DFS_TREE_COLOR = "#0000FF";
+    HIGHLIGHT_CIRCLE_COLOR = "#000000";
+    DFS_TREE_COLOR = "#0000FF";
 
     constructor(am, dir) {
         super();
@@ -74,15 +74,15 @@ class GraphDFS extends Graph {
             this.visitedIndexID[i] = this.nextIndex++;
             this.parentID[i] = this.nextIndex++;
             this.parentIndexID[i] = this.nextIndex++;
-            this.cmd("CreateRectangle", this.visitedID[i], "f", GraphDFS.AUX_ARRAY_WIDTH, GraphDFS.AUX_ARRAY_HEIGHT, GraphDFS.VISITED_START_X, GraphDFS.AUX_ARRAY_START_Y + i * GraphDFS.AUX_ARRAY_HEIGHT);
-            this.cmd("CreateLabel", this.visitedIndexID[i], i, GraphDFS.VISITED_START_X - GraphDFS.AUX_ARRAY_WIDTH, GraphDFS.AUX_ARRAY_START_Y + i * GraphDFS.AUX_ARRAY_HEIGHT);
-            this.cmd("SetForegroundColor", this.visitedIndexID[i], GraphDFS.VERTEX_INDEX_COLOR);
-            this.cmd("CreateRectangle", this.parentID[i], "", GraphDFS.AUX_ARRAY_WIDTH, GraphDFS.AUX_ARRAY_HEIGHT, GraphDFS.PARENT_START_X, GraphDFS.AUX_ARRAY_START_Y + i * GraphDFS.AUX_ARRAY_HEIGHT);
-            this.cmd("CreateLabel", this.parentIndexID[i], i, GraphDFS.PARENT_START_X - GraphDFS.AUX_ARRAY_WIDTH, GraphDFS.AUX_ARRAY_START_Y + i * GraphDFS.AUX_ARRAY_HEIGHT);
-            this.cmd("SetForegroundColor", this.parentIndexID[i], GraphDFS.VERTEX_INDEX_COLOR);
+            this.cmd("CreateRectangle", this.visitedID[i], "f", this.AUX_ARRAY_WIDTH, this.AUX_ARRAY_HEIGHT, this.VISITED_START_X, this.AUX_ARRAY_START_Y + i * this.AUX_ARRAY_HEIGHT);
+            this.cmd("CreateLabel", this.visitedIndexID[i], i, this.VISITED_START_X - this.AUX_ARRAY_WIDTH, this.AUX_ARRAY_START_Y + i * this.AUX_ARRAY_HEIGHT);
+            this.cmd("SetForegroundColor", this.visitedIndexID[i], this.VERTEX_INDEX_COLOR);
+            this.cmd("CreateRectangle", this.parentID[i], "", this.AUX_ARRAY_WIDTH, this.AUX_ARRAY_HEIGHT, this.PARENT_START_X, this.AUX_ARRAY_START_Y + i * this.AUX_ARRAY_HEIGHT);
+            this.cmd("CreateLabel", this.parentIndexID[i], i, this.PARENT_START_X - this.AUX_ARRAY_WIDTH, this.AUX_ARRAY_START_Y + i * this.AUX_ARRAY_HEIGHT);
+            this.cmd("SetForegroundColor", this.parentIndexID[i], this.VERTEX_INDEX_COLOR);
         }
-        this.cmd("CreateLabel", this.nextIndex++, "Parent", GraphDFS.PARENT_START_X - GraphDFS.AUX_ARRAY_WIDTH, GraphDFS.AUX_ARRAY_START_Y - GraphDFS.AUX_ARRAY_HEIGHT * 1.5, 0);
-        this.cmd("CreateLabel", this.nextIndex++, "Visited", GraphDFS.VISITED_START_X - GraphDFS.AUX_ARRAY_WIDTH, GraphDFS.AUX_ARRAY_START_Y - GraphDFS.AUX_ARRAY_HEIGHT * 1.5, 0);
+        this.cmd("CreateLabel", this.nextIndex++, "Parent", this.PARENT_START_X - this.AUX_ARRAY_WIDTH, this.AUX_ARRAY_START_Y - this.AUX_ARRAY_HEIGHT * 1.5, 0);
+        this.cmd("CreateLabel", this.nextIndex++, "Visited", this.VISITED_START_X - this.AUX_ARRAY_WIDTH, this.AUX_ARRAY_START_Y - this.AUX_ARRAY_HEIGHT * 1.5, 0);
         this.animationManager.setAllLayers([0, this.currentLayer]);
         this.animationManager.StartNewAnimation(this.commands);
         this.animationManager.skipForward();
@@ -116,12 +116,12 @@ class GraphDFS extends Graph {
             this.visited[i] = false;
         }
         const vertex = parseInt(startVetex);
-        this.cmd("CreateHighlightCircle", this.highlightCircleL, GraphDFS.HIGHLIGHT_CIRCLE_COLOR, this.xPosLogical[vertex], this.yPosLogical[vertex]);
+        this.cmd("CreateHighlightCircle", this.highlightCircleL, this.HIGHLIGHT_CIRCLE_COLOR, this.xPosLogical[vertex], this.yPosLogical[vertex]);
         this.cmd("SetLayer", this.highlightCircleL, 1);
-        this.cmd("CreateHighlightCircle", this.highlightCircleAL, GraphDFS.HIGHLIGHT_CIRCLE_COLOR, this.adjListXStart - this.adjListWidth, this.adjListYStart + vertex * this.adjListHeight);
+        this.cmd("CreateHighlightCircle", this.highlightCircleAL, this.HIGHLIGHT_CIRCLE_COLOR, this.adjListXStart - this.adjListWidth, this.adjListYStart + vertex * this.adjListHeight);
         this.cmd("SetLayer", this.highlightCircleAL, 2);
 
-        this.cmd("CreateHighlightCircle", this.highlightCircleAM, GraphDFS.HIGHLIGHT_CIRCLE_COLOR, this.adjMatrixXStart - this.adjMatrixWidth, this.adjMatrixYStart + vertex * this.adjMatrixHeight);
+        this.cmd("CreateHighlightCircle", this.highlightCircleAM, this.HIGHLIGHT_CIRCLE_COLOR, this.adjMatrixXStart - this.adjMatrixWidth, this.adjMatrixYStart + vertex * this.adjMatrixHeight);
         this.cmd("SetLayer", this.highlightCircleAM, 3);
 
         this.messageY = 30;
@@ -159,7 +159,7 @@ class GraphDFS extends Graph {
 
                     if (!this.visited[neighbor]) {
                         this.cmd("Disconnect", this.circleID[startVertex], this.circleID[neighbor]);
-                        this.cmd("Connect", this.circleID[startVertex], this.circleID[neighbor], GraphDFS.DFS_TREE_COLOR, this.curve[startVertex][neighbor], 1, "");
+                        this.cmd("Connect", this.circleID[startVertex], this.circleID[neighbor], this.DFS_TREE_COLOR, this.curve[startVertex][neighbor], 1, "");
                         this.cmd("Move", this.highlightCircleL, this.xPosLogical[neighbor], this.yPosLogical[neighbor]);
                         this.cmd("Move", this.highlightCircleAL, this.adjListXStart - this.adjListWidth, this.adjListYStart + neighbor * this.adjListHeight);
                         this.cmd("Move", this.highlightCircleAM, this.adjMatrixXStart - this.adjMatrixWidth, this.adjMatrixYStart + neighbor * this.adjMatrixHeight);

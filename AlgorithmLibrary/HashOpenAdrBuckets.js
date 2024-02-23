@@ -33,14 +33,14 @@
 
 class HashOpenAdrBuckets extends Hash {
     // This is a special key and should not be possible to enter in the GUI:
-    static DELETED = "<deleted>";
+    DELETED = "<deleted>";
 
-    static DEFAULT_TABLE_SIZE = 23;
-    static TABLE_SIZES = [13, 23, 41];
-    static TABLE_SIZE_LABELS = ["Small (13)", "Medium (23)", "Large (41)"];
-    static NUM_BUCKETS = {13: 5, 23: 6, 41: 11};
+    DEFAULT_TABLE_SIZE = 23;
+    TABLE_SIZES = [13, 23, 41];
+    TABLE_SIZE_LABELS = ["Small (13)", "Medium (23)", "Large (41)"];
+    NUM_BUCKETS = {13: 5, 23: 6, 41: 11};
 
-    static ARRAY_ELEM_START_Y = 100;
+    ARRAY_ELEM_START_Y = 100;
 
     constructor(am) {
         super();
@@ -52,16 +52,16 @@ class HashOpenAdrBuckets extends Hash {
         this.addBreakToAlgorithmBar();
 
         this.addLabelToAlgorithmBar("Table size:");
-        this.sizeSelect = this.addSelectToAlgorithmBar(HashOpenAdrBuckets.TABLE_SIZES, HashOpenAdrBuckets.TABLE_SIZE_LABELS);
-        this.sizeSelect.value = HashOpenAdrBuckets.DEFAULT_TABLE_SIZE;
+        this.sizeSelect = this.addSelectToAlgorithmBar(this.TABLE_SIZES, this.TABLE_SIZE_LABELS);
+        this.sizeSelect.value = this.DEFAULT_TABLE_SIZE;
         this.sizeSelect.onchange = this.resetAll.bind(this);
     }
 
     resetAll() {
-        this.tableSize = parseInt(this.sizeSelect?.value) || HashOpenAdrBuckets.DEFAULT_TABLE_SIZE;
+        this.tableSize = parseInt(this.sizeSelect?.value) || this.DEFAULT_TABLE_SIZE;
         super.resetAll();
 
-        this.numBuckets = HashOpenAdrBuckets.NUM_BUCKETS[this.tableSize];
+        this.numBuckets = this.NUM_BUCKETS[this.tableSize];
         this.bucketSize = Math.floor((this.tableSize - 2) / this.numBuckets);
 
         this.tableCells = new Array(this.tableSize);
@@ -129,7 +129,7 @@ class HashOpenAdrBuckets extends Hash {
     getCellPosXY(i) {
         const startX = this.getCellWidth();
         let x = startX;
-        let y = HashOpenAdrBuckets.ARRAY_ELEM_START_Y;
+        let y = this.ARRAY_ELEM_START_Y;
         for (let k = 0; k < i; k++) {
             x += this.getCellWidth();
             if (x + this.getCellWidth() > this.getCanvasWidth()) {
@@ -163,24 +163,24 @@ class HashOpenAdrBuckets extends Hash {
         this.cmd("CreateHighlightCircle", this.highlightID, "red", 0, 0);
         const firstLabel = this.nextIndex;
 
-        let xPosOfNextLabel = Hash.FIRST_PRINT_POS_X;
+        let xPosOfNextLabel = this.FIRST_PRINT_POS_X;
         let yPosOfNextLabel = this.getCanvasHeight() * 0.9;
 
         for (let i = 0; i < this.tableCells.length; i++) {
             this.cmd("Move", this.highlightID, this.getCellPosX(i), this.getCellPosY(i));
             this.cmd("Step");
             const elem = this.tableCells[i];
-            if (elem && elem !== HashOpenAdrBuckets.DELETED) {
+            if (elem && elem !== this.DELETED) {
                 const nextLabelID = this.nextIndex++;
                 this.cmd("CreateLabel", nextLabelID, elem, this.getCellPosX(i), this.getCellPosY(i));
                 this.cmd("SetForegroundColor", nextLabelID, "blue");
                 this.cmd("Move", nextLabelID, xPosOfNextLabel, yPosOfNextLabel);
                 this.cmd("Step");
 
-                xPosOfNextLabel += Hash.PRINT_HORIZONTAL_GAP;
+                xPosOfNextLabel += this.PRINT_HORIZONTAL_GAP;
                 if (xPosOfNextLabel > this.printMax) {
-                    xPosOfNextLabel = Hash.FIRST_PRINT_POS_X;
-                    yPosOfNextLabel += Hash.PRINT_VERTICAL_GAP;
+                    xPosOfNextLabel = this.FIRST_PRINT_POS_X;
+                    yPosOfNextLabel += this.PRINT_VERTICAL_GAP;
                 }
             }
         }
@@ -248,8 +248,8 @@ class HashOpenAdrBuckets extends Hash {
         if (index < 0) {
             this.cmd("SetText", this.messageID, `Deleting ${elem}: Element not found!`);
         } else {
-            this.tableCells[index] = HashOpenAdrBuckets.DELETED;
-            this.cmd("SetText", this.tableCellIDs[index], HashOpenAdrBuckets.DELETED);
+            this.tableCells[index] = this.DELETED;
+            this.cmd("SetText", this.tableCellIDs[index], this.DELETED);
             this.cmd("SetText", this.messageID, `Deleted ${elem}.`);
             this.cmd("Step");
             this.cmd("SetHighlight", this.tableCellIDs[index], 0);
@@ -333,13 +333,13 @@ class HashOpenAdrBuckets extends Hash {
         const highlightID = this.nextIndex++;
 
         const lblText = `    ${hash} % ${this.tableSize}  =  `;
-        this.cmd("CreateLabel", labelID, lblText, Hash.HASH_MOD_X, Hash.HASH_NUMBER_START_Y, 0);
+        this.cmd("CreateLabel", labelID, lblText, this.HASH_MOD_X, this.HASH_NUMBER_START_Y, 0);
         this.cmd("CreateLabel", labelID2, "", 0, 0);
         this.cmd("AlignRight", labelID2, labelID);
         this.cmd("Settext", labelID, lblText + bucket);
         this.cmd("Step");
 
-        this.cmd("CreateHighlightCircle", highlightID, Hash.HIGHLIGHT_COLOR, 0, 0);
+        this.cmd("CreateHighlightCircle", highlightID, this.HIGHLIGHT_COLOR, 0, 0);
         this.cmd("SetWidth", highlightID, this.getCellHeight());
         this.cmd("AlignMiddle", highlightID, labelID2);
         this.cmd("Move", highlightID, this.getBucketLabelX(bucket), this.getBucketLabelY(bucket));

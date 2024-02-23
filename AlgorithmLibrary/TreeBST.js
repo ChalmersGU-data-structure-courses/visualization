@@ -47,24 +47,24 @@ class BSTNode {
 
 
 class TreeBST extends Algorithm {
-    static FOREGROUND_COLOR = "#007700";
-    static BACKGROUND_COLOR = "#EEFFEE";
+    FOREGROUND_COLOR = "#007700";
+    BACKGROUND_COLOR = "#EEFFEE";
 
-    static LINK_COLOR = TreeBST.FOREGROUND_COLOR;
-    static HIGHLIGHT_CIRCLE_COLOR = TreeBST.FOREGROUND_COLOR;
-    static PRINT_COLOR = TreeBST.FOREGROUND_COLOR;
+    LINK_COLOR = this.FOREGROUND_COLOR;
+    HIGHLIGHT_CIRCLE_COLOR = this.FOREGROUND_COLOR;
+    PRINT_COLOR = this.FOREGROUND_COLOR;
 
-    static NODE_SIZE = 40;
-    static WIDTH_DELTA = TreeBST.NODE_SIZE + 10;
-    static HEIGHT_DELTA = TreeBST.NODE_SIZE + 10;
-    static STARTING_Y = 50;
+    NODE_SIZE = 40;
+    WIDTH_DELTA = this.NODE_SIZE + 10;
+    HEIGHT_DELTA = this.NODE_SIZE + 10;
+    STARTING_Y = 50;
 
-    static FIRST_PRINT_POS_X = 50;
-    static PRINT_VERTICAL_GAP = 20;
-    static PRINT_HORIZONTAL_GAP = 50;
+    FIRST_PRINT_POS_X = 50;
+    PRINT_VERTICAL_GAP = 20;
+    PRINT_HORIZONTAL_GAP = 50;
 
-    static MESSAGE_X = 10;
-    static MESSAGE_Y = 10;
+    MESSAGE_X = 10;
+    MESSAGE_Y = 10;
 
     constructor(am) {
         super();
@@ -81,7 +81,7 @@ class TreeBST extends Algorithm {
         this.nextIndex = 0;
         this.commands = [];
         this.messageID = this.nextIndex++;
-        this.cmd("CreateLabel", this.messageID, "", TreeBST.MESSAGE_X, TreeBST.MESSAGE_Y, 0);
+        this.cmd("CreateLabel", this.messageID, "", this.MESSAGE_X, this.MESSAGE_Y, 0);
 
         this.initialIndex = this.nextIndex;
         this.animationManager.StartNewAnimation(this.commands);
@@ -96,8 +96,8 @@ class TreeBST extends Algorithm {
         const h = this.getCanvasHeight();
 
         this.startingX = w / 2;
-        this.firstPrintPosY = h - 3 * TreeBST.PRINT_VERTICAL_GAP;
-        this.printMax = w - TreeBST.PRINT_HORIZONTAL_GAP;
+        this.firstPrintPosY = h - 3 * this.PRINT_VERTICAL_GAP;
+        this.printMax = w - this.PRINT_HORIZONTAL_GAP;
 
         this.implementAction(() => {
             this.commands = [];
@@ -181,10 +181,10 @@ class TreeBST extends Algorithm {
         this.commands = [];
         this.cmd("SetText", this.messageID, "Printing tree");
         this.highlightID = this.nextIndex++;
-        this.cmd("CreateHighlightCircle", this.highlightID, TreeBST.HIGHLIGHT_CIRCLE_COLOR, this.treeRoot.x, this.treeRoot.y);
+        this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, this.treeRoot.x, this.treeRoot.y);
         const firstLabel = this.nextIndex;
 
-        this.xPosOfNextLabel = TreeBST.FIRST_PRINT_POS_X;
+        this.xPosOfNextLabel = this.FIRST_PRINT_POS_X;
         this.yPosOfNextLabel = this.firstPrintPosY;
 
         this.printTreeRec(this.treeRoot);
@@ -208,14 +208,14 @@ class TreeBST extends Algorithm {
         }
         const nextLabelID = this.nextIndex++;
         this.cmd("CreateLabel", nextLabelID, tree.data, tree.x, tree.y);
-        this.cmd("SetForegroundColor", nextLabelID, TreeBST.PRINT_COLOR);
+        this.cmd("SetForegroundColor", nextLabelID, this.PRINT_COLOR);
         this.cmd("Move", nextLabelID, this.xPosOfNextLabel, this.yPosOfNextLabel);
         this.cmd("Step");
 
-        this.xPosOfNextLabel += TreeBST.PRINT_HORIZONTAL_GAP;
+        this.xPosOfNextLabel += this.PRINT_HORIZONTAL_GAP;
         if (this.xPosOfNextLabel > this.printMax) {
-            this.xPosOfNextLabel = TreeBST.FIRST_PRINT_POS_X;
-            this.yPosOfNextLabel += TreeBST.PRINT_VERTICAL_GAP;
+            this.xPosOfNextLabel = this.FIRST_PRINT_POS_X;
+            this.yPosOfNextLabel += this.PRINT_VERTICAL_GAP;
         }
         if (tree.right != null) {
             this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
@@ -273,7 +273,7 @@ class TreeBST extends Algorithm {
                 this.cmd("Step");
                 this.cmd("SetHighlight", tree.graphicID, 0);
                 if (tree.left != null) {
-                    this.cmd("CreateHighlightCircle", this.highlightID, TreeBST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+                    this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
                     this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
                     this.cmd("Step");
                     this.cmd("Delete", this.highlightID);
@@ -284,7 +284,7 @@ class TreeBST extends Algorithm {
                 this.cmd("Step");
                 this.cmd("SetHighlight", tree.graphicID, 0);
                 if (tree.right != null) {
-                    this.cmd("CreateHighlightCircle", this.highlightID, TreeBST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+                    this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
                     this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
                     this.cmd("Step");
                     this.cmd("Delete", this.highlightID);
@@ -303,19 +303,19 @@ class TreeBST extends Algorithm {
         const treeNodeID = this.nextIndex++;
 
         if (this.treeRoot == null) {
-            const x = this.startingX, y = TreeBST.STARTING_Y;
+            const x = this.startingX, y = this.STARTING_Y;
             this.cmd("CreateCircle", treeNodeID, insertedValue, x, y);
-            this.cmd("SetWidth", treeNodeID, TreeBST.NODE_SIZE);
-            this.cmd("SetForegroundColor", treeNodeID, TreeBST.FOREGROUND_COLOR);
-            this.cmd("SetBackgroundColor", treeNodeID, TreeBST.BACKGROUND_COLOR);
+            this.cmd("SetWidth", treeNodeID, this.NODE_SIZE);
+            this.cmd("SetForegroundColor", treeNodeID, this.FOREGROUND_COLOR);
+            this.cmd("SetBackgroundColor", treeNodeID, this.BACKGROUND_COLOR);
             this.cmd("Step");
             this.treeRoot = new BSTNode(insertedValue, treeNodeID, x, y);
         } else {
-            const x = TreeBST.STARTING_Y, y = 2 * TreeBST.STARTING_Y;
+            const x = this.STARTING_Y, y = 2 * this.STARTING_Y;
             this.cmd("CreateCircle", treeNodeID, insertedValue, x, y);
-            this.cmd("SetWidth", treeNodeID, TreeBST.NODE_SIZE);
-            this.cmd("SetForegroundColor", treeNodeID, TreeBST.FOREGROUND_COLOR);
-            this.cmd("SetBackgroundColor", treeNodeID, TreeBST.BACKGROUND_COLOR);
+            this.cmd("SetWidth", treeNodeID, this.NODE_SIZE);
+            this.cmd("SetForegroundColor", treeNodeID, this.FOREGROUND_COLOR);
+            this.cmd("SetBackgroundColor", treeNodeID, this.BACKGROUND_COLOR);
             this.cmd("Step");
             const insertElem = new BSTNode(insertedValue, treeNodeID, x, y);
             this.cmd("SetHighlight", insertElem.graphicID, 1);
@@ -347,9 +347,9 @@ class TreeBST extends Algorithm {
                 this.cmd("SetHighlight", elem.graphicID, 0);
                 tree.left = elem;
                 elem.parent = tree;
-                this.cmd("Connect", tree.graphicID, elem.graphicID, TreeBST.LINK_COLOR);
+                this.cmd("Connect", tree.graphicID, elem.graphicID, this.LINK_COLOR);
             } else {
-                this.cmd("CreateHighlightCircle", this.highlightID, TreeBST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+                this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
                 this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
                 this.cmd("Step");
                 this.cmd("Delete", this.highlightID);
@@ -360,12 +360,12 @@ class TreeBST extends Algorithm {
             this.cmd("SetHighlight", elem.graphicID, 0);
             tree.right = elem;
             elem.parent = tree;
-            this.cmd("Connect", tree.graphicID, elem.graphicID, TreeBST.LINK_COLOR);
-            elem.x = tree.x + TreeBST.WIDTH_DELTA / 2;
-            elem.y = tree.y + TreeBST.HEIGHT_DELTA;
+            this.cmd("Connect", tree.graphicID, elem.graphicID, this.LINK_COLOR);
+            elem.x = tree.x + this.WIDTH_DELTA / 2;
+            elem.y = tree.y + this.HEIGHT_DELTA;
             this.cmd("Move", elem.graphicID, elem.x, elem.y);
         } else {
-            this.cmd("CreateHighlightCircle", this.highlightID, TreeBST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+            this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
             this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
             this.cmd("Step");
             this.cmd("Delete", this.highlightID);
@@ -420,7 +420,7 @@ class TreeBST extends Algorithm {
                     this.cmd("SetText", this.messageID, "Node to delete has no left child: \nSet parent of deleted node to right child of deleted node");
                     if (tree.parent != null) {
                         this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
-                        this.cmd("Connect", tree.parent.graphicID, tree.right.graphicID, TreeBST.LINK_COLOR);
+                        this.cmd("Connect", tree.parent.graphicID, tree.right.graphicID, this.LINK_COLOR);
                         this.cmd("Step");
                         this.cmd("Delete", tree.graphicID);
                         if (leftchild) {
@@ -439,7 +439,7 @@ class TreeBST extends Algorithm {
                     this.cmd("SetText", this.messageID, "Node to delete has no right child: \nSet parent of deleted node to left child of deleted node");
                     if (tree.parent != null) {
                         this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
-                        this.cmd("Connect", tree.parent.graphicID, tree.left.graphicID, TreeBST.LINK_COLOR);
+                        this.cmd("Connect", tree.parent.graphicID, tree.left.graphicID, this.LINK_COLOR);
                         this.cmd("Step");
                         this.cmd("Delete", tree.graphicID);
                         if (leftchild) {
@@ -457,7 +457,7 @@ class TreeBST extends Algorithm {
                 } else { // tree.left != null && tree.right != null
                     this.cmd("SetText", this.messageID, "Node to delete has two children: \nFind largest node in left subtree");
                     this.highlightID = this.nextIndex++;
-                    this.cmd("CreateHighlightCircle", this.highlightID, TreeBST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+                    this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
                     let tmp = tree;
                     tmp = tree.left;
                     this.cmd("Move", this.highlightID, tmp.x, tmp.y);
@@ -491,7 +491,7 @@ class TreeBST extends Algorithm {
                         this.resizeTree();
                     } else {
                         this.cmd("Disconnect", tmp.parent.graphicID, tmp.graphicID);
-                        this.cmd("Connect", tmp.parent.graphicID, tmp.left.graphicID, TreeBST.LINK_COLOR);
+                        this.cmd("Connect", tmp.parent.graphicID, tmp.left.graphicID, this.LINK_COLOR);
                         this.cmd("Step");
                         this.cmd("Delete", tmp.graphicID);
                         if (tmp.parent !== tree) {
@@ -506,7 +506,7 @@ class TreeBST extends Algorithm {
                 }
             } else if (cmp < 0) {
                 if (tree.left != null) {
-                    this.cmd("CreateHighlightCircle", this.highlightID, TreeBST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+                    this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
                     this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
                     this.cmd("Step");
                     this.cmd("Delete", this.highlightID);
@@ -514,7 +514,7 @@ class TreeBST extends Algorithm {
                 this.treeDelete(tree.left, valueToDelete);
             } else {
                 if (tree.right != null) {
-                    this.cmd("CreateHighlightCircle", this.highlightID, TreeBST.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
+                    this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
                     this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
                     this.cmd("Step");
                     this.cmd("Delete", this.highlightID);
@@ -547,7 +547,7 @@ class TreeBST extends Algorithm {
             } else if (this.treeRoot.rightWidth > startingPoint) {
                 startingPoint = Math.max(this.treeRoot.leftWidth, 2 * startingPoint - this.treeRoot.rightWidth);
             }
-            this.setNewPositions(this.treeRoot, startingPoint, TreeBST.STARTING_Y, 0);
+            this.setNewPositions(this.treeRoot, startingPoint, this.STARTING_Y, 0);
             this.animateNewPositions(this.treeRoot);
             this.cmd("Step");
         }
@@ -562,8 +562,8 @@ class TreeBST extends Algorithm {
                 xPosition = xPosition + tree.leftWidth;
             }
             tree.x = xPosition;
-            this.setNewPositions(tree.left, xPosition, yPosition + TreeBST.HEIGHT_DELTA, -1);
-            this.setNewPositions(tree.right, xPosition, yPosition + TreeBST.HEIGHT_DELTA, 1);
+            this.setNewPositions(tree.left, xPosition, yPosition + this.HEIGHT_DELTA, -1);
+            this.setNewPositions(tree.right, xPosition, yPosition + this.HEIGHT_DELTA, 1);
         }
     }
 
@@ -579,8 +579,8 @@ class TreeBST extends Algorithm {
         if (tree == null) {
             return 0;
         }
-        tree.leftWidth = Math.max(this.resizeWidths(tree.left), TreeBST.WIDTH_DELTA / 2);
-        tree.rightWidth = Math.max(this.resizeWidths(tree.right), TreeBST.WIDTH_DELTA / 2);
+        tree.leftWidth = Math.max(this.resizeWidths(tree.left), this.WIDTH_DELTA / 2);
+        tree.rightWidth = Math.max(this.resizeWidths(tree.right), this.WIDTH_DELTA / 2);
         return tree.leftWidth + tree.rightWidth;
     }
 }

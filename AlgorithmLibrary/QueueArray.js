@@ -32,30 +32,30 @@
 
 
 class QueueArray extends Algorithm {
-    static SIZE = 15;
-    static INDEX_COLOR = "#0000FF";
+    SIZE = 15;
+    INDEX_COLOR = "#0000FF";
 
-    static ARRAY_START_X = 100;
-    static ARRAY_START_Y = 200;
-    static ARRAY_ELEM_WIDTH = 50;
-    static ARRAY_ELEM_HEIGHT = 50;
+    ARRAY_START_X = 100;
+    ARRAY_START_Y = 200;
+    ARRAY_ELEM_WIDTH = 50;
+    ARRAY_ELEM_HEIGHT = 50;
 
-    static ARRAY_LINE_SPACING = 130;
+    ARRAY_LINE_SPACING = 130;
 
-    static HEAD_POS_X = 180;
-    static HEAD_POS_Y = 100;
-    static HEAD_LABEL_X = 130;
-    static HEAD_LABEL_Y = 100;
+    HEAD_POS_X = 180;
+    HEAD_POS_Y = 100;
+    HEAD_LABEL_X = 130;
+    HEAD_LABEL_Y = 100;
 
-    static TAIL_POS_X = 280;
-    static TAIL_POS_Y = 100;
-    static TAIL_LABEL_X = 230;
-    static TAIL_LABEL_Y = 100;
+    TAIL_POS_X = 280;
+    TAIL_POS_Y = 100;
+    TAIL_LABEL_X = 230;
+    TAIL_LABEL_Y = 100;
 
-    static QUEUE_LABEL_X = 50;
-    static QUEUE_LABEL_Y = 30;
-    static QUEUE_ELEMENT_X = 120;
-    static QUEUE_ELEMENT_Y = 30;
+    QUEUE_LABEL_X = 50;
+    QUEUE_LABEL_Y = 30;
+    QUEUE_ELEMENT_X = 120;
+    QUEUE_ELEMENT_Y = 30;
 
     constructor(am) {
         super();
@@ -112,12 +112,12 @@ class QueueArray extends Algorithm {
         this.arrayData = [];
         this.arrayID = [];
         this.arrayLabelID = [];
-        for (let i = 0; i < QueueArray.SIZE; i++) {
+        for (let i = 0; i < this.SIZE; i++) {
             this.arrayID[i] = this.nextIndex++;
             this.arrayLabelID[i] = this.nextIndex++;
             this.cmd("CreateRectangle", this.arrayID[i], "", this.getArrayElemWidth(), this.getArrayElemHeight(), this.getArrayX(i), this.getArrayY(i));
             this.cmd("CreateLabel", this.arrayLabelID[i], i, this.getArrayX(i), this.getArrayLabelY(i));
-            this.cmd("SetForegroundColor", this.arrayLabelID[i], QueueArray.INDEX_COLOR);
+            this.cmd("SetForegroundColor", this.arrayLabelID[i], this.INDEX_COLOR);
         }
 
         this.highlightID = this.nextIndex++;
@@ -165,7 +165,7 @@ class QueueArray extends Algorithm {
     getArrayElemWidth() {
         let nrows = 1;
         while (true) {
-            const w = nrows * this.getCanvasWidth() / (QueueArray.SIZE + 2 * nrows);
+            const w = nrows * this.getCanvasWidth() / (this.SIZE + 2 * nrows);
             if (w >= 25) return w;
             nrows++;
         }
@@ -200,7 +200,7 @@ class QueueArray extends Algorithm {
     clearAll() {
         this.commands = [];
         this.cmd("SetText", this.leftoverLabelID, "");
-        for (let i = 0; i < QueueArray.SIZE; i++) {
+        for (let i = 0; i < this.SIZE; i++) {
             this.arrayData[i] = null;
             this.cmd("SetText", this.arrayID[i], "");
         }
@@ -213,7 +213,7 @@ class QueueArray extends Algorithm {
 
     enqueue(elemToEnqueue) {
         this.commands = [];
-        if ((this.tail + 1) % QueueArray.SIZE === this.head) {
+        if ((this.tail + 1) % this.SIZE === this.head) {
             this.cmd("SetText", this.leftoverLabelID, "Queue full!");
             return this.commands;
         }
@@ -229,7 +229,7 @@ class QueueArray extends Algorithm {
         this.cmd("AlignRight", labEnqueueValID2, this.leftoverLabelID);
         this.cmd("Step");
 
-        this.cmd("CreateHighlightCircle", this.highlightID, QueueArray.INDEX_COLOR, 0, 0);
+        this.cmd("CreateHighlightCircle", this.highlightID, this.INDEX_COLOR, 0, 0);
         this.cmd("SetWidth", this.highlightID, this.getArrayElemHeight());
         this.cmd("AlignMiddle", this.highlightID, this.tailID);
         this.cmd("Step");
@@ -246,7 +246,7 @@ class QueueArray extends Algorithm {
         this.cmd("SetHighlight", this.tailID, 1);
         this.cmd("Step");
 
-        this.tail = (this.tail + 1) % QueueArray.SIZE;
+        this.tail = (this.tail + 1) % this.SIZE;
         this.cmd("SetText", this.tailID, this.tail);
         this.cmd("Step");
 
@@ -269,7 +269,7 @@ class QueueArray extends Algorithm {
         this.cmd("SetText", this.leftoverLabelID, "Dequeing value:  ");
         this.cmd("Step");
 
-        this.cmd("CreateHighlightCircle", this.highlightID, QueueArray.INDEX_COLOR, 0, 0);
+        this.cmd("CreateHighlightCircle", this.highlightID, this.INDEX_COLOR, 0, 0);
         this.cmd("SetWidth", this.highlightID, this.getArrayElemHeight());
         this.cmd("AlignMiddle", this.highlightID, this.headID);
         this.cmd("Step");
@@ -288,7 +288,7 @@ class QueueArray extends Algorithm {
         this.cmd("SetHighlight", this.headID, 1);
         this.cmd("Step");
 
-        this.head = (this.head + 1) % QueueArray.SIZE;
+        this.head = (this.head + 1) % this.SIZE;
         this.cmd("SetText", this.headID, this.head);
         this.cmd("Step");
 

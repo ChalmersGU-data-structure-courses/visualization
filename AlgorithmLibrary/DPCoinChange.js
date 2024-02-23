@@ -32,31 +32,31 @@
 
 
 class DPCoinChange extends Algorithm {
-    static TABLE_ELEM_WIDTH = 30;
-    static TABLE_ELEM_HEIGHT = 30;
+    TABLE_ELEM_WIDTH = 30;
+    TABLE_ELEM_HEIGHT = 30;
 
-    static TABLE_START_X = 500;
-    static TABLE_START_Y = 50;
-    static TABLE_DIFF_X = 70;
+    TABLE_START_X = 500;
+    TABLE_START_Y = 50;
+    TABLE_DIFF_X = 70;
 
-    static CODE_START_X = 10;
-    static CODE_START_Y = 10;
-    static CODE_LINE_HEIGHT = 14;
+    CODE_START_X = 10;
+    CODE_START_Y = 10;
+    CODE_LINE_HEIGHT = 14;
 
-    static GREEDY_START_X = 100;
-    static GREEDY_START_Y = 150;
-    static RECURSIVE_START_X = 220;
-    static RECURSIVE_START_Y = 10;
-    static RECURSIVE_DELTA_Y = 14;
-    static RECURSIVE_DELTA_X = 8;
-    static CODE_HIGHLIGHT_COLOR = "#FF0000";
-    static CODE_STANDARD_COLOR = "#000000";
+    GREEDY_START_X = 100;
+    GREEDY_START_Y = 150;
+    RECURSIVE_START_X = 220;
+    RECURSIVE_START_Y = 10;
+    RECURSIVE_DELTA_Y = 14;
+    RECURSIVE_DELTA_X = 8;
+    CODE_HIGHLIGHT_COLOR = "#FF0000";
+    CODE_STANDARD_COLOR = "#000000";
 
-    static TABLE_INDEX_COLOR = "#0000FF";
-    static CODE_RECURSIVE_1_COLOR = "#339933";
-    static CODE_RECURSIVE_2_COLOR = "#0099FF";
+    TABLE_INDEX_COLOR = "#0000FF";
+    CODE_RECURSIVE_1_COLOR = "#339933";
+    CODE_RECURSIVE_2_COLOR = "#0099FF";
 
-    static DPCode = [
+    DPCode = [
         ["def ", "change(n, coinArray)", ":"],
         ["     if ", "(n === 0) "],
         ["          return 0"],
@@ -69,7 +69,7 @@ class DPCoinChange extends Algorithm {
         ["     return best"],
     ];
 
-    static GREEDYCode = [
+    GREEDYCode = [
         ["def ", "changeGreedy(n, coinArray)", ":"],
         ["    coinsRequired = 0"],
         ["    for coin in reversed(coinArray): "],
@@ -79,12 +79,12 @@ class DPCoinChange extends Algorithm {
         ["    return coinsRequired"],
     ];
 
-    static COINS = [[1, 5, 10, 25],
+    COINS = [[1, 5, 10, 25],
         [1, 4, 6, 10]];
 
-    static MAX_VALUE = 30;
+    MAX_VALUE = 30;
 
-    static MESSAGE_ID = 0;
+    MESSAGE_ID = 0;
 
     constructor(am) {
         super();
@@ -98,8 +98,8 @@ class DPCoinChange extends Algorithm {
             this.codeID[i] = new Array(this.code[i].length);
             for (let j = 0; j < this.code[i].length; j++) {
                 this.codeID[i][j] = this.nextIndex++;
-                this.cmd("CreateLabel", this.codeID[i][j], this.code[i][j], DPCoinChange.CODE_START_X, DPCoinChange.CODE_START_Y + i * DPCoinChange.CODE_LINE_HEIGHT, 0);
-                this.cmd("SetForegroundColor", this.codeID[i][j], DPCoinChange.CODE_STANDARD_COLOR);
+                this.cmd("CreateLabel", this.codeID[i][j], this.code[i][j], this.CODE_START_X, this.CODE_START_Y + i * this.CODE_LINE_HEIGHT, 0);
+                this.cmd("SetForegroundColor", this.codeID[i][j], this.CODE_STANDARD_COLOR);
                 if (j > 0) {
                     this.cmd("AlignRight", this.codeID[i][j], this.codeID[i][j - 1]);
                 }
@@ -129,11 +129,11 @@ class DPCoinChange extends Algorithm {
         this.nextIndex = 0;
         this.addControls();
         // HACK!!
-        this.setCode(DPCoinChange.GREEDYCode);
+        this.setCode(this.GREEDYCode);
         this.greedyCodeID = this.codeID;
         this.setCodeAlpha(this.greedyCodeID, 0);
         ///
-        this.setCode(DPCoinChange.DPCode);
+        this.setCode(this.DPCode);
         this.usingDPCode = true;
 
         this.animationManager.StartNewAnimation(this.commands);
@@ -161,10 +161,10 @@ class DPCoinChange extends Algorithm {
         this.greedyButton.onclick = this.greedyCallback.bind(this);
 
         const coinLabels = [];
-        for (let i = 0; i < DPCoinChange.COINS.length; i++) {
-            let nextLabel = `Coins: [${DPCoinChange.COINS[i][0]}`;
-            for (let j = 1; j < DPCoinChange.COINS[i].length; j++) {
-                nextLabel = `${nextLabel}, ${DPCoinChange.COINS[i][j]}`;
+        for (let i = 0; i < this.COINS.length; i++) {
+            let nextLabel = `Coins: [${this.COINS[i][0]}`;
+            for (let j = 1; j < this.COINS[i].length; j++) {
+                nextLabel = `${nextLabel}, ${this.COINS[i][j]}`;
             }
             nextLabel = `${nextLabel}]`;
             coinLabels.push(nextLabel);
@@ -193,7 +193,7 @@ class DPCoinChange extends Algorithm {
     greedyCallback(value) {
         let changeValue = this.normalizeNumber(this.changeField.value);
         if (changeValue !== "") {
-            changeValue = Math.min(changeValue, DPCoinChange.MAX_VALUE);
+            changeValue = Math.min(changeValue, this.MAX_VALUE);
             this.changeField.value = changeValue;
             this.implementAction(this.implementGreedy.bind(this), changeValue);
         }
@@ -209,8 +209,8 @@ class DPCoinChange extends Algorithm {
             this.usingDPCode = false;
         }
 
-        let currX = DPCoinChange.GREEDY_START_X;
-        const currY = DPCoinChange.GREEDY_START_Y + 2.5 * DPCoinChange.TABLE_ELEM_HEIGHT;
+        let currX = this.GREEDY_START_X;
+        const currY = this.GREEDY_START_Y + 2.5 * this.TABLE_ELEM_HEIGHT;
 
         const messageID = this.nextIndex++;
         this.oldIDs.push(messageID);
@@ -218,9 +218,9 @@ class DPCoinChange extends Algorithm {
         const valueRemainingID = this.nextIndex++;
         this.oldIDs.push(valueRemainingID);
 
-        this.cmd("CreateRectangle", valueRemainingID, value, DPCoinChange.TABLE_ELEM_WIDTH,
-            DPCoinChange.TABLE_ELEM_HEIGHT,
-            DPCoinChange.GREEDY_START_X, DPCoinChange.GREEDY_START_Y);
+        this.cmd("CreateRectangle", valueRemainingID, value, this.TABLE_ELEM_WIDTH,
+            this.TABLE_ELEM_HEIGHT,
+            this.GREEDY_START_X, this.GREEDY_START_Y);
 
         let tempLabel = this.nextIndex++;
         this.oldIDs.push(tempLabel);
@@ -230,9 +230,9 @@ class DPCoinChange extends Algorithm {
         const requiredCoinsID = this.nextIndex++;
         this.oldIDs.push(requiredCoinsID);
 
-        this.cmd("CreateRectangle", requiredCoinsID, value, DPCoinChange.TABLE_ELEM_WIDTH,
-            DPCoinChange.TABLE_ELEM_HEIGHT,
-            DPCoinChange.GREEDY_START_X, DPCoinChange.GREEDY_START_Y + DPCoinChange.TABLE_ELEM_HEIGHT);
+        this.cmd("CreateRectangle", requiredCoinsID, value, this.TABLE_ELEM_WIDTH,
+            this.TABLE_ELEM_HEIGHT,
+            this.GREEDY_START_X, this.GREEDY_START_Y + this.TABLE_ELEM_HEIGHT);
 
         tempLabel = this.nextIndex++;
         this.oldIDs.push(tempLabel);
@@ -241,24 +241,24 @@ class DPCoinChange extends Algorithm {
 
         let requiredCoins = 0;
 
-        for (let i = DPCoinChange.COINS[this.coinIndex].length - 1; i >= 0; i--) {
-            while (value >= DPCoinChange.COINS[this.coinIndex][i]) {
+        for (let i = this.COINS[this.coinIndex].length - 1; i >= 0; i--) {
+            while (value >= this.COINS[this.coinIndex][i]) {
                 requiredCoins = requiredCoins + 1;
-                value = value - DPCoinChange.COINS[this.coinIndex][i];
+                value = value - this.COINS[this.coinIndex][i];
                 this.cmd("SetText", valueRemainingID, value);
                 this.cmd("SetText", requiredCoinsID, requiredCoins);
                 const moveIndex = this.nextIndex++;
                 this.oldIDs.push(moveIndex);
-                this.cmd("CreateLabel", moveIndex, DPCoinChange.COINS[this.coinIndex][i], DPCoinChange.GREEDY_START_X, DPCoinChange.GREEDY_START_Y);
+                this.cmd("CreateLabel", moveIndex, this.COINS[this.coinIndex][i], this.GREEDY_START_X, this.GREEDY_START_Y);
                 this.cmd("Move", moveIndex, currX, currY);
-                currX += DPCoinChange.TABLE_ELEM_WIDTH;
+                currX += this.TABLE_ELEM_WIDTH;
                 this.cmd("Step");
             }
         }
 
         this.cmd("CreateLabel", messageID,
-            `changeGreedy(${String(initialValue)}, [${String(DPCoinChange.COINS[this.coinIndex])}])    = ${String(requiredCoins)}`,
-            DPCoinChange.RECURSIVE_START_X, DPCoinChange.RECURSIVE_START_Y, 0);
+            `changeGreedy(${String(initialValue)}, [${String(this.COINS[this.coinIndex])}])    = ${String(requiredCoins)}`,
+            this.RECURSIVE_START_X, this.RECURSIVE_START_Y, 0);
 
         return this.commands;
     }
@@ -276,22 +276,22 @@ class DPCoinChange extends Algorithm {
             this.tableYPos[i] = new Array(maxVal + 1);
         }
 
-        const tableRows = Math.floor((this.getCanvasHeight() - DPCoinChange.TABLE_ELEM_HEIGHT - DPCoinChange.TABLE_START_Y) / DPCoinChange.TABLE_ELEM_HEIGHT);
+        const tableRows = Math.floor((this.getCanvasHeight() - this.TABLE_ELEM_HEIGHT - this.TABLE_START_Y) / this.TABLE_ELEM_HEIGHT);
         const tableCols = Math.ceil((maxVal + 1) / tableRows);
 
         const header1ID = this.nextIndex++;
         this.oldIDs.push(header1ID);
 
-        this.cmd("CreateLabel", header1ID, "# of Coins Required", DPCoinChange.TABLE_START_X, DPCoinChange.TABLE_START_Y - 30);
+        this.cmd("CreateLabel", header1ID, "# of Coins Required", this.TABLE_START_X, this.TABLE_START_Y - 30);
 
         const header2ID = this.nextIndex++;
         this.oldIDs.push(header2ID);
 
-        this.cmd("CreateLabel", header2ID, "Coins to Use", DPCoinChange.TABLE_START_X + tableCols * DPCoinChange.TABLE_DIFF_X + 1.5 * DPCoinChange.TABLE_DIFF_X, DPCoinChange.TABLE_START_Y - 30);
+        this.cmd("CreateLabel", header2ID, "Coins to Use", this.TABLE_START_X + tableCols * this.TABLE_DIFF_X + 1.5 * this.TABLE_DIFF_X, this.TABLE_START_Y - 30);
 
         for (let i = 0; i <= maxVal; i++) {
-            const yPos = i % tableRows * DPCoinChange.TABLE_ELEM_HEIGHT + DPCoinChange.TABLE_START_Y;
-            let xPos = Math.floor(i / tableRows) * DPCoinChange.TABLE_DIFF_X + DPCoinChange.TABLE_START_X;
+            const yPos = i % tableRows * this.TABLE_ELEM_HEIGHT + this.TABLE_START_Y;
+            let xPos = Math.floor(i / tableRows) * this.TABLE_DIFF_X + this.TABLE_START_X;
 
             for (let j = 0; j < 2; j++) {
                 this.tableID[j][i] = this.nextIndex++;
@@ -303,16 +303,16 @@ class DPCoinChange extends Algorithm {
 
                 this.cmd("CreateRectangle", this.tableID[j][i],
                     "",
-                    DPCoinChange.TABLE_ELEM_WIDTH,
-                    DPCoinChange.TABLE_ELEM_HEIGHT,
+                    this.TABLE_ELEM_WIDTH,
+                    this.TABLE_ELEM_HEIGHT,
                     xPos,
                     yPos);
                 const indexID = this.nextIndex++;
                 this.oldIDs.push(indexID);
-                this.cmd("CreateLabel", indexID, i, xPos - DPCoinChange.TABLE_ELEM_WIDTH, yPos);
-                this.cmd("SetForegroundColor", indexID, DPCoinChange.TABLE_INDEX_COLOR);
+                this.cmd("CreateLabel", indexID, i, xPos - this.TABLE_ELEM_WIDTH, yPos);
+                this.cmd("SetForegroundColor", indexID, this.TABLE_INDEX_COLOR);
 
-                xPos = xPos + tableCols * DPCoinChange.TABLE_DIFF_X + 1.5 * DPCoinChange.TABLE_DIFF_X;
+                xPos = xPos + tableCols * this.TABLE_DIFF_X + 1.5 * this.TABLE_DIFF_X;
             }
         }
     }
@@ -359,7 +359,7 @@ class DPCoinChange extends Algorithm {
     recursiveCallback(event) {
         let changeValue = this.normalizeNumber(this.changeField.value);
         if (changeValue !== "") {
-            changeValue = Math.min(changeValue, DPCoinChange.MAX_VALUE - 5);
+            changeValue = Math.min(changeValue, this.MAX_VALUE - 5);
             this.changeField.value = changeValue;
             this.implementAction(this.recursiveChange.bind(this), changeValue);
         }
@@ -368,7 +368,7 @@ class DPCoinChange extends Algorithm {
     tableCallback(event) {
         let changeValue = this.normalizeNumber(this.changeField.value);
         if (changeValue !== "") {
-            changeValue = Math.min(changeValue, DPCoinChange.MAX_VALUE);
+            changeValue = Math.min(changeValue, this.MAX_VALUE);
             this.changeField.value = changeValue;
             this.implementAction(this.tableChange.bind(this), changeValue);
         }
@@ -377,7 +377,7 @@ class DPCoinChange extends Algorithm {
     memoizedCallback(event) {
         let changeValue = this.normalizeNumber(this.changeField.value);
         if (changeValue !== "") {
-            changeValue = Math.min(changeValue, DPCoinChange.MAX_VALUE - 5);
+            changeValue = Math.min(changeValue, this.MAX_VALUE - 5);
             this.changeField.value = changeValue;
             this.implementAction(this.memoizedChange.bind(this), changeValue);
         }
@@ -389,9 +389,9 @@ class DPCoinChange extends Algorithm {
         const messageID = this.nextIndex++;
         this.oldIDs.push(messageID);
         this.cmd("CreateLabel", messageID,
-            `Enter a value between 0 and ${String(DPCoinChange.MAX_VALUE)} in the text field.\n` +
+            `Enter a value between 0 and ${String(this.MAX_VALUE)} in the text field.\n` +
             "Then press the Change Recursive, Change Table, Change Memoized, or Change Greedy button",
-            DPCoinChange.RECURSIVE_START_X, DPCoinChange.RECURSIVE_START_Y, 0);
+            this.RECURSIVE_START_X, this.RECURSIVE_START_Y, 0);
         return this.commands;
     }
 
@@ -405,33 +405,33 @@ class DPCoinChange extends Algorithm {
             this.usingDPCode = true;
         }
 
-        this.currentY = DPCoinChange.RECURSIVE_START_Y;
+        this.currentY = this.RECURSIVE_START_Y;
 
         const functionCallID = this.nextIndex++;
         this.oldIDs.push(functionCallID);
-        const final = this.change(value, DPCoinChange.RECURSIVE_START_X, functionCallID);
-        this.cmd("SetText", functionCallID, `change(${String(value)}, [${String(DPCoinChange.COINS[this.coinIndex])}])    = ${String(final[0])}`);
+        const final = this.change(value, this.RECURSIVE_START_X, functionCallID);
+        this.cmd("SetText", functionCallID, `change(${String(value)}, [${String(this.COINS[this.coinIndex])}])    = ${String(final[0])}`);
 
         return this.commands;
     }
 
     change(value, xPos, ID) {
-        const coins = DPCoinChange.COINS[this.coinIndex];
+        const coins = this.COINS[this.coinIndex];
         this.cmd("CreateLabel", ID, `change(${String(value)}, [${String(coins)}])`, xPos, this.currentY, 0);
-        this.currentY += DPCoinChange.RECURSIVE_DELTA_Y;
-        this.cmd("SetForegroundColor", this.codeID[0][1], DPCoinChange.CODE_HIGHLIGHT_COLOR);
+        this.currentY += this.RECURSIVE_DELTA_Y;
+        this.cmd("SetForegroundColor", this.codeID[0][1], this.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");
-        this.cmd("SetForegroundColor", this.codeID[0][1], DPCoinChange.CODE_STANDARD_COLOR);
-        this.cmd("SetForegroundColor", this.codeID[1][1], DPCoinChange.CODE_HIGHLIGHT_COLOR);
+        this.cmd("SetForegroundColor", this.codeID[0][1], this.CODE_STANDARD_COLOR);
+        this.cmd("SetForegroundColor", this.codeID[1][1], this.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");
-        this.cmd("SetForegroundColor", this.codeID[1][1], DPCoinChange.CODE_STANDARD_COLOR);
+        this.cmd("SetForegroundColor", this.codeID[1][1], this.CODE_STANDARD_COLOR);
         if (value > 0) {
-            this.cmd("SetForegroundColor", this.codeID[3][0], DPCoinChange.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[3][0], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.codeID[3][0], DPCoinChange.CODE_STANDARD_COLOR);
-            this.cmd("SetForegroundColor", this.codeID[4][0], DPCoinChange.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[3][0], this.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][0], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.codeID[4][0], DPCoinChange.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][0], this.CODE_STANDARD_COLOR);
 
             let best = -1;
             const nextID = this.nextIndex++;
@@ -439,35 +439,35 @@ class DPCoinChange extends Algorithm {
             let recID = nextID;
             let bestList = [];
             for (let i = 0; i < coins.length; i++) {
-                this.cmd("SetForegroundColor", this.codeID[5][1], DPCoinChange.CODE_HIGHLIGHT_COLOR);
+                this.cmd("SetForegroundColor", this.codeID[5][1], this.CODE_HIGHLIGHT_COLOR);
                 this.cmd("Step");
-                this.cmd("SetForegroundColor", this.codeID[5][1], DPCoinChange.CODE_STANDARD_COLOR);
+                this.cmd("SetForegroundColor", this.codeID[5][1], this.CODE_STANDARD_COLOR);
                 if (value >= coins[i]) {
-                    this.cmd("SetForegroundColor", this.codeID[6][1], DPCoinChange.CODE_HIGHLIGHT_COLOR);
+                    this.cmd("SetForegroundColor", this.codeID[6][1], this.CODE_HIGHLIGHT_COLOR);
                     this.cmd("Step");
-                    this.cmd("SetForegroundColor", this.codeID[6][1], DPCoinChange.CODE_STANDARD_COLOR);
-                    const nextTry = this.change(value - coins[i], xPos + DPCoinChange.RECURSIVE_DELTA_X, recID);
+                    this.cmd("SetForegroundColor", this.codeID[6][1], this.CODE_STANDARD_COLOR);
+                    const nextTry = this.change(value - coins[i], xPos + this.RECURSIVE_DELTA_X, recID);
                     // TODO:  SOMEHTING ELSE HERE
                     if (best === -1) {
-                        this.cmd("SetForegroundColor", this.codeID[7][1], DPCoinChange.CODE_HIGHLIGHT_COLOR);
+                        this.cmd("SetForegroundColor", this.codeID[7][1], this.CODE_HIGHLIGHT_COLOR);
                         this.cmd("Step");
-                        this.cmd("SetForegroundColor", this.codeID[7][1], DPCoinChange.CODE_STANDARD_COLOR);
+                        this.cmd("SetForegroundColor", this.codeID[7][1], this.CODE_STANDARD_COLOR);
                         best = nextTry[0] + 1;
                         bestList = nextTry[1];
                         bestList.push(coins[i]);
-                        this.currentY += DPCoinChange.RECURSIVE_DELTA_Y;
+                        this.currentY += this.RECURSIVE_DELTA_Y;
                         recID = nextID2;
                     } else if (best > nextTry[0] + 1) {
-                        this.cmd("SetForegroundColor", this.codeID[7][2], DPCoinChange.CODE_HIGHLIGHT_COLOR);
+                        this.cmd("SetForegroundColor", this.codeID[7][2], this.CODE_HIGHLIGHT_COLOR);
                         this.cmd("Step");
-                        this.cmd("SetForegroundColor", this.codeID[7][2], DPCoinChange.CODE_STANDARD_COLOR);
+                        this.cmd("SetForegroundColor", this.codeID[7][2], this.CODE_STANDARD_COLOR);
                         best = nextTry[0] + 1;
                         bestList = nextTry[1];
                         bestList.push(coins[i]);
                         this.cmd("Delete", recID);
                         this.cmd("SetText", nextID, `${String(best)}       ([${String(bestList)}])`);
-                        this.cmd("SetPosition", nextID, xPos + DPCoinChange.RECURSIVE_DELTA_X, this.currentY);
-                        this.cmd("Move", nextID, xPos + DPCoinChange.RECURSIVE_DELTA_X, this.currentY - DPCoinChange.RECURSIVE_DELTA_Y);
+                        this.cmd("SetPosition", nextID, xPos + this.RECURSIVE_DELTA_X, this.currentY);
+                        this.cmd("Move", nextID, xPos + this.RECURSIVE_DELTA_X, this.currentY - this.RECURSIVE_DELTA_Y);
                         this.cmd("Step");
                     } else {
                         this.cmd("Delete", recID);
@@ -478,23 +478,23 @@ class DPCoinChange extends Algorithm {
             }
             this.cmd("Delete", nextID);
             this.cmd("SetText", ID, `${String(best)}       ([${String(bestList)}])`);
-            this.cmd("SetPosition", ID, xPos + DPCoinChange.RECURSIVE_DELTA_X, this.currentY);
-            this.cmd("Move", ID, xPos, this.currentY - 2 * DPCoinChange.RECURSIVE_DELTA_Y);
+            this.cmd("SetPosition", ID, xPos + this.RECURSIVE_DELTA_X, this.currentY);
+            this.cmd("Move", ID, xPos, this.currentY - 2 * this.RECURSIVE_DELTA_Y);
 
-            this.currentY = this.currentY - 2 * DPCoinChange.RECURSIVE_DELTA_Y;
+            this.currentY = this.currentY - 2 * this.RECURSIVE_DELTA_Y;
 
-            this.cmd("SetForegroundColor", this.codeID[9][0], DPCoinChange.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[9][0], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.codeID[9][0], DPCoinChange.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[9][0], this.CODE_STANDARD_COLOR);
             this.cmd("Step");
             return [best, bestList];
         } else {
             this.cmd("SetText", ID, "0");
-            this.cmd("SetForegroundColor", this.codeID[2][0], DPCoinChange.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[2][0], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.codeID[2][0], DPCoinChange.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[2][0], this.CODE_STANDARD_COLOR);
 
-            this.currentY -= DPCoinChange.RECURSIVE_DELTA_Y;
+            this.currentY -= this.RECURSIVE_DELTA_Y;
             return [0, []];
         }
     }
@@ -509,16 +509,16 @@ class DPCoinChange extends Algorithm {
         }
 
         this.buildTable(value);
-        const coins = DPCoinChange.COINS[this.coinIndex];
+        const coins = this.COINS[this.coinIndex];
         for (let i = 0; i <= value && i <= 0; i++) {
-            this.cmd("SetForegroundColor", this.codeID[1][1], DPCoinChange.CODE_HIGHLIGHT_COLOR);
-            this.cmd("SetForegroundColor", this.codeID[2][0], DPCoinChange.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[1][1], this.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[2][0], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("SetHighlight", this.tableID[0][i], 1);
             this.cmd("SetText", this.tableID[0][i], 0);
             this.tableVals[0][i] = 0;
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.codeID[1][1], DPCoinChange.CODE_STANDARD_COLOR);
-            this.cmd("SetForegroundColor", this.codeID[2][0], DPCoinChange.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[1][1], this.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[2][0], this.CODE_STANDARD_COLOR);
             this.cmd("SetHighlight", this.tableID[0][i], 0);
         }
         for (let i = 1; i <= value; i++) {
@@ -546,7 +546,7 @@ class DPCoinChange extends Algorithm {
         const finalID = this.nextIndex++;
         this.oldIDs.push(finalID);
         this.cmd("CreateLabel", finalID, this.tableVals[0][value], this.tableXPos[0][value] - 5, this.tableYPos[0][value] - 5, 0);
-        this.cmd("Move", finalID, DPCoinChange.RECURSIVE_START_X, DPCoinChange.RECURSIVE_START_Y);
+        this.cmd("Move", finalID, this.RECURSIVE_START_X, this.RECURSIVE_START_Y);
         this.cmd("Step");
         this.cmd("SetText", finalID, `change(${String(value)}) = ${String(this.tableVals[0][value])}`);
 
@@ -569,42 +569,42 @@ class DPCoinChange extends Algorithm {
             return this.tableVals[value];
         }
         this.cmd("SetHighlight", this.tableID[value], 0);
-        this.currentY += DPCoinChange.RECURSIVE_DELTA_Y;
-        this.cmd("SetForegroundColor", this.codeID[0][1], DPCoinChange.CODE_HIGHLIGHT_COLOR);
+        this.currentY += this.RECURSIVE_DELTA_Y;
+        this.cmd("SetForegroundColor", this.codeID[0][1], this.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");
-        this.cmd("SetForegroundColor", this.codeID[0][1], DPCoinChange.CODE_STANDARD_COLOR);
-        this.cmd("SetForegroundColor", this.codeID[1][1], DPCoinChange.CODE_HIGHLIGHT_COLOR);
+        this.cmd("SetForegroundColor", this.codeID[0][1], this.CODE_STANDARD_COLOR);
+        this.cmd("SetForegroundColor", this.codeID[1][1], this.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");
-        this.cmd("SetForegroundColor", this.codeID[1][1], DPCoinChange.CODE_STANDARD_COLOR);
+        this.cmd("SetForegroundColor", this.codeID[1][1], this.CODE_STANDARD_COLOR);
         if (value > 1) {
             const firstID = this.nextIndex++;
             const secondID = this.nextIndex++;
-            this.cmd("SetForegroundColor", this.codeID[4][1], DPCoinChange.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][1], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.codeID[4][1], DPCoinChange.CODE_STANDARD_COLOR);
-            const firstValue = this.fibMem(value - 1, xPos + DPCoinChange.RECURSIVE_DELTA_X, firstID);
-            this.currentY += DPCoinChange.RECURSIVE_DELTA_Y;
-            this.cmd("SetForegroundColor", this.codeID[4][3], DPCoinChange.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][1], this.CODE_STANDARD_COLOR);
+            const firstValue = this.fibMem(value - 1, xPos + this.RECURSIVE_DELTA_X, firstID);
+            this.currentY += this.RECURSIVE_DELTA_Y;
+            this.cmd("SetForegroundColor", this.codeID[4][3], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.codeID[4][3], DPCoinChange.CODE_STANDARD_COLOR);
-            const secondValue = this.fibMem(value - 2, xPos + DPCoinChange.RECURSIVE_DELTA_X, secondID);
+            this.cmd("SetForegroundColor", this.codeID[4][3], this.CODE_STANDARD_COLOR);
+            const secondValue = this.fibMem(value - 2, xPos + this.RECURSIVE_DELTA_X, secondID);
 
-            this.cmd("SetForegroundColor", this.codeID[4][1], DPCoinChange.CODE_RECURSIVE_1_COLOR);
-            this.cmd("SetForegroundColor", firstID, DPCoinChange.CODE_RECURSIVE_1_COLOR);
-            this.cmd("SetForegroundColor", this.codeID[4][2], DPCoinChange.CODE_HIGHLIGHT_COLOR);
-            this.cmd("SetForegroundColor", this.codeID[4][3], DPCoinChange.CODE_RECURSIVE_2_COLOR);
-            this.cmd("SetForegroundColor", secondID, DPCoinChange.CODE_RECURSIVE_2_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][1], this.CODE_RECURSIVE_1_COLOR);
+            this.cmd("SetForegroundColor", firstID, this.CODE_RECURSIVE_1_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][2], this.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][3], this.CODE_RECURSIVE_2_COLOR);
+            this.cmd("SetForegroundColor", secondID, this.CODE_RECURSIVE_2_COLOR);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.codeID[4][1], DPCoinChange.CODE_STANDARD_COLOR);
-            this.cmd("SetForegroundColor", this.codeID[4][2], DPCoinChange.CODE_STANDARD_COLOR);
-            this.cmd("SetForegroundColor", this.codeID[4][3], DPCoinChange.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][1], this.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][2], this.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][3], this.CODE_STANDARD_COLOR);
 
             this.cmd("Delete", firstID);
             this.cmd("Delete", secondID);
             this.cmd("SetText", ID, firstValue + secondValue);
             this.cmd("Step");
             this.tableVals[value] = firstValue + secondValue;
-            this.currentY = this.currentY - 2 * DPCoinChange.RECURSIVE_DELTA_Y;
+            this.currentY = this.currentY - 2 * this.RECURSIVE_DELTA_Y;
             this.cmd("CreateLabel", this.nextIndex, this.tableVals[value], xPos + 5, this.currentY + 5);
             this.cmd("Move", this.nextIndex, this.tableXPos[value], this.tableYPos[value], this.currentY);
             this.cmd("Step");
@@ -613,9 +613,9 @@ class DPCoinChange extends Algorithm {
             return firstValue + secondValue;
         } else {
             this.cmd("SetText", ID, "1");
-            this.cmd("SetForegroundColor", this.codeID[2][0], DPCoinChange.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[2][0], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.codeID[2][0], DPCoinChange.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[2][0], this.CODE_STANDARD_COLOR);
             this.tableVals[value] = 1;
             this.cmd("CreateLabel", this.nextIndex, this.tableVals[value], xPos + 5, this.currentY + 5);
             this.cmd("Move", this.nextIndex, this.tableXPos[value], this.tableYPos[value], this.currentY);
@@ -623,7 +623,7 @@ class DPCoinChange extends Algorithm {
             this.cmd("Delete", this.nextIndex);
             this.cmd("SetText", this.tableID[value], this.tableVals[value]);
 
-            this.currentY -= DPCoinChange.RECURSIVE_DELTA_Y;
+            this.currentY -= this.RECURSIVE_DELTA_Y;
             return 1;
         }
     }
@@ -640,12 +640,12 @@ class DPCoinChange extends Algorithm {
         this.clearOldIDs();
         this.buildTable(value);
 
-        this.currentY = DPCoinChange.RECURSIVE_START_Y;
+        this.currentY = this.RECURSIVE_START_Y;
 
         const functionCallID = this.nextIndex++;
         this.oldIDs.push(functionCallID);
-        const final = this.changeMem(value, DPCoinChange.RECURSIVE_START_X, functionCallID);
-        this.cmd("SetText", functionCallID, `change(${String(value)}, [${String(DPCoinChange.COINS[this.coinIndex])}])    = ${String(final[0])}`);
+        const final = this.changeMem(value, this.RECURSIVE_START_X, functionCallID);
+        this.cmd("SetText", functionCallID, `change(${String(value)}, [${String(this.COINS[this.coinIndex])}])    = ${String(final[0])}`);
         return this.commands;
 
         // this.currentY = DPChange.RECURSIVE_START_Y;
@@ -653,9 +653,9 @@ class DPCoinChange extends Algorithm {
     }
 
     changeMem(value, xPos, ID) {
-        const coins = DPCoinChange.COINS[this.coinIndex];
+        const coins = this.COINS[this.coinIndex];
         this.cmd("CreateLabel", ID, `change(${String(value)}, [${String(coins)}])`, xPos, this.currentY, 0);
-        this.cmd("SetForegroundColor", this.codeID[0][1], DPCoinChange.CODE_HIGHLIGHT_COLOR);
+        this.cmd("SetForegroundColor", this.codeID[0][1], this.CODE_HIGHLIGHT_COLOR);
         this.cmd("SetHighlight", this.tableID[0][value], 1);
         this.cmd("Step");
         if (this.tableVals[0][value] >= 0) {
@@ -664,24 +664,24 @@ class DPCoinChange extends Algorithm {
             this.cmd("Move", ID, xPos, this.currentY);
             this.cmd("Step");
             this.cmd("SetHighlight", this.tableID[0][value], 0);
-            this.cmd("SetForegroundColor", this.codeID[0][1], DPCoinChange.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[0][1], this.CODE_STANDARD_COLOR);
             return [this.tableVals[0][value], []];
         }
         this.cmd("SetHighlight", this.tableID[0][value], 0);
-        this.currentY += DPCoinChange.RECURSIVE_DELTA_Y;
+        this.currentY += this.RECURSIVE_DELTA_Y;
 
-        this.cmd("SetForegroundColor", this.codeID[0][1], DPCoinChange.CODE_STANDARD_COLOR);
-        this.cmd("SetForegroundColor", this.codeID[1][1], DPCoinChange.CODE_HIGHLIGHT_COLOR);
+        this.cmd("SetForegroundColor", this.codeID[0][1], this.CODE_STANDARD_COLOR);
+        this.cmd("SetForegroundColor", this.codeID[1][1], this.CODE_HIGHLIGHT_COLOR);
         this.cmd("Step");
-        this.cmd("SetForegroundColor", this.codeID[1][1], DPCoinChange.CODE_STANDARD_COLOR);
+        this.cmd("SetForegroundColor", this.codeID[1][1], this.CODE_STANDARD_COLOR);
         // return 1;
         if (value > 0) {
-            this.cmd("SetForegroundColor", this.codeID[3][0], DPCoinChange.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[3][0], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.codeID[3][0], DPCoinChange.CODE_STANDARD_COLOR);
-            this.cmd("SetForegroundColor", this.codeID[4][0], DPCoinChange.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[3][0], this.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][0], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.codeID[4][0], DPCoinChange.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[4][0], this.CODE_STANDARD_COLOR);
 
             let best = -1;
             const nextID = this.nextIndex++;
@@ -689,35 +689,35 @@ class DPCoinChange extends Algorithm {
             let recID = nextID;
             let bestList = [];
             for (let i = 0; i < coins.length; i++) {
-                this.cmd("SetForegroundColor", this.codeID[5][1], DPCoinChange.CODE_HIGHLIGHT_COLOR);
+                this.cmd("SetForegroundColor", this.codeID[5][1], this.CODE_HIGHLIGHT_COLOR);
                 this.cmd("Step");
-                this.cmd("SetForegroundColor", this.codeID[5][1], DPCoinChange.CODE_STANDARD_COLOR);
+                this.cmd("SetForegroundColor", this.codeID[5][1], this.CODE_STANDARD_COLOR);
                 if (value >= coins[i]) {
-                    this.cmd("SetForegroundColor", this.codeID[6][1], DPCoinChange.CODE_HIGHLIGHT_COLOR);
+                    this.cmd("SetForegroundColor", this.codeID[6][1], this.CODE_HIGHLIGHT_COLOR);
                     this.cmd("Step");
-                    this.cmd("SetForegroundColor", this.codeID[6][1], DPCoinChange.CODE_STANDARD_COLOR);
-                    const nextTry = this.changeMem(value - coins[i], xPos + DPCoinChange.RECURSIVE_DELTA_X, recID);
+                    this.cmd("SetForegroundColor", this.codeID[6][1], this.CODE_STANDARD_COLOR);
+                    const nextTry = this.changeMem(value - coins[i], xPos + this.RECURSIVE_DELTA_X, recID);
                     // TODO:  SOMEHTING ELSE HERE
                     if (best === -1) {
-                        this.cmd("SetForegroundColor", this.codeID[7][1], DPCoinChange.CODE_HIGHLIGHT_COLOR);
+                        this.cmd("SetForegroundColor", this.codeID[7][1], this.CODE_HIGHLIGHT_COLOR);
                         this.cmd("Step");
-                        this.cmd("SetForegroundColor", this.codeID[7][1], DPCoinChange.CODE_STANDARD_COLOR);
+                        this.cmd("SetForegroundColor", this.codeID[7][1], this.CODE_STANDARD_COLOR);
                         best = nextTry[0] + 1;
                         bestList = nextTry[1];
                         bestList.push(coins[i]);
-                        this.currentY += DPCoinChange.RECURSIVE_DELTA_Y;
+                        this.currentY += this.RECURSIVE_DELTA_Y;
                         recID = nextID2;
                     } else if (best > nextTry[0] + 1) {
-                        this.cmd("SetForegroundColor", this.codeID[7][2], DPCoinChange.CODE_HIGHLIGHT_COLOR);
+                        this.cmd("SetForegroundColor", this.codeID[7][2], this.CODE_HIGHLIGHT_COLOR);
                         this.cmd("Step");
-                        this.cmd("SetForegroundColor", this.codeID[7][2], DPCoinChange.CODE_STANDARD_COLOR);
+                        this.cmd("SetForegroundColor", this.codeID[7][2], this.CODE_STANDARD_COLOR);
                         best = nextTry[0] + 1;
                         bestList = nextTry[1];
                         bestList.push(coins[i]);
                         this.cmd("Delete", recID);
                         this.cmd("SetText", nextID, String(best));
-                        this.cmd("SetPosition", nextID, xPos + DPCoinChange.RECURSIVE_DELTA_X, this.currentY);
-                        this.cmd("Move", nextID, xPos + DPCoinChange.RECURSIVE_DELTA_X, this.currentY - DPCoinChange.RECURSIVE_DELTA_Y);
+                        this.cmd("SetPosition", nextID, xPos + this.RECURSIVE_DELTA_X, this.currentY);
+                        this.cmd("Move", nextID, xPos + this.RECURSIVE_DELTA_X, this.currentY - this.RECURSIVE_DELTA_Y);
                         this.cmd("Step");
                     } else {
                         this.cmd("Step");
@@ -734,24 +734,24 @@ class DPCoinChange extends Algorithm {
             this.tableVals[0][value] = best;
             this.tableVals[1][value] = bestList[0];
 
-            this.cmd("SetPosition", ID, xPos + DPCoinChange.RECURSIVE_DELTA_X, this.currentY);
-            this.cmd("Move", ID, xPos, this.currentY - 2 * DPCoinChange.RECURSIVE_DELTA_Y);
+            this.cmd("SetPosition", ID, xPos + this.RECURSIVE_DELTA_X, this.currentY);
+            this.cmd("Move", ID, xPos, this.currentY - 2 * this.RECURSIVE_DELTA_Y);
 
-            this.currentY = this.currentY - 2 * DPCoinChange.RECURSIVE_DELTA_Y;
+            this.currentY = this.currentY - 2 * this.RECURSIVE_DELTA_Y;
 
-            this.cmd("SetForegroundColor", this.codeID[9][0], DPCoinChange.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[9][0], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.codeID[9][0], DPCoinChange.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[9][0], this.CODE_STANDARD_COLOR);
             this.cmd("Step");
             return [best, bestList];
         } else {
             this.cmd("SetText", ID, "0");
-            this.cmd("SetForegroundColor", this.codeID[2][0], DPCoinChange.CODE_HIGHLIGHT_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[2][0], this.CODE_HIGHLIGHT_COLOR);
             this.cmd("Step");
-            this.cmd("SetForegroundColor", this.codeID[2][0], DPCoinChange.CODE_STANDARD_COLOR);
+            this.cmd("SetForegroundColor", this.codeID[2][0], this.CODE_STANDARD_COLOR);
             this.cmd("SetText", this.tableID[0][value], 0);
 
-            this.currentY -= DPCoinChange.RECURSIVE_DELTA_Y;
+            this.currentY -= this.RECURSIVE_DELTA_Y;
             return [0, []];
         }
     }

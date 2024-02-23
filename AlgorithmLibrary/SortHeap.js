@@ -32,13 +32,13 @@
 
 
 class SortHeap extends Algorithm {
-    static ARRAY_SIZE = 32;
-    static ARRAY_ELEM_WIDTH = 30;
-    static ARRAY_ELEM_HEIGHT = 25;
-    static ARRAY_INITIAL_X = 30;
+    ARRAY_SIZE = 32;
+    ARRAY_ELEM_WIDTH = 30;
+    ARRAY_ELEM_HEIGHT = 25;
+    ARRAY_INITIAL_X = 30;
 
-    static ARRAY_Y_POS = 50;
-    static ARRAY_LABEL_Y_POS = 70;
+    ARRAY_Y_POS = 50;
+    ARRAY_LABEL_Y_POS = 70;
 
     constructor(am) {
         super();
@@ -71,24 +71,24 @@ class SortHeap extends Algorithm {
     }
 
     createArray() {
-        this.arrayData = new Array(SortHeap.ARRAY_SIZE);
-        this.arrayLabels = new Array(SortHeap.ARRAY_SIZE);
-        this.arrayRects = new Array(SortHeap.ARRAY_SIZE);
-        this.circleObjs = new Array(SortHeap.ARRAY_SIZE);
-        this.ArrayXPositions = new Array(SortHeap.ARRAY_SIZE);
-        this.oldData = new Array(SortHeap.ARRAY_SIZE);
+        this.arrayData = new Array(this.ARRAY_SIZE);
+        this.arrayLabels = new Array(this.ARRAY_SIZE);
+        this.arrayRects = new Array(this.ARRAY_SIZE);
+        this.circleObjs = new Array(this.ARRAY_SIZE);
+        this.ArrayXPositions = new Array(this.ARRAY_SIZE);
+        this.oldData = new Array(this.ARRAY_SIZE);
         this.currentHeapSize = 0;
 
-        for (let i = 1; i < SortHeap.ARRAY_SIZE; i++) {
+        for (let i = 1; i < this.ARRAY_SIZE; i++) {
             this.arrayData[i] = Math.floor(1 + Math.random() * 999);
             this.oldData[i] = this.arrayData[i];
 
-            this.ArrayXPositions[i] = SortHeap.ARRAY_INITIAL_X + i * SortHeap.ARRAY_ELEM_WIDTH;
+            this.ArrayXPositions[i] = this.ARRAY_INITIAL_X + i * this.ARRAY_ELEM_WIDTH;
             this.arrayLabels[i] = this.nextIndex++;
             this.arrayRects[i] = this.nextIndex++;
             this.circleObjs[i] = this.nextIndex++;
-            this.cmd("CreateRectangle", this.arrayRects[i], this.arrayData[i], SortHeap.ARRAY_ELEM_WIDTH, SortHeap.ARRAY_ELEM_HEIGHT, this.ArrayXPositions[i], SortHeap.ARRAY_Y_POS);
-            this.cmd("CreateLabel", this.arrayLabels[i], i - 1, this.ArrayXPositions[i], SortHeap.ARRAY_LABEL_Y_POS);
+            this.cmd("CreateRectangle", this.arrayRects[i], this.arrayData[i], this.ARRAY_ELEM_WIDTH, this.ARRAY_ELEM_HEIGHT, this.ArrayXPositions[i], this.ARRAY_Y_POS);
+            this.cmd("CreateLabel", this.arrayLabels[i], i - 1, this.ArrayXPositions[i], this.ARRAY_LABEL_Y_POS);
             this.cmd("SetForegroundColor", this.arrayLabels[i], "#0000FF");
         }
         this.swapLabel1 = this.nextIndex++;
@@ -106,14 +106,14 @@ class SortHeap extends Algorithm {
 
     heapsortCallback(event) {
         this.commands = this.buildHeap("");
-        for (let i = SortHeap.ARRAY_SIZE - 1; i > 1; i--) {
+        for (let i = this.ARRAY_SIZE - 1; i > 1; i--) {
             this.swap(i, 1);
             this.cmd("SetAlpha", this.arrayRects[i], 0.2);
             this.cmd("Delete", this.circleObjs[i]);
             this.currentHeapSize = i - 1;
             this.pushDown(1);
         }
-        for (let i = 1; i < SortHeap.ARRAY_SIZE; i++) {
+        for (let i = 1; i < this.ARRAY_SIZE; i++) {
             this.cmd("SetAlpha", this.arrayRects[i], 1);
         }
         this.cmd("Delete", this.circleObjs[1]);
@@ -126,7 +126,7 @@ class SortHeap extends Algorithm {
 
     randomizeArray() {
         this.commands = [];
-        for (let i = 1; i < SortHeap.ARRAY_SIZE; i++) {
+        for (let i = 1; i < this.ARRAY_SIZE; i++) {
             this.arrayData[i] = Math.floor(1 + Math.random() * 999);
             this.cmd("SetText", this.arrayRects[i], this.arrayData[i]);
             this.oldData[i] = this.arrayData[i];
@@ -137,7 +137,7 @@ class SortHeap extends Algorithm {
     }
 
     reset() {
-        for (let i = 1; i < SortHeap.ARRAY_SIZE; i++) {
+        for (let i = 1; i < this.ARRAY_SIZE; i++) {
             this.arrayData[i] = this.oldData[i];
             this.cmd("SetText", this.arrayRects[i], this.arrayData[i]);
         }
@@ -149,12 +149,12 @@ class SortHeap extends Algorithm {
         this.cmd("SetText", this.arrayRects[index2], "");
         this.cmd("SetText", this.circleObjs[index1], "");
         this.cmd("SetText", this.circleObjs[index2], "");
-        this.cmd("CreateLabel", this.swapLabel1, this.arrayData[index1], this.ArrayXPositions[index1], SortHeap.ARRAY_Y_POS);
-        this.cmd("CreateLabel", this.swapLabel2, this.arrayData[index2], this.ArrayXPositions[index2], SortHeap.ARRAY_Y_POS);
+        this.cmd("CreateLabel", this.swapLabel1, this.arrayData[index1], this.ArrayXPositions[index1], this.ARRAY_Y_POS);
+        this.cmd("CreateLabel", this.swapLabel2, this.arrayData[index2], this.ArrayXPositions[index2], this.ARRAY_Y_POS);
         this.cmd("CreateLabel", this.swapLabel3, this.arrayData[index1], this.HeapXPositions[index1], this.HeapYPositions[index1]);
         this.cmd("CreateLabel", this.swapLabel4, this.arrayData[index2], this.HeapXPositions[index2], this.HeapYPositions[index2]);
-        this.cmd("Move", this.swapLabel1, this.ArrayXPositions[index2], SortHeap.ARRAY_Y_POS);
-        this.cmd("Move", this.swapLabel2, this.ArrayXPositions[index1], SortHeap.ARRAY_Y_POS);
+        this.cmd("Move", this.swapLabel1, this.ArrayXPositions[index2], this.ARRAY_Y_POS);
+        this.cmd("Move", this.swapLabel2, this.ArrayXPositions[index1], this.ARRAY_Y_POS);
         this.cmd("Move", this.swapLabel3, this.HeapXPositions[index2], this.HeapYPositions[index2]);
         this.cmd("Move", this.swapLabel4, this.HeapXPositions[index1], this.HeapYPositions[index1]);
         const tmp = this.arrayData[index1];
@@ -211,7 +211,7 @@ class SortHeap extends Algorithm {
 
     buildHeap(ignored) {
         this.commands = [];
-        for (let i = 1; i < SortHeap.ARRAY_SIZE; i++) {
+        for (let i = 1; i < this.ARRAY_SIZE; i++) {
             this.cmd("CreateCircle", this.circleObjs[i], this.arrayData[i], this.HeapXPositions[i], this.HeapYPositions[i]);
             this.cmd("SetText", this.arrayRects[i], this.arrayData[i]);
             if (i > 1) {
@@ -219,7 +219,7 @@ class SortHeap extends Algorithm {
             }
         }
         this.cmd("Step");
-        this.currentHeapSize = SortHeap.ARRAY_SIZE - 1;
+        this.currentHeapSize = this.ARRAY_SIZE - 1;
         let nextElem = this.currentHeapSize;
         while (nextElem > 0) {
             this.pushDown(nextElem);
