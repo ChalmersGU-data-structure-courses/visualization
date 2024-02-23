@@ -26,11 +26,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
-/* globals Toolbar, EventListener, ObjectManager,
-           UndoConnect, UndoCreate, UndoHighlight, UndoHighlightEdge, UndoMove,
-           UndoSetAlpha, UndoSetBackgroundColor, UndoSetEdgeAlpha, UndoSetEdgeColor,
-           UndoSetForegroundColor, UndoSetHeight, UndoSetHighlightIndex, UndoSetNull,
-           UndoSetNumElements, UndoSetPosition, UndoSetText, UndoSetTextColor, UndoSetWidth */
+/* globals Toolbar, EventListener, ObjectManager, UndoBlock */
 /* exported initCanvas, AnimationManager, SingleAnimation */
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -612,7 +608,7 @@ class AnimationManager extends EventListener {
                 const label = args.shift();
                 const x = Number(args.shift());
                 const y = Number(args.shift());
-                undoBlock.push(new UndoCreate(id));
+                undoBlock.push(new UndoBlock.Create(id));
                 this.animatedObjects.addCircleObject(id, label);
                 this.animatedObjects.setNodePosition(id, x, y);
             } else if (cmd === "CONNECT") {
@@ -622,7 +618,7 @@ class AnimationManager extends EventListener {
                 const directed = this.parseBool(args.shift(), true);
                 const label = args.shift() || "";
                 const connectionPoint = Number(args.shift()) || 0;
-                undoBlock.push(new UndoConnect(id, toID, false));
+                undoBlock.push(new UndoBlock.Connection(id, toID, false));
                 this.animatedObjects.connectEdge(id, toID, color, curve, directed, label, connectionPoint);
             } else if (cmd === "CREATERECTANGLE") {
                 const label = args.shift();
@@ -632,7 +628,7 @@ class AnimationManager extends EventListener {
                 const y = Number(args.shift());
                 const xJustify = args.shift() || "center";
                 const yJustify = args.shift() || "center";
-                undoBlock.push(new UndoCreate(id));
+                undoBlock.push(new UndoBlock.Create(id));
                 this.animatedObjects.addRectangleObject(id, label, width, height, xJustify, yJustify);
                 if (!isNaN(x) && !isNaN(y)) {
                     this.animatedObjects.setNodePosition(id, x, y);
@@ -642,7 +638,7 @@ class AnimationManager extends EventListener {
                 const fromY = this.animatedObjects.getNodeY(id);
                 const toX = Number(args.shift());
                 const toY = Number(args.shift());
-                undoBlock.push(new UndoMove(id, toX, toY, fromX, fromY));
+                undoBlock.push(new UndoBlock.Move(id, toX, toY, fromX, fromY));
                 this.currentBlock.push(new SingleAnimation(id, fromX, fromY, toX, toY));
                 anyAnimations = true;
             } else if (cmd === "MOVETOALIGNRIGHT") {
@@ -650,7 +646,7 @@ class AnimationManager extends EventListener {
                 const fromY = this.animatedObjects.getNodeY(id);
                 const otherId = Number(args.shift());
                 const [toX, toY] = this.animatedObjects.getAlignRightPos(id, otherId);
-                undoBlock.push(new UndoMove(id, toX, toY, fromX, fromY));
+                undoBlock.push(new UndoBlock.Move(id, toX, toY, fromX, fromY));
                 this.currentBlock.push(new SingleAnimation(id, fromX, fromY, toX, toY));
                 anyAnimations = true;
             } else if (cmd === "STEP") {
@@ -658,16 +654,16 @@ class AnimationManager extends EventListener {
             } else if (cmd === "SETFOREGROUNDCOLOR") {
                 const oldColor = this.animatedObjects.foregroundColor(id);
                 const color = this.parseColor(args.shift());
-                undoBlock.push(new UndoSetForegroundColor(id, oldColor));
+                undoBlock.push(new UndoBlock.SetForegroundColor(id, oldColor));
                 this.animatedObjects.setForegroundColor(id, color);
             } else if (cmd === "SETBACKGROUNDCOLOR") {
                 const oldColor = this.animatedObjects.backgroundColor(id);
                 const color = this.parseColor(args.shift());
-                undoBlock.push(new UndoSetBackgroundColor(id, oldColor));
+                undoBlock.push(new UndoBlock.SetBackgroundColor(id, oldColor));
                 this.animatedObjects.setBackgroundColor(id, color);
             } else if (cmd === "SETHIGHLIGHT") {
                 const highlight = this.parseBool(args.shift());
-                undoBlock.push(new UndoHighlight(id, !highlight));
+                undoBlock.push(new UndoBlock.Highlight(id, !highlight));
                 this.animatedObjects.setHighlight(id, highlight);
             } else if (cmd === "DISCONNECT") {
                 const toID = Number(args.shift());
@@ -677,13 +673,13 @@ class AnimationManager extends EventListener {
             } else if (cmd === "SETALPHA") {
                 const oldAlpha = this.animatedObjects.getAlpha(id);
                 const alpha = Number(args.shift());
-                undoBlock.push(new UndoSetAlpha(id, oldAlpha));
+                undoBlock.push(new UndoBlock.SetAlpha(id, oldAlpha));
                 this.animatedObjects.setAlpha(id, alpha);
             } else if (cmd === "SETTEXT") {
                 const text = args.shift();
                 const index = Number(args.shift()) || 0;
                 const oldText = this.animatedObjects.getText(id, index);
-                undoBlock.push(new UndoSetText(id, oldText, index));
+                undoBlock.push(new UndoBlock.SetText(id, oldText, index));
                 this.animatedObjects.setText(id, text, index);
             } else if (cmd === "DELETE") {
                 const removedObject = this.animatedObjects.getObject(id);
@@ -697,7 +693,7 @@ class AnimationManager extends EventListener {
                 const x = Number(args.shift());
                 const y = Number(args.shift());
                 const radius = Number(args.shift()) || 20;
-                undoBlock.push(new UndoCreate(id));
+                undoBlock.push(new UndoBlock.Create(id));
                 this.animatedObjects.addHighlightCircleObject(id, color, radius);
                 if (!isNaN(x) && !isNaN(y)) {
                     this.animatedObjects.setNodePosition(id, x, y);
@@ -707,7 +703,7 @@ class AnimationManager extends EventListener {
                 const x = Number(args.shift());
                 const y = Number(args.shift());
                 const centering = this.parseBool(args.shift(), true);
-                undoBlock.push(new UndoCreate(id));
+                undoBlock.push(new UndoBlock.Create(id));
                 this.animatedObjects.addLabelObject(id, label, centering);
                 if (!isNaN(x) && !isNaN(y)) {
                     this.animatedObjects.setNodePosition(id, x, y);
@@ -716,24 +712,24 @@ class AnimationManager extends EventListener {
                 const toID = Number(args.shift());
                 const color = this.parseColor(args.shift());
                 const oldColor = this.animatedObjects.getEdgeColor(id, toID);
-                undoBlock.push(new UndoSetEdgeColor(id, toID, oldColor));
+                undoBlock.push(new UndoBlock.SetEdgeColor(id, toID, oldColor));
                 this.animatedObjects.setEdgeColor(id, toID, color);
             } else if (cmd === "SETEDGEALPHA") {
                 const toID = Number(args.shift());
                 const alpha = Number(args.shift());
                 const oldAlpha = this.animatedObjects.getEdgeAlpha(id, toID);
-                undoBlock.push(new UndoSetEdgeAlpha(id, toID, oldAlpha));
+                undoBlock.push(new UndoBlock.SetEdgeAlpha(id, toID, oldAlpha));
                 this.animatedObjects.setEdgeAlpha(id, toID, alpha);
             } else if (cmd === "SETEDGEHIGHLIGHT") {
                 const toID = Number(args.shift());
                 const highlight = this.parseBool(args.shift());
                 const oldHighlight = this.animatedObjects.getEdgeHighlight(id, toID);
-                undoBlock.push(new UndoHighlightEdge(id, toID, oldHighlight));
+                undoBlock.push(new UndoBlock.HighlightEdge(id, toID, oldHighlight));
                 this.animatedObjects.setEdgeHighlight(id, toID, highlight);
             } else if (cmd === "SETHEIGHT") {
                 const height = Number(args.shift());
                 const oldHeight = this.animatedObjects.getHeight(id);
-                undoBlock.push(new UndoSetHeight(id, oldHeight));
+                undoBlock.push(new UndoBlock.SetHeight(id, oldHeight));
                 this.animatedObjects.setHeight(id, height);
             } else if (cmd === "SETLAYER") {
                 const layer = Number(args.shift());
@@ -749,7 +745,7 @@ class AnimationManager extends EventListener {
                 const verticalOrientation = this.parseBool(args.shift(), true);
                 const linkPosEnd = this.parseBool(args.shift(), false);
                 const numLabels = Number(args.shift()) || 1;
-                undoBlock.push(new UndoCreate(id));
+                undoBlock.push(new UndoBlock.Create(id));
                 this.animatedObjects.addLinkedListObject(
                     id, label, width, height,
                     linkPercent, verticalOrientation, linkPosEnd, numLabels,
@@ -760,13 +756,13 @@ class AnimationManager extends EventListener {
             } else if (cmd === "SETNULL") {
                 const nullVal = this.parseBool(args.shift());
                 const oldNull = this.animatedObjects.getNull(id);
-                undoBlock.push(new UndoSetNull(id, oldNull));
+                undoBlock.push(new UndoBlock.SetNull(id, oldNull));
                 this.animatedObjects.setNull(id, nullVal);
             } else if (cmd === "SETTEXTCOLOR") {
                 const color = this.parseColor(args.shift());
                 const index = Number(args.shift()) || 0;
                 const oldColor = this.animatedObjects.getTextColor(id, index);
-                undoBlock.push(new UndoSetTextColor(id, oldColor, index));
+                undoBlock.push(new UndoBlock.SetTextColor(id, oldColor, index));
                 this.animatedObjects.setTextColor(id, color, index);
             } else if (cmd === "CREATEBTREENODE") {
                 const widthPerElem = Number(args.shift());
@@ -776,7 +772,7 @@ class AnimationManager extends EventListener {
                 const y = Number(args.shift());
                 const bgColor = this.parseColor(args.shift(), "white");
                 const fgColor = this.parseColor(args.shift(), "black");
-                undoBlock.push(new UndoCreate(id));
+                undoBlock.push(new UndoBlock.Create(id));
                 this.animatedObjects.addBTreeNode(id, widthPerElem, height, numElems, bgColor, fgColor);
                 if (!isNaN(x) && !isNaN(y)) {
                     this.animatedObjects.setNodePosition(id, x, y);
@@ -784,55 +780,55 @@ class AnimationManager extends EventListener {
             } else if (cmd === "SETWIDTH") {
                 const width = Number(args.shift());
                 const oldWidth = this.animatedObjects.getWidth(id);
-                undoBlock.push(new UndoSetWidth(id, oldWidth));
+                undoBlock.push(new UndoBlock.SetWidth(id, oldWidth));
                 this.animatedObjects.setWidth(id, width);
             } else if (cmd === "SETNUMELEMENTS") {
                 const numElems = Number(args.shift());
                 const removedObject = this.animatedObjects.getObject(id);
                 const oldNumElems = removedObject.getNumElements();
-                undoBlock.push(new UndoSetNumElements(removedObject, oldNumElems, numElems));
+                undoBlock.push(new UndoBlock.SetNumElements(removedObject, oldNumElems, numElems));
                 this.animatedObjects.setNumElements(id, numElems);
             } else if (cmd === "SETPOSITION") {
                 const x = Number(args.shift());
                 const y = Number(args.shift());
                 const oldX = this.animatedObjects.getNodeX(id);
                 const oldY = this.animatedObjects.getNodeY(id);
-                undoBlock.push(new UndoSetPosition(id, oldX, oldY));
+                undoBlock.push(new UndoBlock.SetPosition(id, oldX, oldY));
                 this.animatedObjects.setNodePosition(id, x, y);
             } else if (cmd === "ALIGNMIDDLE") {
                 const otherID = Number(args.shift());
                 const oldX = this.animatedObjects.getNodeX(id);
                 const oldY = this.animatedObjects.getNodeY(id);
-                undoBlock.push(new UndoSetPosition(id, oldX, oldY));
+                undoBlock.push(new UndoBlock.SetPosition(id, oldX, oldY));
                 this.animatedObjects.alignMiddle(id, otherID);
             } else if (cmd === "ALIGNRIGHT") {
                 const otherID = Number(args.shift());
                 const oldX = this.animatedObjects.getNodeX(id);
                 const oldY = this.animatedObjects.getNodeY(id);
-                undoBlock.push(new UndoSetPosition(id, oldX, oldY));
+                undoBlock.push(new UndoBlock.SetPosition(id, oldX, oldY));
                 this.animatedObjects.alignRight(id, otherID);
             } else if (cmd === "ALIGNLEFT") {
                 const otherID = Number(args.shift());
                 const oldX = this.animatedObjects.getNodeX(id);
                 const oldY = this.animatedObjects.getNodeY(id);
-                undoBlock.push(new UndoSetPosition(id, oldX, oldY));
+                undoBlock.push(new UndoBlock.SetPosition(id, oldX, oldY));
                 this.animatedObjects.alignLeft(id, otherID);
             } else if (cmd === "ALIGNTOP") {
                 const otherID = Number(args.shift());
                 const oldX = this.animatedObjects.getNodeX(id);
                 const oldY = this.animatedObjects.getNodeY(id);
-                undoBlock.push(new UndoSetPosition(id, oldX, oldY));
+                undoBlock.push(new UndoBlock.SetPosition(id, oldX, oldY));
                 this.animatedObjects.alignTop(id, otherID);
             } else if (cmd === "ALIGNBOTTOM") {
                 const otherID = Number(args.shift());
                 const oldX = this.animatedObjects.getNodeX(id);
                 const oldY = this.animatedObjects.getNodeY(id);
-                undoBlock.push(new UndoSetPosition(id, oldX, oldY));
+                undoBlock.push(new UndoBlock.SetPosition(id, oldX, oldY));
                 this.animatedObjects.alignBottom(id, otherID);
             } else if (cmd === "SETHIGHLIGHTINDEX") {
                 const index = Number(args.shift());
                 const oldIndex = this.animatedObjects.getHighlightIndex(id);
-                undoBlock.push(new UndoSetHighlightIndex(id, oldIndex));
+                undoBlock.push(new UndoBlock.SetHighlightIndex(id, oldIndex));
                 this.animatedObjects.setHighlightIndex(id, index);
             } else {
                 console.error(`Unknown command: ${cmd}`);

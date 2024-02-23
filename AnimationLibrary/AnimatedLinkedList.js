@@ -27,11 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals AnimatedObject, UndoBlock */
-/* exported AnimatedLinkedList */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class AnimatedLinkedList extends AnimatedObject {
+AnimatedObject.LinkedList = class LinkedList extends AnimatedObject {
     w;
     h;
     linkPercent;
@@ -260,16 +259,16 @@ class AnimatedLinkedList extends AnimatedObject {
     }
 
     createUndoDelete() {
-        return new UndoDeleteLinkedList(
+        return new UndoBlock.DeleteLinkedList(
             this.objectID, this.numLabels, this.labels, this.x, this.y, this.w, this.h,
             this.linkPercent, this.linkPositionEnd, this.vertical, this.labelColors,
             this.backgroundColor, this.foregroundColor, this.layer, this.nullPointer,
         );
     }
-}
+};
 
 
-class UndoDeleteLinkedList extends UndoBlock {
+UndoBlock.DeleteLinkedList = class UndoDeleteLinkedList extends UndoBlock {
     constructor(objectID, numLabels, labels, x, y, w, h, linkPercent, linkPositionEnd,
         vertical, labelColors, backgroundColor, foregroundColor, layer, nullPointer) {
         super();
@@ -303,4 +302,4 @@ class UndoDeleteLinkedList extends UndoBlock {
             world.setTextColor(this.objectID, this.labelColors[i], i);
         }
     }
-}
+};

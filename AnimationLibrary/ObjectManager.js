@@ -26,8 +26,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
-/* globals AnimatedBTreeNode, AnimatedCircle, AnimatedLabel, 
-           AnimatedLinkedList,AnimatedRectangle, HighlightCircle */
+/* globals AnimatedObject */
 /* exported ObjectManager */
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -57,7 +56,7 @@ class ObjectManager {
     constructor(canvas) {
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
-        this.statusReport = new AnimatedLabel(-1, "...", false, this.ctx);
+        this.statusReport = new AnimatedObject.Label(-1, "...", false, this.ctx);
     }
 
     update() {
@@ -194,7 +193,7 @@ class ObjectManager {
         if (this.Nodes[objectID] != null) {
             throw new Error(`addLabelObject: Object with same ID (${objectID}) already exists`);
         }
-        const newLabel = new AnimatedLabel(objectID, objectLabel, centering, this.ctx);
+        const newLabel = new AnimatedObject.Label(objectID, objectLabel, centering, this.ctx);
         this.Nodes[objectID] = newLabel;
     }
 
@@ -202,7 +201,7 @@ class ObjectManager {
         if (this.Nodes[objectID] != null) {
             throw new Error(`addLinkedListObject: Object with same ID (${objectID}) already exists`);
         }
-        const newNode = new AnimatedLinkedList(objectID, nodeLabel, width, height, linkPer, verticalOrientation, linkPosEnd, numLabels, backgroundColor, foregroundColor);
+        const newNode = new AnimatedObject.LinkedList(objectID, nodeLabel, width, height, linkPer, verticalOrientation, linkPosEnd, numLabels, backgroundColor, foregroundColor);
         this.Nodes[objectID] = newNode;
     }
 
@@ -210,7 +209,7 @@ class ObjectManager {
         if (this.Nodes[objectID] != null) {
             throw new Error(`addHighlightCircleObject: Object with same ID (${objectID}) already exists`);
         }
-        const newNode = new HighlightCircle(objectID, objectColor, radius);
+        const newNode = new AnimatedObject.HighlightCircle(objectID, objectColor, radius);
         this.Nodes[objectID] = newNode;
     }
 
@@ -218,7 +217,7 @@ class ObjectManager {
         if (this.Nodes[objectID] != null) {
             throw new Error(`addBTreeNode: Object with same ID (${objectID}) already exists`);
         }
-        const newNode = new AnimatedBTreeNode(objectID, widthPerElem, height, numElems, backgroundColor, foregroundColor);
+        const newNode = new AnimatedObject.BTreeNode(objectID, widthPerElem, height, numElems, backgroundColor, foregroundColor);
         this.Nodes[objectID] = newNode;
     }
 
@@ -226,7 +225,7 @@ class ObjectManager {
         if (this.Nodes[objectID] != null) {
             throw new Error(`addRectangleObject: Object with same ID (${objectID}) already exists`);
         }
-        const newNode = new AnimatedRectangle(objectID, nodeLabel, width, height, xJustify, yJustify, backgroundColor, foregroundColor);
+        const newNode = new AnimatedObject.Rectangle(objectID, nodeLabel, width, height, xJustify, yJustify, backgroundColor, foregroundColor);
         this.Nodes[objectID] = newNode;
     }
 
@@ -234,7 +233,7 @@ class ObjectManager {
         if (this.Nodes[objectID] != null) {
             throw new Error(`addCircleObject: Object with same ID (${objectID}) already exists`);
         }
-        const newNode = new AnimatedCircle(objectID, objectLabel);
+        const newNode = new AnimatedObject.Circle(objectID, objectLabel);
         this.Nodes[objectID] = newNode;
     }
 
@@ -319,7 +318,7 @@ class ObjectManager {
         if (fromObj == null || toObj == null) {
             throw new Error(`connectEdge: One of the objects ${objectIDfrom} or ${objectIDto} do not exist`);
         }
-        const l = new Connection(fromObj, toObj, color, curve, directed, lab, connectionPoint);
+        const l = new AnimatedObject.Connection(fromObj, toObj, color, curve, directed, lab, connectionPoint);
         if (this.Edges[objectIDfrom] == null) {
             this.Edges[objectIDfrom] = [];
         }

@@ -27,11 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals AnimatedObject, UndoBlock */
-/* exported AnimatedRectangle */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class AnimatedRectangle extends AnimatedObject {
+AnimatedObject.Rectangle = class Rectangle extends AnimatedObject {
     w;
     h;
     xJustify; // "center", "left", "right"
@@ -164,15 +163,15 @@ class AnimatedRectangle extends AnimatedObject {
     }
 
     createUndoDelete() {
-        return new UndoDeleteRectangle(
+        return new UndoBlock.DeleteRectangle(
             this.objectID, this.label, this.x, this.y, this.w, this.h, this.xJustify, this.yJustify,
             this.backgroundColor, this.foregroundColor, this.highlighted, this.layer,
         );
     }
-}
+};
 
 
-class UndoDeleteRectangle extends UndoBlock {
+UndoBlock.DeleteRectangle = class UndoDeleteRectangle extends UndoBlock {
     constructor(objectID, label, x, y, w, h, xJustify, yJustify, backgroundColor, foregroundColor, highlighted, layer) {
         super();
         this.objectID = objectID;
@@ -198,4 +197,4 @@ class UndoDeleteRectangle extends UndoBlock {
         world.setLayer(this.objectID, this.layer);
         world.setHighlight(this.objectID, this.highlighted);
     }
-}
+};

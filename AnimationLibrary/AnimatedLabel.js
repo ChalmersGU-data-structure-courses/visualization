@@ -27,11 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals AnimatedObject, UndoBlock */
-/* exported AnimatedLabel */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class AnimatedLabel extends AnimatedObject {
+AnimatedObject.Label = class Label extends AnimatedObject {
     centering;
     textWidth;
     leftWidth;
@@ -248,15 +247,15 @@ class AnimatedLabel extends AnimatedObject {
     }
 
     createUndoDelete() {
-        return new UndoDeleteLabel(
+        return new UndoBlock.DeleteLabel(
             this.objectID, this.label, this.x, this.y, this.centering,
             this.labelColor, this.layer, this.highlightIndex,
         );
     }
-}
+};
 
 
-class UndoDeleteLabel extends UndoBlock {
+UndoBlock.DeleteLabel = class UndoDeleteLabel extends UndoBlock {
     constructor(objectID, label, x, y, centering, labelColor, layer, highlightIndex) {
         super();
         this.objectID = objectID;
@@ -275,4 +274,4 @@ class UndoDeleteLabel extends UndoBlock {
         world.setForegroundColor(this.objectID, this.labelColor);
         world.setLayer(this.objectID, this.layer);
     }
-}
+};

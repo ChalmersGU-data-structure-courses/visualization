@@ -27,12 +27,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals SingleAnimation */
-/* exported UndoCreate, UndoHighlight, UndoHighlightEdge, UndoMove, UndoSetAlpha,
-            UndoSetBackgroundColor, UndoSetEdgeAlpha, UndoSetEdgeColor,
-            UndoSetForegroundColor, UndoSetHeight, UndoSetHighlightIndex,
-            UndoSetNull, UndoSetNumElements, UndoSetPosition, UndoSetText,
-            UndoSetTextColor, UndoSetWidth
-*/
+/* exported UndoBlock */
 ///////////////////////////////////////////////////////////////////////////////
 
 
@@ -48,7 +43,7 @@ class UndoBlock {
 }
 
 
-class UndoMove extends UndoBlock {
+UndoBlock.Move = class UndoMove extends UndoBlock {
     constructor(id, fmX, fmy, tx, ty) {
         super();
         this.objectID = id;
@@ -63,10 +58,10 @@ class UndoMove extends UndoBlock {
         animationList.push(nextAnim);
         return true;
     }
-}
+};
 
 
-class UndoCreate extends UndoBlock {
+UndoBlock.Create = class UndoCreate extends UndoBlock {
     constructor(id) {
         super();
         this.objectID = id;
@@ -75,10 +70,10 @@ class UndoCreate extends UndoBlock {
     undoInitialStep(world) {
         world.removeObject(this.objectID);
     }
-}
+};
 
 
-class UndoHighlight extends UndoBlock {
+UndoBlock.Highlight = class UndoHighlight extends UndoBlock {
     constructor(id, val) {
         super();
         this.objectID = id;
@@ -88,10 +83,10 @@ class UndoHighlight extends UndoBlock {
     undoInitialStep(world) {
         world.setHighlight(this.objectID, this.highlightValue);
     }
-}
+};
 
 
-class UndoSetHeight extends UndoBlock {
+UndoBlock.SetHeight = class UndoSetHeight extends UndoBlock {
     constructor(id, val) {
         super();
         this.objectID = id;
@@ -101,10 +96,10 @@ class UndoSetHeight extends UndoBlock {
     undoInitialStep(world) {
         world.setHeight(this.objectID, this.height);
     }
-}
+};
 
 
-class UndoSetWidth extends UndoBlock {
+UndoBlock.SetWidth = class UndoSetWidth extends UndoBlock {
     constructor(id, val) {
         super();
         this.objectID = id;
@@ -114,10 +109,10 @@ class UndoSetWidth extends UndoBlock {
     undoInitialStep(world) {
         world.setWidth(this.objectID, this.width);
     }
-}
+};
 
 
-class UndoSetNumElements extends UndoBlock {
+UndoBlock.SetNumElements = class UndoSetNumElements extends UndoBlock {
     constructor(obj, oldNumElems, newNumElems) {
         super();
         this.objectID = obj.objectID;
@@ -142,10 +137,10 @@ class UndoSetNumElements extends UndoBlock {
             }
         }
     }
-}
+};
 
 
-class UndoSetAlpha extends UndoBlock {
+UndoBlock.SetAlpha = class UndoSetAlpha extends UndoBlock {
     constructor(id, alph) {
         super();
         this.objectID = id;
@@ -155,10 +150,10 @@ class UndoSetAlpha extends UndoBlock {
     undoInitialStep(world) {
         world.setAlpha(this.objectID, this.alphaVal);
     }
-}
+};
 
 
-class UndoSetNull extends UndoBlock {
+UndoBlock.SetNull = class UndoSetNull extends UndoBlock {
     constructor(id, nv) {
         super();
         this.objectID = id;
@@ -168,10 +163,10 @@ class UndoSetNull extends UndoBlock {
     undoInitialStep(world) {
         world.setNull(this.objectID, this.nullVal);
     }
-}
+};
 
 
-class UndoSetForegroundColor extends UndoBlock {
+UndoBlock.SetForegroundColor = class UndoSetForegroundColor extends UndoBlock {
     constructor(id, color) {
         super();
         this.objectID = id;
@@ -181,10 +176,10 @@ class UndoSetForegroundColor extends UndoBlock {
     undoInitialStep(world) {
         world.setForegroundColor(this.objectID, this.color);
     }
-}
+};
 
 
-class UndoSetBackgroundColor extends UndoBlock {
+UndoBlock.SetBackgroundColor = class UndoSetBackgroundColor extends UndoBlock {
     constructor(id, color) {
         super();
         this.objectID = id;
@@ -194,10 +189,10 @@ class UndoSetBackgroundColor extends UndoBlock {
     undoInitialStep(world) {
         world.setBackgroundColor(this.objectID, this.color);
     }
-}
+};
 
 
-class UndoSetHighlightIndex extends UndoBlock {
+UndoBlock.SetHighlightIndex = class UndoSetHighlightIndex extends UndoBlock {
     constructor(id, index) {
         super();
         this.objectID = id;
@@ -207,10 +202,10 @@ class UndoSetHighlightIndex extends UndoBlock {
     undoInitialStep(world) {
         world.setHighlightIndex(this.objectID, this.index);
     }
-}
+};
 
 
-class UndoSetText extends UndoBlock {
+UndoBlock.SetText = class UndoSetText extends UndoBlock {
     constructor(id, str, index) {
         super();
         this.objectID = id;
@@ -221,10 +216,10 @@ class UndoSetText extends UndoBlock {
     undoInitialStep(world) {
         world.setText(this.objectID, this.newText, this.labelIndex);
     }
-}
+};
 
 
-class UndoSetTextColor extends UndoBlock {
+UndoBlock.SetTextColor = class UndoSetTextColor extends UndoBlock {
     constructor(id, color, index) {
         super();
         this.objectID = id;
@@ -235,10 +230,10 @@ class UndoSetTextColor extends UndoBlock {
     undoInitialStep(world) {
         world.setTextColor(this.objectID, this.color, this.index);
     }
-}
+};
 
 
-class UndoHighlightEdge extends UndoBlock {
+UndoBlock.HighlightEdge = class UndoHighlightEdge extends UndoBlock {
     constructor(from, to, val) {
         super();
         this.fromID = from;
@@ -249,10 +244,10 @@ class UndoHighlightEdge extends UndoBlock {
     undoInitialStep(world) {
         world.setEdgeHighlight(this.fromID, this.toID, this.highlightValue);
     }
-}
+};
 
 
-class UndoSetEdgeColor extends UndoBlock {
+UndoBlock.SetEdgeColor = class UndoSetEdgeColor extends UndoBlock {
     constructor(from, to, oldColor) {
         super();
         this.fromID = from;
@@ -263,10 +258,10 @@ class UndoSetEdgeColor extends UndoBlock {
     undoInitialStep(world) {
         world.setEdgeColor(this.fromID, this.toID, this.color);
     }
-}
+};
 
 
-class UndoSetEdgeAlpha extends UndoBlock {
+UndoBlock.SetEdgeAlpha = class UndoSetEdgeAlpha extends UndoBlock {
     constructor(from, to, oldAplha) {
         super();
         this.fromID = from;
@@ -277,10 +272,10 @@ class UndoSetEdgeAlpha extends UndoBlock {
     undoInitialStep(world) {
         world.setEdgeAlpha(this.fromID, this.toID, this.alpha);
     }
-}
+};
 
 
-class UndoSetPosition extends UndoBlock {
+UndoBlock.SetPosition = class UndoSetPosition extends UndoBlock {
     constructor(id, x, y) {
         super();
         this.objectID = id;
@@ -291,4 +286,4 @@ class UndoSetPosition extends UndoBlock {
     undoInitialStep(world) {
         world.setNodePosition(this.objectID, this.x, this.y);
     }
-}
+};

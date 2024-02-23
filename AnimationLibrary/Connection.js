@@ -27,11 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals AnimatedObject, UndoBlock */
-/* exported Connection */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class Connection extends AnimatedObject {
+AnimatedObject.Connection = class Connection extends AnimatedObject {
     node1;
     node2;
     color;
@@ -137,12 +136,12 @@ class Connection extends AnimatedObject {
     }
 
     createUndoDisconnect() {
-        return new UndoConnect(this.node1.objectID, this.node2.objectID, true, this.color, this.directed, this.curve, this.label, this.anchorPoint);
+        return new UndoBlock.Connection(this.node1.objectID, this.node2.objectID, true, this.color, this.directed, this.curve, this.label, this.anchorPoint);
     }
-}
+};
 
 
-class UndoConnect extends UndoBlock {
+UndoBlock.Connection = class UndoConnection extends UndoBlock {
     constructor(node1, node2, connect, color, directed, curve, label, anchorPoint) {
         super();
         this.fromID = node1;
@@ -162,4 +161,4 @@ class UndoConnect extends UndoBlock {
             world.disconnectEdge(this.fromID, this.toID);
         }
     }
-}
+};

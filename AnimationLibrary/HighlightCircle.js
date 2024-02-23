@@ -27,11 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals AnimatedObject, UndoBlock */
-/* exported HighlightCircle */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class HighlightCircle extends AnimatedObject {
+AnimatedObject.HighlightCircle = class HighlightCircle extends AnimatedObject {
     radius;
     thickness = 4;
 
@@ -53,15 +52,15 @@ class HighlightCircle extends AnimatedObject {
     }
 
     createUndoDelete() {
-        return new UndoDeleteHighlightCircle(
+        return new UndoBlock.DeleteHighlightCircle(
             this.objectID, this.x, this.y, this.foregroundColor,
             this.radius, this.layer, this.alpha,
         );
     }
-}
+};
 
 
-class UndoDeleteHighlightCircle extends UndoBlock {
+UndoBlock.DeleteHighlightCircle = class UndoDeleteHighlightCircle extends UndoBlock {
     constructor(objectID, x, y, foregroundColor, radius, layer, alpha) {
         super();
         this.objectID = objectID;
@@ -79,4 +78,4 @@ class UndoDeleteHighlightCircle extends UndoBlock {
         world.setNodePosition(this.objectID, this.x, this.y);
         world.setAlpha(this.objectID, this.alpha);
     }
-}
+};

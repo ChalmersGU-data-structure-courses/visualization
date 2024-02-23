@@ -27,11 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals AnimatedObject, UndoBlock */
-/* exported AnimatedBTreeNode */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class AnimatedBTreeNode extends AnimatedObject {
+AnimatedObject.BTreeNode = class BTreeNode extends AnimatedObject {
     MIN_WIDTH = 10;
     CORNER_RADIUS = 10;
     EDGE_POINTER_DISPLACEMENT = 5;
@@ -173,15 +172,15 @@ class AnimatedBTreeNode extends AnimatedObject {
     }
 
     createUndoDelete() {
-        return new UndoDeleteBTreeNode(
+        return new UndoBlock.DeleteBTreeNode(
             this.objectID, this.numLabels, this.labels, this.x, this.y, this.widthPerElement, this.nodeHeight,
             this.labelColors, this.backgroundColor, this.foregroundColor, this.layer, this.highlighted,
         );
     }
-}
+};
 
 
-class UndoDeleteBTreeNode extends UndoBlock {
+UndoBlock.DeleteBTreeNode = class UndoDeleteBTreeNode extends UndoBlock {
     constructor(objectID, numLabels, labels, x, y, widthPerElement, nodeHeight,
         labelColors, backgroundColor, foregroundColor, layer, highlighted) {
         super();
@@ -209,4 +208,4 @@ class UndoDeleteBTreeNode extends UndoBlock {
         world.setHighlight(this.objectID, this.highlighted);
         world.setLayer(this.objectID, this.layer);
     }
-}
+};
