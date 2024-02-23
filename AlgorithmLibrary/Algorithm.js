@@ -123,11 +123,18 @@ class Algorithm {
     addReturnSubmit(field, allowed, action) {
         allowed = (
             allowed === "int" ? "0-9" :
-            allowed === "float" ? "0-9.-" :
-            allowed === "alpha" ? "a-zA-Z" :
+            allowed === "int+" ? "0-9 " :
+            allowed === "float" ? "-.0-9" :
+            allowed === "float+" ? "-.0-9 " :
             allowed === "ALPHA" ? "A-Z" :
+            allowed === "ALPHA+" ? "A-Z " :
+            allowed === "alpha" ? "a-zA-Z" :
+            allowed === "alpha+" ? "a-zA-Z " :
+            allowed === "ALPHANUM" ? "A-Z0-9" : 
+            allowed === "ALPHANUM+" ? "A-Z0-9 " : 
             allowed === "alphanum" ? "a-zA-Z0-9" :
-            allowed === "ALPHANUM" ? "A-Z0-9" : allowed
+            allowed === "alphanum+" ? "a-zA-Z0-9 " :
+            allowed
         );
 
         const regex = new RegExp(`[^${allowed}]`, "g");
