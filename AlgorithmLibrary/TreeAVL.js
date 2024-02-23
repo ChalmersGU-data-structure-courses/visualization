@@ -848,7 +848,7 @@ class TreeAVL extends Algorithm {
 
                             if (this.getHeight(tmpPar) !== Math.max(this.getHeight(tmpPar.left), this.getHeight(tmpPar.right)) + 1) {
                                 tmpPar.height = Math.max(this.getHeight(tmpPar.left), this.getHeight(tmpPar.right)) + 1;
-                                this.cmd("SetText", tmpPar.heightLabelID, tree.height);
+                                this.cmd("SetText", tmpPar.heightLabelID, tmpPar.height);
                                 this.cmd("SetText", this.messageID, "Adjusting height after recursive call");
                                 this.cmd("SetForegroundColor", tmpPar.heightLabelID, TreeAVL.HIGHLIGHT_LABEL_COLOR);
                                 this.cmd("Step");
