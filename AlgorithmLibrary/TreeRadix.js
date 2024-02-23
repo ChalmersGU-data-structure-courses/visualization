@@ -27,30 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported TreeRadix */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class RadixNode {
-    constructor(val, id, initialX, initialY) {
-        this.wordRemainder = val;
-        this.x = initialX;
-        this.y = initialY;
-        this.graphicID = id;
-        this.children = new Array(26);
-        this.childWidths = new Array(26);
-        for (let i = 0; i < 26; i++) {
-            this.children[i] = null;
-            this.childWidths[i] = 0;
-        }
-        this.width = 0;
-        this.parent = null;
-        this.isword = false;
-    }
-}
-
-
-class TreeRadix extends Algorithm {
+Algorithm.Tree.Radix = class RadixTree extends Algorithm.Tree {
     NODE_WIDTH = 60;
 
     LINK_COLOR = "#007700";
@@ -68,6 +48,26 @@ class TreeRadix extends Algorithm {
     FIRST_PRINT_POS_X = 50;
     PRINT_VERTICAL_GAP = 20;
     PRINT_HORIZONTAL_GAP = 50;
+
+
+    RadixNode = class RadixNode {
+        constructor(val, id, initialX, initialY) {
+            this.wordRemainder = val;
+            this.x = initialX;
+            this.y = initialY;
+            this.graphicID = id;
+            this.children = new Array(26);
+            this.childWidths = new Array(26);
+            for (let i = 0; i < 26; i++) {
+                this.children[i] = null;
+                this.childWidths[i] = 0;
+            }
+            this.width = 0;
+            this.parent = null;
+            this.isword = false;
+        }
+    };
+
 
     constructor(am) {
         super();
@@ -493,7 +493,7 @@ class TreeRadix extends Algorithm {
             this.cmd("SetText", 2, `Reached an empty tree.  Creating a node containing ${s}`);
             this.cmd("Step");
             this.cmd("SetText", 2, "");
-            rt = new RadixNode(s, this.nextIndex, startX, startY);
+            rt = new this.RadixNode(s, this.nextIndex, startX, startY);
             this.nextIndex++;
             rt.isword = true;
             return rt;
@@ -566,7 +566,7 @@ class TreeRadix extends Algorithm {
         this.cmd("SetWidth", this.nextIndex, this.NODE_WIDTH);
         this.cmd("Step");
 
-        const newNode = new RadixNode(firstRemainder, this.nextIndex, 0, 0);
+        const newNode = new this.RadixNode(firstRemainder, this.nextIndex, 0, 0);
         this.nextIndex++;
 
         newNode.wordRemainder = firstRemainder;
@@ -647,4 +647,4 @@ class TreeRadix extends Algorithm {
         tree.width = Math.max(size, this.NODE_WIDTH + 4);
         return tree.width;
     }
-}
+};

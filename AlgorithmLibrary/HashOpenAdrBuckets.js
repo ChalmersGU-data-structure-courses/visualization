@@ -26,12 +26,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
-/* globals Hash */
-/* exported HashOpenAdrBuckets */
+/* globals Algorithm */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class HashOpenAdrBuckets extends Hash {
+Algorithm.Hash.OpenAdrBuckets = class OpenAdrBuckets extends Algorithm.Hash {
     // This is a special key and should not be possible to enter in the GUI:
     DELETED = "<deleted>";
 
@@ -351,4 +350,4 @@ class HashOpenAdrBuckets extends Hash {
         this.nextIndex -= 3;
         return bucket;
     }
-}
+};

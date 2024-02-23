@@ -27,11 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported DPMatrixMultiply */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class DPMatrixMultiply extends Algorithm {
+Algorithm.DP.MatrixMultiply = class MatrixMultiply extends Algorithm.DP {
     TABLE_ELEM_WIDTH = 40;
     TABLE_ELEM_HEIGHT = 30;
 
@@ -577,4 +576,4 @@ class DPMatrixMultiply extends Algorithm {
 
         return this.commands;
     }
-}
+};

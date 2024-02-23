@@ -27,27 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported HeapFibonacci */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class FibonacciNode {
-    constructor(val, id, initialX, initialY) {
-        this.data = val;
-        this.x = initialX;
-        this.y = initialY;
-        this.graphicID = id;
-        this.degree = 0;
-        this.leftChild = null;
-        this.rightSib = null;
-        this.parent = null;
-        this.internalGraphicID = -1;
-        this.degreeID = -1;
-    }
-}
-
-
-class HeapFibonacci extends Algorithm {
+Algorithm.Heap.Fibonacci = class FibonacciHeap extends Algorithm.Heap {
     LINK_COLOR = "#007700";
     FOREGROUND_COLOR = "#007700";
     BACKGROUND_COLOR = "#EEFFEE";
@@ -75,6 +58,23 @@ class HeapFibonacci extends Algorithm {
     INDEGREE_ARRAY_START_Y = 50;
 
     TMP_PTR_Y = 60;
+
+
+    FibonacciNode = class FibonacciNode {
+        constructor(val, id, initialX, initialY) {
+            this.data = val;
+            this.x = initialX;
+            this.y = initialY;
+            this.graphicID = id;
+            this.degree = 0;
+            this.leftChild = null;
+            this.rightSib = null;
+            this.parent = null;
+            this.internalGraphicID = -1;
+            this.degreeID = -1;
+        }
+    };
+
 
     constructor(am) {
         super();
@@ -341,7 +341,7 @@ class HeapFibonacci extends Algorithm {
     insertElement(insertedValue) {
         this.commands = [];
 
-        const insertNode = new FibonacciNode(insertedValue, this.nextIndex++, this.INSERT_X, this.INSERT_Y);
+        const insertNode = new this.FibonacciNode(insertedValue, this.nextIndex++, this.INSERT_X, this.INSERT_Y);
         insertNode.internalGraphicID = this.nextIndex++;
         insertNode.degreeID = this.nextIndex++;
         this.cmd("CreateCircle", insertNode.graphicID, insertedValue, this.INSERT_X, this.INSERT_Y);
@@ -717,4 +717,4 @@ class HeapFibonacci extends Algorithm {
         // TODO:  Add all the internal links &etc
         return tree1;
     }
-}
+};

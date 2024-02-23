@@ -27,11 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported QueueLL */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class QueueLL extends Algorithm {
+Algorithm.Queue.LinkedList = class LinkedListQueue extends Algorithm.Queue {
     SIZE = 32;
     ELEM_SPACING = 1.5;
 
@@ -267,4 +266,4 @@ class QueueLL extends Algorithm {
             this.cmd("Move", this.queue[i].id, this.getElemX(i), this.getElemY(i));
         }
     }
-}
+};

@@ -27,11 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported SortCounting */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class SortCounting extends Algorithm {
+Algorithm.Sort.Counting = class CountingSort extends Algorithm.Sort {
     ARRAY_ELEM_WIDTH = 30;
     ARRAY_ELEM_HEIGHT = 30;
     ARRAY_ELEM_START_X = 20;
@@ -254,4 +253,4 @@ class SortCounting extends Algorithm {
     resetCallback(event) {
         this.randomizeArray();
     }
-}
+};

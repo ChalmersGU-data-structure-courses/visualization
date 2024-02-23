@@ -27,32 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported TreeAVL */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class AVLNode {
-    constructor(val, id, hid, initialX, initialY) {
-        this.data = val;
-        this.x = initialX;
-        this.y = initialY;
-        this.height = 1;
-        this.graphicID = id;
-        this.heightLabelID = hid;
-        this.left = null;
-        this.right = null;
-        this.parent = null;
-        this.leftWidth = 0;
-        this.rightWidth = 0;
-    }
-
-    isLeftChild() {
-        return this.parent == null || this.parent.left === this;
-    }
-}
-
-
-class TreeAVL extends Algorithm {
+Algorithm.Tree.AVL = class AVLTree extends Algorithm.Tree {
     FOREGROUND_COLOR = "#007700";
     BACKGROUND_COLOR = "#EEFFEE";
 
@@ -77,6 +55,28 @@ class TreeAVL extends Algorithm {
 
     MESSAGE_X = 10;
     MESSAGE_Y = 10;
+
+
+    AVLNode = class AVLNode {
+        constructor(val, id, hid, initialX, initialY) {
+            this.data = val;
+            this.x = initialX;
+            this.y = initialY;
+            this.height = 1;
+            this.graphicID = id;
+            this.heightLabelID = hid;
+            this.left = null;
+            this.right = null;
+            this.parent = null;
+            this.leftWidth = 0;
+            this.rightWidth = 0;
+        }
+
+        isLeftChild() {
+            return this.parent == null || this.parent.left === this;
+        }
+    };
+
 
     constructor(am) {
         super();
@@ -325,7 +325,7 @@ class TreeAVL extends Algorithm {
             this.cmd("CreateLabel", labelID, 1, x - this.LABEL_DISPLACE, y - this.LABEL_DISPLACE);
             this.cmd("SetForegroundColor", labelID, this.HEIGHT_LABEL_COLOR);
             this.cmd("Step");
-            this.treeRoot = new AVLNode(insertedValue, treeNodeID, labelID, x, y);
+            this.treeRoot = new this.AVLNode(insertedValue, treeNodeID, labelID, x, y);
             this.treeRoot.height = 1;
         } else {
             const x = this.STARTING_Y, y = 2 * this.STARTING_Y;
@@ -336,7 +336,7 @@ class TreeAVL extends Algorithm {
             this.cmd("CreateLabel", labelID, "", x - this.LABEL_DISPLACE, y - this.LABEL_DISPLACE);
             this.cmd("SetForegroundColor", labelID, this.HEIGHT_LABEL_COLOR);
             this.cmd("Step");
-            const insertElem = new AVLNode(insertedValue, treeNodeID, labelID, x, y);
+            const insertElem = new this.AVLNode(insertedValue, treeNodeID, labelID, x, y);
             insertElem.height = 1;
             this.cmd("SetHighlight", insertElem.graphicID, 1);
             this.insert(insertElem, this.treeRoot);
@@ -1001,4 +1001,4 @@ class TreeAVL extends Algorithm {
         tree.rightWidth = Math.max(this.resizeWidths(tree.right), this.WIDTH_DELTA / 2);
         return tree.leftWidth + tree.rightWidth;
     }
-}
+};

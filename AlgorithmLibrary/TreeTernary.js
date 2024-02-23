@@ -27,29 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported TreeTernary */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class TernaryNode {
-    constructor(val, id, initialX, initialY) {
-        this.nextChar = val;
-        this.x = initialX;
-        this.y = initialY;
-        this.graphicID = id;
-
-        this.left = null;
-        this.center = null;
-        this.right = null;
-        this.leftWidth = 0;
-        this.centerWidth = 0;
-        this.rightWwidth = 0;
-        this.parent = null;
-    }
-}
-
-
-class TreeTernary extends Algorithm {
+Algorithm.Tree.Ternary = class TernaryTree extends Algorithm.Tree {
     FOREGROUND_COLOR = "#007700";
     BACKGROUND_COLOR = "#CCFFCC";
 
@@ -71,6 +52,24 @@ class TreeTernary extends Algorithm {
     FIRST_PRINT_POS_X = 50;
     PRINT_VERTICAL_GAP = 20;
     PRINT_HORIZONTAL_GAP = 50;
+
+
+    TernaryNode = class TernaryNode {
+        constructor(val, id, initialX, initialY) {
+            this.nextChar = val;
+            this.x = initialX;
+            this.y = initialY;
+            this.graphicID = id;
+            this.left = null;
+            this.center = null;
+            this.right = null;
+            this.leftWidth = 0;
+            this.centerWidth = 0;
+            this.rightWwidth = 0;
+            this.parent = null;
+        }
+    };
+
 
     constructor(am) {
         super();
@@ -523,7 +522,7 @@ class TreeTernary extends Algorithm {
             this.cmd("SetBackgroundColor", this.nextIndex, this.FALSE_COLOR);
             this.cmd("SetWidth", this.nextIndex, this.NODE_WIDTH);
             this.cmd("SetText", 2, "Creating a new root");
-            this.root = new TernaryNode(" ", this.nextIndex, this.NEW_NODE_X, this.NEW_NODE_Y);
+            this.root = new this.TernaryNode(" ", this.nextIndex, this.NEW_NODE_X, this.NEW_NODE_Y);
             this.cmd("Step");
             this.resizeTree();
             this.cmd("SetText", 2, "");
@@ -544,7 +543,7 @@ class TreeTernary extends Algorithm {
             this.cmd("SetBackgroundColor", this.nextIndex, this.FALSE_COLOR);
             this.cmd("SetWidth", this.nextIndex, this.NODE_WIDTH);
             this.cmd("SetText", 2, "Creating a new node");
-            child = new TernaryNode(" ", this.nextIndex, this.NEW_NODE_X, this.NEW_NODE_Y);
+            child = new this.TernaryNode(" ", this.nextIndex, this.NEW_NODE_X, this.NEW_NODE_Y);
             this.cmd("Step");
             let dir = 0.0001;
             if (label.charAt(0) === ">") {
@@ -677,4 +676,4 @@ class TreeTernary extends Algorithm {
         tree.width = Math.max(tree.leftWidth + tree.centerWidth + tree.rightWidth, this.NODE_WIDTH + 4);
         return tree.width;
     }
-}
+};

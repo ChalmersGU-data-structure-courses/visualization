@@ -27,34 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported TreeBPlus */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class BPlusTreeNode {
-    constructor(id, initialX, initialY) {
-        this.widths = [];
-        this.keys = [];
-        this.children = [];
-        this.x = initialX;
-        this.y = initialY;
-        this.graphicID = id;
-        this.numKeys = 0;
-        this.isLeaf = true;
-        this.parent = null;
-        this.leftWidth = 0;
-        this.rightWidth = 0;
-        // Could use children for next pointer, but I got lazy ...
-        this.next = null;
-    }
-
-    toString() {
-        return `[${this.keys.join(" ")}]`;
-    }
-}
-
-
-class TreeBPlus extends Algorithm {
+Algorithm.Tree.BPlusTree = class BPlusTree extends Algorithm.Tree {
     MAX_DEGREES = [3, 4, 5, 6, 7];
     MAX_DEGREE_LABELS = ["2/3-tree", "2/3/4-tree", "Max. degree 5", "Max. degree 6", "Max. degree 7"];
     INITIAL_MAX_DEGREE = 3;
@@ -79,6 +55,30 @@ class TreeBPlus extends Algorithm {
 
     MESSAGE_X = 10;
     MESSAGE_Y = 10;
+
+
+    BPlusTreeNode = class BPlusTreeNode {
+        constructor(id, initialX, initialY) {
+            this.widths = [];
+            this.keys = [];
+            this.children = [];
+            this.x = initialX;
+            this.y = initialY;
+            this.graphicID = id;
+            this.numKeys = 0;
+            this.isLeaf = true;
+            this.parent = null;
+            this.leftWidth = 0;
+            this.rightWidth = 0;
+            // Could use children for next pointer, but I got lazy ...
+            this.next = null;
+        }
+
+        toString() {
+            return `[${this.keys.join(" ")}]`;
+        }
+    };
+
 
     constructor(am, maxDegree) {
         super();
@@ -354,7 +354,7 @@ class TreeBPlus extends Algorithm {
         this.cmd("Step");
 
         if (this.treeRoot == null) {
-            this.treeRoot = new BPlusTreeNode(this.nextIndex++, this.startingX, this.STARTING_Y);
+            this.treeRoot = new this.BPlusTreeNode(this.nextIndex++, this.startingX, this.STARTING_Y);
             this.cmd(
                 "CreateBTreeNode",
                 this.treeRoot.graphicID,
@@ -440,7 +440,7 @@ class TreeBPlus extends Algorithm {
         this.cmd("SetHighlight", tree.graphicID, 1);
         this.cmd("Step");
         this.cmd("SetHighlight", tree.graphicID, 0);
-        const rightNode = new BPlusTreeNode(this.nextIndex++, tree.x + 100, tree.y);
+        const rightNode = new this.BPlusTreeNode(this.nextIndex++, tree.x + 100, tree.y);
         const risingNode = tree.keys[this.getSplitIndex()];
 
         let currentParent, parentIndex;
@@ -570,7 +570,7 @@ class TreeBPlus extends Algorithm {
             this.cmd("SetText", currentParent.graphicID, risingNode, parentIndex);
             return tree.parent;
         } else { // if (tree.parent == null)
-            this.treeRoot = new BPlusTreeNode(this.nextIndex++, this.startingX, this.STARTING_Y);
+            this.treeRoot = new this.BPlusTreeNode(this.nextIndex++, this.startingX, this.STARTING_Y);
             this.cmd(
                 "CreateBTreeNode",
                 this.treeRoot.graphicID,
@@ -1180,4 +1180,4 @@ class TreeBPlus extends Algorithm {
             return treeWidth;
         }
     }
-}
+};

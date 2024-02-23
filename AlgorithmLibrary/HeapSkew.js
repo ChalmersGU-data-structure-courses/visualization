@@ -27,37 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported HeapSkew */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class SkewHeapNode {
-    constructor(val, id, initialX, initialY) {
-        this.data = val;
-        this.x = (initialX == null) ? 0 : initialX;
-        this.y = (initialY == null) ? 0 : initialY;
-
-        this.graphicID = id;
-        this.left = null;
-        this.right = null;
-        this.leftWidth = 0;
-        this.rightWidth = 0;
-        this.parent = null;
-    }
-
-    disconnectFromParent() {
-        if (this.parent != null) {
-            if (this.parent.right === this) {
-                this.parent.right = null;
-            } else if (this.parent.left === this) {
-                this.parent.left = null;
-            }
-        }
-    }
-}
-
-
-class HeapSkew extends Algorithm {
+Algorithm.Heap.Skew = class SkewHeap extends Algorithm.Heap {
     LINK_COLOR = "#007700";
     HIGHLIGHT_CIRCLE_COLOR = "#007700";
     FOREGROUND_COLOR = "#007700";
@@ -75,6 +48,32 @@ class HeapSkew extends Algorithm {
     MESSAGE_Y = 10;
 
     MESSAGE_ID = 0;
+
+
+    SkewHeapNode = class SkewHeapNode {
+        constructor(val, id, initialX, initialY) {
+            this.data = val;
+            this.x = (initialX == null) ? 0 : initialX;
+            this.y = (initialY == null) ? 0 : initialY;
+            this.graphicID = id;
+            this.left = null;
+            this.right = null;
+            this.leftWidth = 0;
+            this.rightWidth = 0;
+            this.parent = null;
+        }
+
+        disconnectFromParent() {
+            if (this.parent != null) {
+                if (this.parent.right === this) {
+                    this.parent.right = null;
+                } else if (this.parent.left === this) {
+                    this.parent.left = null;
+                }
+            }
+        }
+    };
+
 
     constructor(am) {
         super();
@@ -196,7 +195,7 @@ class HeapSkew extends Algorithm {
         this.commands = [];
         this.cmd("SetText", this.MESSAGE_ID, "Create a heap with one node, merge with existing heap.");
 
-        this.secondaryRoot = new SkewHeapNode(insertedValue, this.nextIndex++, this.INSERT_X, this.INSERT_Y);
+        this.secondaryRoot = new this.SkewHeapNode(insertedValue, this.nextIndex++, this.INSERT_X, this.INSERT_Y);
         this.cmd("CreateCircle", this.secondaryRoot.graphicID, insertedValue, this.secondaryRoot.x, this.secondaryRoot.y);
         this.cmd("SetForegroundColor", this.secondaryRoot.graphicID, this.FOREGROUND_COLOR);
         this.cmd("SetBackgroundColor", this.secondaryRoot.graphicID, this.BACKGROUND_COLOR);
@@ -371,4 +370,4 @@ class HeapSkew extends Algorithm {
             this.animateNewPositions(tree.right);
         }
     }
-}
+};

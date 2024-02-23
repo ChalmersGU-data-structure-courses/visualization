@@ -26,12 +26,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
-/* globals Graph */
-/* exported GraphToposortDFS */
+/* globals Algorithm */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class GraphToposortDFS extends Graph {
+Algorithm.Graph.ToposortDFS = class ToposortDFS extends Algorithm.Graph {
     ORDERING_INITIAL_X = 300;
     ORDERING_INITIAL_Y = 70;
     ORDERING_DELTA_Y = 20;
@@ -316,4 +315,4 @@ class GraphToposortDFS extends Graph {
             }
         }
     }
-}
+};

@@ -26,12 +26,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
-/* globals Graph */
-/* exported GraphDFS */
+/* globals Algorithm */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class GraphDFS extends Graph {
+Algorithm.Graph.DFS = class DFS extends Algorithm.Graph {
     AUX_ARRAY_WIDTH = 25;
     AUX_ARRAY_HEIGHT = 25;
     AUX_ARRAY_START_Y = 50;
@@ -185,4 +184,4 @@ class GraphDFS extends Graph {
     reset() {
         this.messageID = [];
     }
-}
+};

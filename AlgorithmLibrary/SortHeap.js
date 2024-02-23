@@ -27,11 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported SortHeap */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class SortHeap extends Algorithm {
+Algorithm.Sort.Heap = class HeapSort extends Algorithm.Sort {
     ARRAY_SIZE = 32;
     ARRAY_ELEM_WIDTH = 30;
     ARRAY_ELEM_HEIGHT = 25;
@@ -227,4 +226,4 @@ class SortHeap extends Algorithm {
         }
         return this.commands;
     }
-}
+};

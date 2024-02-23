@@ -27,29 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported TreeTrie */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class TrieNode {
-    constructor(val, id, initialX, initialY) {
-        this.wordRemainder = val;
-        this.x = initialX;
-        this.y = initialY;
-        this.graphicID = id;
-        this.children = new Array(26);
-        this.childWidths = new Array(26);
-        for (let i = 0; i < 26; i++) {
-            this.children[i] = null;
-            this.childWidths[i] = 0;
-        }
-        this.width = 0;
-        this.parent = null;
-    }
-}
-
-
-class TreeTrie extends Algorithm {
+Algorithm.Tree.Trie = class Trie extends Algorithm.Tree {
     FOREGROUND_COLOR = "#007700";
     BACKGROUND_COLOR = "#EEFFEE";
 
@@ -70,6 +51,25 @@ class TreeTrie extends Algorithm {
     FIRST_PRINT_POS_X = 50;
     PRINT_VERTICAL_GAP = 20;
     PRINT_HORIZONTAL_GAP = 50;
+
+
+    TrieNode = class TrieNode {
+        constructor(val, id, initialX, initialY) {
+            this.wordRemainder = val;
+            this.x = initialX;
+            this.y = initialY;
+            this.graphicID = id;
+            this.children = new Array(26);
+            this.childWidths = new Array(26);
+            for (let i = 0; i < 26; i++) {
+                this.children[i] = null;
+                this.childWidths[i] = 0;
+            }
+            this.width = 0;
+            this.parent = null;
+        }
+    };
+
 
     constructor(am) {
         super();
@@ -379,7 +379,7 @@ class TreeTrie extends Algorithm {
             this.cmd("SetBackgroundColor", this.nextIndex, this.FALSE_COLOR);
             this.cmd("SetWidth", this.nextIndex, this.NODE_WIDTH);
             this.cmd("SetText", 2, "Creating a new root");
-            this.root = new TrieNode("", this.nextIndex, this.NEW_NODE_X, this.NEW_NODE_Y);
+            this.root = new this.TrieNode("", this.nextIndex, this.NEW_NODE_X, this.NEW_NODE_Y);
             this.cmd("Step");
             this.resizeTree();
             this.cmd("SetText", 2, "");
@@ -413,7 +413,7 @@ class TreeTrie extends Algorithm {
                 this.cmd("SetBackgroundColor", this.nextIndex, this.FALSE_COLOR);
                 this.cmd("SetWidth", this.nextIndex, this.NODE_WIDTH);
                 this.cmd("SetText", 2, `Child ${s.charAt(0)} does not exist.  Creating ... `);
-                tree.children[index] = new TrieNode(s.charAt(0), this.nextIndex, this.NEW_NODE_X, this.NEW_NODE_Y);
+                tree.children[index] = new this.TrieNode(s.charAt(0), this.nextIndex, this.NEW_NODE_X, this.NEW_NODE_Y);
                 tree.children[index].parent = tree;
                 this.cmd("Connect", tree.graphicID, tree.children[index].graphicID, this.FOREGROUND_COLOR, 0, false, s.charAt(0));
 
@@ -474,4 +474,4 @@ class TreeTrie extends Algorithm {
         tree.width = Math.max(size, this.NODE_WIDTH + 4);
         return tree.width;
     }
-}
+};

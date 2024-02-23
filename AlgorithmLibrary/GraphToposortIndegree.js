@@ -26,12 +26,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
-/* globals Graph */
-/* exported GraphToposortIndegree */
+/* globals Algorithm */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class GraphToposortIndegree extends Graph {
+Algorithm.Graph.ToposortIndegree = class ToposortIndegree extends Algorithm.Graph {
     INDEGREE_ARRAY_ELEM_WIDTH = 25;
     INDEGREE_ARRAY_ELEM_HEIGHT = 25;
     INDEGREE_ARRAY_START_X = 50;
@@ -363,4 +362,4 @@ class GraphToposortIndegree extends Graph {
         this.messageID = [];
         this.nextIndex = this.initialIndex;
     }
-}
+};

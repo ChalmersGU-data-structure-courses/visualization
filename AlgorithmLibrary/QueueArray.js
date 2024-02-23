@@ -27,11 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported QueueArray */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class QueueArray extends Algorithm {
+Algorithm.Queue.Array = class ArrayQueue extends Algorithm.Queue {
     SIZE = 15;
     INDEX_COLOR = "#0000FF";
 
@@ -298,4 +297,4 @@ class QueueArray extends Algorithm {
 
         return this.commands;
     }
-}
+};

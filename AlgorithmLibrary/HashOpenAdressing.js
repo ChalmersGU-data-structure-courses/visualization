@@ -26,12 +26,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
-/* globals Hash */
-/* exported HashOpenAdressing */
+/* globals Algorithm */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class HashOpenAdressing extends Hash {
+Algorithm.Hash.OpenAdressing = class OpenAdressing extends Algorithm.Hash {
     // This is a special key and should not be possible to enter in the GUI:
     DELETED = "<deleted>";
 
@@ -308,4 +307,4 @@ class HashOpenAdressing extends Hash {
             return i * d;
         }
     }
-}
+};

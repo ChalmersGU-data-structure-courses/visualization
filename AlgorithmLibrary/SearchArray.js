@@ -27,11 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported SearchArray */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class SearchArray extends Algorithm {
+Algorithm.Search = class Search extends Algorithm {
     LOW_CIRCLE_COLOR = "#1010FF";
     LOW_BACKGROUND_COLOR = "#F0F0FF";
     MID_CIRCLE_COLOR = "#108040";
@@ -588,4 +587,4 @@ class SearchArray extends Algorithm {
         }
         return this.commands;
     }
-}
+};

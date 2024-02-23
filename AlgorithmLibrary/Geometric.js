@@ -27,34 +27,31 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported Geometric, Matrix */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class Matrix {
-    constructor(contents, x, y) {
-        this.data = contents;
-        this.x = x;
-        this.y = y;
-    }
-
-    transpose() {
-        const newData = new Array(this.data[0].length);
-
-        for (let i = 0; i < this.data[0].length; i++) {
-            newData[i] = new Array(this.data.length);
+Algorithm.Geometric = class Geometric extends Algorithm {
+    Matrix = class Matrix {
+        constructor(contents, x, y) {
+            this.data = contents;
+            this.x = x;
+            this.y = y;
         }
-        for (let i = 0; i < this.data.length; i++) {
-            for (let j = 0; j < this.data[i].length; j++) {
-                newData[j][i] = this.data[i][j];
+
+        transpose() {
+            const newData = new Array(this.data[0].length);
+            for (let i = 0; i < this.data[0].length; i++) {
+                newData[i] = new Array(this.data.length);
             }
+            for (let i = 0; i < this.data.length; i++) {
+                for (let j = 0; j < this.data[i].length; j++) {
+                    newData[j][i] = this.data[i][j];
+                }
+            }
+            this.data = newData;
         }
-        this.data = newData;
-    }
-}
+    };
 
-
-class Geometric extends Algorithm {
     // Multiply two (data only!) matrices (not complete matrix object with graphics, just the data
     multiply(lhs, rhs) {
         const resultMat = new Array(lhs.length);
@@ -88,4 +85,4 @@ class Geometric extends Algorithm {
     toRadians(degrees) {
         return (degrees * 2 * Math.PI) / 360.0;
     }
-}
+};

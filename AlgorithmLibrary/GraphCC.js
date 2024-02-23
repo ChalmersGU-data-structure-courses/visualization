@@ -26,12 +26,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
-/* globals Graph */
-/* exported GraphCC */
+/* globals Algorithm */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class GraphCC extends Graph {
+Algorithm.Graph.CC = class CC extends Algorithm.Graph {
     AUX_ARRAY_WIDTH = 25;
     AUX_ARRAY_HEIGHT = 25;
     AUX_ARRAY_START_Y = 100;
@@ -380,4 +379,4 @@ class GraphCC extends Graph {
             }
         }
     }
-}
+};

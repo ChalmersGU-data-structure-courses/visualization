@@ -27,13 +27,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported Graph */
 ///////////////////////////////////////////////////////////////////////////////
 
 // TODO:  UNDO (all the way) is BROKEN.  Redo reset ...
 
 
-class Graph extends Algorithm {
+Algorithm.Graph = class Graph extends Algorithm {
     LARGE_ALLOWED = [
         [false, true, true, false, true, false, false, true, false, false, false, false, false, false, true, false, false, false],
         [true, false, true, false, true, true, false, false, false, false, false, false, false, false, false, false, false, false],
@@ -528,4 +527,4 @@ class Graph extends Algorithm {
             }
         }
     }
-}
+};

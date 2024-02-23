@@ -25,6 +25,7 @@
 
 <!-- Searching and sorting -->
 <script type="text/javascript" src="AlgorithmLibrary/SearchArray.js"> </script>
+<script type="text/javascript" src="AlgorithmLibrary/Sort.js"> </script>
 <script type="text/javascript" src="AlgorithmLibrary/SortComparison.js"> </script>
 <script type="text/javascript" src="AlgorithmLibrary/SortBucket.js"> </script>
 <script type="text/javascript" src="AlgorithmLibrary/SortCounting.js"> </script>
@@ -32,12 +33,15 @@
 <script type="text/javascript" src="AlgorithmLibrary/SortHeap.js"> </script>
 
 <!-- Stacks and queues -->
+<script type="text/javascript" src="AlgorithmLibrary/Stack.js"> </script>
 <script type="text/javascript" src="AlgorithmLibrary/StackArray.js"> </script>
 <script type="text/javascript" src="AlgorithmLibrary/StackLL.js"> </script>
+<script type="text/javascript" src="AlgorithmLibrary/Queue.js"> </script>
 <script type="text/javascript" src="AlgorithmLibrary/QueueArray.js"> </script>
 <script type="text/javascript" src="AlgorithmLibrary/QueueLL.js"> </script>
 
 <!-- Search trees -->
+<script type="text/javascript" src="AlgorithmLibrary/Tree.js"> </script>
 <script type="text/javascript" src="AlgorithmLibrary/TreeBST.js"> </script>
 <script type="text/javascript" src="AlgorithmLibrary/TreeAVL.js"> </script>
 <script type="text/javascript" src="AlgorithmLibrary/TreeRedBlack.js"> </script>
@@ -56,6 +60,7 @@
 <script type="text/javascript" src="AlgorithmLibrary/HashOpenAdrBuckets.js"> </script>
 
 <!-- Priority queues -->
+<script type="text/javascript" src="AlgorithmLibrary/Heap.js"> </script>
 <script type="text/javascript" src="AlgorithmLibrary/HeapBinary.js"> </script>
 <script type="text/javascript" src="AlgorithmLibrary/HeapBinomial.js"> </script>
 <script type="text/javascript" src="AlgorithmLibrary/HeapFibonacci.js"> </script>
@@ -80,6 +85,7 @@
 <script type="text/javascript" src="AlgorithmLibrary/RecNQueens.js"> </script>
 
 <!-- Dynamic programming -->
+<script type="text/javascript" src="AlgorithmLibrary/DP.js"> </script>
 <script type="text/javascript" src="AlgorithmLibrary/DPFibonacci.js"> </script>
 <script type="text/javascript" src="AlgorithmLibrary/DPCoinChange.js"> </script>
 <script type="text/javascript" src="AlgorithmLibrary/DPLCS.js"> </script>
@@ -98,17 +104,22 @@
 <script>
 var currentAlgorithm; // For debugging purposes
 
-function initializeAlgorithm() {
-    var aniManager = initCanvas();
-    var algoName = new URL(window.location).searchParams.get("algorithm");
-    var algoSelect = document.getElementById("algorithmSelector");
+function initAlgorithm() {
+    const aniManager = initCanvas();
+    const algoName = new URL(window.location).searchParams.get("algorithm");
+    const algoSelect = document.getElementById("algorithmSelector");
     algoSelect.value = algoName;
-    if (algoSelect.value && /^[A-Z]\w+$/.test(algoName)) {
-        var algoClass = eval(algoName);
-        if (algoClass.prototype instanceof Algorithm) {
-            currentAlgorithm = new algoClass(aniManager);
+    currentAlgorithm = (() => {
+        if (!algoSelect.value) return null;
+        if (!/^[\w.]+$/.test(algoName)) return null;
+        let algoClass = Algorithm;
+        for (const part of algoName.split(".")) {
+            algoClass = algoClass[part];
+            if (!(algoClass && algoClass.prototype instanceof Algorithm)) return null;
         }
-    } else {
+        return new algoClass(aniManager);
+    })();
+    if (!currentAlgorithm) {
         algoSelect.value = "";
         window.history.replaceState("", "", window.location.pathname);
     }
@@ -116,18 +127,18 @@ function initializeAlgorithm() {
 }
 
 function selectAlgorithm() {
-    var algoName = document.getElementById("algorithmSelector").value;
+    const algoName = document.getElementById("algorithmSelector").value;
     if (algoName) {
-        var url = window.location.pathname + "?" + new URLSearchParams({algorithm: algoName});
+        const url = window.location.pathname + "?" + new URLSearchParams({algorithm: algoName});
         window.history.replaceState("", "", url);
     }
-    initializeAlgorithm();
+    initAlgorithm();
 }
 </script>
 
 </head>
 
-<body onload="initializeAlgorithm()">
+<body onload="initAlgorithm()">
 
 <header>
   <h1><a href="index.html">Data Structure Visualizations</a></h1>
@@ -174,40 +185,40 @@ function selectAlgorithm() {
       <hr/>
 
       <optgroup label="Searching and sorting">
-        <option value="SearchArray">Searching in a sorted array: Linear and binary search</option>
-        <option value="SortComparison">Comparison-based sorting algorithms</option>
+        <option value="Search">Searching in a sorted array: Linear and binary search</option>
+        <option value="Sort.Comparison">Comparison-based sorting algorithms</option>
         <option disabled>&nbsp;&nbsp;&nbsp;&nbsp;(Bubble-, Selection-, Insertion-, Shell-, Merge-, Quicksort)</option>
       </optgroup>
 
       <optgroup label="Stacks and queues">
-        <option value="StackArray">Stack: Array implementation</option>
-        <option value="StackLL">Stack: Linked list implementation</option>
-        <option value="QueueArray">Queue: Array implementation</option>
-        <option value="QueueLL">Queue: Linked list implementation</option>
+        <option value="Stack.Array">Stack: Array implementation</option>
+        <option value="Stack.LinkedList">Stack: Linked list implementation</option>
+        <option value="Queue.Array">Queue: Array implementation</option>
+        <option value="Queue.LinkedList">Queue: Linked list implementation</option>
       </optgroup>
 
       <optgroup label="Search trees">
-        <option value="TreeBST">BST: Binary search tree</option>
-        <option value="TreeAVL">AVL tree</option>
-        <option value="TreeRedBlack">Red-black tree</option>
-        <option value="TreeB">B-tree</option>
+        <option value="Tree.BST">BST: Binary search tree</option>
+        <option value="Tree.AVL">AVL tree</option>
+        <option value="Tree.RedBlack">Red-black tree</option>
+        <option value="Tree.BTree">B-tree</option>
       </optgroup>
 
       <optgroup label="Hash tables">
-        <option value="HashSeparateChaining">Separate chaining hash table</option>
-        <option value="HashOpenAdressing">Open addressing hash table</option>
+        <option value="Hash.SeparateChaining">Separate chaining hash table</option>
+        <option value="Hash.OpenAdressing">Open addressing hash table</option>
       </optgroup>
       
       <optgroup label="Priority queues">
-        <option value="HeapBinary">Binary heap</option>
+        <option value="Heap.Binary">Binary heap</option>
       </optgroup>
 
       <optgroup label="Graph algorithms">
-        <option value="GraphDFS">DFS: Depth-first search</option>
-        <option value="GraphBFS">BFS: Breadth-first search</option>
-        <option value="GraphDijkstra">Dijkstra's shortest path search</option>
-        <option value="GraphPrim">Prim's MST (minimum spanning tree) algorithm</option>
-        <option value="GraphKruskal">Kruskal's MST (minimum spanning tree) algorithm</option>
+        <option value="Graph.DFS">DFS: Depth-first search</option>
+        <option value="Graph.BFS">BFS: Breadth-first search</option>
+        <option value="Graph.Dijkstra">Dijkstra's shortest path search</option>
+        <option value="Graph.Prim">Prim's MST (minimum spanning tree) algorithm</option>
+        <option value="Graph.Kruskal">Kruskal's MST (minimum spanning tree) algorithm</option>
       </optgroup>
 
       <option disabled></option>
@@ -216,80 +227,80 @@ function selectAlgorithm() {
       <option disabled></option>
 
       <optgroup label="Searching and sorting">
-        <option value="SearchArray">Searching in a sorted array: Linear and binary search</option>
-        <option value="SortComparison">Comparison-based sorting algorithms</option>
+        <option value="Search">Searching in a sorted array: Linear and binary search</option>
+        <option value="Sort.Comparison">Comparison-based sorting algorithms</option>
         <option disabled>&nbsp;&nbsp;&nbsp;&nbsp;(Bubble-, Selection-, Insertion-, Shell-, Merge-, Quicksort)</option>
-        <option value="SortBucket">Bucket Sort</option>
-        <option value="SortCounting">Counting Sort</option>
-        <option value="SortRadix">Radix Sort</option>
-        <option value="SortHeap">Heap Sort</option>
+        <option value="Sort.Bucket">Bucket Sort</option>
+        <option value="Sort.Counting">Counting Sort</option>
+        <option value="Sort.Radix">Radix Sort</option>
+        <option value="Sort.Heap">Heap Sort</option>
       </optgroup>
 
       <optgroup label="Stacks and queues">
-        <option value="StackArray">Stack: Array implementation</option>
-        <option value="StackLL">Stack: Linked list implementation</option>
-        <option value="QueueArray">Queue: Array implementation</option>
-        <option value="QueueLL">Queue: Linked list implementation</option>
+        <option value="Stack.Array">Stack: Array implementation</option>
+        <option value="Stack.LinkedList">Stack: Linked list implementation</option>
+        <option value="Queue.Array">Queue: Array implementation</option>
+        <option value="Queue.LinkedList">Queue: Linked list implementation</option>
         <option disabled>Lists: Array implementation (only available in the old Java version)</option>
         <option disabled>Lists: Linked iist implementation (only available in the old Java version)</option>
       </optgroup>
       
       <optgroup label="Search Trees">
-        <option value="TreeBST">BST: Binary search tree</option>
-        <option value="TreeAVL">AVL tree</option>
-        <option value="TreeRedBlack">Red-black tree</option>
-        <option value="TreeSplay">Splay tree</option>
-        <option value="TreeTrie">Trie (prefix tree)</option>
-        <option value="TreeRadix">Radix tree (compact Trie)</option>
-        <option value="TreeTernary">Ternary search tree (Trie with BST of children)</option>
-        <option value="TreeB">B-tree</option>
-        <option value="TreeBPlus">B+ tree</option>
+        <option value="Tree.BST">BST: Binary search tree</option>
+        <option value="Tree.AVL">AVL tree</option>
+        <option value="Tree.RedBlack">Red-black tree</option>
+        <option value="Tree.Splay">Splay tree</option>
+        <option value="Tree.Trie">Trie (prefix tree)</option>
+        <option value="Tree.Radix">Radix tree (compact Trie)</option>
+        <option value="Tree.Ternary">Ternary search tree (Trie with BST of children)</option>
+        <option value="Tree.BTree">B-tree</option>
+        <option value="Tree.BPlusTree">B+ tree</option>
       </optgroup>
 
       <optgroup label="Hash tables">
-        <option value="HashSeparateChaining">Separate chaining hash table</option>
-        <option value="HashOpenAdressing">Open addressing hash table</option>
-        <option value="HashOpenAdrBuckets">Open addressing hash table, using buckets</option>
+        <option value="Hash.SeparateChaining">Separate chaining hash table</option>
+        <option value="Hash.OpenAdressing">Open addressing hash table</option>
+        <option value="Hash.OpenAdrBuckets">Open addressing hash table, using buckets</option>
       </optgroup>
       
       <optgroup label="Priority queues">
-        <option value="HeapBinary">Binary heap</option>
-        <option value="HeapBinomial">Binomial heap</option>
-        <option value="HeapFibonacci">Fibonacci heap</option>
-        <option value="HeapLeftist">Leftist heap</option>
-        <option value="HeapSkew">Skew heap</option>
+        <option value="Heap.Binary">Binary heap</option>
+        <option value="Heap.Binomial">Binomial heap</option>
+        <option value="Heap.Fibonacci">Fibonacci heap</option>
+        <option value="Heap.Leftist">Leftist heap</option>
+        <option value="Heap.Skew">Skew heap</option>
       </optgroup>
       
       <optgroup label="Graph algorithms">
-        <option value="GraphDFS">DFS: Depth-first search</option>
-        <option value="GraphBFS">BFS: Breadth-first search</option>
-        <option value="GraphDijkstra">Dijkstra's shortest path search</option>
-        <option value="GraphPrim">Prim's MST (minimum spanning tree) algorithm</option>
-        <option value="GraphKruskal">Kruskal's MST (minimum spanning tree) algorithm</option>
-        <option value="GraphCC">Connected components</option>
-        <option value="GraphToposortIndegree">Topological sort (using in-degree array)</option>
-        <option value="GraphToposortDFS">Topological sort (using DFS)</option>
-        <option value="GraphFloyd">Floyd-Warshall (all pairs shortest paths)</option>
+        <option value="Graph.DFS">DFS: Depth-first search</option>
+        <option value="Graph.BFS">BFS: Breadth-first search</option>
+        <option value="Graph.Dijkstra">Dijkstra's shortest path search</option>
+        <option value="Graph.Prim">Prim's MST (minimum spanning tree) algorithm</option>
+        <option value="Graph.Kruskal">Kruskal's MST (minimum spanning tree) algorithm</option>
+        <option value="Graph.CC">Connected components</option>
+        <option value="Graph.ToposortIndegree">Topological sort (using in-degree array)</option>
+        <option value="Graph.ToposortDFS">Topological sort (using DFS)</option>
+        <option value="Graph.Floyd">Floyd-Warshall (all pairs shortest paths)</option>
       </optgroup>
 
       <optgroup label="Recursion training">
-        <option value="RecFactorial">Factorial</option>
-        <option value="RecReverse">Reversing a string</option>
-        <option value="RecNQueens">N-queens problem</option>
+        <option value="Recursive.Factorial">Factorial</option>
+        <option value="Recursive.Reverse">Reversing a string</option>
+        <option value="Recursive.NQueens">N-queens problem</option>
       </optgroup>
 
       <optgroup label="Dynamic programming">
-        <option value="DPFibonacci">Calculating Fibonacci numbers</option>
-        <option value="DPCoinChange">Coin change problem</option>
-        <option value="DPLCS">Longest common subsequence</option>
+        <option value="DP.Fibonacci">Calculating Fibonacci numbers</option>
+        <option value="DP.CoinChange">Coin change problem</option>
+        <option value="DP.LCS">Longest common subsequence</option>
       </optgroup>
       
       <optgroup label="Geometric algorithms">
-        <option value="GeoRotateScale2D">2D rotation and scale matrices</option>
-        <option value="GeoRotateTranslate2D">2D rotation and translation matrices</option>
-        <option value="GeoChangeCoord2D">2D changing coordinate systems</option>
-        <option value="GeoRotateScale3D">3D rotation and scale matrices</option>
-        <option value="GeoChangeCoord3D">3D changing coordinate systems</option>
+        <option value="Geometric.RotateScale2D">2D rotation and scale matrices</option>
+        <option value="Geometric.RotateTranslate2D">2D rotation and translation matrices</option>
+        <option value="Geometric.ChangeCoord2D">2D changing coordinate systems</option>
+        <option value="Geometric.RotateScale3D">3D rotation and scale matrices</option>
+        <option value="Geometric.ChangeCoord3D">3D changing coordinate systems</option>
       </optgroup>
         
       <optgroup label="Others...">

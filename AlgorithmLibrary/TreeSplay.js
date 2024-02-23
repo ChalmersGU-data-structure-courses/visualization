@@ -27,33 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported TreeSplay */
 ///////////////////////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////////////////////////
-// Splay tree nodes are ordinary BST nodes
 
-
-class SplayNode {
-    constructor(val, id, initialX, initialY) {
-        this.data = val;
-        this.x = initialX;
-        this.y = initialY;
-        this.graphicID = id;
-        this.left = null;
-        this.right = null;
-        this.parent = null;
-        this.leftWidth = 0;
-        this.rightWidth = 0;
-    }
-
-    isLeftChild() {
-        return this.parent == null || this.parent.left === this;
-    }
-}
-
-
-class TreeSplay extends Algorithm {
+Algorithm.Tree.Splay = class SplayTree extends Algorithm.Tree {
     FOREGROUND_COLOR = "#007700";
     BACKGROUND_COLOR = "#EEFFEE";
 
@@ -72,6 +49,26 @@ class TreeSplay extends Algorithm {
 
     MESSAGE_X = 10;
     MESSAGE_Y = 10;
+
+
+    SplayNode = class SplayNode {
+        constructor(val, id, initialX, initialY) {
+            this.data = val;
+            this.x = initialX;
+            this.y = initialY;
+            this.graphicID = id;
+            this.left = null;
+            this.right = null;
+            this.parent = null;
+            this.leftWidth = 0;
+            this.rightWidth = 0;
+        }
+
+        isLeftChild() {
+            return this.parent == null || this.parent.left === this;
+        }
+    };
+
 
     constructor(am) {
         super();
@@ -328,14 +325,14 @@ class TreeSplay extends Algorithm {
             this.cmd("SetForegroundColor", treeNodeID, this.FOREGROUND_COLOR);
             this.cmd("SetBackgroundColor", treeNodeID, this.BACKGROUND_COLOR);
             this.cmd("Step");
-            this.treeRoot = new SplayNode(insertedValue, treeNodeID, x, y);
+            this.treeRoot = new this.SplayNode(insertedValue, treeNodeID, x, y);
         } else {
             const x = this.STARTING_Y, y = 2 * this.STARTING_Y;
             this.cmd("CreateCircle", treeNodeID, insertedValue, x, y);
             this.cmd("SetForegroundColor", treeNodeID, this.FOREGROUND_COLOR);
             this.cmd("SetBackgroundColor", treeNodeID, this.BACKGROUND_COLOR);
             this.cmd("Step");
-            const insertElem = new SplayNode(insertedValue, treeNodeID, x, y);
+            const insertElem = new this.SplayNode(insertedValue, treeNodeID, x, y);
             this.cmd("SetHighlight", insertElem.graphicID, 1);
             this.insert(insertElem, this.treeRoot);
             this.resizeTree();
@@ -885,4 +882,4 @@ class TreeSplay extends Algorithm {
         tree.rightWidth = Math.max(this.resizeWidths(tree.right), this.WIDTH_DELTA / 2);
         return tree.leftWidth + tree.rightWidth;
     }
-}
+};

@@ -26,12 +26,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
-/* globals Recursive */
-/* exported RecReverse */
+/* globals Algorithm */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class RecReverse extends Recursive {
+Algorithm.Recursive.Reverse = class Reverse extends Algorithm.Recursive {
     ACTIVATION_FIELDS = ["word ", "subProblem ", "subSolution ", "solution "];
 
     CODE = [
@@ -184,4 +183,4 @@ class RecReverse extends Recursive {
             return "";
         }
     }
-}
+};

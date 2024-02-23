@@ -27,11 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported SortComparison */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class SortComparison extends Algorithm {
+Algorithm.Sort.Comparison = class ComparisonSort extends Algorithm.Sort {
     INDEX_COLOR = "#0000FF";
     BAR_FOREGROUND_COLOR = this.INDEX_COLOR;
     BAR_BACKGROUND_COLOR = "#AAAAFF";
@@ -510,4 +509,4 @@ class SortComparison extends Algorithm {
             }
         }
     }
-}
+};

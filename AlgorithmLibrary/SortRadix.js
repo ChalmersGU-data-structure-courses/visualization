@@ -27,11 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported SortRadix */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class SortRadix extends Algorithm {
+Algorithm.Sort.Radix = class RadixSort extends Algorithm.Sort {
     ARRAY_ELEM_WIDTH = 30;
     ARRAY_ELEM_HEIGHT = 30;
     ARRAY_ELEM_START_X = 20;
@@ -301,4 +300,4 @@ class SortRadix extends Algorithm {
     resetCallback(event) {
         this.randomizeArray();
     }
-}
+};

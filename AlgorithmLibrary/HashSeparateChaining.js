@@ -26,29 +26,27 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
-/* globals Hash */
-/* exported HashSeparateChaining */
+/* globals Algorithm */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class HashLinkedListNode {
-    constructor(data, id, x, y) {
-        this.data = data;
-        this.graphicID = id;
-        this.x = x;
-        this.y = y;
-        this.next = null;
-    }
-}
-
-
-class HashSeparateChaining extends Hash {
+Algorithm.Hash.SeparateChaining = class SeparateChaining extends Algorithm.Hash {
     DEFAULT_TABLE_SIZE = 13;
     TABLE_SIZES = [7, 13, 23];
     TABLE_SIZE_LABELS = ["Small (7)", "Medium (13)", "Large (23)"];
 
     NODE_INSERT_X = 100;
     NODE_INSERT_Y = 75;
+
+    LinkedListNode = class LinkedListNode {
+        constructor(data, id, x, y) {
+            this.data = data;
+            this.graphicID = id;
+            this.x = x;
+            this.y = y;
+            this.next = null;
+        }
+    };
 
     constructor(am) {
         super();
@@ -180,7 +178,7 @@ class HashSeparateChaining extends Hash {
         const hash = this.getHashCode(elem);
         const index = this.getStartIndex(hash);
 
-        const node = new HashLinkedListNode(elem, this.nextIndex++, 0, 0);
+        const node = new this.LinkedListNode(elem, this.nextIndex++, 0, 0);
         this.cmd("CreateLinkedList", node.graphicID, elem, this.getCellWidth() * 0.8, this.getCellHeight(), 0, 0);
         this.cmd("AlignRight", node.graphicID, this.messageID);
 
@@ -303,4 +301,4 @@ class HashSeparateChaining extends Hash {
             node = node.next;
         }
     }
-}
+};

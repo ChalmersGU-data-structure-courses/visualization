@@ -26,12 +26,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
-/* globals Graph */
-/* exported GraphDijkstraPrim, GraphDijkstra, GraphPrim */
+/* globals Algorithm */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class GraphDijkstraPrim extends Graph {
+Algorithm.Graph.DijkstraPrim = class DijkstraPrim extends Algorithm.Graph {
     TABLE_ENTRY_WIDTH = 50;
     TABLE_ENTRY_HEIGHT = 25;
     TABLE_START_X = 50;
@@ -303,18 +302,18 @@ class GraphDijkstraPrim extends Graph {
             this.implementAction(this.doDijkstraPrim.bind(this), startValue);
         }
     }
-}
+};
 
 
-class GraphDijkstra extends GraphDijkstraPrim {
+Algorithm.Graph.Dijkstra = class Dijkstra extends Algorithm.Graph.DijkstraPrim {
     constructor(am) {
         super(am, true, true);
     }
-}
+};
 
 
-class GraphPrim extends GraphDijkstraPrim {
+Algorithm.Graph.Prim = class Prim extends Algorithm.Graph.DijkstraPrim {
     constructor(am) {
         super(am, false, false);
     }
-}
+};

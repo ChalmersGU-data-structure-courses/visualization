@@ -27,32 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported TreeRedBlack */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class RedBlackNode {
-    constructor(val, id, blackLevel, initialX, initialY) {
-        this.data = val;
-        this.x = initialX;
-        this.y = initialY;
-        this.blackLevel = blackLevel;
-        this.phantomLeaf = false;
-        this.graphicID = id;
-        this.left = null;
-        this.right = null;
-        this.parent = null;
-        this.leftWidth = 0;
-        this.rightWidth = 0;
-    }
-
-    isLeftChild() {
-        return this.parent == null || this.parent.left === this;
-    }
-}
-
-
-class TreeRedBlack extends Algorithm {
+Algorithm.Tree.RedBlack = class RedBlackTree extends Algorithm.Tree {
     FOREGROUND_RED = "#770000";
     BACKGROUND_RED = "#FFBBBB";
     FOREGROUND_BLACK = "#000000";
@@ -79,6 +57,28 @@ class TreeRedBlack extends Algorithm {
 
     MESSAGE_X = 10;
     MESSAGE_Y = 10;
+
+
+    RedBlackNode = class RedBlackNode {
+        constructor(val, id, blackLevel, initialX, initialY) {
+            this.data = val;
+            this.x = initialX;
+            this.y = initialY;
+            this.blackLevel = blackLevel;
+            this.phantomLeaf = false;
+            this.graphicID = id;
+            this.left = null;
+            this.right = null;
+            this.parent = null;
+            this.leftWidth = 0;
+            this.rightWidth = 0;
+        }
+
+        isLeftChild() {
+            return this.parent == null || this.parent.left === this;
+        }
+    };
+
 
     constructor(am) {
         super();
@@ -335,7 +335,7 @@ class TreeRedBlack extends Algorithm {
             this.cmd("SetWidth", treeNodeID, this.NODE_SIZE);
             this.cmd("SetForegroundColor", treeNodeID, this.FOREGROUND_BLACK);
             this.cmd("SetBackgroundColor", treeNodeID, this.BACKGROUND_BLACK);
-            this.treeRoot = new RedBlackNode(insertedValue, treeNodeID, 1, x, y);
+            this.treeRoot = new this.RedBlackNode(insertedValue, treeNodeID, 1, x, y);
             this.attachNullLeaves(this.treeRoot);
         } else {
             const x = this.STARTING_Y, y = 2 * this.STARTING_Y;
@@ -344,7 +344,7 @@ class TreeRedBlack extends Algorithm {
             this.cmd("SetForegroundColor", treeNodeID, this.FOREGROUND_RED);
             this.cmd("SetBackgroundColor", treeNodeID, this.BACKGROUND_RED);
             this.cmd("Step");
-            const insertElem = new RedBlackNode(insertedValue, treeNodeID, 0, x, y);
+            const insertElem = new this.RedBlackNode(insertedValue, treeNodeID, 0, x, y);
             this.cmd("SetHighlight", insertElem.graphicID, 1);
             this.insert(insertElem, this.treeRoot);
         }
@@ -376,7 +376,7 @@ class TreeRedBlack extends Algorithm {
         this.cmd("CreateCircle", nullLeafID, "", node.x, node.y);
         this.cmd("SetWidth", nullLeafID, this.NULL_LEAF_SIZE);
         this.cmd("SetBackgroundColor", nullLeafID, this.BACKGROUND_NULL_LEAF);
-        const nullLeaf = new RedBlackNode("", nullLeafID, 1, this.startingX, this.STARTING_Y);
+        const nullLeaf = new this.RedBlackNode("", nullLeafID, 1, this.startingX, this.STARTING_Y);
         nullLeaf.phantomLeaf = true;
         nullLeaf.parent = node;
         this.cmd("SetLayer", nullLeafID, 1);
@@ -1096,4 +1096,4 @@ class TreeRedBlack extends Algorithm {
         }
         return tree.leftWidth + tree.rightWidth;
     }
-}
+};

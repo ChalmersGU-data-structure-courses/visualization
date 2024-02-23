@@ -27,11 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported DPCoinChange */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class DPCoinChange extends Algorithm {
+Algorithm.DP.CoinChange = class CoinChange extends Algorithm.DP {
     TABLE_ELEM_WIDTH = 30;
     TABLE_ELEM_HEIGHT = 30;
 
@@ -755,4 +754,4 @@ class DPCoinChange extends Algorithm {
             return [0, []];
         }
     }
-}
+};

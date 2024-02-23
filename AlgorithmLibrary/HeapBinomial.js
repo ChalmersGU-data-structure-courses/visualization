@@ -27,27 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported HeapBinomial */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class BinomialNode {
-    constructor(val, id, initialX, initialY) {
-        this.data = val;
-        this.x = initialX;
-        this.y = initialY;
-        this.graphicID = id;
-        this.degree = 0;
-        this.leftChild = null;
-        this.rightSib = null;
-        this.parent = null;
-        this.internalGraphicID = -1;
-        this.degreeID = -1;
-    }
-}
-
-
-class HeapBinomial extends Algorithm {
+Algorithm.Heap.Binomial = class BinomialHeap extends Algorithm.Heap {
     LINK_COLOR = "#007700";
     HIGHLIGHT_CIRCLE_COLOR = "#007700";
     MERGE_SEPARATING_LINE_COLOR = "#0000FF";
@@ -67,6 +50,23 @@ class HeapBinomial extends Algorithm {
 
     INSERT_X = 30;
     INSERT_Y = 25;
+
+
+    BinomialNode = class BinomialNode {
+        constructor(val, id, initialX, initialY) {
+            this.data = val;
+            this.x = initialX;
+            this.y = initialY;
+            this.graphicID = id;
+            this.degree = 0;
+            this.leftChild = null;
+            this.rightSib = null;
+            this.parent = null;
+            this.internalGraphicID = -1;
+            this.degreeID = -1;
+        }
+    };
+
 
     constructor(am) {
         super();
@@ -263,7 +263,7 @@ class HeapBinomial extends Algorithm {
     insertElement(insertedValue) {
         this.commands = [];
 
-        const insertNode = new BinomialNode(insertedValue, this.nextIndex++, this.INSERT_X, this.INSERT_Y);
+        const insertNode = new this.BinomialNode(insertedValue, this.nextIndex++, this.INSERT_X, this.INSERT_Y);
         insertNode.internalGraphicID = this.nextIndex++;
         insertNode.degreeID = this.nextIndex++;
         this.cmd("CreateCircle", insertNode.graphicID, insertedValue, this.INSERT_X, this.INSERT_Y);
@@ -512,4 +512,4 @@ class HeapBinomial extends Algorithm {
             }
         }
     }
-}
+};

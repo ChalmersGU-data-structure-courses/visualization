@@ -27,11 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported HeapBinary */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class HeapBinary extends Algorithm {
+Algorithm.Heap.Binary = class BinaryHeap extends Algorithm.Heap {
     HEAP_X_POSITIONS = [
         null, 0.50, 0.26, 0.74, 0.14, 0.38, 0.62, 0.86,
         0.08, 0.20, 0.32, 0.44, 0.56, 0.68, 0.80, 0.92,
@@ -419,4 +418,4 @@ class HeapBinary extends Algorithm {
         this.cmd("SetHighlight", this.circleObjs[index], highlightVal);
         this.cmd("SetHighlight", this.arrayRects[index], highlightVal);
     }
-}
+};

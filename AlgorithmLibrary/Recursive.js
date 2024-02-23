@@ -27,24 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported Recursive */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class ActivationRecord {
-    constructor(fields) {
-        this.fields = fields;
-        this.values = new Array(this.fields.length);
-        for (let i = 0; i < this.fields.length; i++) {
-            this.values[i] = "";
-        }
-        this.fieldIDs = new Array(this.fields.length);
-        this.labelIDs = new Array(this.fields.length);
-    }
-}
-
-
-class Recursive extends Algorithm {
+Algorithm.Recursive = class Recursive extends Algorithm {
     CODE_START_X = 10;
     CODE_START_Y = 10;
     CODE_LINE_HEIGHT = 14;
@@ -66,6 +52,19 @@ class Recursive extends Algorithm {
     ACTIVATION_RECORD_SPACING = 2 * this.ACTIVATION_RECORD_WIDTH + 10;
 
     SEPARATING_LINE_COLOR = "#0000FF";
+
+
+    ActivationRecord = class ActivationRecord {
+        constructor(fields) {
+            this.fields = fields;
+            this.values = new Array(this.fields.length);
+            for (let i = 0; i < this.fields.length; i++) {
+                this.values[i] = "";
+            }
+            this.fieldIDs = new Array(this.fields.length);
+            this.labelIDs = new Array(this.fields.length);
+        }
+    };
 
 
     constructor(am) {
@@ -117,7 +116,7 @@ class Recursive extends Algorithm {
     }
 
     createActivation(functionName, argList, x, y, labelsOnLeft) {
-        const activationRec = new ActivationRecord(argList);
+        const activationRec = new this.ActivationRecord(argList);
 
         activationRec.nameID = this.nextIndex++;
         labelsOnLeft = (labelsOnLeft == null) ? true : labelsOnLeft;
@@ -165,4 +164,4 @@ class Recursive extends Algorithm {
         this.cmd("SetForegroundColor", activationRec.separatingLineID, this.SEPARATING_LINE_COLOR);
         return activationRec;
     }
-}
+};

@@ -27,11 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported StackArray */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class StackArray extends Algorithm {
+Algorithm.Stack.Array = class ArrayStack extends Algorithm.Stack {
     SIZE = 15;
     INDEX_COLOR = "#0000FF";
 
@@ -263,4 +262,4 @@ class StackArray extends Algorithm {
 
         return this.commands;
     }
-}
+};

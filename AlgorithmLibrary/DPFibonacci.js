@@ -27,11 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported DPFibonacci */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class DPFibonacci extends Algorithm {
+Algorithm.DP.Fibonacci = class Fibonacci extends Algorithm.DP {
     TABLE_ELEM_WIDTH = 40;
     TABLE_ELEM_HEIGHT = 30;
 
@@ -395,4 +394,4 @@ class DPFibonacci extends Algorithm {
         this.cmd("SetText", functionCallID, `fib(${String(value)}) = ${String(final)}`);
         return this.commands;
     }
-}
+};

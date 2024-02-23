@@ -27,11 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported DPLCS */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class DPLCS extends Algorithm {
+Algorithm.DP.LCS = class LCS extends Algorithm.DP {
     TABLE_ELEM_WIDTH = 40;
     TABLE_ELEM_HEIGHT = 30;
 
@@ -626,4 +625,4 @@ class DPLCS extends Algorithm {
 
         return this.commands;
     }
-}
+};

@@ -26,12 +26,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
-/* globals Recursive */
-/* exported RecFactorial */
+/* globals Algorithm */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class RecFactorial extends Recursive {
+Algorithm.Recursive.Factorial = class Factorial extends Algorithm.Recursive {
     MAX_VALUE = 20;
 
     ACTIVATION_FIELDS = ["n ", "subValue ", "returnValue "];
@@ -178,4 +177,4 @@ class RecFactorial extends Recursive {
             return 1;
         }
     }
-}
+};

@@ -27,11 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported DisjointSet */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class DisjointSet extends Algorithm {
+Algorithm.DisjointSet = class DisjointSet extends Algorithm {
     ARRAY_START_X = 50;
     ARRAY_WIDTH = 30;
     ARRAY_HEIGHT = 30;
@@ -504,4 +503,4 @@ class DisjointSet extends Algorithm {
             this.cmd("Move", this.treeID[i], this.TREE_START_X + this.treeIndexToLocation[i] * this.TREE_ELEM_WIDTH, this.treeY[i]);
         }
     }
-}
+};

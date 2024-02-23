@@ -26,12 +26,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
-/* globals Geometric, Matrix */
-/* exported GeoRotateScale3D */
+/* globals Algorithm */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class GeoRotateScale3D extends Geometric {
+Algorithm.Geometric.RotateScale3D = class RotateScale3D extends Algorithm.Geometric {
     XAxisYPos = 300;
     XAxisStart = 100;
     XAxisEnd = 700;
@@ -833,7 +832,7 @@ class GeoRotateScale3D extends Geometric {
     }
 
     createMatrix(contents, x, y) {
-        const mat = new Matrix(contents, x, y);
+        const mat = new this.Matrix(contents, x, y);
         mat.leftBrack1 = this.nextIndex++;
         mat.leftBrack2 = this.nextIndex++;
         mat.leftBrack3 = this.nextIndex++;
@@ -870,4 +869,4 @@ class GeoRotateScale3D extends Geometric {
         }
         return mat;
     }
-}
+};

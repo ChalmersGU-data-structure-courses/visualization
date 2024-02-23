@@ -27,7 +27,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported SimpleStack */
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -37,7 +36,7 @@
 // Note: remember to replace all references to SimpleStack with the name of your own data structure!
 
 
-class SimpleStack extends Algorithm {
+Algorithm.SimpleStack = class SimpleStack extends Algorithm {
     // First some constants that are specific to the data structure.
     // We placed them in the function's namespace to avoid symbol clashes:
 
@@ -271,4 +270,4 @@ class SimpleStack extends Algorithm {
         }
         return this.commands;
     }
-}
+};

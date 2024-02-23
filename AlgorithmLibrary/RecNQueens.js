@@ -26,12 +26,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
-/* globals Recursive */
-/* exported RecNQueens */
+/* globals Algorithm */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class RecNQueens extends Recursive {
+Algorithm.Recursive.NQueens = class NQueens extends Algorithm.Recursive {
     CALC_QUEENS_ACTIVATION_FIELDS = ["  size  ", "  board  "];
     QUEENS_ACTIVATION_FIELDS = ["  board  ", "  current  ", "  size  ", "  i  ", "  done  "];
     CHECK_ACTIVATION_FIELDS = ["  board  ", "  current  ", "  i  "];
@@ -381,4 +380,4 @@ class RecNQueens extends Recursive {
 
         return OK;
     }
-}
+};

@@ -27,26 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported TreeBST */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class BSTNode {
-    constructor(val, id, initialX, initialY) {
-        this.data = val;
-        this.x = initialX;
-        this.y = initialY;
-        this.graphicID = id;
-        this.left = null;
-        this.right = null;
-        this.parent = null;
-        this.leftWidth = 0;
-        this.rightWidth = 0;
-    }
-}
-
-
-class TreeBST extends Algorithm {
+Algorithm.Tree.BST = class BST extends Algorithm.Tree {
     FOREGROUND_COLOR = "#007700";
     BACKGROUND_COLOR = "#EEFFEE";
 
@@ -65,6 +49,22 @@ class TreeBST extends Algorithm {
 
     MESSAGE_X = 10;
     MESSAGE_Y = 10;
+
+
+    BSTNode = class BSTNode {
+        constructor(val, id, initialX, initialY) {
+            this.data = val;
+            this.x = initialX;
+            this.y = initialY;
+            this.graphicID = id;
+            this.left = null;
+            this.right = null;
+            this.parent = null;
+            this.leftWidth = 0;
+            this.rightWidth = 0;
+        }
+    };
+
 
     constructor(am) {
         super();
@@ -309,7 +309,7 @@ class TreeBST extends Algorithm {
             this.cmd("SetForegroundColor", treeNodeID, this.FOREGROUND_COLOR);
             this.cmd("SetBackgroundColor", treeNodeID, this.BACKGROUND_COLOR);
             this.cmd("Step");
-            this.treeRoot = new BSTNode(insertedValue, treeNodeID, x, y);
+            this.treeRoot = new this.BSTNode(insertedValue, treeNodeID, x, y);
         } else {
             const x = this.STARTING_Y, y = 2 * this.STARTING_Y;
             this.cmd("CreateCircle", treeNodeID, insertedValue, x, y);
@@ -317,7 +317,7 @@ class TreeBST extends Algorithm {
             this.cmd("SetForegroundColor", treeNodeID, this.FOREGROUND_COLOR);
             this.cmd("SetBackgroundColor", treeNodeID, this.BACKGROUND_COLOR);
             this.cmd("Step");
-            const insertElem = new BSTNode(insertedValue, treeNodeID, x, y);
+            const insertElem = new this.BSTNode(insertedValue, treeNodeID, x, y);
             this.cmd("SetHighlight", insertElem.graphicID, 1);
             this.insert(insertElem, this.treeRoot);
         }
@@ -583,4 +583,4 @@ class TreeBST extends Algorithm {
         tree.rightWidth = Math.max(this.resizeWidths(tree.right), this.WIDTH_DELTA / 2);
         return tree.leftWidth + tree.rightWidth;
     }
-}
+};

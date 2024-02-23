@@ -26,12 +26,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
-/* globals Graph */
-/* exported GraphKruskal */
+/* globals Algorithm */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class GraphKruskal extends Graph {
+Algorithm.Graph.Kruskal = class Kruskal extends Algorithm.Graph {
     HIGHLIGHT_CIRCLE_COLOR = "#000000";
 
     SET_ARRAY_ELEM_WIDTH = 25;
@@ -275,4 +274,4 @@ class GraphKruskal extends Graph {
     reset() {
         this.messageID = [];
     }
-}
+};

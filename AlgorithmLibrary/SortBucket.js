@@ -27,21 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported SortBucket */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class BucketLinkedListNode {
-    constructor(label, id, x, y) {
-        this.data = label;
-        this.graphicID = id;
-        this.x = x;
-        this.y = y;
-    }
-}
-
-
-class SortBucket extends Algorithm {
+Algorithm.Sort.Bucket = class BucketSort extends Algorithm.Sort {
     ARRAY_ELEM_WIDTH_SMALL = 30;
     ARRAY_ELEM_HEIGHT_SMALL = 30;
     ARRAY_ELEM_START_X_SMALL = 20;
@@ -63,6 +52,17 @@ class SortBucket extends Algorithm {
     ARRAY_SIZE_SMALL = 30;
 
     ARRAY_Y_POS = 350;
+
+
+    LinkedListNode = class LinkedListNode {
+        constructor(label, id, x, y) {
+            this.data = label;
+            this.graphicID = id;
+            this.x = x;
+            this.y = y;
+        }
+    };
+
 
     constructor(am) {
         super();
@@ -139,7 +139,7 @@ class SortBucket extends Algorithm {
             const label2ID = this.nextIndex++;
             const label3ID = this.nextIndex++;
             const label4ID = this.nextIndex++;
-            const node = new BucketLinkedListNode(this.arrayData[i], this.nextIndex++, 100, 75);
+            const node = new this.LinkedListNode(this.arrayData[i], this.nextIndex++, 100, 75);
             this.cmd("CreateLinkedList", node.graphicID, "", this.LINKED_ITEM_WIDTH_SMALL, this.LINKED_ITEM_HEIGHT_SMALL, 100, 75);
             this.cmd("SetNull", node.graphicID, 1);
 
@@ -287,4 +287,4 @@ class SortBucket extends Algorithm {
     resetCallback(event) {
         this.randomizeArray();
     }
-}
+};

@@ -27,41 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported HeapLeftist */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class LeftistHeapNode {
-    constructor(val, id, nplID, initialX, initialY) {
-        this.data = val;
-        this.x = (initialX == null) ? 0 : initialX;
-        this.y = (initialY == null) ? 0 : initialY;
-        this.npX = initialX - this.NPL_OFFSET_X;
-        this.npY = initialY - this.NPL_OFFSET_Y;
-
-        this.graphicID = id;
-        this.nplID = nplID;
-        this.npl = 0;
-        this.left = null;
-        this.right = null;
-        this.leftWidth = 0;
-        this.rightWidth = 0;
-        this.parent = null;
-    }
-
-    disconnectFromParent() {
-        if (this.parent != null) {
-            if (this.parent.right === this) {
-                this.parent.right = null;
-            } else if (this.parent.left === this) {
-                this.parent.left == null;
-            }
-        }
-    }
-}
-
-
-class HeapLeftist extends Algorithm {
+Algorithm.Heap.Leftist = class LeftistHeap extends Algorithm.Heap {
     LINK_COLOR = "#007700";
     HIGHLIGHT_CIRCLE_COLOR = "#007700";
     FOREGROUND_COLOR = "#007700";
@@ -83,6 +52,36 @@ class HeapLeftist extends Algorithm {
     NPL_COLOR = "#0000FF";
 
     MESSAGE_ID = 0;
+
+
+    LeftistHeapNode = class LeftistHeapNode {
+        constructor(val, id, nplID, initialX, initialY) {
+            this.data = val;
+            this.x = (initialX == null) ? 0 : initialX;
+            this.y = (initialY == null) ? 0 : initialY;
+            this.npX = initialX - this.NPL_OFFSET_X;
+            this.npY = initialY - this.NPL_OFFSET_Y;
+            this.graphicID = id;
+            this.nplID = nplID;
+            this.npl = 0;
+            this.left = null;
+            this.right = null;
+            this.leftWidth = 0;
+            this.rightWidth = 0;
+            this.parent = null;
+        }
+
+        disconnectFromParent() {
+            if (this.parent != null) {
+                if (this.parent.right === this) {
+                    this.parent.right = null;
+                } else if (this.parent.left === this) {
+                    this.parent.left == null;
+                }
+            }
+        }
+    };
+
 
     constructor(am) {
         super();
@@ -218,7 +217,7 @@ class HeapLeftist extends Algorithm {
         this.commands = [];
         this.cmd("SetText", this.MESSAGE_ID, "Create a heap with one node, merge with existing heap.");
 
-        this.secondaryRoot = new LeftistHeapNode(insertedValue, this.nextIndex++, this.nextIndex++, this.INSERT_X, this.INSERT_Y);
+        this.secondaryRoot = new this.LeftistHeapNode(insertedValue, this.nextIndex++, this.nextIndex++, this.INSERT_X, this.INSERT_Y);
         this.cmd("CreateCircle", this.secondaryRoot.graphicID, insertedValue, this.secondaryRoot.x, this.secondaryRoot.y);
         this.cmd("CreateLabel", this.secondaryRoot.nplID, 0, this.INSERT_X - this.NPL_OFFSET_X, this.INSERT_Y - this.NPL_OFFSET_Y);
         this.cmd("SetForegroundColor", this.secondaryRoot.nplID, this.NPL_COLOR);
@@ -418,4 +417,4 @@ class HeapLeftist extends Algorithm {
             this.animateNewPositions(tree.right);
         }
     }
-}
+};

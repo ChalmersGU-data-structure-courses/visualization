@@ -26,12 +26,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
-/* globals Graph */
-/* exported GraphFloyd */
+/* globals Algorithm */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class GraphFloyd extends Graph {
+Algorithm.Graph.Floyd = class Floyd extends Algorithm.Graph {
     SMALL_COST_TABLE_WIDTH = 30;
     SMALL_COST_TABLE_HEIGHT = 30;
     SMALL_COST_TABLE_START_X = 40;
@@ -327,4 +326,4 @@ class GraphFloyd extends Graph {
         this.nextIndex = oldIndex;
         return this.commands;
     }
-}
+};

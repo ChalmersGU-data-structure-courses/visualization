@@ -27,11 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported Hash */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class Hash extends Algorithm {
+Algorithm.Hash = class Hash extends Algorithm {
     MAX_HASH_LENGTH = 6;
     HIGHLIGHT_COLOR = "red";
     INDEX_COLOR = "blue";
@@ -381,4 +380,4 @@ class Hash extends Algorithm {
         this.nextIndex = oldnextIndex;
         return currHash;
     }
-}
+};

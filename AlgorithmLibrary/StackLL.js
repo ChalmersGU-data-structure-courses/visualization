@@ -27,11 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals Algorithm */
-/* exported StackLL */
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class StackLL extends Algorithm {
+Algorithm.Stack.LinkedList = class LinkedListStack extends Algorithm.Stack {
     SIZE = 32;
     ELEM_SPACING = 1.5;
 
@@ -254,4 +253,4 @@ class StackLL extends Algorithm {
             this.cmd("Move", this.stack[j].id, this.getElemX(i), this.getElemY(i));
         }
     }
-}
+};
