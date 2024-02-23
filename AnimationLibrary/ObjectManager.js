@@ -60,7 +60,7 @@ class ObjectManager {
     constructor(canvas) {
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
-        this.statusReport = new AnimatedLabel(-1, "...", false, 30, this.ctx);
+        this.statusReport = new AnimatedLabel(-1, "...", false, this.ctx);
     }
 
     update() {
@@ -197,7 +197,7 @@ class ObjectManager {
         if (this.Nodes[objectID] != null) {
             throw new Error(`addLabelObject: Object with same ID (${objectID}) already exists`);
         }
-        const newLabel = new AnimatedLabel(objectID, objectLabel, centering, this.getTextWidth(objectLabel), this.ctx);
+        const newLabel = new AnimatedLabel(objectID, objectLabel, centering, this.ctx);
         this.Nodes[objectID] = newLabel;
     }
 
@@ -554,7 +554,7 @@ class ObjectManager {
 
     setText(objectID, text, index) {
         if (this.Nodes[objectID] == null) return;
-        this.Nodes[objectID].setText(text, index, this.getTextWidth(text));
+        this.Nodes[objectID].setText(text, index);
     }
 
     getNull(objectID) {
@@ -575,26 +575,5 @@ class ObjectManager {
     setNumElements(objectID, numElems) {
         if (this.Nodes[objectID] == null) return;
         this.Nodes[objectID].setNumElements(numElems);
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Helper methods
-
-    getTextWidth(text) {
-        // TODO:  Need to make fonts more flexible, and less hardwired.
-        if (text == null) {
-            return 3;
-        }
-        this.ctx.font = `${AnimatedObject.DEFAULT_TEXT_HEIGHT}px sans-serif`;
-        const strList = text.split("\n");
-        let width = 0;
-        if (strList.length === 1) {
-            width = this.ctx.measureText(text).width;
-        } else {
-            for (let i = 0; i < strList.length; i++) {
-                width = Math.max(width, this.ctx.measureText(strList[i]).width);
-            }
-        }
-        return width;
     }
 }

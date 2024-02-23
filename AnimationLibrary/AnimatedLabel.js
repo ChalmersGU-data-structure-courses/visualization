@@ -39,7 +39,7 @@ class AnimatedLabel extends AnimatedObject {
     drawingContext;
     alwaysOnTop = true;
 
-    constructor(objectID, label, centering, textWidth, drawingContext, labelColor, highlightColor) {
+    constructor(objectID, label, centering, drawingContext, textWidth, labelColor, highlightColor) {
         super(null, labelColor, highlightColor);
         this.objectID = objectID;
         this.label = label;
