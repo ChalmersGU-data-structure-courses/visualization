@@ -84,10 +84,10 @@ class Algorithm {
         // To be overriden in base class
     }
 
-    implementAction(funct, val) {
-        const nxt = [funct, val];
+    implementAction(funct, ...args) {
+        const nxt = [funct, args];
         this.actionHistory.push(nxt);
-        const retVal = funct(val);
+        const retVal = funct(...args);
         this.animationManager.StartNewAnimation(retVal);
     }
 
@@ -177,10 +177,9 @@ class Algorithm {
         //
         // If this seems horribly inefficient -- it is! However, it seems to work well
         // in practice, and you get undo for free for all algorithms, which is a non-trivial gain.
-        const len = this.actionHistory.length;
         this.recordAnimation = false;
-        for (let i = 0; i < len; i++) {
-            this.actionHistory[i][0](this.actionHistory[i][1]);
+        for (const [funct, args] of this.actionHistory) {
+            funct(...args);
         }
         this.recordAnimation = true;
     }
