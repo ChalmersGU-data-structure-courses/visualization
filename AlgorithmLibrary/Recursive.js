@@ -67,6 +67,12 @@ class Recursive extends Algorithm {
 
     SEPARATING_LINE_COLOR = "#0000FF";
 
+
+    constructor(am) {
+        super();
+        if (am) this.init(am);
+    }
+
     init(am) {
         super.init(am);
     }

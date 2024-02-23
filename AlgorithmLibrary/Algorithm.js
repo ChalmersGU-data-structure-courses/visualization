@@ -31,6 +31,10 @@
 
 
 class Algorithm {
+    constructor(am) {
+        if (am) this.init(am);
+    }
+
     init(am) {
         this.animationManager = am;
         am.addListener("AnimationStarted", this, this.disableUI);

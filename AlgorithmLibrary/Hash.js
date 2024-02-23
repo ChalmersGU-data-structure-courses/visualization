@@ -63,6 +63,11 @@ class Hash extends Algorithm {
     PRINT_VERTICAL_GAP = 20;
     PRINT_HORIZONTAL_GAP = 50;
 
+    
+    constructor(am) {
+        super();
+        if (am) this.init(am);
+    }
 
     init(am) {
         super.init(am);

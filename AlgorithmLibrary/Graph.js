@@ -158,6 +158,11 @@ class Graph extends Algorithm {
     HIGHLIGHT_COLOR = "#0000FF";
 
 
+    constructor(am, directed, dag) {
+        super();
+        if (am) this.init(am, directed, dag);
+    }
+
     init(am, directed = true, dag = false) {
         super.init(am);
 
