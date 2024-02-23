@@ -26,22 +26,19 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
-/* globals AnimatedBTreeNode, AnimatedCircle, AnimatedLabel, AnimatedLinkedList,
-           AnimatedObject, AnimatedRectangle, HighlightCircle, Line
-*/
+/* globals AnimatedBTreeNode, AnimatedCircle, AnimatedLabel, 
+           AnimatedLinkedList,AnimatedRectangle, HighlightCircle */
 /* exported ObjectManager */
 ///////////////////////////////////////////////////////////////////////////////
 
-// Object Manager
-//
+
 // Manage all of our animated objects.  Control any animated object should occur through
 // this interface (not language enforced, because enforcing such things in Javascript is
 // problematic.)
 //
 // This class is only accessed through:
-//
-//  AnimationMain
-//  Undo objects (which are themselves controlled by AnimationMain
+//  - AnimationManager
+//  - Undo objects (which are themselves controlled by AnimationManager
 
 
 class ObjectManager {
@@ -322,7 +319,7 @@ class ObjectManager {
         if (fromObj == null || toObj == null) {
             throw new Error(`connectEdge: One of the objects ${objectIDfrom} or ${objectIDto} do not exist`);
         }
-        const l = new Line(fromObj, toObj, color, curve, directed, lab, connectionPoint);
+        const l = new Connection(fromObj, toObj, color, curve, directed, lab, connectionPoint);
         if (this.Edges[objectIDfrom] == null) {
             this.Edges[objectIDfrom] = [];
         }

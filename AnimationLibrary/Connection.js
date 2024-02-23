@@ -27,14 +27,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
 /* globals AnimatedObject, UndoBlock */
-/* exported Line */
+/* exported Connection */
 ///////////////////////////////////////////////////////////////////////////////
 
-// This class is somewhat poorly named -- it handles links between vertices in graphs,
-//  pointers in linked lists, and so on.
 
-
-class Line extends AnimatedObject {
+class Connection extends AnimatedObject {
     node1;
     node2;
     color;
