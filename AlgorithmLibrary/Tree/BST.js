@@ -436,5 +436,357 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
             return s;
         }
     };
+
+    ///////////////////////////////////////////////////////////////////////////////
+    // Rotating the tree
+    // These are not used by BST, but by self-balancing subclasses
+    // The following rotations are implemented:
+    //  - Single Rotate Left/Right (also known as Zig)
+    //  - Double Rotate Left/Right (also known as Zig-Zag)
+    //  - Zig-Zig Left/Right
+
+    resetHeight(tree) {
+        // BSTs do not store the height in the nodes, so do nothing
+    }
+
+    singleRotateLeft(tree) {
+        const A = tree;
+        const B = tree.right;
+        // const t1 = A.left;
+        const t2 = B.left;
+        // const t3 = B.right;
+
+        this.cmd("SetText", this.messageID, "Single Rotate Left");
+        this.cmd("SetHighlight", A.graphicID, 1);
+        this.cmd("SetHighlight", B.graphicID, 1);
+        this.cmd("SetEdgeHighlight", A.graphicID, B.graphicID, 1);
+        this.cmd("Step");
+        this.cmd("SetEdgeHighlight", A.graphicID, B.graphicID, 0);
+
+        if (t2) {
+            this.cmd("Disconnect", B.graphicID, t2.graphicID);
+            this.cmd("Connect", A.graphicID, t2.graphicID, this.LINK_COLOR);
+            t2.parent = A;
+        }
+        this.cmd("Disconnect", A.graphicID, B.graphicID);
+        this.cmd("Connect", B.graphicID, A.graphicID, this.LINK_COLOR);
+        B.parent = A.parent;
+        if (!A.parent) {
+            this.treeRoot = B;
+        } else {
+            this.cmd("Disconnect", A.parent.graphicID, A.graphicID, this.LINK_COLOR);
+            this.cmd("Connect", A.parent.graphicID, B.graphicID, this.LINK_COLOR);
+            A.reassignParent(B);
+        }
+        B.left = A;
+        A.parent = B;
+        A.right = t2;
+        this.resetHeight(A);
+        this.resetHeight(B);
+        this.resizeTree();
+        this.cmd("SetEdgeHighlight", B.graphicID, A.graphicID, 1);
+        this.cmd("Step");
+        this.cmd("SetEdgeHighlight", B.graphicID, A.graphicID, 0);
+        this.cmd("SetHighlight", A.graphicID, 0);
+        this.cmd("SetHighlight", B.graphicID, 0);
+    }
+
+    singleRotateRight(tree) {
+        const A = tree.left;
+        const B = tree;
+        // const t1 = A.left;
+        const t2 = A.right;
+        // const t3 = B.right;
+
+        this.cmd("SetText", this.messageID, "Single Rotate Right");
+        this.cmd("SetHighlight", A.graphicID, 1);
+        this.cmd("SetHighlight", B.graphicID, 1);
+        this.cmd("SetEdgeHighlight", B.graphicID, A.graphicID, 1);
+        this.cmd("Step");
+        this.cmd("SetEdgeHighlight", B.graphicID, A.graphicID, 0);
+
+        if (t2) {
+            this.cmd("Disconnect", A.graphicID, t2.graphicID);
+            this.cmd("Connect", B.graphicID, t2.graphicID, this.LINK_COLOR);
+            t2.parent = B;
+        }
+        this.cmd("Disconnect", B.graphicID, A.graphicID);
+        this.cmd("Connect", A.graphicID, B.graphicID, this.LINK_COLOR);
+        A.parent = B.parent;
+        if (!B.parent) {
+            this.treeRoot = A;
+        } else {
+            this.cmd("Disconnect", B.parent.graphicID, B.graphicID, this.LINK_COLOR);
+            this.cmd("Connect", B.parent.graphicID, A.graphicID, this.LINK_COLOR);
+            B.reassignParent(A);
+        }
+        A.right = B;
+        B.parent = A;
+        B.left = t2;
+        this.resetHeight(B);
+        this.resetHeight(A);
+        this.resizeTree();
+        this.cmd("SetEdgeHighlight", A.graphicID, B.graphicID, 1);
+        this.cmd("Step");
+        this.cmd("SetEdgeHighlight", A.graphicID, B.graphicID, 0);
+        this.cmd("SetHighlight", A.graphicID, 0);
+        this.cmd("SetHighlight", B.graphicID, 0);
+    }
+
+    doubleRotateLeft(tree) {
+        const A = tree;
+        const B = tree.right.left;
+        const C = tree.right;
+        // const t1 = A.left;
+        const t2 = B.left;
+        const t3 = B.right;
+        // const t4 = C.right;
+
+        this.cmd("SetText", this.messageID, "Double Rotate Left");
+        this.cmd("SetHighlight", A.graphicID, 1);
+        this.cmd("SetHighlight", B.graphicID, 1);
+        this.cmd("SetHighlight", C.graphicID, 1);
+        this.cmd("SetEdgeHighlight", A.graphicID, C.graphicID, 1);
+        this.cmd("SetEdgeHighlight", C.graphicID, B.graphicID, 1);
+        this.cmd("Step");
+        this.cmd("SetEdgeHighlight", A.graphicID, C.graphicID, 0);
+        this.cmd("SetEdgeHighlight", C.graphicID, B.graphicID, 0);
+
+        if (t2) {
+            this.cmd("Disconnect", B.graphicID, t2.graphicID);
+            t2.parent = A;
+            A.right = t2;
+            this.cmd("Connect", A.graphicID, t2.graphicID, this.LINK_COLOR);
+        }
+        if (t3) {
+            this.cmd("Disconnect", B.graphicID, t3.graphicID);
+            t3.parent = C;
+            C.left = t2;
+            this.cmd("Connect", C.graphicID, t3.graphicID, this.LINK_COLOR);
+        }
+        if (!A.parent) {
+            B.parent = null;
+            this.treeRoot = B;
+        } else {
+            this.cmd("Disconnect", A.parent.graphicID, A.graphicID);
+            this.cmd("Connect", A.parent.graphicID, B.graphicID, this.LINK_COLOR);
+            A.reassignParent(B);
+            B.parent = A.parent;
+            A.parent = B;
+        }
+        this.cmd("Disconnect", A.graphicID, C.graphicID);
+        this.cmd("Disconnect", C.graphicID, B.graphicID);
+        this.cmd("Connect", B.graphicID, A.graphicID, this.LINK_COLOR);
+        this.cmd("Connect", B.graphicID, C.graphicID, this.LINK_COLOR);
+
+        A.parent = B;
+        A.right = t2;
+        B.left = A;
+        B.right = C;
+        C.parent = B;
+        C.left = t3;
+        this.resetHeight(A);
+        this.resetHeight(C);
+        this.resetHeight(B);
+        this.resizeTree();
+        this.cmd("SetEdgeHighlight", B.graphicID, A.graphicID, 1);
+        this.cmd("SetEdgeHighlight", B.graphicID, C.graphicID, 1);
+        this.cmd("Step");
+        this.cmd("SetEdgeHighlight", B.graphicID, A.graphicID, 0);
+        this.cmd("SetEdgeHighlight", B.graphicID, C.graphicID, 0);
+        this.cmd("SetHighlight", A.graphicID, 0);
+        this.cmd("SetHighlight", B.graphicID, 0);
+        this.cmd("SetHighlight", C.graphicID, 0);
+    }
+
+    doubleRotateRight(tree) {
+        const A = tree.left;
+        const B = tree.left.right;
+        const C = tree;
+        // const t1 = A.left;
+        const t2 = B.left;
+        const t3 = B.right;
+        // const t4 = C.right;
+
+        this.cmd("SetText", this.messageID, "Double Rotate Right");
+        this.cmd("SetHighlight", A.graphicID, 1);
+        this.cmd("SetHighlight", B.graphicID, 1);
+        this.cmd("SetHighlight", C.graphicID, 1);
+        this.cmd("SetEdgeHighlight", C.graphicID, A.graphicID, 1);
+        this.cmd("SetEdgeHighlight", A.graphicID, B.graphicID, 1);
+        this.cmd("Step");
+        this.cmd("SetEdgeHighlight", C.graphicID, A.graphicID, 0);
+        this.cmd("SetEdgeHighlight", A.graphicID, B.graphicID, 0);
+
+        if (t2) {
+            this.cmd("Disconnect", B.graphicID, t2.graphicID);
+            t2.parent = A;
+            A.right = t2;
+            this.cmd("Connect", A.graphicID, t2.graphicID, this.LINK_COLOR);
+        }
+        if (t3) {
+            this.cmd("Disconnect", B.graphicID, t3.graphicID);
+            t3.parent = C;
+            C.left = t2;
+            this.cmd("Connect", C.graphicID, t3.graphicID, this.LINK_COLOR);
+        }
+        if (!C.parent) {
+            B.parent = null;
+            this.treeRoot = B;
+        } else {
+            this.cmd("Disconnect", C.parent.graphicID, C.graphicID);
+            this.cmd("Connect", C.parent.graphicID, B.graphicID, this.LINK_COLOR);
+            C.reassignParent(B);
+            B.parent = C.parent;
+            C.parent = B;
+        }
+        this.cmd("Disconnect", C.graphicID, A.graphicID);
+        this.cmd("Disconnect", A.graphicID, B.graphicID);
+        this.cmd("Connect", B.graphicID, A.graphicID, this.LINK_COLOR);
+        this.cmd("Connect", B.graphicID, C.graphicID, this.LINK_COLOR);
+
+        A.parent = B;
+        A.right = t2;
+        B.left = A;
+        B.right = C;
+        C.parent = B;
+        C.left = t3;
+        this.resetHeight(A);
+        this.resetHeight(C);
+        this.resetHeight(B);
+        this.resizeTree();
+        this.cmd("SetEdgeHighlight", B.graphicID, A.graphicID, 1);
+        this.cmd("SetEdgeHighlight", B.graphicID, C.graphicID, 1);
+        this.cmd("Step");
+        this.cmd("SetEdgeHighlight", B.graphicID, A.graphicID, 0);
+        this.cmd("SetEdgeHighlight", B.graphicID, C.graphicID, 0);
+        this.cmd("SetHighlight", A.graphicID, 0);
+        this.cmd("SetHighlight", B.graphicID, 0);
+        this.cmd("SetHighlight", C.graphicID, 0);
+    }
+
+    zigZigLeft(tree) {
+        const A = tree;
+        const B = tree.right;
+        const C = tree.right.right;
+        // const t1 = A.left;
+        const t2 = B.left;
+        const t3 = C.left;
+        // const t4 = C.right;
+
+        this.cmd("SetText", this.messageID, "Zig-Zig Left");
+        this.cmd("SetHighlight", A.graphicID, 1);
+        this.cmd("SetHighlight", B.graphicID, 1);
+        this.cmd("SetHighlight", C.graphicID, 1);
+        this.cmd("SetEdgeHighlight", A.graphicID, B.graphicID, 1);
+        this.cmd("SetEdgeHighlight", B.graphicID, C.graphicID, 1);
+        this.cmd("Step");
+        this.cmd("SetEdgeHighlight", A.graphicID, B.graphicID, 0);
+        this.cmd("SetEdgeHighlight", B.graphicID, C.graphicID, 0);
+
+        if (A.parent) {
+            this.cmd("Disconnect", A.parent.graphicID, A.graphicID);
+            this.cmd("Connect", A.parent.graphicID, C.graphicID, this.LINK_COLOR);
+            A.reassignParent(C);
+        } else {
+            this.treeRoot = C;
+        }
+        if (t2) {
+            this.cmd("Disconnect", B.graphicID, t2.graphicID);
+            this.cmd("Connect", A.graphicID, t2.graphicID, this.LINK_COLOR);
+            t2.parent = A;
+        }
+        if (t3) {
+            this.cmd("Disconnect", C.graphicID, t3.graphicID);
+            this.cmd("Connect", B.graphicID, t3.graphicID, this.LINK_COLOR);
+            t3.parent = B;
+        }
+        this.cmd("Disconnect", A.graphicID, B.graphicID);
+        this.cmd("Disconnect", B.graphicID, C.graphicID);
+        this.cmd("Connect", C.graphicID, B.graphicID, this.LINK_COLOR);
+        this.cmd("Connect", B.graphicID, A.graphicID, this.LINK_COLOR);
+
+        C.parent = A.parent;
+        C.left = B;
+        B.parent = C;
+        B.right = t3;
+        B.left = A;
+        A.parent = B;
+        A.right = t2;
+        this.resetHeight(A);
+        this.resetHeight(B);
+        this.resetHeight(C);
+        this.resizeTree();
+        this.cmd("SetEdgeHighlight", C.graphicID, B.graphicID, 1);
+        this.cmd("SetEdgeHighlight", B.graphicID, A.graphicID, 1);
+        this.cmd("Step");
+        this.cmd("SetEdgeHighlight", C.graphicID, B.graphicID, 0);
+        this.cmd("SetEdgeHighlight", B.graphicID, A.graphicID, 0);
+        this.cmd("SetHighlight", A.graphicID, 0);
+        this.cmd("SetHighlight", B.graphicID, 0);
+        this.cmd("SetHighlight", C.graphicID, 0);
+    }
+
+    zigZigRight(tree) {
+        const A = tree.left.left;
+        const B = tree.left;
+        const C = tree;
+        // const t1 = A.left;
+        const t2 = A.right;
+        const t3 = B.right;
+        // const t4 = C.right;
+
+        this.cmd("SetText", this.messageID, "Zig-Zig Right");
+        this.cmd("SetHighlight", A.graphicID, 1);
+        this.cmd("SetHighlight", B.graphicID, 1);
+        this.cmd("SetHighlight", C.graphicID, 1);
+        this.cmd("SetEdgeHighlight", C.graphicID, B.graphicID, 1);
+        this.cmd("SetEdgeHighlight", B.graphicID, A.graphicID, 1);
+        this.cmd("Step");
+        this.cmd("SetEdgeHighlight", C.graphicID, B.graphicID, 0);
+        this.cmd("SetEdgeHighlight", B.graphicID, A.graphicID, 0);
+
+        if (C.parent) {
+            this.cmd("Disconnect", C.parent.graphicID, C.graphicID);
+            this.cmd("Connect", C.parent.graphicID, A.graphicID, this.LINK_COLOR);
+            C.reassignParent(A);
+        } else {
+            this.treeRoot = A;
+        }
+        if (t2) {
+            this.cmd("Disconnect", A.graphicID, t2.graphicID);
+            this.cmd("Connect", B.graphicID, t2.graphicID, this.LINK_COLOR);
+            t2.parent = B;
+        }
+        if (t3) {
+            this.cmd("Disconnect", B.graphicID, t3.graphicID);
+            this.cmd("Connect", C.graphicID, t3.graphicID, this.LINK_COLOR);
+            t3.parent = C;
+        }
+        this.cmd("Disconnect", C.graphicID, B.graphicID);
+        this.cmd("Disconnect", B.graphicID, A.graphicID);
+        this.cmd("Connect", A.graphicID, B.graphicID, this.LINK_COLOR);
+        this.cmd("Connect", B.graphicID, C.graphicID, this.LINK_COLOR);
+
+        A.parent = C.parent;
+        A.right = B;
+        B.parent = A;
+        B.left = t2;
+        B.right = C;
+        C.parent = B;
+        C.left = t3;
+        this.resetHeight(A);
+        this.resetHeight(B);
+        this.resetHeight(C);
+        this.resizeTree();
+        this.cmd("SetEdgeHighlight", A.graphicID, B.graphicID, 1);
+        this.cmd("SetEdgeHighlight", B.graphicID, C.graphicID, 1);
+        this.cmd("Step");
+        this.cmd("SetEdgeHighlight", A.graphicID, B.graphicID, 0);
+        this.cmd("SetEdgeHighlight", B.graphicID, C.graphicID, 0);
+        this.cmd("SetHighlight", A.graphicID, 0);
+        this.cmd("SetHighlight", B.graphicID, 0);
+        this.cmd("SetHighlight", C.graphicID, 0);
+    }
 };
 
