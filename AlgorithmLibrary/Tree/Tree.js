@@ -179,7 +179,7 @@ Algorithm.Tree = class Tree extends Algorithm {
     // Printing the values in the tree
 
     printAction() {
-        if (!this.treeRoot) return [];
+        if (!this.isTreeNode(this.treeRoot)) return [];
         this.commands = [];
         this.cmd("SetText", this.messageID, "Printing tree");
         this.cmd("Step");
@@ -226,12 +226,12 @@ Algorithm.Tree = class Tree extends Algorithm {
     // Finding a value in the tree
 
     findAction(value) {
+        if (!this.isTreeNode(this.treeRoot)) return [];
         this.commands = [];
         this.cmd("SetText", this.messageID, `Searching for ${value}`);
         this.cmd("Step");
         const [found, node] = this.doFind(value, this.treeRoot);
         this.postFind(found, node);
-        this.cmd("SetAlpha", this.highlightID, 0);
         this.cmd("SetText", this.messageID, `${value} ${found ? "found" : "not found"}`);
         this.validateTree();
         return this.commands;
@@ -260,11 +260,11 @@ Algorithm.Tree = class Tree extends Algorithm {
             const elemID = this.nextIndex++;
             const elem = this.createTreeNode(elemID, x, y, value);
             this.cmd("Step");
-            if (this.treeRoot == null) {
-                this.treeRoot = elem;
-            } else {
+            if (this.isTreeNode(this.treeRoot)) {
                 const [inserted, node] = this.doInsert(elem, this.treeRoot);
                 this.postInsert(inserted, node);
+            } else {
+                this.treeRoot = elem;
             }
             this.cmd("SetAlpha", this.highlightID, 0);
             this.cmd("SetText", this.messageID, "");
@@ -287,6 +287,7 @@ Algorithm.Tree = class Tree extends Algorithm {
     // Deleting a value from the tree
 
     deleteAction(value) {
+        if (!this.isTreeNode(this.treeRoot)) return [];
         this.commands = [];
         this.cmd("SetText", this.messageID, `Deleting ${value}`);
         this.cmd("Step");
@@ -349,5 +350,9 @@ Algorithm.Tree = class Tree extends Algorithm {
 
     removeTreeNode(node) {
         console.error("Tree.removeTreeNode: must be overridden!");
+    }
+
+    isTreeNode(node) {
+        console.error("Tree.isTreeNode: must be overridden!");
     }
 };

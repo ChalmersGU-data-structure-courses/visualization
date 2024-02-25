@@ -106,13 +106,14 @@ Algorithm.Tree.AVL = class AVLTree extends Algorithm.Tree.BST {
     validateAVL(tree) {
         if (!tree) return 0;
         if (!tree.labelID) {
-            console.error("Tree node missing label ID:", tree);
+            console.error("Tree node missing label ID", tree);
         }
+        if (isNaN(tree.height)) console.error(`Tree height not a number, ${tree.height}`, tree);
         const leftHeight = this.validateAVL(tree.left);
         const rightHeight = this.validateAVL(tree.right);
         const height = 1 + Math.max(leftHeight, rightHeight);
-        if (height !== this.getHeight(tree)) {
-            console.error(`Height mismatch, ${height} != ${this.getHeight(tree)}`, tree);
+        if (height !== tree.height) {
+            console.error(`Height mismatch, ${height} != ${tree.height}`, tree);
         }
         if (Math.abs(leftHeight - rightHeight) > 1) {
             console.error(`AVL imbalance, ${leftHeight} != ${rightHeight} +-1`, tree);

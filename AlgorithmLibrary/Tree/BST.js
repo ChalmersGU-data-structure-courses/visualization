@@ -38,7 +38,7 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
     doPrint(tree) {
         this.cmd("Move", this.highlightID, tree.x, tree.y);
         this.cmd("Step");
-        if (tree.left) {
+        if (this.isTreeNode(tree.left)) {
             this.doPrint(tree.left);
             this.cmd("Move", this.highlightID, tree.x, tree.y);
             this.cmd("Step");
@@ -55,7 +55,7 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
             this.printPosY += this.PRINT_VERTICAL_GAP;
         }
 
-        if (tree.right) {
+        if (this.isTreeNode(tree.right)) {
             this.doPrint(tree.right);
             this.cmd("Move", this.highlightID, tree.x, tree.y);
             this.cmd("Step");
@@ -67,9 +67,7 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
 
     doClear(tree) {
         for (const child of [tree.left, tree.right]) {
-            if (child) {
-                this.doClear(child);
-            }
+            if (child) this.doClear(child);
         }
         this.removeTreeNode(tree);
     }
@@ -78,12 +76,10 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
     // Finding a value in the tree
 
     doFind(value, tree) {
-        if (!tree) return false;
-        this.cmd("SetHighlight", tree.graphicID, 1);
         const cmp = this.compare(value, tree.data);
-
         if (cmp === 0) {
             this.cmd("SetText", this.messageID, `${value} = ${tree.data}: Element found`);
+            this.cmd("SetHighlight", tree.graphicID, 1);
             this.cmd("Step");
             this.cmd("SetHighlight", tree.graphicID, 0);
             return [true, tree];
@@ -92,25 +88,27 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
         const cmpStr = cmp < 0 ? "<" : ">";
         const dirStr = cmp < 0 ? "left" : "right";
         const child = cmp < 0 ? tree.left : tree.right;
-        if (child) {
-            this.cmd("SetText", this.messageID, `${value} ${cmpStr} ${tree.data}: Look into ${dirStr} child`);
-            this.cmd("SetEdgeHighlight", tree.graphicID, child.graphicID, 1);
-            this.cmd("Step");
-            this.cmd("SetAlpha", this.highlightID, 1);
-            this.cmd("SetPosition", this.highlightID, tree.x, tree.y);
-            this.cmd("Move", this.highlightID, child.x, child.y);
-            this.cmd("SetHighlight", tree.graphicID, 0);
-            this.cmd("SetEdgeHighlight", tree.graphicID, child.graphicID, 0);
-            this.cmd("SetText", this.messageID, "");
-            this.cmd("Step");
-            this.cmd("SetAlpha", this.highlightID, 0);
-            return this.doFind(value, child);
-        } else {
+        if (!this.isTreeNode(child)) {
             this.cmd("SetText", this.messageID, `${value} ${cmpStr} ${tree.data}: Element not found`);
+            this.cmd("SetHighlight", tree.graphicID, 1);
             this.cmd("Step");
             this.cmd("SetHighlight", tree.graphicID, 0);
             return [false, tree];
         }
+
+        this.cmd("SetText", this.messageID, `${value} ${cmpStr} ${tree.data}: Look into ${dirStr} child`);
+        this.cmd("SetHighlight", tree.graphicID, 1);
+        this.cmd("SetEdgeHighlight", tree.graphicID, child.graphicID, 1);
+        this.cmd("Step");
+        this.cmd("SetHighlight", tree.graphicID, 0);
+        this.cmd("SetEdgeHighlight", tree.graphicID, child.graphicID, 0);
+        this.cmd("SetAlpha", this.highlightID, 1);
+        this.cmd("SetPosition", this.highlightID, tree.x, tree.y);
+        this.cmd("Move", this.highlightID, child.x, child.y);
+        this.cmd("SetText", this.messageID, "");
+        this.cmd("Step");
+        this.cmd("SetAlpha", this.highlightID, 0);
+        return this.doFind(value, child);
     }
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -132,8 +130,7 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
         const cmpStr = cmp === 0 ? "=" : cmp < 0 ? "<" : ">";
         const dirStr = cmp < 0 ? "left" : "right";
         const child = cmp < 0 ? tree.left : tree.right;
-        let inserted = true, node = elem;
-        if (child) {
+        if (this.isTreeNode(child)) {
             this.cmd("SetText", this.messageID, `${value} ${cmpStr} ${tree.data}: Look into ${dirStr} child`);
             this.cmd("SetEdgeHighlight", tree.graphicID, child.graphicID, 1);
             this.cmd("Step");
@@ -145,34 +142,38 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
             this.cmd("SetText", this.messageID, "");
             this.cmd("Step");
             this.cmd("SetAlpha", this.highlightID, 0);
-            [inserted, node] = this.doInsert(elem, child);
+            const result = this.doInsert(elem, child);
             this.resizeTree();
-        } else {
-            this.cmd("SetText", this.messageID, `${value} ${cmpStr} ${tree.data}: Inserting element as ${dirStr} child`);
-            this.cmd("Step");
-            this.cmd("SetHighlight", tree.graphicID, 0);
-            this.cmd("SetHighlight", elem.graphicID, 0);
-            this.cmd("Connect", tree.graphicID, elem.graphicID, this.LINK_COLOR);
-            if (cmp < 0) tree.left = elem;
-            else tree.right = elem;
-            elem.parent = tree;
-            this.cmd("SetAlpha", this.highlightID, 1);
-            this.cmd("SetPosition", this.highlightID, elem.x, elem.y);
-            this.resizeTree();
-            this.cmd("Move", this.highlightID, elem.x, elem.y);
-            this.cmd("Step");
-            this.cmd("SetAlpha", this.highlightID, 0);
+            // Rebalancing is not done by BSTs, but by other data structures such as AVL trees:
+            this.rebalance(tree, cmp);
+            return result;
         }
+
+        this.cmd("SetText", this.messageID, `${value} ${cmpStr} ${tree.data}: Inserting element as ${dirStr} child`);
+        this.cmd("Step");
+        if (child) this.removeTreeNode(child);
+        this.cmd("SetHighlight", tree.graphicID, 0);
+        this.cmd("SetHighlight", elem.graphicID, 0);
+        this.cmd("Connect", tree.graphicID, elem.graphicID, this.LINK_COLOR);
+        if (cmp < 0) tree.left = elem;
+        else tree.right = elem;
+        elem.parent = tree;
+        this.cmd("SetAlpha", this.highlightID, 1);
+        this.cmd("SetPosition", this.highlightID, elem.x, elem.y);
+        this.resizeTree();
+        this.cmd("Move", this.highlightID, elem.x, elem.y);
+        this.cmd("Step");
+        this.cmd("SetAlpha", this.highlightID, 0);
         // Rebalancing is not done by BSTs, but by other data structures such as AVL trees:
         this.rebalance(tree, cmp);
-        return [inserted, node];
+        return [true, elem];
     }
 
     ///////////////////////////////////////////////////////////////////////////////
     // Deleting a value from the tree
 
     doDelete(value, tree) {
-        if (!tree) {
+        if (!this.isTreeNode(tree)) {
             this.cmd("SetText", this.messageID, `Element ${value} not found, could not delete`);
             this.cmd("Step");
             return [false, tree];
@@ -190,29 +191,34 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
         const cmpStr = cmp < 0 ? "<" : ">";
         const dirStr = cmp < 0 ? "left" : "right";
         const child = cmp < 0 ? tree.left : tree.right;
-        this.cmd("SetText", this.messageID, `${value} ${cmpStr} ${tree.data}: Look into ${dirStr} child`);
-        if (child) {
+        if (!this.isTreeNode(child)) {
+            this.cmd("SetText", this.messageID, `${value} ${cmpStr} ${tree.data}: Element not found`);
             this.cmd("SetHighlight", tree.graphicID, 1);
-            this.cmd("SetEdgeHighlight", tree.graphicID, child.graphicID, 1);
             this.cmd("Step");
-            this.cmd("SetAlpha", this.highlightID, 1);
-            this.cmd("SetPosition", this.highlightID, tree.x, tree.y);
-            this.cmd("Move", this.highlightID, child.x, child.y);
             this.cmd("SetHighlight", tree.graphicID, 0);
-            this.cmd("SetEdgeHighlight", tree.graphicID, child.graphicID, 0);
-            this.cmd("SetText", this.messageID, "");
-            this.cmd("Step");
-            this.cmd("SetAlpha", this.highlightID, 0);
+            return [false, tree];
         }
-        let [deleted, node] = this.doDelete(value, child);
-        if (!node) node = tree;
+
+        this.cmd("SetText", this.messageID, `${value} ${cmpStr} ${tree.data}: Look into ${dirStr} child`);
+        this.cmd("SetHighlight", tree.graphicID, 1);
+        this.cmd("SetEdgeHighlight", tree.graphicID, child.graphicID, 1);
+        this.cmd("Step");
+        this.cmd("SetHighlight", tree.graphicID, 0);
+        this.cmd("SetEdgeHighlight", tree.graphicID, child.graphicID, 0);
+        this.cmd("SetAlpha", this.highlightID, 1);
+        this.cmd("SetPosition", this.highlightID, tree.x, tree.y);
+        this.cmd("Move", this.highlightID, child.x, child.y);
+        this.cmd("SetText", this.messageID, "");
+        this.cmd("Step");
+        this.cmd("SetAlpha", this.highlightID, 0);
+         let result = this.doDelete(value, child);
         // Rebalancing is not done by BSTs, but by other data structures such as AVL trees:
         this.rebalance(tree, cmp);
-        return [deleted, node];
+        return result;
     }
 
     doDeleteNode(tree) {
-        if (!tree.left && !tree.right) {
+        if (!(this.isTreeNode(tree.left) || this.isTreeNode(tree.right))) {
             this.cmd("SetText", this.messageID, `Node ${tree.data} is a leaf: We can delete it`);
             this.cmd("SetHighlight", tree.graphicID, 1);
             this.cmd("Step");
@@ -228,8 +234,8 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
             return [true, parent];
         }
 
-        if (!(tree.left && tree.right)) {
-            const child = tree.left || tree.right;
+        if (!(this.isTreeNode(tree.left) && this.isTreeNode(tree.right))) {
+            const child = this.isTreeNode(tree.left) ? tree.left : tree.right;
             this.cmd("SetText", this.messageID, `Node ${tree.data} has only one child ${child.data} - replace it with its child`);
             this.cmd("SetHighlight", tree.graphicID, 1);
             this.cmd("SetAlpha", this.highlightID, 1);
@@ -261,7 +267,7 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
         while (true) {
             this.cmd("Move", this.highlightID, prenode.x, prenode.y);
             this.cmd("Step");
-            if (!prenode.right) break;
+            if (!this.isTreeNode(prenode.right)) break;
             prenode = prenode.right;
         }
         const labelID = this.nextIndex++;
@@ -275,13 +281,14 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
         this.cmd("SetText", this.messageID, `Copy largest value ${prenode.data} of left subtree into node to delete`);
         this.cmd("SetHighlight", tree.graphicID, 0);
         this.cmd("Step");
+
         this.cmd("Delete", labelID);
         this.cmd("SetText", tree.graphicID, tree.data);
         this.cmd("SetAlpha", this.highlightID, 0);
         this.cmd("SetText", this.messageID, "Remove node whose value we copied");
 
         let parent = prenode.parent;
-        if (prenode.left) {
+        if (this.isTreeNode(prenode.left)) {
             this.cmd("Disconnect", parent.graphicID, prenode.graphicID);
             this.cmd("Connect", parent.graphicID, prenode.left.graphicID, this.LINK_COLOR);
             this.cmd("SetAlpha", this.highlightID, 1);
@@ -325,6 +332,9 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
 
     validateBST(tree, parent, cmpVal) {
         if (!tree) return cmpVal;
+        if (!(tree instanceof this.TreeNode)) {
+            console.error("Not a tree node:", tree);
+        }
         if (!(tree.parent === parent || (!tree.parent && !parent))) {
             console.error("Parent mismatch:", tree, parent);
         }
@@ -334,11 +344,14 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
         if (tree.left) {
             cmpVal = this.validateBST(tree.left, tree, cmpVal);
         }
-        if (this.compare(cmpVal, tree.data) > 0) {
-            console.error(`Order mismatch, ${cmpVal} > ${tree.data}`, tree);
+        if (this.isTreeNode(tree)) {
+            if (this.compare(cmpVal, tree.data) > 0) {
+                console.error(`Order mismatch, ${cmpVal} > ${tree.data}`, tree);
+            }
+            cmpVal = tree.data;
         }
         if (tree.right) {
-            cmpVal = this.validateBST(tree.right, tree, tree.data);
+            cmpVal = this.validateBST(tree.right, tree, cmpVal);
         }
         return cmpVal;
     }
@@ -388,7 +401,7 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Creating and removing tree nodes
+    // Manipulating tree nodes
 
     createTreeNode(elemID, x, y, value) {
         const node = new this.TreeNode(elemID, x, y, value);
@@ -403,6 +416,9 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
         this.cmd("Delete", node.graphicID);
     }
 
+    isTreeNode(node) {
+        return node instanceof this.TreeNode && !node.phantomLeaf;
+    }
 
     TreeNode = class TreeNode {
         constructor(id, x, y, data) {
@@ -426,6 +442,12 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
 
         isRightChild() {
             return this.parent?.right === this;
+        }
+
+        getSibling() {
+            const parent = this.parent;
+            if (!parent) return null;
+            return this === parent.left ? parent.right : parent.left;
         }
 
         deepString() {
@@ -489,6 +511,7 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
         this.cmd("SetEdgeHighlight", B.graphicID, A.graphicID, 0);
         this.cmd("SetHighlight", A.graphicID, 0);
         this.cmd("SetHighlight", B.graphicID, 0);
+        return B;
     }
 
     singleRotateRight(tree) {
@@ -531,6 +554,7 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
         this.cmd("SetEdgeHighlight", A.graphicID, B.graphicID, 0);
         this.cmd("SetHighlight", A.graphicID, 0);
         this.cmd("SetHighlight", B.graphicID, 0);
+        return A;
     }
 
     doubleRotateLeft(tree) {
@@ -597,6 +621,7 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
         this.cmd("SetHighlight", A.graphicID, 0);
         this.cmd("SetHighlight", B.graphicID, 0);
         this.cmd("SetHighlight", C.graphicID, 0);
+        return B;
     }
 
     doubleRotateRight(tree) {
@@ -663,6 +688,7 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
         this.cmd("SetHighlight", A.graphicID, 0);
         this.cmd("SetHighlight", B.graphicID, 0);
         this.cmd("SetHighlight", C.graphicID, 0);
+        return B;
     }
 
     zigZigLeft(tree) {
@@ -725,6 +751,7 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
         this.cmd("SetHighlight", A.graphicID, 0);
         this.cmd("SetHighlight", B.graphicID, 0);
         this.cmd("SetHighlight", C.graphicID, 0);
+        return C;
     }
 
     zigZigRight(tree) {
@@ -787,6 +814,7 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
         this.cmd("SetHighlight", A.graphicID, 0);
         this.cmd("SetHighlight", B.graphicID, 0);
         this.cmd("SetHighlight", C.graphicID, 0);
+        return A;
     }
 };
 
