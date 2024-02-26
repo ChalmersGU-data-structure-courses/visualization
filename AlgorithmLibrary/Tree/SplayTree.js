@@ -37,7 +37,7 @@ Algorithm.Tree.Splay = class SplayTree extends Algorithm.Tree.BST {
 
     postFind(searchResult, action) {
         const node = searchResult.node;
-        if (action === "insert" || node === this.treeRoot) return;
+        if (action === this.INSERT_ACTION || node === this.treeRoot) return;
         this.cmd("SetText", this.messageID, `Now splaying ${node} up to the root`);
         this.cmd("SetHighlight", node.graphicID, 1);
         this.cmd("Step");

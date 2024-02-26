@@ -64,6 +64,12 @@ Algorithm.Tree = class Tree extends Algorithm {
     ];
 
 
+    // Actions used by doFind and postFind:
+    FIND_ACTION = "find";
+    INSERT_ACTION = "insert";
+    DELETE_ACTION = "delete";
+
+
     constructor(am) {
         super();
         if (am) this.init(am);
@@ -234,7 +240,10 @@ Algorithm.Tree = class Tree extends Algorithm {
     }
 
     doClear(tree) {
-        console.error("Tree.doClear: must be overridden!");
+        for (const child of tree.getChildren()) {
+            if (child) this.doClear(child);
+        }
+        this.removeTreeNode(tree);
     }
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -245,19 +254,19 @@ Algorithm.Tree = class Tree extends Algorithm {
         this.commands = [];
         this.cmd("SetText", this.messageID, `Searching for ${value}`);
         this.cmd("Step");
-        const searchResult = this.doFind(value, this.treeRoot);
-        this.postFind(searchResult);
+        const searchResult = this.doFind(value, this.treeRoot, this.FIND_ACTION);
+        this.postFind(searchResult, this.FIND_ACTION);
         this.resizeTree();
         this.validateTree();
         this.cmd("SetText", this.messageID, `${value} ${searchResult.found ? "found" : "not found"}`);
         return this.commands;
     }
 
-    doFind(value, tree) {
+    doFind(value, tree, action = this.FIND_ACTION) {
         console.error("Tree.doFind: must be overridden!");
     }
 
-    postFind(searchResult) {
+    postFind(searchResult, action = this.FIND_ACTION) {
         // BST's do not do any post-processing
     }
 
@@ -280,8 +289,8 @@ Algorithm.Tree = class Tree extends Algorithm {
                 this.cmd("Step");
                 this.postInsert({node: elem});
             } else {
-                const searchResult = this.doFind(value, this.treeRoot, true);
-                this.postFind(searchResult, "insert");
+                const searchResult = this.doFind(value, this.treeRoot, this.INSERT_ACTION);
+                this.postFind(searchResult, this.INSERT_ACTION);
                 if (searchResult.found && !this.ALLOW_DUPLICATES) {
                     this.cmd("SetText", this.messageID, `Node ${searchResult.node} already exists`);
                     this.cmd("Step");
@@ -293,8 +302,6 @@ Algorithm.Tree = class Tree extends Algorithm {
             this.resizeTree();
             this.validateTree();
         }
-        this.resizeTree();
-        this.validateTree();
         this.cmd("SetText", this.messageID, "");
         return this.commands;
     }
@@ -315,12 +322,12 @@ Algorithm.Tree = class Tree extends Algorithm {
         this.commands = [];
         this.cmd("SetText", this.messageID, `Deleting ${value}`);
         this.cmd("Step");
-        const searchResult = this.doFind(value, this.treeRoot);
-        this.postFind(searchResult, "delete");
+        const searchResult = this.doFind(value, this.treeRoot, this.DELETE_ACTION);
+        this.postFind(searchResult, this.DELETE_ACTION);
         if (!searchResult.found) {
             this.cmd("SetText", this.messageID, `Node ${value} doesn't exist`);
         } else {
-            const deleteResult = this.doDelete(searchResult.node);
+            const deleteResult = this.doDelete(searchResult.node, value);
             this.postDelete(deleteResult);
             this.resizeTree();
             this.validateTree();
@@ -330,7 +337,7 @@ Algorithm.Tree = class Tree extends Algorithm {
         return this.commands;
     }
 
-    doDelete(node) {
+    doDelete(node, value) {
         console.error("Tree.doDelete: must be overridden!");
     }
 
@@ -365,10 +372,36 @@ Algorithm.Tree = class Tree extends Algorithm {
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Resizing the tree (must be overridden)
+    // Resizing the tree
 
     resizeTree(animate = true) {
-        console.error("Tree.resizeTree: must be overridden!");
+        if (!this.treeRoot) return;
+        this.resizeWidths(this.treeRoot);
+        let startingX = this.getTreeRootX();
+        if (this.treeRoot.leftWidth > startingX) {
+            startingX = this.treeRoot.leftWidth;
+        } else if (this.treeRoot.rightWidth > startingX) {
+            startingX = Math.max(this.treeRoot.leftWidth, 2 * startingX - this.treeRoot.rightWidth);
+        }
+        this.setNewPositions(this.treeRoot, startingX, this.getTreeRootY());
+        const cmd = animate ? "Move" : "SetPosition";
+        this.animateNewPositions(this.treeRoot, cmd);
+    }
+
+    resizeWidths(tree) {
+        console.error("Tree.resizeWidths: must be overridden!");
+    }
+
+    setNewPositions(tree, x, y) {
+        console.error("Tree.setNewPositions: must be overridden!");
+    }
+
+    animateNewPositions(tree, cmd) {
+        if (!tree) return;
+        for (const child of tree.getChildren()) {
+            this.animateNewPositions(child, cmd);
+        }
+        this.cmd(cmd, tree.graphicID, tree.x, tree.y);
     }
 
     ///////////////////////////////////////////////////////////////////////////////

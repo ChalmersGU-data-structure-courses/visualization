@@ -63,21 +63,11 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Delete the whole tree
-
-    doClear(tree) {
-        for (const child of [tree.left, tree.right]) {
-            if (child) this.doClear(child);
-        }
-        this.removeTreeNode(tree);
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////
     // Find a value in the tree
 
-    doFind(value, node, findInsertionPoint = false) {
+    doFind(value, node, action = this.FIND_ACTION) {
         const cmp = this.compare(value, node.data);
-        if (cmp === 0 && !(findInsertionPoint && this.ALLOW_DUPLICATES)) {
+        if (cmp === 0 && !(action === this.INSERT_ACTION && this.ALLOW_DUPLICATES)) {
             this.cmd("SetHighlight", node.graphicID, 1);
             this.cmd("Step");
             this.cmd("SetHighlight", node.graphicID, 0);
@@ -106,7 +96,7 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
         this.cmd("SetText", this.messageID, "");
         this.cmd("Step");
         this.cmd("SetAlpha", this.highlightID, 0);
-        return this.doFind(value, child, findInsertionPoint);
+        return this.doFind(value, child, action);
     }
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -250,16 +240,14 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
         if (!tree.graphicID) {
             console.error("Tree node missing ID:", tree);
         }
-        if (tree.left) {
+        if (this.isTreeNode(tree.left)) {
             cmpVal = this.validateBST(tree.left, tree, cmpVal);
         }
-        if (this.isTreeNode(tree)) {
-            if (this.compare(cmpVal, tree.data) > 0) {
-                console.error(`Order mismatch, ${cmpVal} > ${tree.data}`, tree);
-            }
-            cmpVal = tree.data;
+        if (this.compare(cmpVal, tree.data) > 0) {
+            console.error(`Order mismatch, ${cmpVal} > ${tree.data}`, tree);
         }
-        if (tree.right) {
+        cmpVal = tree.data;
+        if (this.isTreeNode(tree.right)) {
             cmpVal = this.validateBST(tree.right, tree, cmpVal);
         }
         return cmpVal;
@@ -268,24 +256,12 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
     ///////////////////////////////////////////////////////////////////////////////
     // Resizing the tree
 
-    resizeTree(animate = true) {
-        if (!this.treeRoot) return;
-        this.resizeWidths(this.treeRoot);
-        let startingX = this.getTreeRootX();
-        if (this.treeRoot.leftWidth > startingX) {
-            startingX = this.treeRoot.leftWidth;
-        } else if (this.treeRoot.rightWidth > startingX) {
-            startingX = Math.max(this.treeRoot.leftWidth, 2 * startingX - this.treeRoot.rightWidth);
-        }
-        this.setNewPositions(this.treeRoot, startingX, this.getTreeRootY());
-        const cmd = animate ? "Move" : "SetPosition";
-        this.animateNewPositions(this.treeRoot, cmd);
-    }
-
     resizeWidths(tree) {
         if (!tree) return 0;
-        tree.width = this.resizeWidths(tree.left) + this.getSpacingX() + this.resizeWidths(tree.right);
-        tree.width = Math.max(tree.width, this.NODE_SIZE);
+        tree.width = Math.max(
+            this.NODE_SIZE,
+            this.resizeWidths(tree.left) + this.getSpacingX() + this.resizeWidths(tree.right),
+        );
         const left = tree.left?.leftWidth || 0;
         const right = tree.right?.rightWidth || 0;
         const mid = tree.width - left - right;
@@ -300,13 +276,6 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
         const nextY = y + this.NODE_SIZE + this.getSpacingY();
         if (tree.left) this.setNewPositions(tree.left, x - tree.leftWidth + tree.left.leftWidth, nextY);
         if (tree.right) this.setNewPositions(tree.right, x + tree.rightWidth - tree.right.rightWidth, nextY);
-    }
-
-    animateNewPositions(tree, cmd) {
-        if (!tree) return;
-        this.animateNewPositions(tree.left, cmd);
-        this.animateNewPositions(tree.right, cmd);
-        this.cmd(cmd, tree.graphicID, tree.x, tree.y);
     }
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -343,6 +312,10 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
         reassignParent(newChild) {
             if (this.parent?.left === this) this.parent.left = newChild;
             if (this.parent?.right === this) this.parent.right = newChild;
+        }
+
+        getChildren() {
+            return [this.left, this.right];
         }
 
         isLeftChild() {
