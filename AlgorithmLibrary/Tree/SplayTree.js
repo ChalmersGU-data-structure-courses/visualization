@@ -35,40 +35,43 @@ Algorithm.Tree.Splay = class SplayTree extends Algorithm.Tree.BST {
     ///////////////////////////////////////////////////////////////////////////////
     // After finding or inserting we splay the last visited node up to the top
 
-    postFind(found, node) {
+    postFind(searchResult, action) {
+        const node = searchResult.node;
+        if (action === "insert" || node === this.treeRoot) return;
+        this.cmd("SetText", this.messageID, `Now splaying ${node} up to the root`);
+        this.cmd("SetHighlight", node.graphicID, 1);
+        this.cmd("Step");
+        this.cmd("SetHighlight", node.graphicID, 0);
         this.splayUp(node);
     }
 
-    postInsert(found, node) {
+    postInsert(insertResult) {
+        const node = insertResult.node;
+        if (node === this.treeRoot) return;
+        this.cmd("SetText", this.messageID, `Now splaying ${node} up to the root`);
+        this.cmd("SetHighlight", node.graphicID, 1);
+        this.cmd("Step");
+        this.cmd("SetHighlight", node.graphicID, 0);
         this.splayUp(node);
     }
 
     ///////////////////////////////////////////////////////////////////////////////
     // Deleting a value from the tree
 
-    deleteAction(value) {
-        this.commands = [];
-        this.cmd("SetText", this.messageID, `Finding ${value} and splaying to rooot`);
-        this.cmd("Step");
-        const [found, node] = this.doFind(value, this.treeRoot);
-        this.postFind(found, node);
-        if (found) this.doDeleteRoot();
-        this.validateTree();
-        return this.commands;
-    }
-
-    doDeleteRoot() {
+    doDelete(node) {
+        if (this.treeRoot !== node) console.error(`The node ${node} is not splayed to the root!`);
         this.cmd("SetText", this.messageID, "Removing root, leaving left and right trees");
+        this.cmd("SetHighlight", this.treeRoot.graphicID, 1);
         this.cmd("Step");
         if (!this.treeRoot.right) {
             this.cmd("SetText", this.messageID, "No right tree, make left tree the root");
-            this.cmd("Delete", this.treeRoot.graphicID);
+            this.removeTreeNode(this.treeRoot);
             this.cmd("Step");
             this.treeRoot = this.treeRoot.left;
             this.treeRoot.parent = null;
         } else if (!this.treeRoot.left) {
             this.cmd("SetText", this.messageID, "No left tree, make right tree the root");
-            this.cmd("Delete", this.treeRoot.graphicID);
+            this.removeTreeNode(this.treeRoot);
             this.cmd("Step");
             this.treeRoot = this.treeRoot.right;
             this.treeRoot.parent = null;
@@ -80,36 +83,37 @@ Algorithm.Tree.Splay = class SplayTree extends Algorithm.Tree.BST {
             this.cmd("Disconnect", oldGraphicID, left.graphicID);
             this.cmd("Disconnect", oldGraphicID, right.graphicID);
             this.cmd("SetAlpha", oldGraphicID, 0);
-            this.cmd("Step");
-
+            
             left.parent = null;
-            const largestLeft = this.findMax(left);
+            let largestLeft = left;
+            this.cmd("SetAlpha", this.highlightID, 1);
+            this.cmd("SetPosition", this.highlightID, largestLeft.x, largestLeft.y);
+            this.cmd("Step");
+            if (largestLeft.right) {
+                while (largestLeft.right) {
+                    largestLeft = largestLeft.right;
+                    this.cmd("Move", this.highlightID, largestLeft.x, largestLeft.y);
+                    this.cmd("Step");
+                }
+            }
+            this.cmd("SetAlpha", this.highlightID, 0);
             this.splayUp(largestLeft);
             this.cmd("SetText", this.messageID, "Left tree now has no right subtree, connect left and right trees");
+            this.cmd("SetHighlight", largestLeft.graphicID, 1);
             this.cmd("Step");
+            this.cmd("SetHighlight", largestLeft.graphicID, 0);
             this.cmd("Connect", largestLeft.graphicID, right.graphicID, this.LINK_COLOR);
             largestLeft.parent = null;
             largestLeft.right = right;
             right.parent = largestLeft;
             this.treeRoot = largestLeft;
-            this.cmd("Delete", oldGraphicID);
+            this.removeTreeNode(oldGraphicID);
         }
         this.resizeTree();
     }
 
-    findMax(tree) {
-        if (!tree.right) return tree;
-        this.cmd("SetAlpha", this.highlightID, 1);
-        this.cmd("SetPosition", this.highlightID, tree.x, tree.y);
-        this.cmd("Step");
-        while (tree.right) {
-            tree = tree.right;
-            this.cmd("Move", this.highlightID, tree.x, tree.y);
-            this.cmd("Step");
-        }
-        this.cmd("SetAlpha", this.highlightID, 0);
-        return tree;
-    }
+    ///////////////////////////////////////////////////////////////////////////////
+    // Splaying a node to the root of the tree
 
     splayUp(node) {
         if (!node.parent) return;

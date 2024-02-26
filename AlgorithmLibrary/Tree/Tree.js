@@ -38,7 +38,9 @@ Algorithm.Tree = class Tree extends Algorithm {
     HIGHLIGHT_CIRCLE_COLOR = this.FOREGROUND_COLOR;
     PRINT_COLOR = "blue";
 
-    STARTING_Y = 50;
+    TREE_ROOT_Y = 50;
+    NEW_NODE_X = this.TREE_ROOT_Y;
+    NEW_NODE_Y = 2 * this.TREE_ROOT_Y;
 
     NODE_SIZE = 40;
     NODE_SPACING = 20;
@@ -53,10 +55,12 @@ Algorithm.Tree = class Tree extends Algorithm {
     ALLOW_DUPLICATES = true;
 
     INSERT_MANY_VALUES = [
+        "A B C D E F G H J K",
+        "Z Y X V T S P O M L",
         "A L G O R I T H M",
         "C O M P L E X I T Y",
         "R E C U R S I O N",
-        "A B C D E F G H J K",
+        5,
     ];
 
 
@@ -102,15 +106,15 @@ Algorithm.Tree = class Tree extends Algorithm {
 
     addControls() {
         if (this.INSERT_MANY_VALUES?.length > 1) {
+            const insertManyTexts = this.INSERT_MANY_VALUES.map(
+                (v) => isNaN(v) ? v : v + " random numbers"
+            );
             this.insertSelect = this.addSelectToAlgorithmBar(
                 ["", ...this.INSERT_MANY_VALUES],
-                ["Insert...", ...this.INSERT_MANY_VALUES],
+                ["Insert many values:", ...insertManyTexts],
             );
             this.insertSelect.value = "";
-            this.insertSelect.onchange = (event) => {
-                this.insertField.value = this.insertSelect.value;
-                this.insertSelect.value = "";
-            };
+            this.insertSelect.onchange = this.insertSelectCallback.bind(this);
         }
         this.insertField = this.addControlToAlgorithmBar("Text", "", {maxlength: 20, size: 15});
         this.addReturnSubmit(this.insertField, "ALPHANUM+", this.insertCallback.bind(this));
@@ -146,10 +150,21 @@ Algorithm.Tree = class Tree extends Algorithm {
     ///////////////////////////////////////////////////////////////////////////////
     // Callback functions for the algorithm control bar
 
+    insertSelectCallback() {
+        let selected = this.insertSelect.value;
+        if (!isNaN(selected)) selected = Array.from(
+            {length: selected}, 
+            (_) => 10 + Math.floor(90 * Math.random())
+        ).join(" ");
+        this.insertField.value = selected;
+        this.insertSelect.value = "";
+    }
+
     insertCallback() {
-        if (this.insertField.value.trim() === "") return;
-        const values = this.insertField.value.trim().split(/\s+/).map(v => this.normalizeNumber(v));
+        const insertField = this.insertField.value.trim();
         this.insertField.value = "";
+        if (insertField === "") return;
+        const values = insertField.split(/\s+/).map(v => this.normalizeNumber(v));
         this.implementAction(this.insertAction.bind(this), ...values);
     }
 
@@ -176,7 +191,7 @@ Algorithm.Tree = class Tree extends Algorithm {
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Printing the values in the tree
+    // Print the values in the tree
 
     printAction() {
         if (!this.isTreeNode(this.treeRoot)) return [];
@@ -206,7 +221,7 @@ Algorithm.Tree = class Tree extends Algorithm {
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Deleting the tree
+    // Delete the whole tree
 
     clearAction() {
         this.commands = [];
@@ -223,17 +238,18 @@ Algorithm.Tree = class Tree extends Algorithm {
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Finding a value in the tree
+    // Find a value in the tree
 
     findAction(value) {
         if (!this.isTreeNode(this.treeRoot)) return [];
         this.commands = [];
         this.cmd("SetText", this.messageID, `Searching for ${value}`);
         this.cmd("Step");
-        const [found, node] = this.doFind(value, this.treeRoot);
-        this.postFind(found, node);
-        this.cmd("SetText", this.messageID, `${value} ${found ? "found" : "not found"}`);
+        const searchResult = this.doFind(value, this.treeRoot);
+        this.postFind(searchResult);
+        this.resizeTree();
         this.validateTree();
+        this.cmd("SetText", this.messageID, `${value} ${searchResult.found ? "found" : "not found"}`);
         return this.commands;
     }
 
@@ -241,12 +257,12 @@ Algorithm.Tree = class Tree extends Algorithm {
         console.error("Tree.doFind: must be overridden!");
     }
 
-    postFind(found, node) {
+    postFind(searchResult) {
         // BST's do not do any post-processing
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Inserting one or more values into the tree
+    // Insert one or more values into the tree
 
     insertAction(...values) {
         this.commands = [];
@@ -256,67 +272,81 @@ Algorithm.Tree = class Tree extends Algorithm {
         }
         for (const value of values) {
             this.cmd("SetText", this.messageID, `Inserting ${value}`);
-            const x = this.STARTING_Y, y = 2 * this.STARTING_Y;
-            const elemID = this.nextIndex++;
-            const elem = this.createTreeNode(elemID, x, y, value);
             this.cmd("Step");
-            if (this.isTreeNode(this.treeRoot)) {
-                const [inserted, node] = this.doInsert(elem, this.treeRoot);
-                this.postInsert(inserted, node);
-            } else {
+            if (!this.isTreeNode(this.treeRoot)) {
+                const elemID = this.nextIndex++;
+                const elem = this.createTreeNode(elemID, this.getTreeRootX(), this.getTreeRootY(), value);
                 this.treeRoot = elem;
+                this.cmd("Step");
+                this.postInsert({node: elem});
+            } else {
+                const searchResult = this.doFind(value, this.treeRoot, true);
+                this.postFind(searchResult, "insert");
+                if (searchResult.found && !this.ALLOW_DUPLICATES) {
+                    this.cmd("SetText", this.messageID, `Node ${searchResult.node} already exists`);
+                    this.cmd("Step");
+                } else {
+                    const insertResult = this.doInsert(value, searchResult.node);
+                    this.postInsert(insertResult);
+                }
             }
-            this.cmd("SetAlpha", this.highlightID, 0);
-            this.cmd("SetText", this.messageID, "");
             this.resizeTree();
-            this.cmd("Step");
             this.validateTree();
         }
+        this.resizeTree();
+        this.validateTree();
+        this.cmd("SetText", this.messageID, "");
         return this.commands;
     }
 
-    doInsert(elem, tree) {
+    doInsert(value, node) {
         console.error("Tree.doInsert: must be overridden!");
     }
 
-    postInsert(inserted, node) {
+    postInsert(insertResult) {
         // BST's do not do any post-processing
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Deleting a value from the tree
+    // Delete a value from the tree
 
     deleteAction(value) {
         if (!this.isTreeNode(this.treeRoot)) return [];
         this.commands = [];
         this.cmd("SetText", this.messageID, `Deleting ${value}`);
         this.cmd("Step");
-        const [deleted, node] = this.doDelete(value, this.treeRoot);
-        this.postDelete(deleted, node);
-        this.cmd("SetAlpha", this.highlightID, 0);
+        const searchResult = this.doFind(value, this.treeRoot);
+        this.postFind(searchResult, "delete");
+        if (!searchResult.found) {
+            this.cmd("SetText", this.messageID, `Node ${value} doesn't exist`);
+        } else {
+            const deleteResult = this.doDelete(searchResult.node);
+            this.postDelete(deleteResult);
+            this.resizeTree();
+            this.validateTree();
+        }
+        this.cmd("Step");
         this.cmd("SetText", this.messageID, "");
-        this.resizeTree();
-        this.validateTree();
         return this.commands;
     }
 
-    doDelete(value, tree) {
+    doDelete(node) {
         console.error("Tree.doDelete: must be overridden!");
     }
 
-    postDelete(deleted, node) {
+    postDelete(deleteResult) {
         // BST's do not do any post-processing
     }
 
     ///////////////////////////////////////////////////////////////////////////////
     // Calculating canvas positions and sizes
 
-    getStartingX() {
+    getTreeRootX() {
         return this.getCanvasWidth() / 2;
     }
 
-    getStartingY() {
-        return this.STARTING_Y;
+    getTreeRootY() {
+        return this.TREE_ROOT_Y;
     }
 
     getSpacingX() {

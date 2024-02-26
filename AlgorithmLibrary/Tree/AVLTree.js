@@ -36,13 +36,29 @@ Algorithm.Tree.AVL = class AVLTree extends Algorithm.Tree.BST {
 
     LABEL_DISPLACE = this.NODE_SIZE / 2;
 
-    ///////////////////////////////////////////////////////////////////////////////
-    // Rebalancing the tree
 
-    rebalance(node, cmp) {
-        if (!node) return;
+    postInsert(insertResult) {
+        this.unwindRecursion(insertResult.node);
+    }
+
+    postDelete(deleteResult) {
+        this.unwindRecursion(deleteResult.node);
+    }
+
+    unwindRecursion(node) {
+        let child = null;
+        while (node) {
+            this.rebalanceNode(node, child);
+            child = node;
+            node = node.parent;
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////
+    // Node rebalancing
+
+    rebalanceNode(node, child) {
         this.cmd("SetAlpha", this.highlightID, 1);
-        const child = cmp < 0 ? node.left : node.right;
         if (child) {
             this.cmd("SetPosition", this.highlightID, child.x, child.y);
             this.cmd("Move", this.highlightID, node.x, node.y);
@@ -99,6 +115,7 @@ Algorithm.Tree.AVL = class AVLTree extends Algorithm.Tree.BST {
     // Validating the tree
 
     validateTree() {
+        if (!this.treeRoot) return;
         super.validateTree();
         this.validateAVL(this.treeRoot);
     }
