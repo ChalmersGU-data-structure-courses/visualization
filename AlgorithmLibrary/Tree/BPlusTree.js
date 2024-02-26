@@ -30,7 +30,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-Algorithm.Tree.BPlusTree = class BPlusTree extends Algorithm.Tree {
+Algorithm.Tree.BPlusTree = class BPlusTree extends Algorithm {
     MAX_DEGREES = [3, 4, 5, 6, 7];
     MAX_DEGREE_LABELS = ["2/3-tree", "2/3/4-tree", "Max. degree 5", "Max. degree 6", "Max. degree 7"];
     INITIAL_MAX_DEGREE = 3;
