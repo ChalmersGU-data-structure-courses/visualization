@@ -138,46 +138,43 @@ Algorithm.Tree.BPlusTree = class BPlusTree extends Algorithm.Tree {
     ///////////////////////////////////////////////////////////////////////////////
     // Find a value in the tree
 
-    doFind(value, node) {
-        if (node != null) {
-            this.cmd("SetHighlight", node.graphicID, 1);
-            this.cmd("Step");
-            let i = 0;
-            while (i < node.numKeys && this.compare(node.keys[i], value) < 0)
-                i++;
+    doFind(value, node, action = this.FIND_ACTION) {
+        if (action !== this.FIND_ACTION) {
+            // Don't find the node before inserting/deleting.
+            // So just return without searching:
+            return {found: action === this.DELETE_ACTION, node: this.treeRoot};
+        }
+        this.cmd("SetHighlight", node.graphicID, 1);
+        this.cmd("Step");
+        let i = 0;
+        while (i < node.numKeys && this.compare(node.keys[i], value) < 0) {
+            i++;
+        }
+
+        if (node.isLeaf) {
             if (i === node.numKeys || this.compare(node.keys[i], value) > 0) {
-                if (!node.isLeaf) {
-                    let cmpstr = value;
-                    if (i > 0) cmpstr = `${node.keys[i - 1]} < ${cmpstr}`;
-                    if (i < node.numKeys) cmpstr = `${cmpstr} < ${node.keys[i]}`;
-                    this.cmd("SetText", this.messageID, `Searching for ${value}: ${cmpstr} (recurse into child)`);
-                    this.cmd("SetEdgeHighlight", node.graphicID, node.children[i].graphicID, 1);
-                    this.cmd("Step");
-                    this.cmd("SetHighlight", node.graphicID, 0);
-                    this.cmd("SetEdgeHighlight", node.graphicID, node.children[i].graphicID, 0);
-                    return this.doFind(node.children[i], value);
-                } else {
-                    this.cmd("SetHighlight", node.graphicID, 0);
-                    return false;
-                }
-            } else if (node.isLeaf) {
+                this.cmd("SetHighlight", node.graphicID, 0);
+                return {found: false, node: node};
+            } else {
                 this.cmd("SetTextColor", node.graphicID, this.HIGHLIGHT_COLOR, i);
                 this.cmd("SetText", this.messageID, `Element ${value} found`);
                 this.cmd("Step");
                 this.cmd("SetTextColor", node.graphicID, this.FOREGROUND_COLOR, i);
                 this.cmd("SetHighlight", node.graphicID, 0);
-                this.cmd("Step");
-                return true;
-            } else {
-                this.cmd("SetEdgeHighlight", node.graphicID, node.children[i + 1].graphicID, 1);
-                this.cmd("Step");
-                this.cmd("SetHighlight", node.graphicID, 0);
-                this.cmd("SetEdgeHighlight", node.graphicID, node.children[i + 1].graphicID, 0);
-                return this.doFind(node.children[i + 1], value);
+                return {found: true, node: node};
             }
-        } else {
-            return false;
         }
+
+        if (i < node.numKeys && this.compare(node.keys[i], value) === 0) i++;
+        let cmpstr = value;
+        if (i > 0) cmpstr = `${node.keys[i - 1]} <= ${cmpstr}`;
+        if (i < node.numKeys) cmpstr = `${cmpstr} < ${node.keys[i]}`;
+        this.cmd("SetText", this.messageID, `Searching for ${value}: ${cmpstr} (recurse into child)`);
+        this.cmd("SetEdgeHighlight", node.graphicID, node.children[i].graphicID, 1);
+        this.cmd("Step");
+        this.cmd("SetHighlight", node.graphicID, 0);
+        this.cmd("SetEdgeHighlight", node.graphicID, node.children[i].graphicID, 0);
+        return this.doFind(value, node.children[i]);
     }
 
     ///////////////////////////////////////////////////////////////////////////////
