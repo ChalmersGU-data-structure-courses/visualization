@@ -43,18 +43,8 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
             this.cmd("Move", this.highlightID, node.x, node.y);
             this.cmd("Step");
         }
-
-        const nextLabelID = this.nextIndex++;
-        this.cmd("CreateLabel", nextLabelID, node.data, node.x, node.y);
-        this.cmd("SetForegroundColor", nextLabelID, this.PRINT_COLOR);
-        this.cmd("Move", nextLabelID, this.printPosX, this.printPosY);
+        this.printOneLabel(node.data, node.x, node.y);
         this.cmd("Step");
-        this.printPosX += this.PRINT_HORIZONTAL_GAP;
-        if (this.printPosX > this.getCanvasWidth() - this.PRINT_HORIZONTAL_GAP) {
-            this.printPosX = this.FIRST_PRINT_POS_X;
-            this.printPosY += this.PRINT_VERTICAL_GAP;
-        }
-
         if (this.isTreeNode(node.right)) {
             this.doPrint(node.right);
             this.cmd("Move", this.highlightID, node.x, node.y);

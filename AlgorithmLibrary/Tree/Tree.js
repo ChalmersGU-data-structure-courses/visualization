@@ -210,8 +210,8 @@ Algorithm.Tree = class Tree extends Algorithm {
 
         this.printPosX = this.FIRST_PRINT_POS_X;
         this.printPosY = this.getCanvasHeight() - 3 * this.PRINT_VERTICAL_GAP;
-
         this.doPrint(this.treeRoot);
+
         this.cmd("SetAlpha", this.highlightID, 0);
         this.cmd("Step");
         for (let i = firstLabel; i < this.nextIndex; i++) {
@@ -220,6 +220,19 @@ Algorithm.Tree = class Tree extends Algorithm {
         this.nextIndex = firstLabel; // Reuse objects. Not necessary.
         this.cmd("SetText", this.messageID, "");
         return this.commands;
+    }
+
+    printOneLabel(label, fromX, fromY) {
+        const nextLabelID = this.nextIndex++;
+        this.cmd("CreateLabel", nextLabelID, label, fromX, fromY);
+        this.cmd("SetForegroundColor", nextLabelID, this.PRINT_COLOR);
+        this.cmd("Move", nextLabelID, this.printPosX, this.printPosY);
+        this.printPosX += this.PRINT_HORIZONTAL_GAP;
+        if (this.printPosX > this.getCanvasWidth() - this.PRINT_HORIZONTAL_GAP) {
+            this.printPosX = this.FIRST_PRINT_POS_X;
+            this.printPosY += this.PRINT_VERTICAL_GAP;
+        }
+
     }
 
     doPrint(tree) {
