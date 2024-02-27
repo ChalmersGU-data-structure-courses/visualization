@@ -58,7 +58,7 @@ Algorithm.Tree.RedBlack = class RedBlackTree extends Algorithm.Tree.BST {
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Rebalancing after insert
+    // Rebalance after insertion
 
     postInsert(insertResult) {
         this.resizeTree();
@@ -70,45 +70,45 @@ Algorithm.Tree.RedBlack = class RedBlackTree extends Algorithm.Tree.BST {
         }
     }
 
-    fixDoubleRed(tree) {
-        if (!tree.parent) return;
-        if (this.getBlackLevel(tree.parent) > 0) return;
-        if (!tree.parent.parent) return;
+    fixDoubleRed(node) {
+        if (!node.parent) return;
+        if (this.getBlackLevel(node.parent) > 0) return;
+        if (!node.parent.parent) return;
 
-        const pibling = tree.parent.getSibling();
+        const pibling = node.parent.getSibling();
         if (this.getBlackLevel(pibling) === 0) {
             this.cmd("SetText", this.messageID, "Node, parent and parent's sibling are all red:\nPush blackness down from grandparent");
             this.cmd("Step");
             this.setBlackLevel(pibling, 1);
-            this.setBlackLevel(tree.parent, 1);
+            this.setBlackLevel(node.parent, 1);
             this.setBlackLevel(pibling.parent, 0);
             this.cmd("Step");
             this.fixDoubleRed(pibling.parent);
             return
         }
 
-        let side = tree.isLeftChild() ? "left" : "right";
-        let rotate = tree.parent.isLeftChild() ? "left" : "right";
+        let side = node.isLeftChild() ? "left" : "right";
+        let rotate = node.parent.isLeftChild() ? "left" : "right";
         if (side !== rotate) {
             this.cmd("SetText", this.messageID, `Node is a red ${side} child of a red ${rotate} child: Rotate ${rotate}`);
             this.cmd("Step");
-            if (rotate === "right") this.singleRotateRight(tree.parent);
-            else if (rotate === "left") this.singleRotateLeft(tree.parent);
-            tree = tree[rotate];
+            if (rotate === "right") this.singleRotateRight(node.parent);
+            else if (rotate === "left") this.singleRotateLeft(node.parent);
+            node = node[rotate];
         }
 
-        side = tree.isLeftChild() ? "left" : "right";
+        side = node.isLeftChild() ? "left" : "right";
         rotate = side === "left" ? "right" : "left";
         this.cmd("SetText", this.messageID, `Node is a red ${side} child of a red ${side} child: Rotate ${rotate}`);
         this.cmd("Step");
-        if (rotate === "right") this.singleRotateRight(tree.parent.parent);
-        else if (rotate === "left") this.singleRotateLeft(tree.parent.parent);
-        this.setBlackLevel(tree.parent, 1);
-        this.setBlackLevel(tree.parent[rotate], 0);
+        if (rotate === "right") this.singleRotateRight(node.parent.parent);
+        else if (rotate === "left") this.singleRotateLeft(node.parent.parent);
+        this.setBlackLevel(node.parent, 1);
+        this.setBlackLevel(node.parent[rotate], 0);
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Rebalancing after delete
+    // Rebalance after deletion
 
     postDelete(deletedResult) {
         const deleted = deletedResult.deleted;
@@ -207,7 +207,7 @@ Algorithm.Tree.RedBlack = class RedBlackTree extends Algorithm.Tree.BST {
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Handling phantom leafs
+    // Handle phantom leafs
 
     attachNullLeaves(node) {
         this.attachNullLeaf(node, true);
@@ -245,7 +245,7 @@ Algorithm.Tree.RedBlack = class RedBlackTree extends Algorithm.Tree.BST {
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Modifying the black level
+    // Modify the black level
 
     getBlackLevel(node) {
         return node == null ? 1 : node.blackLevel;
@@ -276,61 +276,59 @@ Algorithm.Tree.RedBlack = class RedBlackTree extends Algorithm.Tree.BST {
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Validating the tree
+    // Validate the tree
 
     validateTree() {
         if (!this.treeRoot) return;
         super.validateTree();
         if (this.treeRoot.blackLevel !== 1) console.error(`Tree root is not black`, this.treeRoot);
-        this.validateRedBlack(this.treeRoot, null);
+        this.validateRedBlack(this.treeRoot);
     }
 
-    validateRedBlack(tree) {
-        if (!tree) return 0;
-        if (isNaN(tree.blackLevel)) console.error(`Black level not a number, ${tree.blackLevel}`, tree);
-        if (tree.blackLevel > 1) console.error("Double-black node:", tree);
-        if (tree.blackLevel === 0) {
-            if (tree.phantomLeaf) console.error("Red phantom leaf:", tree.parent);
-            if (tree.parent && tree.parent.blackLevel === 0) console.error("Red node has red child:", tree.parent);
+    validateRedBlack(node) {
+        if (!node) return 0;
+        if (isNaN(node.blackLevel)) console.error(`Black level not a number, ${node.blackLevel}`, node);
+        if (node.blackLevel > 1) console.error("Double-black node:", node);
+        if (node.blackLevel === 0) {
+            if (node.phantomLeaf) console.error("Red phantom leaf:", node.parent);
+            if (node.parent && node.parent.blackLevel === 0) console.error("Red node has red child:", node.parent);
         }
         let leftPath = 0;
-        if (tree.left) {
-            leftPath = this.validateRedBlack(tree.left);
+        if (node.left) leftPath = this.validateRedBlack(node.left);
+        if (node.right) {
+            const rightPath = this.validateRedBlack(node.right);
+            if (rightPath !== leftPath) console.error(`Different black path lengths, ${leftPath} != ${rightPath}:`, node);
         }
-        if (tree.right) {
-            const rightPath = this.validateRedBlack(tree.right);
-            if (rightPath !== leftPath) console.error(`Different black path lengths, ${leftPath} != ${rightPath}:`, tree);
-        }
-        return leftPath + tree.blackLevel;
+        return leftPath + node.blackLevel;
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Resizing the tree
+    // Resize the tree
 
-    resizeWidths(tree) {
-        if (!tree) return 0;
-        super.resizeWidths(tree);
-        if (tree.phantomLeaf) {
-            tree.leftWidth += this.NULL_LEAF_ADJUST;
-            tree.rightWidth += this.NULL_LEAF_ADJUST;
+    resizeWidths(node) {
+        if (!node) return 0;
+        super.resizeWidths(node);
+        if (node.phantomLeaf) {
+            node.leftWidth += this.NULL_LEAF_ADJUST;
+            node.rightWidth += this.NULL_LEAF_ADJUST;
         }
-        tree.width = tree.leftWidth + tree.rightWidth;
-        return tree.width;
+        node.width = node.leftWidth + node.rightWidth;
+        return node.width;
     }
 
-    setNewPositions(tree, x, y) {
-        tree.y = y;
-        tree.x = x;
-        if (tree.phantomLeaf) {
-            tree.y += this.NULL_LEAF_ADJUST;
+    setNewPositions(node, x, y) {
+        node.y = y;
+        node.x = x;
+        if (node.phantomLeaf) {
+            node.y += this.NULL_LEAF_ADJUST;
         }
         const nextY = y + this.NODE_SIZE + this.getSpacingY();
-        if (tree.left) this.setNewPositions(tree.left, x - tree.leftWidth + tree.left.leftWidth, nextY);
-        if (tree.right) this.setNewPositions(tree.right, x + tree.rightWidth - tree.right.rightWidth, nextY);
+        if (node.left) this.setNewPositions(node.left, x - node.leftWidth + node.left.leftWidth, nextY);
+        if (node.right) this.setNewPositions(node.right, x + node.rightWidth - node.right.rightWidth, nextY);
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Creating and removing tree nodes
+    // Manipulate tree nodes
 
     createTreeNode(elemID, x, y, value) {
         const node = super.createTreeNode(elemID, x, y, value);

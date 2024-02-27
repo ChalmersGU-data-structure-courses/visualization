@@ -33,7 +33,8 @@
 Algorithm.Tree.Splay = class SplayTree extends Algorithm.Tree.BST {
 
     ///////////////////////////////////////////////////////////////////////////////
-    // After finding or inserting we splay the last visited node up to the top
+    // After we have found or inserted an element
+    // we splay the last visited node up to the top
 
     postFind(searchResult, action) {
         const node = searchResult.node;
@@ -56,7 +57,7 @@ Algorithm.Tree.Splay = class SplayTree extends Algorithm.Tree.BST {
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Deleting a value from the tree
+    // Delete a value from the tree
 
     doDelete(node) {
         if (this.treeRoot !== node) console.error(`The node ${node} is not splayed to the root!`);
@@ -113,7 +114,7 @@ Algorithm.Tree.Splay = class SplayTree extends Algorithm.Tree.BST {
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Splaying a node to the root of the tree
+    // Splay a node to the root of the tree
 
     splayUp(node) {
         if (!node.parent) return;

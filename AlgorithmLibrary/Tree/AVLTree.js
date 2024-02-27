@@ -36,6 +36,8 @@ Algorithm.Tree.AVL = class AVLTree extends Algorithm.Tree.BST {
 
     LABEL_DISPLACE = this.NODE_SIZE / 2;
 
+    ///////////////////////////////////////////////////////////////////////////////
+    // Rebalance after insertion and deletion
 
     postInsert(insertResult) {
         this.unwindRecursion(insertResult.node);
@@ -55,7 +57,7 @@ Algorithm.Tree.AVL = class AVLTree extends Algorithm.Tree.BST {
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Node rebalancing
+    // Rebalance nodes
 
     rebalanceNode(node, child) {
         this.cmd("SetAlpha", this.highlightID, 1);
@@ -97,22 +99,7 @@ Algorithm.Tree.AVL = class AVLTree extends Algorithm.Tree.BST {
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Getting and setting the height
-
-    getHeight(tree) {
-        return tree ? tree.height : 0;
-    }
-
-    resetHeight(tree) {
-        if (!tree) return;
-        const newHeight = Math.max(this.getHeight(tree.left), this.getHeight(tree.right)) + 1;
-        if (tree.height === newHeight) return;
-        tree.height = newHeight;
-        this.cmd("SetText", tree.labelID, newHeight);
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////
-    // Validating the tree
+    // Validate the tree
 
     validateTree() {
         if (!this.treeRoot) return;
@@ -120,37 +107,31 @@ Algorithm.Tree.AVL = class AVLTree extends Algorithm.Tree.BST {
         this.validateAVL(this.treeRoot);
     }
 
-    validateAVL(tree) {
-        if (!tree) return 0;
-        if (!tree.labelID) {
-            console.error("Tree node missing label ID", tree);
-        }
-        if (isNaN(tree.height)) console.error(`Tree height not a number, ${tree.height}`, tree);
-        const leftHeight = this.validateAVL(tree.left);
-        const rightHeight = this.validateAVL(tree.right);
+    validateAVL(node) {
+        if (!node) return 0;
+        if (!node.labelID) console.error("Tree node missing label ID", node);
+        if (isNaN(node.height)) console.error(`Tree height not a number, ${node.height}`, node);
+        const leftHeight = this.validateAVL(node.left);
+        const rightHeight = this.validateAVL(node.right);
         const height = 1 + Math.max(leftHeight, rightHeight);
-        if (height !== tree.height) {
-            console.error(`Height mismatch, ${height} != ${tree.height}`, tree);
-        }
-        if (Math.abs(leftHeight - rightHeight) > 1) {
-            console.error(`AVL imbalance, ${leftHeight} != ${rightHeight} +-1`, tree);
-        }
+        if (height !== node.height) console.error(`Height mismatch, ${height} != ${node.height}`, node);
+        if (Math.abs(leftHeight - rightHeight) > 1) console.error(`AVL imbalance, ${leftHeight} != ${rightHeight} +-1`, node);
         return height;
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Resizing the tree
+    // Resize the tree
 
-    animateNewPositions(tree, cmd, side = +1) {
-        if (!tree) return;
-        this.animateNewPositions(tree.left, cmd, -1);
-        this.animateNewPositions(tree.right, cmd, +1);
-        this.cmd(cmd, tree.graphicID, tree.x, tree.y);
-        this.cmd(cmd, tree.labelID, tree.x + side * this.LABEL_DISPLACE, tree.y - this.LABEL_DISPLACE);
+    animateNewPositions(node, cmd, side = +1) {
+        if (!node) return;
+        this.animateNewPositions(node.left, cmd, -1);
+        this.animateNewPositions(node.right, cmd, +1);
+        this.cmd(cmd, node.graphicID, node.x, node.y);
+        this.cmd(cmd, node.labelID, node.x + side * this.LABEL_DISPLACE, node.y - this.LABEL_DISPLACE);
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Creating and removing tree nodes
+    // Manipulate tree nodes
 
     createTreeNode(elemID, x, y, value) {
         const node = super.createTreeNode(elemID, x, y, value);
@@ -164,5 +145,17 @@ Algorithm.Tree.AVL = class AVLTree extends Algorithm.Tree.BST {
     removeTreeNode(node) {
         super.removeTreeNode(node);
         this.cmd("Delete", node.labelID);
+    }
+
+    getHeight(node) {
+        return node ? node.height : 0;
+    }
+
+    resetHeight(node) {
+        if (!node) return;
+        const newHeight = Math.max(this.getHeight(node.left), this.getHeight(node.right)) + 1;
+        if (node.height === newHeight) return;
+        node.height = newHeight;
+        this.cmd("SetText", node.labelID, newHeight);
     }
 };

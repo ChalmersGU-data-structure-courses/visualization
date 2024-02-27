@@ -39,14 +39,6 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
 
     WIDTH_PER_ELEM = this.NODE_SIZE;
     NODE_HEIGHT = this.NODE_SIZE * 3/4;
-    STARTING_Y = 50;
-
-    FIRST_PRINT_POS_X = 50;
-    PRINT_VERTICAL_GAP = 20;
-    PRINT_HORIZONTAL_GAP = 50;
-
-    MESSAGE_X = 10;
-    MESSAGE_Y = 10;
 
     constructor(am) {
         super();
@@ -110,25 +102,25 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Functions that do the actual work
+    // Print the values in the tree
 
-    doPrint(tree) {
-        this.cmd("Move", this.highlightID, this.getLabelX(tree, 0), tree.y);
+    doPrint(node) {
+        this.cmd("Move", this.highlightID, this.getLabelX(node, 0), node.y);
         this.cmd("Step");
-        for (let i = 0; i < tree.numChildren(); i++) {
-            const child = tree.children[i];
-            const labelX = this.getLabelX(tree, Math.min(i, tree.numLabels() - 1));
+        for (let i = 0; i < node.numChildren(); i++) {
+            const child = node.children[i];
+            const labelX = this.getLabelX(node, Math.min(i, node.numLabels() - 1));
             if (this.isTreeNode(child)) {
                 this.doPrint(child);
-                this.cmd("Move", this.highlightID, labelX, tree.y);
+                this.cmd("Move", this.highlightID, labelX, node.y);
                 this.cmd("Step");
-            } else if (0 < i && i < tree.numLabels()) {
-                this.cmd("Move", this.highlightID, labelX, tree.y);
+            } else if (0 < i && i < node.numLabels()) {
+                this.cmd("Move", this.highlightID, labelX, node.y);
                 this.cmd("Step");
             }
-            if (i < tree.numLabels()) {
+            if (i < node.numLabels()) {
                 const nextLabelID = this.nextIndex++;
-                this.cmd("CreateLabel", nextLabelID, tree.labels[i], labelX, tree.y);
+                this.cmd("CreateLabel", nextLabelID, node.labels[i], labelX, node.y);
                 this.cmd("SetForegroundColor", nextLabelID, this.PRINT_COLOR);
                 this.cmd("Move", nextLabelID, this.printPosX, this.printPosY);
                 this.cmd("Step");
@@ -282,7 +274,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Splitting a node
+    // Split a node
 
     split(node) {
         const nodeID = node.graphicID;
@@ -365,7 +357,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Deleting a node
+    // Delete a node
 
     doDelete(node, value) {
         if (this.preemptiveSplit()) {
@@ -435,9 +427,6 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////////////
-    // Repairing after deleting
-
     repairAfterDelete(node) {
         if (node.numLabels() >= this.getMinKeys()) return;
         const parent = node.parent;
@@ -462,7 +451,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Merging nodes
+    // Merge nodes
 
     mergeRight(node) {
         const nodeID = node.graphicID;
@@ -519,13 +508,9 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
         this.cmd("SetNumElements", parentID, parent.numLabels());
         this.cmd("SetHighlight", nodeID, 0);
         this.cmd("SetHighlight", parentID, 0);
-        // this.cmd("SetHighlight", rightSib.graphicID, 0);
-        // this.cmd("Step");
         this.removeTreeNode(rightSib);
-        // tree.numLabels() = tree.numLabels() + rightSib.numLabels() + 1;
         this.cmd("Move", moveLabelID, this.getLabelX(node, fromParentIndex), node.y);
         this.cmd("Step");
-        // resizeTree();
         this.cmd("Delete", moveLabelID);
         this.nextIndex--;
         this.cmd("SetText", nodeID, node.labels[fromParentIndex], fromParentIndex);
@@ -534,7 +519,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Stealing from sibling
+    // Steal from sibling
 
     stealFromRight(node, parentIndex) {
         const nodeID = node.graphicID;
@@ -679,7 +664,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Deletion using preemptive split/merge
+    // Delete using preemptive split/merge
 
     doPreemptiveDelete(node, value) {
         if (!node) return;
@@ -860,68 +845,72 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Validating the tree
+    // Validate the tree
 
     validateTree() {
-        // console.log("Validating tree", this.treeRoot);
+        if (!this.treeRoot) return;
+        super.validateTree();
         this.validateBTree(this.treeRoot, null, Number.MIN_SAFE_INTEGER);
     }
 
-    validateBTree(tree, parent, cmpVal) {
-        if (!tree) return [cmpVal, 0];
-        if (!(tree instanceof this.BTreeNode)) console.error("Not a B-tree node:", tree);
-        if (!tree.graphicID) console.error("Tree node missing ID:", tree);
-        if (tree.numLabels() + 1 !== tree.numChildren()) console.error(`Label/children mismatch, ${tree.numLabels()} + 1 != ${tree.numChildren()}`, tree);
-        if (tree.numLabels() === 0) console.error("Empty tree node", tree);
-        if (tree.numChildren() > this.getMaxDegree()) console.error(`Too high degree, ${tree.numChildren()} > ${this.getMaxDegree()}`, tree);
-        if (!(tree.parent === parent || (!tree.parent && !parent))) console.error("Parent mismatch:", tree, parent);
-        if (!tree.graphicID) console.error("Tree missing ID:", tree);
-        let height, childHeight;
-        for (let i = 0; i < tree.numChildren(); i++) {
-            const child = tree.children[i];
-            if (child) {
-                [cmpVal, childHeight] = this.validateBTree(child, tree, cmpVal);
-                if (height && childHeight !== height) console.error(`Height mismatch, ${height} != ${childHeight}`, tree);
+    validateBTree(node, parent, cmpVal) {
+        if (!node) return [cmpVal, 0];
+        if (!(node instanceof this.BTreeNode)) console.error("Not a B-tree node:", node);
+        if (!node.graphicID) console.error("Tree node missing ID:", node);
+        if (!(node.parent === parent || (!node.parent && !parent))) console.error("Parent mismatch:", node, parent);
+        if (node.labels.length !== node.numLabels()) console.error("N:o labels mismatch", node);
+        if (node.numLabels() === 0) console.error("Empty tree node", node);
+        if (node.numLabels() + 1 !== node.numChildren()) console.error(`N:o children mismatch, ${node.numLabels()} + 1 != ${node.numChildren()}`, node);
+        if (node.numChildren() > this.getMaxDegree()) console.error(`Too high degree, ${node.numChildren()} > ${this.getMaxDegree()}`, node);
+        let height = 0;
+        for (let i = 0; i <= node.numLabels(); i++) {
+            if (node.isLeaf()) {
+                if (node.children[i]) console.error(`Leaf has children`, node);
+            } else {
+                const child = node.children[i];
+                if (!child) console.error(`Null child n:o ${i}`, node);
+                let childHeight;
+                [cmpVal, childHeight] = this.validateBTree(child, node, cmpVal);
+                if (height && childHeight !== height) console.error(`Height mismatch, ${height} != ${childHeight}`, node);
                 height = childHeight;
             }
-            if (i < tree.numLabels()) {
-                const val = tree.labels[i];
-                if (this.compare(cmpVal, val) > 0) console.error(`Order mismatch, ${cmpVal} > ${val}`, tree);
+            if (i < node.numLabels()) {
+                const val = node.labels[i];
+                if (this.compare(cmpVal, val) > 0) console.error(`Order mismatch, ${cmpVal} > ${val}`, node);
                 cmpVal = val;
             }
         }
         return [cmpVal, height + 1];
     }
 
-
     ///////////////////////////////////////////////////////////////////////////////
-    // Resizing the tree
+    // Resize the tree
 
-    resizeWidths(tree) {
-        if (!tree) return 0;
-        tree.childWidths = 0;
-        for (const child of tree.getChildren()) {
-            tree.childWidths += this.resizeWidths(child);
+    resizeWidths(node) {
+        if (!node) return 0;
+        node.childWidths = 0;
+        for (const child of node.getChildren()) {
+            node.childWidths += this.resizeWidths(child);
         }
-        tree.width = Math.max(
-            tree.numLabels() * this.WIDTH_PER_ELEM,
-            tree.childWidths + tree.numLabels() * this.getSpacingX(),
+        node.width = Math.max(
+            node.numLabels() * this.WIDTH_PER_ELEM,
+            node.childWidths + node.numLabels() * this.getSpacingX(),
         );
-        const left = tree.getLeft()?.leftWidth || 0;
-        const right = tree.getRight()?.rightWidth || 0;
-        const mid = tree.width - left - right;
-        tree.leftWidth = mid / 2 + left;
-        tree.rightWidth = mid / 2 + right;
-        return tree.width;
+        const left = node.getLeft()?.leftWidth || 0;
+        const right = node.getRight()?.rightWidth || 0;
+        const mid = node.width - left - right;
+        node.leftWidth = mid / 2 + left;
+        node.rightWidth = mid / 2 + right;
+        return node.width;
     }
 
-    setNewPositions(tree, x, y) {
-        tree.y = y;
-        tree.x = x;
-        x -= tree.leftWidth;
-        const spacing = (tree.width - tree.childWidths) / tree.numLabels();
+    setNewPositions(node, x, y) {
+        node.y = y;
+        node.x = x;
+        x -= node.leftWidth;
+        const spacing = (node.width - node.childWidths) / node.numLabels();
         const nextY = y + this.NODE_HEIGHT + this.getSpacingY();
-        for (const child of tree.getChildren()) {
+        for (const child of node.getChildren()) {
             if (child) {
                 this.setNewPositions(child, x + child.leftWidth, nextY);
                 x += child.width;
@@ -931,7 +920,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Manipulating tree nodes
+    // Manipulate tree nodes
 
     createTreeNode(elemID, x, y, value) {
         const node = new this.BTreeNode(elemID, x, y, [value]);
@@ -946,7 +935,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
     }
 
     isTreeNode(node) {
-        return node instanceof this.BTreeNode && !node.phantomLeaf;
+        return node instanceof this.BTreeNode;
     }
 
     getParentIndex(node) {

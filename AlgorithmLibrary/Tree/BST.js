@@ -35,17 +35,17 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
     ///////////////////////////////////////////////////////////////////////////////
     // Print the values in the tree
 
-    doPrint(tree) {
-        this.cmd("Move", this.highlightID, tree.x, tree.y);
+    doPrint(node) {
+        this.cmd("Move", this.highlightID, node.x, node.y);
         this.cmd("Step");
-        if (this.isTreeNode(tree.left)) {
-            this.doPrint(tree.left);
-            this.cmd("Move", this.highlightID, tree.x, tree.y);
+        if (this.isTreeNode(node.left)) {
+            this.doPrint(node.left);
+            this.cmd("Move", this.highlightID, node.x, node.y);
             this.cmd("Step");
         }
 
         const nextLabelID = this.nextIndex++;
-        this.cmd("CreateLabel", nextLabelID, tree.data, tree.x, tree.y);
+        this.cmd("CreateLabel", nextLabelID, node.data, node.x, node.y);
         this.cmd("SetForegroundColor", nextLabelID, this.PRINT_COLOR);
         this.cmd("Move", nextLabelID, this.printPosX, this.printPosY);
         this.cmd("Step");
@@ -55,9 +55,9 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
             this.printPosY += this.PRINT_VERTICAL_GAP;
         }
 
-        if (this.isTreeNode(tree.right)) {
-            this.doPrint(tree.right);
-            this.cmd("Move", this.highlightID, tree.x, tree.y);
+        if (this.isTreeNode(node.right)) {
+            this.doPrint(node.right);
+            this.cmd("Move", this.highlightID, node.x, node.y);
             this.cmd("Step");
         }
     }
@@ -222,64 +222,53 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Validating the tree
+    // Validate the tree
 
     validateTree() {
-        // console.log("Validating tree", this.treeRoot);
+        if (!this.treeRoot) return;
+        super.validateTree();
         this.validateBST(this.treeRoot, null, Number.MIN_SAFE_INTEGER);
     }
 
-    validateBST(tree, parent, cmpVal) {
-        if (!tree) return cmpVal;
-        if (!(tree instanceof this.TreeNode)) {
-            console.error("Not a tree node:", tree);
-        }
-        if (!(tree.parent === parent || (!tree.parent && !parent))) {
-            console.error("Parent mismatch:", tree, parent);
-        }
-        if (!tree.graphicID) {
-            console.error("Tree node missing ID:", tree);
-        }
-        if (this.isTreeNode(tree.left)) {
-            cmpVal = this.validateBST(tree.left, tree, cmpVal);
-        }
-        if (this.compare(cmpVal, tree.data) > 0) {
-            console.error(`Order mismatch, ${cmpVal} > ${tree.data}`, tree);
-        }
-        cmpVal = tree.data;
-        if (this.isTreeNode(tree.right)) {
-            cmpVal = this.validateBST(tree.right, tree, cmpVal);
-        }
+    validateBST(node, parent, cmpVal) {
+        if (!node) return cmpVal;
+        if (!(node instanceof this.TreeNode)) console.error("Not a tree node:", node);
+        if (!node.graphicID) console.error("Tree node missing ID:", node);
+        if (node.parent !== parent && (node.parent || parent)) console.error("Parent mismatch:", node, parent);
+        if (this.isTreeNode(node.left)) cmpVal = this.validateBST(node.left, node, cmpVal);
+        if (this.compare(cmpVal, node.data) > 0) console.error(`Order mismatch, ${cmpVal} > ${node.data}`, node);
+        cmpVal = node.data;
+        if (this.isTreeNode(node.right)) cmpVal = this.validateBST(node.right, node, cmpVal);
         return cmpVal;
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Resizing the tree
+    // Resize the tree
 
-    resizeWidths(tree) {
-        if (!tree) return 0;
-        tree.width = Math.max(
+    resizeWidths(node) {
+        if (!node) return 0;
+        node.width = Math.max(
             this.NODE_SIZE,
-            this.resizeWidths(tree.left) + this.getSpacingX() + this.resizeWidths(tree.right),
+            this.resizeWidths(node.left) + this.getSpacingX() + this.resizeWidths(node.right),
         );
-        const left = tree.left?.leftWidth || 0;
-        const right = tree.right?.rightWidth || 0;
-        const mid = tree.width - left - right;
-        tree.leftWidth = mid / 2 + left;
-        tree.rightWidth = mid / 2 + right;
-        return tree.width;
+        const left = node.left?.leftWidth || 0;
+        const right = node.right?.rightWidth || 0;
+        const mid = node.width - left - right;
+        node.leftWidth = mid / 2 + left;
+        node.rightWidth = mid / 2 + right;
+        return node.width;
     }
 
-    setNewPositions(tree, x, y) {
-        tree.y = y;
-        tree.x = x;
+    setNewPositions(node, x, y) {
+        node.y = y;
+        node.x = x;
         const nextY = y + this.NODE_SIZE + this.getSpacingY();
-        if (tree.left) this.setNewPositions(tree.left, x - tree.leftWidth + tree.left.leftWidth, nextY);
-        if (tree.right) this.setNewPositions(tree.right, x + tree.rightWidth - tree.right.rightWidth, nextY);
+        if (node.left) this.setNewPositions(node.left, x - node.leftWidth + node.left.leftWidth, nextY);
+        if (node.right) this.setNewPositions(node.right, x + node.rightWidth - node.right.rightWidth, nextY);
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Manipulating tree nodes
+    // Manipulate tree nodes
 
     createTreeNode(elemID, x, y, value) {
         const node = new this.TreeNode(elemID, x, y, value);
@@ -346,20 +335,20 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
     };
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Rotating the tree
+    // Rotate the tree
     // These are not used by BST, but by self-balancing subclasses
     // The following rotations are implemented:
     //  - Single Rotate Left/Right (also known as Zig)
     //  - Double Rotate Left/Right (also known as Zig-Zag)
     //  - Zig-Zig Left/Right
 
-    resetHeight(tree) {
+    resetHeight(node) {
         // BSTs do not store the height in the nodes, so do nothing
     }
 
-    singleRotateLeft(tree) {
-        const A = tree;
-        const B = tree.right;
+    singleRotateLeft(node) {
+        const A = node;
+        const B = node.right;
         // const t1 = A.left;
         const t2 = B.left;
         // const t3 = B.right;
@@ -400,9 +389,9 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
         return B;
     }
 
-    singleRotateRight(tree) {
-        const A = tree.left;
-        const B = tree;
+    singleRotateRight(node) {
+        const A = node.left;
+        const B = node;
         // const t1 = A.left;
         const t2 = A.right;
         // const t3 = B.right;
@@ -443,10 +432,10 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
         return A;
     }
 
-    doubleRotateLeft(tree) {
-        const A = tree;
-        const B = tree.right.left;
-        const C = tree.right;
+    doubleRotateLeft(node) {
+        const A = node;
+        const B = node.right.left;
+        const C = node.right;
         // const t1 = A.left;
         const t2 = B.left;
         const t3 = B.right;
@@ -510,10 +499,10 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
         return B;
     }
 
-    doubleRotateRight(tree) {
-        const A = tree.left;
-        const B = tree.left.right;
-        const C = tree;
+    doubleRotateRight(node) {
+        const A = node.left;
+        const B = node.left.right;
+        const C = node;
         // const t1 = A.left;
         const t2 = B.left;
         const t3 = B.right;
@@ -577,10 +566,10 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
         return B;
     }
 
-    zigZigLeft(tree) {
-        const A = tree;
-        const B = tree.right;
-        const C = tree.right.right;
+    zigZigLeft(node) {
+        const A = node;
+        const B = node.right;
+        const C = node.right.right;
         // const t1 = A.left;
         const t2 = B.left;
         const t3 = C.left;
@@ -640,10 +629,10 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
         return C;
     }
 
-    zigZigRight(tree) {
-        const A = tree.left.left;
-        const B = tree.left;
-        const C = tree;
+    zigZigRight(node) {
+        const A = node.left.left;
+        const B = node.left;
+        const C = node;
         // const t1 = A.left;
         const t2 = A.right;
         const t3 = B.right;

@@ -262,7 +262,7 @@ Algorithm.Tree = class Tree extends Algorithm {
         return this.commands;
     }
 
-    doFind(value, tree, action = this.FIND_ACTION) {
+    doFind(value, node, action = this.FIND_ACTION) {
         console.error("Tree.doFind: must be overridden!");
     }
 
@@ -346,7 +346,7 @@ Algorithm.Tree = class Tree extends Algorithm {
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Calculating canvas positions and sizes
+    // Calculate canvas positions and sizes
 
     getTreeRootX() {
         return this.getCanvasWidth() / 2;
@@ -365,14 +365,15 @@ Algorithm.Tree = class Tree extends Algorithm {
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Validating the tree
+    // Validate the tree
 
-    validateTree(tree, parent = null) {
-        console.error("Tree.validateTree: must be overridden!");
+    validateTree() {
+        // console.log("Validating tree", this.treeRoot);
+        // This should be overridden by subclasses
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Resizing the tree
+    // Resize the tree
 
     resizeTree(animate = true) {
         if (!this.treeRoot) return;
@@ -388,24 +389,24 @@ Algorithm.Tree = class Tree extends Algorithm {
         this.animateNewPositions(this.treeRoot, cmd);
     }
 
-    resizeWidths(tree) {
+    resizeWidths(node) {
         console.error("Tree.resizeWidths: must be overridden!");
     }
 
-    setNewPositions(tree, x, y) {
+    setNewPositions(node, x, y) {
         console.error("Tree.setNewPositions: must be overridden!");
     }
 
-    animateNewPositions(tree, cmd) {
-        if (!tree) return;
-        for (const child of tree.getChildren()) {
+    animateNewPositions(node, cmd) {
+        if (!node) return;
+        for (const child of node.getChildren()) {
             this.animateNewPositions(child, cmd);
         }
-        this.cmd(cmd, tree.graphicID, tree.x, tree.y);
+        this.cmd(cmd, node.graphicID, node.x, node.y);
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Creating and removing tree nodes (must be overridden)
+    // Manipluate tree nodes (must be overridden)
 
     createTreeNode(elemID, x, y, value) {
         console.error("Tree.createTreeNode: must be overridden!");
