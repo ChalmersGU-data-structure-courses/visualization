@@ -318,7 +318,7 @@ class AnimationManager extends EventListener {
             try {
                 this.update();
                 this.objectManager.draw();
-            } catch {
+            } catch (error) {
                 this.stopTimer();
                 console.error(error);
             }

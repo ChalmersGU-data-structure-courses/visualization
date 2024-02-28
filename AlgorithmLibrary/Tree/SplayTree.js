@@ -31,6 +31,8 @@
 
 
 Algorithm.Tree.Splay = class SplayTree extends Algorithm.Tree.BST {
+    INSERT_TOPDOWN = true;
+    DELETE_TOPDOWN = true;
 
     ///////////////////////////////////////////////////////////////////////////////
     // After we have found or inserted an element
@@ -40,15 +42,30 @@ Algorithm.Tree.Splay = class SplayTree extends Algorithm.Tree.BST {
         this.splayUp(searchResult.node);
     }
 
-    postInsert(insertResult) {
-        this.splayUp(insertResult.node);
+    doInsert(node, value) {
+        const searchResult = this.doFind(node, value);
+        if (searchResult.found && !this.ALLOW_DUPLICATES) {
+            this.splayUp(searchResult.node);
+            this.cmd("SetText", this.messageID, `Node ${searchResult.node} already exists`);
+            this.cmd("Step");
+        } else {
+            const insertResult = super.doInsert(searchResult.node, value);
+            this.splayUp(insertResult.node);
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////////
     // Delete a value from the tree
 
-    doDelete(node) {
-        this.splayUp(node);
+    doDelete(node, value) {
+        const searchResult = this.doFind(node, value);
+        this.splayUp(searchResult.node);
+        if (!searchResult.found) {
+            this.cmd("SetText", this.messageID, `Node ${value} doesn't exist`);
+            this.cmd("Step");
+            return;
+        }
+
         this.cmd("SetText", this.messageID, "Removing root, leaving left and right trees");
         this.cmd("SetHighlight", this.treeRoot.graphicID, 1);
         this.cmd("Step");
@@ -68,10 +85,10 @@ Algorithm.Tree.Splay = class SplayTree extends Algorithm.Tree.BST {
             this.cmd("SetText", this.messageID, "Splay largest element in left tree to root");
             const right = this.treeRoot.right;
             const left = this.treeRoot.left;
-            const oldGraphicID = this.treeRoot.graphicID;
-            this.cmd("Disconnect", oldGraphicID, left.graphicID);
-            this.cmd("Disconnect", oldGraphicID, right.graphicID);
-            this.cmd("SetAlpha", oldGraphicID, 0);
+            const oldRoot = this.treeRoot;
+            this.cmd("Disconnect", oldRoot.graphicID, left.graphicID);
+            this.cmd("Disconnect", oldRoot.graphicID, right.graphicID);
+            this.cmd("SetAlpha", oldRoot.graphicID, 0);
             
             left.parent = null;
             let largestLeft = left;
@@ -96,7 +113,7 @@ Algorithm.Tree.Splay = class SplayTree extends Algorithm.Tree.BST {
             largestLeft.right = right;
             right.parent = largestLeft;
             this.treeRoot = largestLeft;
-            this.removeTreeNode(oldGraphicID);
+            this.removeTreeNode(oldRoot);
         }
         this.resizeTree();
     }
