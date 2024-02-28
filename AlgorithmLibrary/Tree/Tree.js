@@ -44,6 +44,7 @@ Algorithm.Tree = class Tree extends Algorithm {
 
     NODE_SIZE = 40;
     NODE_SPACING = 20;
+    HIGHLIGHT_CIRCLE_WIDTH = this.NODE_SIZE;
 
     FIRST_PRINT_POS_X = 50;
     PRINT_VERTICAL_GAP = 20;
@@ -52,7 +53,7 @@ Algorithm.Tree = class Tree extends Algorithm {
     MESSAGE_X = 10;
     MESSAGE_Y = 10;
 
-    ALLOW_DUPLICATES = true;
+    // ALLOW_DUPLICATES = true;
 
     INSERT_MANY_VALUES = [
         "A B C D E F G H J K",
@@ -62,12 +63,6 @@ Algorithm.Tree = class Tree extends Algorithm {
         "R E C U R S I O N",
         5,
     ];
-
-
-    // Actions used by doFind and postFind:
-    FIND_ACTION = "find";
-    INSERT_ACTION = "insert";
-    DELETE_ACTION = "delete";
 
 
     constructor(am) {
@@ -91,6 +86,7 @@ Algorithm.Tree = class Tree extends Algorithm {
 
         this.highlightID = this.nextIndex++;
         this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, 0, 0);
+        this.cmd("SetWidth", this.highlightID, this.HIGHLIGHT_CIRCLE_WIDTH);
         this.cmd("SetHighlight", this.highlightID, true);
         this.cmd("SetAlpha", this.highlightID, 0);
 
@@ -267,19 +263,19 @@ Algorithm.Tree = class Tree extends Algorithm {
         this.commands = [];
         this.cmd("SetText", this.messageID, `Searching for ${value}`);
         this.cmd("Step");
-        const searchResult = this.doFind(value, this.treeRoot, this.FIND_ACTION);
-        this.postFind(searchResult, this.FIND_ACTION);
+        const searchResult = this.doFind(this.treeRoot, value);
+        this.postFind(searchResult);
         this.resizeTree();
         this.validateTree();
         this.cmd("SetText", this.messageID, `${value} ${searchResult.found ? "found" : "not found"}`);
         return this.commands;
     }
 
-    doFind(value, node, action = this.FIND_ACTION) {
+    doFind(node, value) {
         console.error("Tree.doFind: must be overridden!");
     }
 
-    postFind(searchResult, action = this.FIND_ACTION) {
+    postFind(searchResult) {
         // BST's do not do any post-processing
     }
 
@@ -302,13 +298,16 @@ Algorithm.Tree = class Tree extends Algorithm {
                 this.cmd("Step");
                 this.postInsert({node: elem});
             } else {
-                const searchResult = this.doFind(value, this.treeRoot, this.INSERT_ACTION);
-                this.postFind(searchResult, this.INSERT_ACTION);
-                if (searchResult.found && !this.ALLOW_DUPLICATES) {
-                    this.cmd("SetText", this.messageID, `Node ${searchResult.node} already exists`);
+                let node = this.treeRoot, found = false;
+                if (!this.INSERT_TOPDOWN) {
+                    const searchResult = this.doFind(this.treeRoot, value);
+                    node = searchResult.node, found = searchResult.found;
+                }
+                if (found && !this.ALLOW_DUPLICATES) {
+                    this.cmd("SetText", this.messageID, `Node ${node} already exists`);
                     this.cmd("Step");
                 } else {
-                    const insertResult = this.doInsert(value, searchResult.node);
+                    const insertResult = this.doInsert(node, value);
                     this.postInsert(insertResult);
                 }
             }
@@ -319,7 +318,7 @@ Algorithm.Tree = class Tree extends Algorithm {
         return this.commands;
     }
 
-    doInsert(value, node) {
+    doInsert(node, value) {
         console.error("Tree.doInsert: must be overridden!");
     }
 
@@ -335,17 +334,20 @@ Algorithm.Tree = class Tree extends Algorithm {
         this.commands = [];
         this.cmd("SetText", this.messageID, `Deleting ${value}`);
         this.cmd("Step");
-        const searchResult = this.doFind(value, this.treeRoot, this.DELETE_ACTION);
-        this.postFind(searchResult, this.DELETE_ACTION);
-        if (!searchResult.found) {
-            this.cmd("SetText", this.messageID, `Node ${value} doesn't exist`);
-        } else {
-            const deleteResult = this.doDelete(searchResult.node, value);
-            this.postDelete(deleteResult);
-            this.resizeTree();
-            this.validateTree();
+        let node = this.treeRoot, found = true;
+        if (!this.DELETE_TOPDOWN) {
+            const searchResult = this.doFind(this.treeRoot, value);
+            node = searchResult.node, found = searchResult.found;
         }
-        this.cmd("Step");
+        if (!found) {
+            this.cmd("SetText", this.messageID, `Node ${value} doesn't exist`);
+            this.cmd("Step");
+        } else {
+            const deleteResult = this.doDelete(node, value);
+            this.postDelete(deleteResult);
+        }
+        this.resizeTree();
+        this.validateTree();
         this.cmd("SetText", this.messageID, "");
         return this.commands;
     }

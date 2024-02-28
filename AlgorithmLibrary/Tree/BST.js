@@ -31,6 +31,8 @@
 
 
 Algorithm.Tree.BST = class BST extends Algorithm.Tree {
+    INSERT_TOPDOWN = false;
+    DELETE_TOPDOWN = false;
 
     ///////////////////////////////////////////////////////////////////////////////
     // Print the values in the tree
@@ -55,9 +57,9 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
     ///////////////////////////////////////////////////////////////////////////////
     // Find a value in the tree
 
-    doFind(value, node, action = this.FIND_ACTION) {
+    doFind(node, value) {
         const cmp = this.compare(value, node.data);
-        if (cmp === 0 && !(action === this.INSERT_ACTION && this.ALLOW_DUPLICATES)) {
+        if (cmp === 0) {
             this.cmd("SetHighlight", node.graphicID, 1);
             this.cmd("Step");
             this.cmd("SetHighlight", node.graphicID, 0);
@@ -86,13 +88,13 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
         this.cmd("SetText", this.messageID, "");
         this.cmd("Step");
         this.cmd("SetAlpha", this.highlightID, 0);
-        return this.doFind(value, child, action);
+        return this.doFind(child, value);
     }
 
     ///////////////////////////////////////////////////////////////////////////////
     // Insert a value just below a node
 
-    doInsert(value, parent) {
+    doInsert(parent, value) {
         const cmp = this.compare(value, parent.data);
         const cmpStr = cmp === 0 ? "=" : cmp < 0 ? "<" : ">";
         const dirStr = cmp < 0 ? "left" : "right";

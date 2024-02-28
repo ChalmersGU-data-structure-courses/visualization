@@ -36,31 +36,19 @@ Algorithm.Tree.Splay = class SplayTree extends Algorithm.Tree.BST {
     // After we have found or inserted an element
     // we splay the last visited node up to the top
 
-    postFind(searchResult, action) {
-        const node = searchResult.node;
-        if (action === this.INSERT_ACTION || node === this.treeRoot) return;
-        this.cmd("SetText", this.messageID, `Now splaying ${node} up to the root`);
-        this.cmd("SetHighlight", node.graphicID, 1);
-        this.cmd("Step");
-        this.cmd("SetHighlight", node.graphicID, 0);
-        this.splayUp(node);
+    postFind(searchResult) {
+        this.splayUp(searchResult.node);
     }
 
     postInsert(insertResult) {
-        const node = insertResult.node;
-        if (node === this.treeRoot) return;
-        this.cmd("SetText", this.messageID, `Now splaying ${node} up to the root`);
-        this.cmd("SetHighlight", node.graphicID, 1);
-        this.cmd("Step");
-        this.cmd("SetHighlight", node.graphicID, 0);
-        this.splayUp(node);
+        this.splayUp(insertResult.node);
     }
 
     ///////////////////////////////////////////////////////////////////////////////
     // Delete a value from the tree
 
     doDelete(node) {
-        if (this.treeRoot !== node) console.error(`The node ${node} is not splayed to the root!`);
+        this.splayUp(node);
         this.cmd("SetText", this.messageID, "Removing root, leaving left and right trees");
         this.cmd("SetHighlight", this.treeRoot.graphicID, 1);
         this.cmd("Step");
@@ -117,26 +105,35 @@ Algorithm.Tree.Splay = class SplayTree extends Algorithm.Tree.BST {
     // Splay a node to the root of the tree
 
     splayUp(node) {
+        if (node === this.treeRoot) return;
+        this.cmd("SetText", this.messageID, `Now splaying ${node} up to the root`);
+        this.cmd("SetHighlight", node.graphicID, 1);
+        this.cmd("Step");
+        this.cmd("SetHighlight", node.graphicID, 0);
+        this.doSplayUp(node);
+    }
+
+    doSplayUp(node) {
         if (!node.parent) return;
         if (node.isLeftChild()) {
             if (!node.parent.parent) {
                 this.singleRotateRight(node.parent);
             } else if (node.parent.isRightChild()) {
                 this.doubleRotateLeft(node.parent.parent);
-                this.splayUp(node);
+                this.doSplayUp(node);
             } else {
                 this.zigZigRight(node.parent.parent);
-                this.splayUp(node);
+                this.doSplayUp(node);
             }
         } else { // node.isRightChild()
             if (!node.parent.parent) {
                 this.singleRotateLeft(node.parent);
             } else if (node.parent.isLeftChild()) {
                 this.doubleRotateRight(node.parent.parent);
-                this.splayUp(node);
+                this.doSplayUp(node);
             } else {
                 this.zigZigLeft(node.parent.parent);
-                this.splayUp(node);
+                this.doSplayUp(node);
             }
         }
     }
