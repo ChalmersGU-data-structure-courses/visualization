@@ -53,7 +53,7 @@ Algorithm.Tree = class Tree extends Algorithm {
     MESSAGE_X = 10;
     MESSAGE_Y = 10;
 
-    // ALLOW_DUPLICATES = true;
+    ALLOW_DUPLICATES = false;
 
     INSERT_MANY_VALUES = [
         "A B C D E F G H J K",
