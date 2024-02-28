@@ -40,6 +40,14 @@ AnimatedObject.HighlightCircle = class HighlightCircle extends AnimatedObject {
         this.radius = radius;
     }
 
+    getWidth() {
+        return this.radius * 2;
+    }
+
+    setWidth(newWidth) {
+        this.radius = newWidth / 2;
+    }
+
     draw(ctx) {
         if (!this.addedToScene) return;
         ctx.globalAlpha = this.alpha;
