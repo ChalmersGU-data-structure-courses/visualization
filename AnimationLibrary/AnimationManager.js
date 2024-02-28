@@ -315,8 +315,13 @@ class AnimationManager extends EventListener {
             // We need to set the timeout *first*, otherwise if we
             // try to clear it later, we get behavior we don't want ...
             this.startTimer();
-            this.update();
-            this.objectManager.draw();
+            try {
+                this.update();
+                this.objectManager.draw();
+            } catch {
+                this.stopTimer();
+                console.error(error);
+            }
         }, 30);
     }
 
