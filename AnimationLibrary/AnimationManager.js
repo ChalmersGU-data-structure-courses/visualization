@@ -601,7 +601,7 @@ class AnimationManager extends EventListener {
 
         while (this.currentAnimation < this.AnimationSteps.length && !foundBreak) {
             const args = this.AnimationSteps[this.currentAnimation].split("<;>");
-            // console.log(...args);
+            if (debug) console.log("-->", ...args);
             const cmd = args.shift().toUpperCase();
             const id = Number(args.shift());
             if (cmd === "CREATECIRCLE") {

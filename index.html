@@ -103,9 +103,10 @@
 <script type="text/javascript" src="AlgorithmLibrary/DisjointSet.js"> </script>
 
 <script>
-var currentAlgorithm; // For debugging purposes
+var currentAlgorithm, debug; // For debugging purposes
 
 function initAlgorithm() {
+    debug = new URL(window.location).searchParams.get("debug");
     const aniManager = initCanvas();
     const algoName = new URL(window.location).searchParams.get("algorithm");
     const algoSelect = document.getElementById("algorithmSelector");
@@ -130,7 +131,9 @@ function initAlgorithm() {
 function selectAlgorithm() {
     const algoName = document.getElementById("algorithmSelector").value;
     if (algoName) {
-        const url = window.location.pathname + "?" + new URLSearchParams({algorithm: algoName});
+        let params = {algorithm: algoName};
+        if (debug) params.debug = debug;
+        const url = window.location.pathname + "?" + new URLSearchParams(params);
         window.history.replaceState("", "", url);
     }
     initAlgorithm();
