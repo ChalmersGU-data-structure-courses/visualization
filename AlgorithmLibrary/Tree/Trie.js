@@ -38,6 +38,7 @@ Algorithm.Tree.Trie = class Trie extends Algorithm.Tree {
     NODE_SIZE = 30;
     HIGHLIGHT_CIRCLE_WIDTH = this.NODE_SIZE;
     NODE_SPACING_X = 10;
+    NODE_SPACING_Y = 20;
     NEW_NODE_Y = 3 * this.TREE_ROOT_Y;
 
     INSERT_MANY_VALUES = [
@@ -102,9 +103,9 @@ Algorithm.Tree.Trie = class Trie extends Algorithm.Tree {
         for (const child of node.getChildren()) {
             const stringSoFar2 = stringSoFar + child.value;
             const nextLabelID = this.nextIndex++;
-            const fromx = (child.x + node.x) / 2 + this.NODE_SIZE / 2;
-            const fromy = (child.y + node.y) / 2;
-            this.cmd("CreateLabel", nextLabelID, child.value, fromx, fromy, 0);
+            const fromX = (child.x + node.x) / 2;
+            const fromY = (child.y + node.y) / 2;
+            this.cmd("CreateLabel", nextLabelID, child.value, fromX, fromY, 0);
             this.cmd("SetForegroundColor", nextLabelID, this.PRINT_COLOR);
             this.cmd("MoveToAlignRight", nextLabelID, this.messageExtraID);
             this.cmd("Move", this.highlightID, child.x, child.y);
@@ -112,7 +113,6 @@ Algorithm.Tree.Trie = class Trie extends Algorithm.Tree {
             this.cmd("Delete", nextLabelID);
             this.nextIndex--;
             this.cmd("SetText", this.messageExtraID, stringSoFar2);
-
             this.doPrint(child, stringSoFar2);
             this.cmd("Move", this.highlightID, node.x, node.y);
             this.cmd("SetText", this.messageExtraID, stringSoFar);
@@ -244,7 +244,7 @@ Algorithm.Tree.Trie = class Trie extends Algorithm.Tree {
                 this.cmd("Step");
                 this.cmd("SetText", this.messageNextID, "");
             }
-            this.doInsert(word.toUpperCase(), this.treeRoot);
+            this.doInsert(word, this.treeRoot);
             this.cmd("SetText", this.messageID, "");
             this.cmd("SetText", this.messageExtraID, "");
             this.cmd("SetText", this.messageNextID, "");

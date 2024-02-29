@@ -30,45 +30,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-Algorithm.Tree.Ternary = class TernaryTree extends Algorithm.Tree {
-    FOREGROUND_COLOR = "#007700";
-    BACKGROUND_COLOR = "#CCFFCC";
-
+Algorithm.Tree.Ternary = class TernaryTree extends Algorithm.Tree.Trie {
     CENTER_LINK_COLOR = this.FOREGROUND_COLOR;
     SIDE_LINK_COLOR = "#8888AA";
-    HIGHLIGHT_CIRCLE_COLOR = this.FOREGROUND_COLOR;
-    PRINT_COLOR = this.FOREGROUND_COLOR;
-    TRUE_COLOR = this.BACKGROUND_COLOR;
-    FALSE_COLOR = "#FFFFFF";
 
-    NODE_WIDTH = 30;
-
-    WIDTH_DELTA = 50;
-    HEIGHT_DELTA = 50;
-    STARTING_Y = 20;
-    LEFT_MARGIN = 300;
-    NEW_NODE_Y = 100;
-    NEW_NODE_X = 50;
-    FIRST_PRINT_POS_X = 50;
-    PRINT_VERTICAL_GAP = 20;
-    PRINT_HORIZONTAL_GAP = 50;
-
-
-    TernaryNode = class TernaryNode {
-        constructor(val, id, initialX, initialY) {
-            this.nextChar = val;
-            this.x = initialX;
-            this.y = initialY;
-            this.graphicID = id;
-            this.left = null;
-            this.center = null;
-            this.right = null;
-            this.leftWidth = 0;
-            this.centerWidth = 0;
-            this.rightWwidth = 0;
-            this.parent = null;
-        }
-    };
+    CURVE = 0.01;
 
 
     constructor(am) {
@@ -76,625 +42,388 @@ Algorithm.Tree.Ternary = class TernaryTree extends Algorithm.Tree {
         this.init(am);
     }
 
-    init(am) {
-        super.init(am);
-        this.addControls();
+    ///////////////////////////////////////////////////////////////////////////////
+    // Delete a node from the tree
 
-        this.nextIndex = 0;
-        this.commands = [];
-        this.cmd("CreateLabel", 0, "", 20, 10, 0);
-        this.cmd("CreateLabel", 1, "", 20, 10, 0);
-        this.cmd("CreateLabel", 2, "", 20, 30, 0);
-        this.nextIndex = 3;
-        this.root = null;
-        this.animationManager.StartNewAnimation(this.commands);
-        this.animationManager.skipForward();
-        this.animationManager.clearHistory();
-
-        this.sizeChanged();
-    }
-
-    sizeChanged() {
-        const w = this.getCanvasWidth();
-        const h = this.getCanvasHeight();
-
-        this.startingX = w / 2;
-        this.firstPrintPosY = h - 2 * this.PRINT_VERTICAL_GAP;
-        this.printMax = w - 10;
-
-        this.implementAction(() => {
-            this.commands = [];
-            this.resizeTree();
-            return this.commands;
-        });
-    }
-
-    addControls() {
-        this.insertField = this.addControlToAlgorithmBar("Text", "", {maxlength: 12, size: 12});
-        this.addReturnSubmit(this.insertField, "ALPHA", this.insertCallback.bind(this));
-        this.insertButton = this.addButtonToAlgorithmBar("Insert");
-        this.insertButton.onclick = this.insertCallback.bind(this);
-
-        this.deleteField = this.addControlToAlgorithmBar("Text", "", {maxlength: 12, size: 12});
-        this.addReturnSubmit(this.deleteField, "ALPHA", this.deleteCallback.bind(this));
-        this.deleteButton = this.addButtonToAlgorithmBar("Delete");
-        this.deleteButton.onclick = this.deleteCallback.bind(this);
-
-        this.findField = this.addControlToAlgorithmBar("Text", "", {maxlength: 12, size: 12});
-        this.addReturnSubmit(this.findField, "ALPHA", this.findCallback.bind(this));
-        this.findButton = this.addButtonToAlgorithmBar("Find");
-        this.findButton.onclick = this.findCallback.bind(this);
-
-        this.printButton = this.addButtonToAlgorithmBar("Print");
-        this.printButton.onclick = this.printCallback.bind(this);
-    }
-
-    reset() {
-        this.nextIndex = 3;
-        this.root = null;
-    }
-
-    insertCallback(event) {
-        const insertedValue = this.insertField.value;
-        if (insertedValue !== "") {
-            this.insertField.value = "";
-            this.implementAction(this.add.bind(this), insertedValue);
-        }
-    }
-
-    deleteCallback(event) {
-        const deletedValue = this.deleteField.value;
-        if (deletedValue !== "") {
-            this.deleteField.value = "";
-            this.implementAction(this.deleteElement.bind(this), deletedValue);
-        }
-    }
-
-    cleanupAfterDelete(tree) {
-        if (tree == null) {
-            return;
-        } else if (tree.center != null) {
-            this.cmd("SetHighlight", tree.graphicID, 1);
-            this.cmd("SetText", 2, ["Cleaning up after delete ...", "Tree has center child, no more cleanup required"]);
-            this.cmd("Step");
-            this.cmd("SetText", 2, "");
-            this.cmd("SetHighlight", tree.graphicID, 0);
-            return;
-        } else if (tree.center == null && tree.right == null && tree.left == null && tree.isword) {
-            this.cmd("SetHighlight", tree.graphicID, 1);
-            this.cmd("SetText", 2, ["Cleaning up after delete ...", "Leaf at end of word, no more cleanup required"]);
-            this.cmd("Step");
-            this.cmd("SetText", 2, "");
-            this.cmd("SetHighlight", tree.graphicID, 0);
-            return;
-        } else if (tree.center == null && tree.left == null && tree.right == null) {
-            this.cmd("SetText", 2, "Cleaning up after delete ...");
-            this.cmd("SetHighlight", tree.graphicID, 1);
-            this.cmd("Step");
-            if (tree.parent == null) {
-                this.root = null;
-            } else if (tree.parent.left === tree) {
-                this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
-                tree.parent.left = null;
-            } else if (tree.parent.right === tree) {
-                this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
-                tree.parent.right = null;
-            } else if (tree.parent.center === tree) {
-                this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
-                tree.parent.center = null;
-                tree.parent.charAt = " ";
-                this.cmd("SetText", tree.parent.graphicID, " ");
-            }
-            this.cmd("Delete", tree.graphicID);
-            this.cleanupAfterDelete(tree.parent);
-        } else if ((tree.left == null && tree.center == null) || (tree.right == null && tree.center == null)) {
-            let child = null;
-            if (tree.left != null) {
-                child = tree.left;
-            } else {
-                child = tree.right;
-            }
-            this.cmd("Disconnect", tree.graphicID, child.graphicID);
-            if (tree.parent == null) {
-                this.cmd("Delete", tree.graphicID);
-                this.root = child;
-                child.parent = null;
-            } else if (tree.parent.left === tree) {
-                this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
-                this.cmd("Connect", tree.parent.graphicID, child.graphicID, this.SIDE_LINK_COLOR, 0.0001, false, `<${tree.parent.nextChar}`);
-                tree.parent.left = child;
-                child.parent = tree.parent;
-                this.cmd("Step");
-                this.cmd("Delete", tree.graphicID);
-            } else if (tree.parent.right === tree) {
-                this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
-                this.cmd("Connect", tree.parent.graphicID, child.graphicID, this.SIDE_LINK_COLOR, -0.0001, false, `>${tree.parent.nextChar}`);
-                tree.parent.right = child;
-                child.parent = tree.parent;
-                this.cmd("Step");
-                this.cmd("Delete", tree.graphicID);
-            } else if (tree.parent.center === tree) {
-                this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
-                this.cmd("Connect", tree.parent.graphicID, child.graphicID, this.CENTER_LINK_COLOR, 0.0001, false, `=${tree.parent.nextChar}`);
-                child.parent = tree.parent;
-                tree.parent.center = child;
-                this.cmd("Step");
-                this.cmd("Delete", tree.graphicID);
-            } else {
-                throw ("What??");
-            }
-        } else if (tree.left != null && tree.center == null && tree.right != null) {
-            let node = tree.left;
-            this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
-            this.cmd("SetWidth", this.highlightID, this.NODE_WIDTH);
-            this.cmd("Move", this.highlightID, node.x, node.y);
-            this.cmd("Step");
-            while (node.right != null) {
-                node = node.right;
-                this.cmd("Move", this.highlightID, node.x, node.y);
-                this.cmd("Step");
-            }
-            if (tree.left !== node) {
-                this.cmd("Disconnect", node.parent.graphicID, node.graphicID);
-                node.parent.right = node.left;
-                if (node.left != null) {
-                    node.left.parent = node.parent;
-                    this.cmd("Disconnect", node.graphicID, node.left.graphicID);
-                    this.cmd("Connect", node.parent.graphicID, node.left.graphicID, this.CENTER_LINK_COLOR, -0.0001, false, `>${node.parent.nextChar}`);
-                }
-                this.cmd("Disconnect", tree.graphicID, tree.right.graphicID);
-                this.cmd("Disconnect", tree.graphicID, tree.left.graphicID);
-                node.right = tree.right;
-                node.left = tree.left;
-                tree.right.parent = node;
-                tree.left.parent = node;
-                this.cmd("Connect", node.graphicID, node.left.graphicID, this.SIDE_LINK_COLOR, 0.0001, false, `<${node.nextChar}`);
-                this.cmd("Connect", node.graphicID, node.right.graphicID, this.SIDE_LINK_COLOR, -0.0001, false, `>${node.nextChar}`);
-            } else {
-                this.cmd("Disconnect", tree.graphicID, tree.left.graphicID);
-                this.cmd("Disconnect", tree.graphicID, tree.right.graphicID);
-                node.right = tree.right;
-                node.right.parent = node;
-                this.cmd("Connect", node.graphicID, node.right.graphicID, this.SIDE_LINK_COLOR, -0.0001, false, `>${node.nextChar}`);
-            }
-            this.cmd("Delete", this.highlightID);
-            this.cmd("Delete", tree.graphicID);
-            this.cmd("Step");
-            node.parent = tree.parent;
-            if (node.parent == null) {
-                this.root = node;
-            } else {
-                this.cmd("Disconnect", tree.parent.graphicID, tree.graphicID);
-                if (tree.parent.left === tree) {
-                    tree.parent.left = node;
-                    node.parent = tree.parent;
-                    this.cmd("Connect", node.parent.graphicID, node.graphicID, this.SIDE_LINK_COLOR, 0.0001, false, `<${node.parent.nextChar}`);
-                } else if (tree.parent.right === tree) {
-                    tree.parent.right = node;
-                    node.parent = tree.parent;
-                    this.cmd("Connect", node.parent.graphicID, node.graphicID, this.SIDE_LINK_COLOR, -0.0001, false, `>${node.parent.nextChar}`);
-                } else if (tree.parent.center === tree) {
-                    tree.parent.center = node;
-                    node.parent = tree.parent;
-                    this.cmd("Connect", node.parent.graphicID, node.graphicID, this.CENTER_LINK_COLOR, 0.0001, false, `=${node.parent.nextChar}`);
-                }
-            }
-        }
-    }
-
-    deleteElement(word) {
-        this.commands = [];
-        this.cmd("SetText", 0, "Deleting: ");
-        this.cmd("SetText", 1, `"${word}"`);
-        this.cmd("AlignRight", 1, 0);
-        this.cmd("Step");
-
-        const node = this.doFind(this.root, word);
-        if (node != null) {
+    cleanupAfterDelete(node) {
+        if (!node) return;
+        if (node.center) {
             this.cmd("SetHighlight", node.graphicID, 1);
-            this.cmd("SetText", 2, `Found "${word}", setting value in tree to False`);
+            this.cmd("SetText", this.messageNextID, ["Cleaning up after delete ...", "Tree has center child, no more cleanup required"]);
             this.cmd("Step");
-            this.cmd("SetBackgroundColor", node.graphicID, this.FALSE_COLOR);
-            node.isword = false;
+            this.cmd("SetText", this.messageNextID, "");
             this.cmd("SetHighlight", node.graphicID, 0);
-            this.cleanupAfterDelete(node);
-            this.resizeTree();
-        } else {
-            this.cmd("SetText", 2, `"${word}" not in tree, nothing to delete`);
-            this.cmd("Step");
-            this.cmd("SetHighlightIndex", 1, -1);
+            return;
         }
-        this.cmd("SetText", 0, "");
-        this.cmd("SetText", 1, "");
-        this.cmd("SetText", 2, "");
-        return this.commands;
-    }
-
-    printCallback(event) {
-        this.implementAction(this.printTree.bind(this), "");
-    }
-
-    printTree(unused) {
-        this.commands = [];
-
-        if (this.root != null) {
-            this.highlightID = this.nextIndex++;
-            this.printLabel1 = this.nextIndex++;
-            this.printLabel2 = this.nextIndex++;
-            const firstLabel = this.nextIndex++;
-            this.cmd("CreateLabel", firstLabel, "Output: ", this.FIRST_PRINT_POS_X, this.firstPrintPosY);
-            this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, this.root.x, this.root.y);
-            this.cmd("SetWidth", this.highlightID, this.NODE_WIDTH);
-            this.cmd("CreateLabel", this.printLabel1, "Current String: ", 20, 10, 0);
-            this.cmd("CreateLabel", this.printLabel2, "", 20, 10, 0);
-            this.cmd("AlignRight", this.printLabel2, this.printLabel1);
-            this.xPosOfNextLabel = this.FIRST_PRINT_POS_X;
-            this.yPosOfNextLabel = this.firstPrintPosY;
-            this.printTreeRec(this.root, "");
-
-            // this.cmd("SetText", this.printLabel1, "About to delete");
-            // this.cmd("Step")
-            this.cmd("Delete", this.highlightID);
-            this.cmd("Delete", this.printLabel1);
-            this.cmd("Delete", this.printLabel2);
+        if (node.isLeaf() && node.isword) {
+            this.cmd("SetHighlight", node.graphicID, 1);
+            this.cmd("SetText", this.messageNextID, ["Cleaning up after delete ...", "Leaf at end of word, no more cleanup required"]);
             this.cmd("Step");
-
-            for (let i = firstLabel; i < this.nextIndex; i++) {
-                this.cmd("Delete", i);
+            this.cmd("SetText", this.messageNextID, "");
+            this.cmd("SetHighlight", node.graphicID, 0);
+            return;
+        }
+        if (node.isLeaf()) {
+            this.cmd("SetText", this.messageNextID, "Cleaning up after delete ...");
+            this.cmd("SetHighlight", node.graphicID, 1);
+            this.cmd("Step");
+            if (!node.parent) {
+                this.treeRoot = null;
+            } else if (node.parent.left === node) {
+                this.cmd("Disconnect", node.parent.graphicID, node.graphicID);
+                node.parent.left = null;
+            } else if (node.parent.right === node) {
+                this.cmd("Disconnect", node.parent.graphicID, node.graphicID);
+                node.parent.right = null;
+            } else if (node.parent.center === node) {
+                this.cmd("Disconnect", node.parent.graphicID, node.graphicID);
+                node.parent.center = null;
+                node.parent.value = "";
+                this.cmd("SetText", node.parent.graphicID, "");
             }
-            this.nextIndex = this.highlightID; /// Reuse objects.  Not necessary.
+            this.removeTreeNode(node);
+            this.cleanupAfterDelete(node.parent);
+        } else if ((!node.left && !node.center) || (!node.right && !node.center)) {
+            const child = node.left || node.right;
+            this.cmd("Disconnect", node.graphicID, child.graphicID);
+            if (node.parent == null) {
+                this.cmd("Delete", node.graphicID);
+                this.treeRoot = child;
+                child.parent = null;
+            } else if (node.parent.left === node) {
+                this.cmd("Disconnect", node.parent.graphicID, node.graphicID);
+                this.cmd("Connect", node.parent.graphicID, child.graphicID, this.SIDE_LINK_COLOR, this.CURVE, true, `<${node.parent.value}`);
+                node.parent.left = child;
+                child.parent = node.parent;
+                this.cmd("Step");
+                this.cmd("Delete", node.graphicID);
+            } else if (node.parent.right === node) {
+                this.cmd("Disconnect", node.parent.graphicID, node.graphicID);
+                this.cmd("Connect", node.parent.graphicID, child.graphicID, this.SIDE_LINK_COLOR, -this.CURVE, true, `>${node.parent.value}`);
+                node.parent.right = child;
+                child.parent = node.parent;
+                this.cmd("Step");
+                this.cmd("Delete", node.graphicID);
+            } else if (node.parent.center === node) {
+                this.cmd("Disconnect", node.parent.graphicID, node.graphicID);
+                this.cmd("Connect", node.parent.graphicID, child.graphicID, this.CENTER_LINK_COLOR, this.CURVE, true, `=${node.parent.value}`);
+                child.parent = node.parent;
+                node.parent.center = child;
+                this.cmd("Step");
+                this.cmd("Delete", node.graphicID);
+            }
+        } else if (node.left && !node.center && node.right) {
+            let child = node.left;
+            this.cmd("SetAlpha", this.highlightID, 1);
+            this.cmd("SetPosition", this.highlightID, node.x, node.y);
+            this.cmd("Move", this.highlightID, child.x, child.y);
+            this.cmd("Step");
+            while (child.right) {
+                child = child.right;
+                this.cmd("Move", this.highlightID, child.x, child.y);
+                this.cmd("Step");
+            }
+            if (node.left !== child) {
+                this.cmd("Disconnect", child.parent.graphicID, child.graphicID);
+                child.parent.right = child.left;
+                if (child.left) {
+                    child.left.parent = child.parent;
+                    this.cmd("Disconnect", child.graphicID, child.left.graphicID);
+                    this.cmd("Connect", child.parent.graphicID, child.left.graphicID, this.CENTER_LINK_COLOR, -this.CURVE, true, `>${child.parent.value}`);
+                }
+                this.cmd("Disconnect", node.graphicID, node.right.graphicID);
+                this.cmd("Disconnect", node.graphicID, node.left.graphicID);
+                child.right = node.right;
+                child.left = node.left;
+                node.right.parent = child;
+                node.left.parent = child;
+                this.cmd("Connect", child.graphicID, child.left.graphicID, this.SIDE_LINK_COLOR, this.CURVE, true, `<${child.value}`);
+                this.cmd("Connect", child.graphicID, child.right.graphicID, this.SIDE_LINK_COLOR, -this.CURVE, true, `>${child.value}`);
+            } else {
+                this.cmd("Disconnect", node.graphicID, node.left.graphicID);
+                this.cmd("Disconnect", node.graphicID, node.right.graphicID);
+                child.right = node.right;
+                child.right.parent = child;
+                this.cmd("Connect", child.graphicID, child.right.graphicID, this.SIDE_LINK_COLOR, -this.CURVE, true, `>${child.value}`);
+            }
+            this.cmd("SetAlpha", this.highlightID, 0);
+            this.removeTreeNode(node);
+            this.cmd("Step");
+            child.parent = node.parent;
+            if (!child.parent) {
+                this.treeRoot = child;
+            } else {
+                this.cmd("Disconnect", node.parent.graphicID, node.graphicID);
+                if (node.parent.left === node) {
+                    node.parent.left = child;
+                    child.parent = node.parent;
+                    this.cmd("Connect", child.parent.graphicID, child.graphicID, this.SIDE_LINK_COLOR, this.CURVE, true, `<${child.parent.value}`);
+                } else if (node.parent.right === node) {
+                    node.parent.right = child;
+                    child.parent = node.parent;
+                    this.cmd("Connect", child.parent.graphicID, child.graphicID, this.SIDE_LINK_COLOR, -this.CURVE, true, `>${child.parent.value}`);
+                } else if (node.parent.center === node) {
+                    node.parent.center = child;
+                    child.parent = node.parent;
+                    this.cmd("Connect", child.parent.graphicID, child.graphicID, this.CENTER_LINK_COLOR, this.CURVE, true, `=${child.parent.value}`);
+                }
+            }
         }
-        return this.commands;
     }
 
-    printTreeRec(tree, stringSoFar) {
-        if (tree.isword) {
+    ///////////////////////////////////////////////////////////////////////////////
+    // Print the values in the tree
+
+    doPrint(node, stringSoFar) {
+        if (node.isword) {
             const nextLabelID = this.nextIndex++;
-            this.cmd("CreateLabel", nextLabelID, `${stringSoFar}  `, 20, 10, 0);
+            this.cmd("CreateLabel", nextLabelID, `${stringSoFar}  `, 0, 0, 0);
             this.cmd("SetForegroundColor", nextLabelID, this.PRINT_COLOR);
-            this.cmd("AlignRight", nextLabelID, this.printLabel1, this.PRINT_COLOR);
+            this.cmd("AlignRight", nextLabelID, this.messageID, this.PRINT_COLOR);
             this.cmd("MoveToAlignRight", nextLabelID, nextLabelID - 1);
             this.cmd("Step");
-
-            this.xPosOfNextLabel += this.PRINT_HORIZONTAL_GAP;
-            if (this.xPosOfNextLabel > this.printMax) {
-                this.xPosOfNextLabel = this.FIRST_PRINT_POS_X;
-                this.yPosOfNextLabel += this.PRINT_VERTICAL_GAP;
-            }
         }
-        if (tree.left != null) {
-            this.cmd("Move", this.highlightID, tree.left.x, tree.left.y);
+        if (node.left) {
+            this.cmd("Move", this.highlightID, node.left.x, node.left.y);
             this.cmd("Step");
-            this.printTreeRec(tree.left, stringSoFar);
-            this.cmd("Move", this.highlightID, tree.x, tree.y);
+            this.doPrint(node.left, stringSoFar);
+            this.cmd("Move", this.highlightID, node.x, node.y);
             this.cmd("Step");
         }
-        if (tree.center != null) {
-            const nextLabelID = this.nextIndex;
-            this.cmd("CreateLabel", nextLabelID, tree.nextChar, tree.x, tree.y, 0);
-            this.cmd("MoveToAlignRight", nextLabelID, this.printLabel2);
-
-            this.cmd("Move", this.highlightID, tree.center.x, tree.center.y);
+        if (node.center) {
+            const stringSoFar2 = stringSoFar + node.value;
+            const nextLabelID = this.nextIndex++;
+            this.cmd("CreateLabel", nextLabelID, node.value, node.x, node.y, 0);
+            this.cmd("SetForegroundColor", nextLabelID, this.PRINT_COLOR);
+            this.cmd("MoveToAlignRight", nextLabelID, this.messageExtraID);
+            this.cmd("Move", this.highlightID, node.center.x, node.center.y);
             this.cmd("Step");
             this.cmd("Delete", nextLabelID);
-            this.cmd("SetText", this.printLabel2, stringSoFar + tree.nextChar);
-            this.printTreeRec(tree.center, stringSoFar + tree.nextChar);
-            this.cmd("Move", this.highlightID, tree.x, tree.y);
-            this.cmd("SetText", this.printLabel2, stringSoFar);
+            this.nextIndex--;
+            this.cmd("SetText", this.messageExtraID, stringSoFar2);
+            this.doPrint(node.center, stringSoFar2);
+            this.cmd("Move", this.highlightID, node.x, node.y);
+            this.cmd("SetText", this.messageExtraID, stringSoFar);
             this.cmd("Step");
         }
-        if (tree.right != null) {
-            this.cmd("Move", this.highlightID, tree.right.x, tree.right.y);
+        if (node.right) {
+            this.cmd("Move", this.highlightID, node.right.x, node.right.y);
             this.cmd("Step");
-            this.printTreeRec(tree.right, stringSoFar);
-            this.cmd("Move", this.highlightID, tree.x, tree.y);
+            this.doPrint(node.right, stringSoFar);
+            this.cmd("Move", this.highlightID, node.x, node.y);
             this.cmd("Step");
         }
     }
 
-    findCallback(event) {
-        const findValue = this.findField.value;
-        if (findValue !== "") {
-            this.findField.value = "";
-            this.implementAction(this.findElement.bind(this), findValue);
-        }
-    }
+    ///////////////////////////////////////////////////////////////////////////////
+    // Find a value in the tree
 
-    findElement(word) {
-        this.commands = [];
-
-        this.commands = [];
-        this.cmd("SetText", 0, "Finding: ");
-        this.cmd("SetText", 1, `"${word}"`);
-        this.cmd("AlignRight", 1, 0);
-        this.cmd("Step");
-
-        const node = this.doFind(this.root, word);
-        if (node != null) {
-            this.cmd("SetText", 0, `Found "${word}"`);
-        } else {
-            this.cmd("SetText", 0, `"${word}" not Found`);
-        }
-
-        this.cmd("SetText", 1, "");
-        this.cmd("SetText", 2, "");
-
-        return this.commands;
-    }
-
-    doFind(tree, s) {
-        if (tree == null) {
-            this.cmd("SetText", 2, ["Reached null tree", "Word is not in the tree"]);
+    doFind(node, suffix) {
+        if (!node) {
+            this.cmd("SetText", this.messageNextID, ["Reached null tree", "Word is not in the tree"]);
             this.cmd("Step");
             return null;
         }
-        this.cmd("SetHighlight", tree.graphicID, 1);
-
-        if (s.length === 0) {
-            if (tree.isword) {
-                this.cmd("SetText", 2, ["Reached the end of the string", "Current node is True", "Word is in the tree"]);
-                this.cmd("Step");
-                this.cmd("SetHighlight", tree.graphicID, 0);
-                return tree;
-            } else {
-                this.cmd("SetText", 2, ["Reached the end of the string", "Current node is False", "Word is Not the tree"]);
-                this.cmd("Step");
-                this.cmd("SetHighlight", tree.graphicID, 0);
-                return null;
-            }
+        this.cmd("SetHighlight", node.graphicID, 1);
+        if (suffix.length === 0) {
+            const found = Boolean(node.isword);
+            this.cmd("SetText", this.messageNextID, [
+                "Reached the end of the string",
+                `Current node is ${found}`,
+                `Word ${found ? "is" : "is NOT"} in the tree`,
+            ]);
+            this.cmd("Step");
+            this.cmd("SetHighlight", node.graphicID, 0);
+            return found ? node : null;
         } else {
-            this.cmd("SetHighlightIndex", 1, 1);
-
+            this.cmd("SetHighlightIndex", this.messageExtraID, 1);
             let child = null;
-            if (tree.nextChar === " ") {
-                this.cmd("SetText", 2, [
-                    "Reached a leaf without a character, still have characeters left in search string",
+            if (node.value === "") {
+                this.cmd("SetText", this.messageNextID, [
+                    "Reached a leaf without a character, still have characters left in search string",
                     "String is not in the tree",
                 ]);
                 this.cmd("Step");
-                this.cmd("SetHighlightIndex", 1, -1);
-                this.cmd("SetHighlight", tree.graphicID, 0);
+                this.cmd("SetHighlightIndex", this.messageExtraID, -1);
+                this.cmd("SetHighlight", node.graphicID, 0);
                 return null;
             }
 
-            if (tree.nextChar === s.charAt(0)) {
-                this.cmd("SetText", 2, [
-                    "Next character in string  matches character at current node",
+            if (node.value === suffix.charAt(0)) {
+                this.cmd("SetText", this.messageNextID, [
+                    "Next character in string matches character at current node",
                     "Recursively look at center child,",
                     "removing first letter from search string",
                 ]);
-                this.cmd("Step");
-                s = s.substring(1);
-                child = tree.center;
-            } else if (tree.nextChar > s.charAt(0)) {
-                this.cmd("SetText", 2, [
+                suffix = suffix.substring(1);
+                child = node.center;
+            } else if (node.value > suffix.charAt(0)) {
+                this.cmd("SetText", this.messageNextID, [
                     "Next character in string < Character at current node",
                     "Recursively look at left node,",
                     "leaving search string as it is",
                 ]);
-                this.cmd("Step");
-                child = tree.left;
+                child = node.left;
             } else {
-                this.cmd("SetText", 2, [
+                this.cmd("SetText", this.messageNextID, [
                     "Next character in string > Character at current node",
                     "Recursively look at left right,",
                     "leaving search string as it is",
                 ]);
-                this.cmd("Step");
-                child = tree.right;
+                child = node.right;
             }
-            if (child != null) {
-                this.cmd("SetText", 1, `"${s}"`);
-                this.cmd("SetHighlightIndex", 1, -1);
-
-                this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
-                this.cmd("SetWidth", this.highlightID, this.NODE_WIDTH);
-                this.cmd("SetHighlight", tree.graphicID, 0);
-
+            this.cmd("Step");
+            if (child) {
+                this.cmd("SetText", this.messageExtraID, `"${suffix}"`);
+                this.cmd("SetHighlightIndex", this.messageExtraID, -1);
+                this.cmd("SetAlpha", this.highlightID, 1);
+                this.cmd("SetPosition", this.highlightID, node.x, node.y);
                 this.cmd("Move", this.highlightID, child.x, child.y);
+                this.cmd("SetHighlight", node.graphicID, 0);
                 this.cmd("Step");
-                this.cmd("Delete", this.highlightID);
+                this.cmd("SetAlpha", this.highlightID, 0);
             } else {
-                this.cmd("SetHighlight", tree.graphicID, 0);
+                this.cmd("SetHighlight", node.graphicID, 0);
             }
-            return this.doFind(child, s);
+            return this.doFind(child, suffix);
         }
     }
 
-    insertElement(insertedValue) {
-        this.cmd("SetText", 0, "");
-        return this.commands;
-    }
+    ///////////////////////////////////////////////////////////////////////////////
+    // Insert one or more values into the tree
 
-    insert(elem, tree) {
-    }
-
-    resizeTree() {
-        this.resizeWidths(this.root);
-        if (this.root != null) {
-            let startingPoint = this.LEFT_MARGIN;
-            if (this.root.left == null) {
-                startingPoint += this.NODE_WIDTH / 2;
-            } else {
-                startingPoint += this.root.left.width;
-            }
-            // const startingPoint = this.root.width / 2 + 1 + this.LEFT_MARGIN;
-            this.setNewPositions(this.root, startingPoint, this.STARTING_Y);
-            this.animateNewPositions(this.root);
+    createIfNotExtant(node, child, label) {
+        if (!child) {
+            const childID = this.nextIndex++;
+            child = this.createTreeNode(childID, this.NEW_NODE_X, this.NEW_NODE_Y, "");
+            this.cmd("SetText", this.messageNextID, "Creating a new node");
             this.cmd("Step");
-        }
-    }
-
-    add(word) {
-        this.commands = [];
-        this.cmd("SetText", 0, "Inserting; ");
-        this.cmd("SetText", 1, `"${word}"`);
-        this.cmd("AlignRight", 1, 0);
-        this.cmd("Step");
-        if (this.root == null) {
-            this.cmd("CreateCircle", this.nextIndex, " ", this.NEW_NODE_X, this.NEW_NODE_Y);
-            this.cmd("SetForegroundColor", this.nextIndex, this.FOREGROUND_COLOR);
-            this.cmd("SetBackgroundColor", this.nextIndex, this.FALSE_COLOR);
-            this.cmd("SetWidth", this.nextIndex, this.NODE_WIDTH);
-            this.cmd("SetText", 2, "Creating a new root");
-            this.root = new this.TernaryNode(" ", this.nextIndex, this.NEW_NODE_X, this.NEW_NODE_Y);
-            this.cmd("Step");
-            this.resizeTree();
-            this.cmd("SetText", 2, "");
-            this.nextIndex++;
-            this.highlightID = this.nextIndex++;
-        }
-        this.addR(word.toUpperCase(), this.root);
-        this.cmd("SetText", 0, "");
-        this.cmd("SetText", 1, "");
-        this.cmd("SetText", 2, "");
-        return this.commands;
-    }
-
-    createIfNotExtant(tree, child, label) {
-        if (child == null) {
-            this.cmd("CreateCircle", this.nextIndex, " ", this.NEW_NODE_X, this.NEW_NODE_Y);
-            this.cmd("SetForegroundColor", this.nextIndex, this.FOREGROUND_COLOR);
-            this.cmd("SetBackgroundColor", this.nextIndex, this.FALSE_COLOR);
-            this.cmd("SetWidth", this.nextIndex, this.NODE_WIDTH);
-            this.cmd("SetText", 2, "Creating a new node");
-            child = new this.TernaryNode(" ", this.nextIndex, this.NEW_NODE_X, this.NEW_NODE_Y);
-            this.cmd("Step");
-            let dir = 0.0001;
-            if (label.charAt(0) === ">") {
-                dir = -0.0001;
-            }
-            let color = this.FOREGROUND_COLOR;
-            if (label.charAt(0) === "=") {
-                color = this.CENTER_LINK_COLOR;
-            } else {
-                color = this.SIDE_LINK_COLOR;
-            }
-            this.cmd("Connect", tree.graphicID, this.nextIndex, color, dir, false, label);
-            this.cmd("SetText", 2, "");
-            this.nextIndex++;
-            this.highlightID = this.nextIndex++;
+            const dir = label.charAt(0) === ">" ? -this.CURVE : this.CURVE;
+            const color = label.charAt(0) === "=" ? this.CENTER_LINK_COLOR : this.SIDE_LINK_COLOR;
+            this.cmd("Connect", node.graphicID, childID, color, dir, true, label);
+            this.cmd("SetText", this.messageNextID, "");
         }
         return child;
     }
 
-    addR(s, tree) {
-        this.cmd("SetHighlight", tree.graphicID, 1);
+    doInsert(s, node) {
+        this.cmd("SetHighlight", node.graphicID, 1);
         if (s.length === 0) {
-            this.cmd("SetText", 2, ["Reached the end of the string", "Set current node to true"]);
+            this.cmd("SetText", this.messageNextID, ["Reached the end of the string", "Set current node to true"]);
             this.cmd("Step");
-            this.cmd("SetBackgroundColor", tree.graphicID, this.TRUE_COLOR);
-            this.cmd("SetHighlight", tree.graphicID, 0);
-            tree.isword = true;
+            this.cmd("SetBackgroundColor", node.graphicID, this.TRUE_COLOR);
+            this.cmd("SetHighlight", node.graphicID, 0);
+            node.isword = true;
             return;
+        }
+
+        this.cmd("SetHighlightIndex", this.messageExtraID, 1);
+        if (node.value === "") {
+            node.value = s.charAt(0);
+            this.cmd("SetText", this.messageNextID, `No character for this node, setting to ${s.charAt(0)}`);
+            this.cmd("SetText", node.graphicID, s.charAt(0));
+            this.cmd("Step");
+            if (!node.center) {
+                node.center = this.createIfNotExtant(node, node.center, `=${s.charAt(0)}`);
+                node.center.parent = node;
+                this.resizeTree();
+            }
+            this.cmd("SetHighlightIndex", this.messageExtraID, -1);
+            this.cmd("SetHighlight", node.graphicID, 0);
+            this.cmd("SetText", this.messageExtraID, `"${s.substring(1)}"`);
+            this.cmd("SetAlpha", this.highlightID, 1);
+            this.cmd("SetPosition", this.highlightID, node.x, node.y);
+            this.cmd("Move", this.highlightID, node.center.x, node.center.y);
+            this.cmd("Step");
+            this.cmd("SetAlpha", this.highlightID, 0);
+            this.doInsert(s.substring(1), node.center);
+        } else if (node.value === s.charAt(0)) {
+            this.cmd("SetAlpha", this.highlightID, 1);
+            this.cmd("SetPosition", this.highlightID, node.x, node.y);
+            this.cmd("SetText", this.messageNextID, `Making recursive call to center child, passing in "${s.substring(1)}"`);
+            this.cmd("Step");
+            this.cmd("SetHighlight", node.graphicID, 0);
+            this.cmd("SetHighlightIndex", this.messageExtraID, -1);
+            this.cmd("SetText", this.messageExtraID, `"${s.substring(1)}"`);
+            this.cmd("Move", this.highlightID, node.center.x, node.center.y);
+            this.cmd("Step");
+            this.cmd("SetAlpha", this.highlightID, 0);
+            this.doInsert(s.substring(1), node.center);
         } else {
-            this.cmd("SetHighlightIndex", 1, 1);
-            if (tree.nextChar === " ") {
-                tree.nextChar = s.charAt(0);
-                this.cmd("SetText", 2, `No character for this node, setting to ${s.charAt(0)}`);
-                this.cmd("SetText", tree.graphicID, s.charAt(0));
-                this.cmd("Step");
-                if (tree.center == null) {
-                    tree.center = this.createIfNotExtant(tree, tree.center, `=${s.charAt(0)}`);
-                    tree.center.parent = tree;
-                    this.resizeTree();
-                }
-                this.cmd("SetHighlightIndex", 1, -1);
-                this.cmd("SetHighlight", tree.graphicID, 0);
-                this.cmd("SetText", 1, `"${s.substring(1)}"`);
-
-                this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
-                this.cmd("SetWidth", this.highlightID, this.NODE_WIDTH);
-                this.cmd("Move", this.highlightID, tree.center.x, tree.center.y);
-                this.cmd("Step");
-                this.cmd("Delete", this.highlightID);
-
-                this.addR(s.substring(1), tree.center);
-            } else if (tree.nextChar === s.charAt(0)) {
-                this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
-                this.cmd("SetWidth", this.highlightID, this.NODE_WIDTH);
-                this.cmd("SetText", 2, `Making recursive call to center child, passing in "${s.substring(1)}"`);
-                this.cmd("Step");
-                this.cmd("SetHighlight", tree.graphicID, 0);
-                this.cmd("SetHighlightIndex", 1, -1);
-                this.cmd("SetText", 1, `"${s.substring(1)}"`);
-                this.cmd("Move", this.highlightID, tree.center.x, tree.center.y);
-                this.cmd("Step");
-                this.cmd("Delete", this.highlightID);
-                this.addR(s.substring(1), tree.center);
+            let child = null;
+            let label = "";
+            if (node.value > s.charAt(0)) {
+                label = `<${node.value}`;
+                this.cmd("SetText", this.messageNextID, [
+                    "Next character in string is < value stored at current node",
+                    `Making recursive call to left child passing in "${s}"`,
+                ]);
+                node.left = this.createIfNotExtant(node, node.left, label);
+                node.left.parent = node;
+                this.resizeTree();
+                child = node.left;
             } else {
-                let child = null;
-                let label = "";
-                if (tree.nextChar > s.charAt(0)) {
-                    label = `<${tree.nextChar}`;
-                    this.cmd("SetText", 2, [
-                        "Next character in stirng is < value stored at current node",
-                        `Making recursive call to left child passing in "${s}"`,
-                    ]);
-                    tree.left = this.createIfNotExtant(tree, tree.left, label);
-                    tree.left.parent = tree;
-                    this.resizeTree();
-                    child = tree.left;
-                } else {
-                    label = `>${tree.nextChar}`;
-                    this.cmd("SetText", 2, [
-                        "Next character in stirng is > value stored at current node",
-                        `Making recursive call to right child passing in "${s}"`,
-                    ]);
-                    tree.right = this.createIfNotExtant(tree, tree.right, label);
-                    tree.right.parent = tree;
-                    child = tree.right;
-                    this.resizeTree();
-                }
-                this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, tree.x, tree.y);
-                this.cmd("SetWidth", this.highlightID, this.NODE_WIDTH);
-                this.cmd("Step");
-                this.cmd("SetHighlight", tree.graphicID, 0);
-                this.cmd("SetHighlightIndex", 1, -1);
-                // this.cmd("SetText", 1, "\"" + s.substring(1) + "\"");
-                this.cmd("Move", this.highlightID, child.x, child.y);
-                this.cmd("Step");
-                this.cmd("Delete", this.highlightID);
-                this.addR(s, child);
+                label = `>${node.value}`;
+                this.cmd("SetText", this.messageNextID, [
+                    "Next character in string is > value stored at current node",
+                    `Making recursive call to right child passing in "${s}"`,
+                ]);
+                node.right = this.createIfNotExtant(node, node.right, label);
+                node.right.parent = node;
+                this.resizeTree();
+                child = node.right;
             }
+            this.cmd("SetAlpha", this.highlightID, 1);
+            this.cmd("SetPosition", this.highlightID, node.x, node.y);
+            this.cmd("Step");
+            this.cmd("SetHighlight", node.graphicID, 0);
+            this.cmd("SetHighlightIndex", this.messageExtraID, -1);
+            this.cmd("Move", this.highlightID, child.x, child.y);
+            this.cmd("Step");
+            this.cmd("SetAlpha", this.highlightID, 0);
+            this.doInsert(s, child);
         }
     }
 
-    setNewPositions(tree, xLeft, yPosition) {
-        if (tree != null) {
-            tree.x = xLeft + this.NODE_WIDTH / 2;
-            tree.y = yPosition;
-            const newYPos = yPosition + this.HEIGHT_DELTA;
-            if (tree.left != null) {
-                this.setNewPositions(tree.left, xLeft, newYPos);
-            }
-            if (tree.center != null) {
-                this.setNewPositions(tree.center, xLeft + tree.leftWidth, newYPos);
-                tree.x = tree.center.x;
-            }
-            if (tree.right != null) {
-                this.setNewPositions(tree.right, xLeft + tree.leftWidth + tree.centerWidth, newYPos);
-            }
-        }
+    ///////////////////////////////////////////////////////////////////////////////
+    // Manipluate tree nodes
+
+    createTreeNode(elemID, x, y, value) {
+        const node = new this.TernaryNode(value, elemID, x, y);
+        this.cmd("CreateCircle", elemID, value, x, y);
+        this.cmd("SetWidth", elemID, this.NODE_SIZE);
+        this.cmd("SetForegroundColor", elemID, this.FOREGROUND_COLOR);
+        this.cmd("SetBackgroundColor", elemID, this.BACKGROUND_COLOR);
+        return node;
     }
 
-    animateNewPositions(tree) {
-        if (tree != null) {
-            this.cmd("Move", tree.graphicID, tree.x, tree.y);
-            this.animateNewPositions(tree.left);
-            this.animateNewPositions(tree.center);
-            this.animateNewPositions(tree.right);
-        }
+    removeTreeNode(node) {
+        this.cmd("Delete", node.graphicID);
     }
 
-    resizeWidths(tree) {
-        if (tree == null) {
-            return 0;
+    TernaryNode = class TernaryNode {
+        constructor(val, id, x, y) {
+            this.graphicID = id;
+            this.value = val;
+            this.x = x;
+            this.y = y;
+            this.left = null;
+            this.center = null;
+            this.right = null;
+            this.parent = null;
+            this.isword = false;
         }
-        tree.leftWidth = (this.resizeWidths(tree.left));
-        tree.centerWidth = (this.resizeWidths(tree.center));
-        tree.rightWidth = (this.resizeWidths(tree.right));
-        tree.width = Math.max(tree.leftWidth + tree.centerWidth + tree.rightWidth, this.NODE_WIDTH + 4);
-        return tree.width;
-    }
+
+        getChildren() {
+            return [this.left, this.center, this.right].filter((c) => c != null);
+        }
+
+        numChildren() {
+            return this.getChildren().length;
+        }
+
+        isLeaf() {
+            return this.numChildren() === 0;
+        }
+    };
 };
