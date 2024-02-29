@@ -30,7 +30,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-Algorithm.Tree.Radix = class RadixTree extends Algorithm.Tree {
+Algorithm.Tree.Radix = class RadixTree extends Algorithm.Tree.Trie {
     NODE_WIDTH = 60;
 
     LINK_COLOR = "#007700";
@@ -52,7 +52,7 @@ Algorithm.Tree.Radix = class RadixTree extends Algorithm.Tree {
 
     RadixNode = class RadixNode {
         constructor(val, id, initialX, initialY) {
-            this.wordRemainder = val;
+            this.value = val;
             this.x = initialX;
             this.y = initialY;
             this.graphicID = id;
@@ -285,7 +285,7 @@ Algorithm.Tree.Radix = class RadixTree extends Algorithm.Tree {
             this.cmd("Step");
 
             if (value.length > indexDifference) {
-                this.cmd("SetText", 2, [`Recusively search remaining string`, `in the '${value.charAt(indexDifference)}' child`]);
+                this.cmd("SetText", 2, ["Recusively search remaining string", `in the '${value.charAt(indexDifference)}' child`]);
                 this.cmd("Step");
                 this.cmd("SetHighlight", tree.graphicID, 0);
                 this.cmd("SetText", 1, value.substring(indexDifference));
@@ -294,7 +294,7 @@ Algorithm.Tree.Radix = class RadixTree extends Algorithm.Tree {
                 const noChild = tree.children[index] == null;
 
                 if (noChild) {
-                    this.cmd("SetText", 2, [`Child '${value.charAt(indexDifference)}' does not exit.`, `String is not in the tree.`]);
+                    this.cmd("SetText", 2, [`Child '${value.charAt(indexDifference)}' does not exit.`, "String is not in the tree."]);
                     this.cmd("Step");
                     return null;
                 } else {
@@ -408,7 +408,7 @@ Algorithm.Tree.Radix = class RadixTree extends Algorithm.Tree {
         const children = this.numChildren(tree);
 
         if (children === 0 && !tree.isword) {
-            this.cmd("SetText", 2, ['Deletion left us with a "False" leaf', "Removing false leaf"]);
+            this.cmd("SetText", 2, ["Deletion left us with a \"False\" leaf", "Removing false leaf"]);
             this.cmd("SetHighlight", tree.graphicID, 1);
             this.cmd("Step");
             this.cmd("SetHighlight", tree.graphicID, 0);
@@ -433,7 +433,7 @@ Algorithm.Tree.Radix = class RadixTree extends Algorithm.Tree {
                     break;
                 }
             }
-            this.cmd("SetText", 2, ['Deletion left us with a "False" node', "Containing one child: Combining"]);
+            this.cmd("SetText", 2, ["Deletion left us with a \"False\" node", "Containing one child: Combining"]);
             this.cmd("SetHighlight", tree.graphicID, 1);
             this.cmd("Step");
             this.cmd("SetHighlight", tree.graphicID, 0);
@@ -511,7 +511,7 @@ Algorithm.Tree.Radix = class RadixTree extends Algorithm.Tree {
             this.cmd("Step");
 
             if (s.length > indexDifference) {
-                this.cmd("SetText", 2, [`Recusively insert remaining string`, `into the '${s.charAt(indexDifference)}' child`]);
+                this.cmd("SetText", 2, ["Recusively insert remaining string", `into the '${s.charAt(indexDifference)}' child`]);
                 this.cmd("Step");
                 this.cmd("SetHighlight", rt.graphicID, 0);
                 this.cmd("SetText", 1, s.substring(indexDifference));
@@ -569,15 +569,15 @@ Algorithm.Tree.Radix = class RadixTree extends Algorithm.Tree {
         const newNode = new this.RadixNode(firstRemainder, this.nextIndex, 0, 0);
         this.nextIndex++;
 
-        newNode.wordRemainder = firstRemainder;
+        newNode.value = firstRemainder;
 
         let index = rt.wordRemainder.charCodeAt(indexDifference) - "A".charCodeAt(0);
         newNode.parent = rt.parent;
         newNode.children[index] = rt;
         if (rt.parent != null) {
             this.cmd("Disconnect", rt.parent.graphicID, rt.graphicID);
-            this.cmd("Connect", rt.parent.graphicID, newNode.graphicID, this.FOREGROUND_COLOR, 0, false, newNode.wordRemainder.charAt(0));
-            const childIndex = newNode.wordRemainder.charCodeAt(0) - "A".charCodeAt(0);
+            this.cmd("Connect", rt.parent.graphicID, newNode.graphicID, this.FOREGROUND_COLOR, 0, false, newNode.value.charAt(0));
+            const childIndex = newNode.value.charCodeAt(0) - "A".charCodeAt(0);
             rt.parent.children[childIndex] = newNode;
             rt.parent = newNode;
         } else {

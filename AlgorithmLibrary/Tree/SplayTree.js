@@ -89,7 +89,7 @@ Algorithm.Tree.Splay = class SplayTree extends Algorithm.Tree.BST {
             this.cmd("Disconnect", oldRoot.graphicID, left.graphicID);
             this.cmd("Disconnect", oldRoot.graphicID, right.graphicID);
             this.cmd("SetAlpha", oldRoot.graphicID, 0);
-            
+
             left.parent = null;
             let largestLeft = left;
             this.cmd("SetAlpha", this.highlightID, 1);

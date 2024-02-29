@@ -43,7 +43,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
     HIGHLIGHT_CIRCLE_COLOR = this.HIGHLIGHT_COLOR;
 
     WIDTH_PER_ELEM = this.NODE_SIZE;
-    NODE_HEIGHT = this.NODE_SIZE * 3/4;
+    NODE_HEIGHT = this.NODE_SIZE * 3 / 4;
     HIGHLIGHT_CIRCLE_WIDTH = this.NODE_HEIGHT;
 
     constructor(am) {
@@ -122,7 +122,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
                 this.cmd("Step");
                 this.printOneLabel(node.labels[i], labelX, node.y);
                 this.cmd("Step");
-            }    
+            }
         } else {
             for (let i = 0; i < node.numChildren(); i++) {
                 const labelX = this.getLabelX(node, Math.min(i, node.numLabels() - 1));
@@ -364,7 +364,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
             for (let i = parent.numLabels(); i > parentIndex; i--) {
                 parent.children[i + 1] = parent.children[i];
                 this.cmd("Disconnect", parentID, parent.children[i].graphicID);
-                this.cmd("Connect", parentID, parent.children[i].graphicID, this.FOREGROUND_COLOR, 0, false, "", i+1);
+                this.cmd("Connect", parentID, parent.children[i].graphicID, this.FOREGROUND_COLOR, 0, false, "", i + 1);
                 parent.labels[i] = parent.labels[i - 1];
                 this.cmd("SetText", parentID, parent.labels[i], i);
             }
@@ -472,7 +472,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
         if (node.numLabels() >= this.getMinKeys()) return;
         const parent = node.parent;
         if (!parent) return;
-        
+
         const i = this.getParentIndex(node);
         if (i > 0 && parent.children[i - 1].numLabels() > this.getMinKeys()) {
             // Steal from left sibling
@@ -500,7 +500,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
         const parentID = parent.graphicID;
         const parentIndex = this.getParentIndex(node);
         const rightSib = parent.children[parentIndex + 1];
-        this.cmd("SetText", this.messageID, [`Merging nodes:`, `${node} + [${parent.labels[parentIndex]}] + ${rightSib}`]);
+        this.cmd("SetText", this.messageID, ["Merging nodes:", `${node} + [${parent.labels[parentIndex]}] + ${rightSib}`]);
         this.cmd("SetHighlight", nodeID, 1);
         this.cmd("SetHighlight", parentID, 1);
         this.cmd("SetHighlight", rightSib.graphicID, 1);
@@ -508,7 +508,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
 
         node.x = (node.x + rightSib.x) / 2;
         this.cmd("SetPosition", nodeID, node.x, node.y);
-        
+
         const fromParentIndex = node.numLabels();
         const moveLabelID = this.nextIndex++;
         if (!node.isBPlusLeaf()) {
@@ -527,24 +527,24 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
             for (let i = 0; i < node.numChildren(); i++) {
                 const child = node.children[i];
                 child.parent = node;
-                this.cmd("Connect", nodeID, child.graphicID, this.FOREGROUND_COLOR, 0,  false,  "", i);
+                this.cmd("Connect", nodeID, child.graphicID, this.FOREGROUND_COLOR, 0, false, "", i);
             }
         } else if (node.isBPlusLeaf()) {
             node.next = rightSib.next;
             if (rightSib.next != null) {
-                this.cmd("Connect", nodeID, node.next.graphicID, this.FOREGROUND_COLOR, 0,  true,  "", node.numLabels());
+                this.cmd("Connect", nodeID, node.next.graphicID, this.FOREGROUND_COLOR, 0, true, "", node.numLabels());
             }
         }
 
         parent.labels.splice(parentIndex, 1);
-        parent.children.splice(parentIndex+1, 1);
+        parent.children.splice(parentIndex + 1, 1);
         this.cmd("SetNumElements", parentID, parent.numLabels());
         for (let i = 0; i < parent.numLabels(); i++) {
             this.cmd("SetText", parentID, parent.labels[i], i);
         }
         for (let i = 0; i < parent.numChildren(); i++) {
             this.cmd("Disconnect", parentID, parent.children[i].graphicID);
-            this.cmd("Connect", parentID, parent.children[i].graphicID, this.FOREGROUND_COLOR, 0,  false,  "", i);
+            this.cmd("Connect", parentID, parent.children[i].graphicID, this.FOREGROUND_COLOR, 0, false, "", i);
         }
 
         this.cmd("SetHighlight", nodeID, 0);
@@ -579,7 +579,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
         let leftLabelY = parent.y;
         let rightLabel = rightSib.labels[0];
         let rightLabelX = this.getLabelX(rightSib, 0);
-        let rightLabelY = rightSib.y;
+        const rightLabelY = rightSib.y;
         if (node.isBPlusLeaf()) {
             leftLabel = rightLabel;
             leftLabelX = rightLabelX;
@@ -588,14 +588,14 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
             rightLabelX = this.getLabelX(rightSib, 1);
         }
         this.cmd("SetText", this.messageID, [
-            `Stealing from right sibling:`, 
+            "Stealing from right sibling:",
             `${node} ← [${leftLabel}] ← [${rightLabel}] / ${node.isBPlusLeaf()}`,
         ]);
         this.cmd("Step");
 
         if (node.isBPlusLeaf()) {
             this.cmd("Disconnect", nodeID, rightSib.graphicID);
-            this.cmd("Connect", nodeID, rightSib.graphicID, this.FOREGROUND_COLOR, 0,  true,  "", node.numLabels()+1);
+            this.cmd("Connect", nodeID, rightSib.graphicID, this.FOREGROUND_COLOR, 0, true, "", node.numLabels() + 1);
         }
 
         node.labels.push(leftLabel);
@@ -610,7 +610,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
         this.cmd("SetForegroundColor", rightLabelID, this.FOREGROUND_COLOR);
 
         this.cmd("SetNumElements", nodeID, node.numLabels());
-        this.cmd("SetText", nodeID, "", node.numLabels()-1);
+        this.cmd("SetText", nodeID, "", node.numLabels() - 1);
         this.cmd("SetText", parentID, "", parentIndex);
         this.cmd("SetText", rightSib.graphicID, "", 0);
 
@@ -627,14 +627,14 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
             }
         }
 
-        this.cmd("Move", leftLabelID, this.getLabelX(node, node.numLabels()-1), node.y);
+        this.cmd("Move", leftLabelID, this.getLabelX(node, node.numLabels() - 1), node.y);
         this.cmd("Move", rightLabelID, this.getLabelX(parent, parentIndex), parent.y);
         this.cmd("Step");
         this.cmd("Delete", leftLabelID);
         this.cmd("Delete", rightLabelID);
         this.nextIndex -= 2;
 
-        this.cmd("SetText", nodeID, leftLabel, node.numLabels()-1);
+        this.cmd("SetText", nodeID, leftLabel, node.numLabels() - 1);
         this.cmd("SetText", parentID, rightLabel, parentIndex);
         this.cmd("SetNumElements", rightSib.graphicID, rightSib.numLabels());
         for (let i = 0; i < rightSib.numLabels(); i++) {
@@ -643,7 +643,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
 
         if (node.isBPlusLeaf() && rightSib.next) {
             this.cmd("Disconnect", rightSib.graphicID, rightSib.next.graphicID);
-            this.cmd("Connect", rightSib.graphicID, rightSib.next.graphicID, this.FOREGROUND_COLOR, 0,  true,  "", rightSib.numLabels());
+            this.cmd("Connect", rightSib.graphicID, rightSib.next.graphicID, this.FOREGROUND_COLOR, 0, true, "", rightSib.numLabels());
         }
 
         this.cmd("Step");
@@ -668,15 +668,15 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
         let rightLabel = parent.labels[parentIndex];
         let rightLabelX = this.getLabelX(parent, parentIndex);
         let rightLabelY = parent.y;
-        let leftLabel = leftSib.labels[leftSib.numLabels()-1];
-        let leftLabelX = this.getLabelX(leftSib, leftSib.numLabels()-1);
-        let leftLabelY = leftSib.y;
+        const leftLabel = leftSib.labels[leftSib.numLabels() - 1];
+        const leftLabelX = this.getLabelX(leftSib, leftSib.numLabels() - 1);
+        const leftLabelY = leftSib.y;
         if (node.isBPlusLeaf()) {
             rightLabel = leftLabel;
             rightLabelX = leftLabelX;
             rightLabelY = leftLabelY;
         }
-        this.cmd("SetText", this.messageID, [`Stealing from left sibling:`, `[${leftLabel}] → [${rightLabel}] → ${node}`]);
+        this.cmd("SetText", this.messageID, ["Stealing from left sibling:", `[${leftLabel}] → [${rightLabel}] → ${node}`]);
         this.cmd("Step");
 
         if (!node.isLeaf()) {
@@ -705,7 +705,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
 
         if (node.isBPlusLeaf()) {
             this.cmd("Disconnect", nodeID, node.next.graphicID);
-            this.cmd("Connect", nodeID, node.next.graphicID, this.FOREGROUND_COLOR, 0,  true,  "", node.numLabels());
+            this.cmd("Connect", nodeID, node.next.graphicID, this.FOREGROUND_COLOR, 0, true, "", node.numLabels());
         }
 
         this.cmd("SetNumElements", nodeID, node.numLabels());
@@ -729,7 +729,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
 
         if (node.isBPlusLeaf()) {
             this.cmd("Disconnect", leftSib.graphicID, nodeID);
-            this.cmd("Connect", leftSib.graphicID, nodeID, this.FOREGROUND_COLOR, 0,  true,  "", leftSib.numLabels());
+            this.cmd("Connect", leftSib.graphicID, nodeID, this.FOREGROUND_COLOR, 0, true, "", leftSib.numLabels());
         }
 
         this.cmd("Step");
@@ -782,7 +782,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
             this.cmd("SetEdgeHighlight", nodeID, node.getRight().graphicID, 0);
             if (node.getRight().numLabels() === this.getMinKeys()) {
                 if (node.children[node.numLabels() - 1].numLabels() > this.getMinKeys()) {
-                    const nextNode = this.stealFromLeft(node.getRight(), node.numLabels()-1);
+                    const nextNode = this.stealFromLeft(node.getRight(), node.numLabels() - 1);
                     this.doDeleteTopdown(nextNode, value);
                 } else {
                     const nextNode = this.mergeRight(node.children[node.numLabels() - 1]);
@@ -792,7 +792,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
                 this.doDeleteTopdown(node.getRight(), value);
             }
             return;
-        } 
+        }
 
         if (this.compare(node.labels[i], value) > 0) {
             this.cmd("SetHighlight", nodeID, 1);
@@ -810,7 +810,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
                 this.doDeleteTopdown(nextNode, value);
             }
             return;
-        } 
+        }
 
         this.cmd("SetHighlight", nodeID, 1);
         this.cmd("SetTextColor", nodeID, this.HIGHLIGHT_COLOR, i);
@@ -823,7 +823,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
 
         if (node.children[i].numLabels() === this.getMinKeys()) {
             this.cmd("SetText", this.messageID, [
-                "Tree to left of element to delete does not have an extra key.", 
+                "Tree to left of element to delete does not have an extra key.",
                 "Looking to the right ...",
             ]);
             this.cmd("SetEdgeHighlight", nodeID, node.children[i + 1].graphicID, 1);
@@ -833,7 +833,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
             // Do a merge, and then recursively delete the element
             if (node.children[i + 1].numLabels() === this.getMinKeys()) {
                 this.cmd("SetText", this.messageID, [
-                    "Neither subtree has extra nodes. Merging around the key to delete,", 
+                    "Neither subtree has extra nodes. Merging around the key to delete,",
                     "and recursively deleting ...",
                 ]);
                 this.cmd("Step");
@@ -843,7 +843,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
                 return;
             } else {
                 this.cmd("SetText", this.messageID, [
-                    "Tree to right of element to delete does have an extra key.", 
+                    "Tree to right of element to delete does have an extra key.",
                     "Finding the smallest key in that subtree ...",
                 ]);
                 this.cmd("Step");
@@ -893,7 +893,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
             }
         } else {
             this.cmd("SetText", this.messageID, [
-                "Tree to left of element to delete does have an extra key.", 
+                "Tree to left of element to delete does have an extra key.",
                 "Finding the largest key in that subtree ...",
             ]);
             this.cmd("Step");
@@ -903,7 +903,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
                 this.cmd("SetHighlight", maxNode.graphicID, 0);
                 if (maxNode.getRight().numLabels() === this.getMinKeys()) {
                     if (maxNode.children[maxNode.numLabels() - 1] > this.getMinKeys()) {
-                        maxNode = this.stealFromLeft(maxNode.getRight(), maxNode.numLabels()-1);
+                        maxNode = this.stealFromLeft(maxNode.getRight(), maxNode.numLabels() - 1);
                     } else {
                         maxNode = this.mergeRight(maxNode.children[maxNode.numLabels() - 1]);
                     }
@@ -949,11 +949,11 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
         if (!(node.parent === parent || (!node.parent && !parent))) console.error("Parent mismatch:", node, parent);
         if (node.labels.length !== node.numLabels()) console.error("N:o labels mismatch", node);
         if (node.numLabels() === 0) console.error("Empty tree node", node);
-        if (node.numLabels() >= this.getMaxDegree()) console.error(`Too high degree, ${node.numLabels()+1} > ${this.getMaxDegree()}`, node);
+        if (node.numLabels() >= this.getMaxDegree()) console.error(`Too high degree, ${node.numLabels() + 1} > ${this.getMaxDegree()}`, node);
 
         let height = 0;
         if (node.isLeaf()) {
-            if (node.children) console.error(`Leaf node has children`, node);
+            if (node.children) console.error("Leaf node has children", node);
             for (let i = 0; i < node.numLabels(); i++) {
                 const val = node.labels[i];
                 if (this.compare(cmpVal, val) > 0) console.error(`Order mismatch, ${cmpVal} > ${val}`, node);
@@ -1018,8 +1018,10 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
 
     createTreeNode(elemID, x, y, value) {
         const node = new this.BTreeNode(elemID, x, y, [value]);
-        this.cmd("CreateBTreeNode", elemID, this.WIDTH_PER_ELEM, this.NODE_HEIGHT, 
-                 1, x, y, this.BACKGROUND_COLOR, this.FOREGROUND_COLOR);
+        this.cmd(
+            "CreateBTreeNode", elemID, this.WIDTH_PER_ELEM, this.NODE_HEIGHT,
+            1, x, y, this.BACKGROUND_COLOR, this.FOREGROUND_COLOR,
+        );
         this.cmd("SetText", elemID, value, 0);
         return node;
     }
@@ -1071,7 +1073,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
             if (this.isLeaf()) return this.toString();
             let s = this.children[0];
             for (let i = 0; i < this.numLabels(); i++) {
-                s += ` ${this.labels[i]} ${this.children[i+1].deepString()}`;
+                s += ` ${this.labels[i]} ${this.children[i + 1].deepString()}`;
             }
             return `(${s})`;
         }
@@ -1093,7 +1095,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
         }
 
         isBPlusLeaf() {
-            return this.isLeaf() && 'next' in this;
+            return this.isLeaf() && "next" in this;
         }
 
         getLeft() {

@@ -90,7 +90,7 @@ Algorithm.Tree.BPlusTree = class BPlusTree extends Algorithm.Tree.BTree {
             index++;
         }
         if (index > 0) this.cmd("Step");
-        this.cmd("Move", this.highlightID, this.getLabelX(node, Math.min(index, node.numLabels()-1)), node.y);
+        this.cmd("Move", this.highlightID, this.getLabelX(node, Math.min(index, node.numLabels() - 1)), node.y);
 
         if (!this.ALLOW_DUPLICATES && this.compare(node.labels[index], value) === 0) {
             this.cmd("SetText", this.messageID, `Node ${node} already exists`);
@@ -107,14 +107,14 @@ Algorithm.Tree.BPlusTree = class BPlusTree extends Algorithm.Tree.BTree {
 
         this.cmd("SetText", this.messageID, `Inserting ${value} into the leaf node ${node}`);
         this.cmd("Step");
-        this.cmd("SetNumElements", nodeID, node.numLabels()+1);
+        this.cmd("SetNumElements", nodeID, node.numLabels() + 1);
         node.labels.splice(index, 0, value);
         for (let i = 0; i < node.numLabels(); i++) {
             this.cmd("SetText", nodeID, node.labels[i], i);
         }
         if (node.next != null) {
             this.cmd("Disconnect", nodeID, node.next.graphicID);
-            this.cmd("Connect", nodeID, node.next.graphicID, this.FOREGROUND_COLOR, 0,  true,  "", node.numLabels());
+            this.cmd("Connect", nodeID, node.next.graphicID, this.FOREGROUND_COLOR, 0, true, "", node.numLabels());
         }
         this.cmd("Move", this.highlightID, this.getLabelX(node, index), node.y);
         this.cmd("Step");
@@ -176,7 +176,7 @@ Algorithm.Tree.BPlusTree = class BPlusTree extends Algorithm.Tree.BTree {
 
             if (node.next != null) {
                 this.cmd("Disconnect", nodeID, node.next.graphicID);
-                this.cmd("Connect", nodeID, node.next.graphicID, this.FOREGROUND_COLOR, 0,  true,  "", node.numLabels());
+                this.cmd("Connect", nodeID, node.next.graphicID, this.FOREGROUND_COLOR, 0, true, "", node.numLabels());
             }
 
             // Bit of a hack -- if we remove the smallest element in a leaf, then find the *next* smallest element
@@ -215,7 +215,7 @@ Algorithm.Tree.BPlusTree = class BPlusTree extends Algorithm.Tree.BTree {
         this.cmd("SetHighlight", node.graphicID, 1);
         this.cmd("SetHighlight", parentNode.graphicID, 1);
         this.cmd("SetHighlight", rightSib.graphicID, 1);
-        this.cmd("SetText", this.messageID, [`Merging nodes:`, `${node} + [${parentNode.keys[parentIndex]}] + ${rightSib}`]);
+        this.cmd("SetText", this.messageID, ["Merging nodes:", `${node} + [${parentNode.keys[parentIndex]}] + ${rightSib}`]);
         this.cmd("Step");
 
         let moveLabelID;
@@ -245,21 +245,21 @@ Algorithm.Tree.BPlusTree = class BPlusTree extends Algorithm.Tree.BTree {
                 this.cmd("Disconnect", rightSib.graphicID, rightSib.children[i].graphicID);
                 node.children[j] = rightSib.children[i];
                 node.children[j].parent = node;
-                this.cmd("Connect", node.graphicID, node.children[j].graphicID, this.FOREGROUND_COLOR, 0,  0,  "", j);
+                this.cmd("Connect", node.graphicID, node.children[j].graphicID, this.FOREGROUND_COLOR, 0, 0, "", j);
             }
             node.numKeys = node.numKeys + rightSib.numKeys + 1;
         } else {
             node.numKeys = node.numKeys + rightSib.numKeys;
             node.next = rightSib.next;
             if (rightSib.next != null) {
-                this.cmd("Connect", node.graphicID, node.next.graphicID, this.FOREGROUND_COLOR, 0,  1,  "", node.numKeys);
+                this.cmd("Connect", node.graphicID, node.next.graphicID, this.FOREGROUND_COLOR, 0, 1, "", node.numKeys);
             }
         }
         this.cmd("Disconnect", parentNode.graphicID, rightSib.graphicID);
         for (let i = parentIndex + 1; i < parentNode.numKeys; i++) {
             this.cmd("Disconnect", parentNode.graphicID, parentNode.children[i + 1].graphicID);
             parentNode.children[i] = parentNode.children[i + 1];
-            this.cmd("Connect", parentNode.graphicID, parentNode.children[i].graphicID, this.FOREGROUND_COLOR, 0,  0,  "", i);
+            this.cmd("Connect", parentNode.graphicID, parentNode.children[i].graphicID, this.FOREGROUND_COLOR, 0, 0, "", i);
             parentNode.keys[i - 1] = parentNode.keys[i];
             this.cmd("SetText", parentNode.graphicID, parentNode.keys[i - 1], i - 1);
         }
@@ -298,7 +298,7 @@ Algorithm.Tree.BPlusTree = class BPlusTree extends Algorithm.Tree.BTree {
         this.cmd("SetHighlight", node.graphicID, 1);
         this.cmd("SetHighlight", parentNode.graphicID, 1);
         this.cmd("SetHighlight", rightSib.graphicID, 1);
-        this.cmd("SetText", this.messageID, [`Stealing from right sibling:`, `${node} ← [${parentNode.labels[parentIndex]}] ← ${rightSib}`]);
+        this.cmd("SetText", this.messageID, ["Stealing from right sibling:", `${node} ← [${parentNode.labels[parentIndex]}] ← ${rightSib}`]);
         this.cmd("Step");
 
         nodeNumKeys++;
@@ -306,7 +306,7 @@ Algorithm.Tree.BPlusTree = class BPlusTree extends Algorithm.Tree.BTree {
 
         if (node.isLeaf) {
             this.cmd("Disconnect", node.graphicID, node.next.graphicID);
-            this.cmd("Connect", node.graphicID, node.next.graphicID, this.FOREGROUND_COLOR, 0,  1,  "", nodeNumKeys);
+            this.cmd("Connect", node.graphicID, node.next.graphicID, this.FOREGROUND_COLOR, 0, 1, "", nodeNumKeys);
         }
 
         this.cmd("SetText", node.graphicID, "", nodeNumKeys - 1);
@@ -340,11 +340,11 @@ Algorithm.Tree.BPlusTree = class BPlusTree extends Algorithm.Tree.BTree {
             node.children[nodeNumKeys] = rightSib.children[0];
             node.children[nodeNumKeys].parent = node;
             this.cmd("Disconnect", rightSib.graphicID, rightSib.children[0].graphicID);
-            this.cmd("Connect", node.graphicID, node.children[nodeNumKeys].graphicID, this.FOREGROUND_COLOR, 0,  0,  "", nodeNumKeys);
+            this.cmd("Connect", node.graphicID, node.children[nodeNumKeys].graphicID, this.FOREGROUND_COLOR, 0, 0, "", nodeNumKeys);
             for (let i = 1; i < rightNumKeys + 1; i++) {
                 this.cmd("Disconnect", rightSib.graphicID, rightSib.children[i].graphicID);
                 rightSib.children[i - 1] = rightSib.children[i];
-                this.cmd("Connect", rightSib.graphicID, rightSib.children[i - 1].graphicID, this.FOREGROUND_COLOR, 0,  0,  "", i - 1);
+                this.cmd("Connect", rightSib.graphicID, rightSib.children[i - 1].graphicID, this.FOREGROUND_COLOR, 0, 0, "", i - 1);
             }
         }
         for (let i = 1; i < rightNumKeys; i++) {
@@ -365,7 +365,7 @@ Algorithm.Tree.BPlusTree = class BPlusTree extends Algorithm.Tree.BTree {
 
         if (node.isLeaf && rightSib.next != null) {
             this.cmd("Disconnect", rightSib.graphicID, rightSib.next.graphicID);
-            this.cmd("Connect", rightSib.graphicID, rightSib.next.graphicID, this.FOREGROUND_COLOR, 0,  1,  "", rightNumKeys);
+            this.cmd("Connect", rightSib.graphicID, rightSib.next.graphicID, this.FOREGROUND_COLOR, 0, 1, "", rightNumKeys);
         }
         return node;
     }
@@ -378,7 +378,7 @@ Algorithm.Tree.BPlusTree = class BPlusTree extends Algorithm.Tree.BTree {
 
         if (node.isLeaf && node.next != null) {
             this.cmd("Disconnect", node.graphicID, node.next.graphicID);
-            this.cmd("Connect", node.graphicID, node.next.graphicID, this.FOREGROUND_COLOR, 0,  1,  "", node.numKeys);
+            this.cmd("Connect", node.graphicID, node.next.graphicID, this.FOREGROUND_COLOR, 0, 1, "", node.numKeys);
         }
 
         for (let i = node.numKeys - 1; i > 0; i--) {
@@ -386,7 +386,7 @@ Algorithm.Tree.BPlusTree = class BPlusTree extends Algorithm.Tree.BTree {
             this.cmd("SetText", node.graphicID, node.keys[i], i);
         }
         const leftSib = parentNode.children[parentIndex - 1];
-        this.cmd("SetText", this.messageID, [`Stealing from left sibling:`, `${leftSib} → [${parentNode.keys[parentIndex]}] → ${node}`]);
+        this.cmd("SetText", this.messageID, ["Stealing from left sibling:", `${leftSib} → [${parentNode.keys[parentIndex]}] → ${node}`]);
 
         this.cmd("SetText", node.graphicID, "", 0);
         this.cmd("SetText", parentNode.graphicID, "", parentIndex - 1);
@@ -416,11 +416,11 @@ Algorithm.Tree.BPlusTree = class BPlusTree extends Algorithm.Tree.BTree {
             for (let i = node.numKeys; i > 0; i--) {
                 this.cmd("Disconnect", node.graphicID, node.children[i - 1].graphicID);
                 node.children[i] = node.children[i - 1];
-                this.cmd("Connect", node.graphicID, node.children[i].graphicID, this.FOREGROUND_COLOR, 0,  0,  "", i);
+                this.cmd("Connect", node.graphicID, node.children[i].graphicID, this.FOREGROUND_COLOR, 0, 0, "", i);
             }
             node.children[0] = leftSib.children[leftSib.numKeys];
             this.cmd("Disconnect", leftSib.graphicID, leftSib.children[leftSib.numKeys].graphicID);
-            this.cmd("Connect", node.graphicID, node.children[0].graphicID, this.FOREGROUND_COLOR, 0,  0,  "", 0);
+            this.cmd("Connect", node.graphicID, node.children[0].graphicID, this.FOREGROUND_COLOR, 0, 0, "", 0);
             leftSib.children[leftSib.numKeys] = null;
             node.children[0].parent = node;
         }
@@ -437,7 +437,7 @@ Algorithm.Tree.BPlusTree = class BPlusTree extends Algorithm.Tree.BTree {
 
         if (node.isLeaf) {
             this.cmd("Disconnect", leftSib.graphicID, node.graphicID);
-            this.cmd("Connect", leftSib.graphicID, node.graphicID, this.FOREGROUND_COLOR, 0,  1,  "", leftSib.numKeys);
+            this.cmd("Connect", leftSib.graphicID, node.graphicID, this.FOREGROUND_COLOR, 0, 1, "", leftSib.numKeys);
         }
         return node;
     }
@@ -495,14 +495,14 @@ Algorithm.Tree.BPlusTree = class BPlusTree extends Algorithm.Tree.BTree {
                 parent = parent.parent;
             }
             if (i && i > 0) {
-                if (node.labels[0] !== parent.labels[i-1]) console.error("Leaf first label not in ancestor", node, parent);
+                if (node.labels[0] !== parent.labels[i - 1]) console.error("Leaf first label not in ancestor", node, parent);
             }
         } else {
             if (node.next) console.error("Non-leaf node has next pointer");
             for (let i = 1; i < node.numChildren(); i++) {
                 let leaf = node.children[i];
                 while (!leaf.isLeaf()) leaf = leaf.getLeft();
-                if (node.labels[i-1] !== leaf.labels[0]) console.error("Non-leaf element not in leaf", node, leaf);
+                if (node.labels[i - 1] !== leaf.labels[0]) console.error("Non-leaf element not in leaf", node, leaf);
             }
             for (const child of node.getChildren()) {
                 this.validateBPlusTree(child);

@@ -281,7 +281,7 @@ Algorithm.Tree.RedBlack = class RedBlackTree extends Algorithm.Tree.BST {
     validateTree() {
         if (!this.treeRoot) return;
         super.validateTree();
-        if (this.treeRoot.blackLevel !== 1) console.error(`Tree root is not black`, this.treeRoot);
+        if (this.treeRoot.blackLevel !== 1) console.error("Tree root is not black", this.treeRoot);
         this.validateRedBlack(this.treeRoot);
     }
 

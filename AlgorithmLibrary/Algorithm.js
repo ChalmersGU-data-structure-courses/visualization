@@ -140,8 +140,8 @@ class Algorithm {
         const regex = new RegExp(`[^${allowed}]`, "g");
 
         const transform = (
-            allowed === allowed.toUpperCase() ? s => s.toUpperCase() :
-            allowed === allowed.toLowerCase() ? s => s.toLowerCase() : s => s
+            allowed === allowed.toUpperCase() ? (s) => s.toUpperCase() :
+            allowed === allowed.toLowerCase() ? (s) => s.toLowerCase() : (s) => s
         );
 
         // Idea taken from here: https://stackoverflow.com/a/14719818

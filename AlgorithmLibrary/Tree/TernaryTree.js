@@ -448,7 +448,7 @@ Algorithm.Tree.Ternary = class TernaryTree extends Algorithm.Tree {
             let child = null;
             if (tree.nextChar === " ") {
                 this.cmd("SetText", 2, [
-                    "Reached a leaf without a character, still have characeters left in search string", 
+                    "Reached a leaf without a character, still have characeters left in search string",
                     "String is not in the tree",
                 ]);
                 this.cmd("Step");
@@ -459,8 +459,8 @@ Algorithm.Tree.Ternary = class TernaryTree extends Algorithm.Tree {
 
             if (tree.nextChar === s.charAt(0)) {
                 this.cmd("SetText", 2, [
-                    "Next character in string  matches character at current node", 
-                    "Recursively look at center child,", 
+                    "Next character in string  matches character at current node",
+                    "Recursively look at center child,",
                     "removing first letter from search string",
                 ]);
                 this.cmd("Step");
@@ -469,15 +469,15 @@ Algorithm.Tree.Ternary = class TernaryTree extends Algorithm.Tree {
             } else if (tree.nextChar > s.charAt(0)) {
                 this.cmd("SetText", 2, [
                     "Next character in string < Character at current node",
-                    "Recursively look at left node,", 
+                    "Recursively look at left node,",
                     "leaving search string as it is",
                 ]);
                 this.cmd("Step");
                 child = tree.left;
             } else {
                 this.cmd("SetText", 2, [
-                    "Next character in string > Character at current node", 
-                    "Recursively look at left right,", 
+                    "Next character in string > Character at current node",
+                    "Recursively look at left right,",
                     "leaving search string as it is",
                 ]);
                 this.cmd("Step");
@@ -628,7 +628,7 @@ Algorithm.Tree.Ternary = class TernaryTree extends Algorithm.Tree {
                 if (tree.nextChar > s.charAt(0)) {
                     label = `<${tree.nextChar}`;
                     this.cmd("SetText", 2, [
-                        `Next character in stirng is < value stored at current node`, 
+                        "Next character in stirng is < value stored at current node",
                         `Making recursive call to left child passing in "${s}"`,
                     ]);
                     tree.left = this.createIfNotExtant(tree, tree.left, label);
@@ -638,7 +638,7 @@ Algorithm.Tree.Ternary = class TernaryTree extends Algorithm.Tree {
                 } else {
                     label = `>${tree.nextChar}`;
                     this.cmd("SetText", 2, [
-                        `Next character in stirng is > value stored at current node`, 
+                        "Next character in stirng is > value stored at current node",
                         `Making recursive call to right child passing in "${s}"`,
                     ]);
                     tree.right = this.createIfNotExtant(tree, tree.right, label);
