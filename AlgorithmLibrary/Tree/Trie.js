@@ -31,12 +31,14 @@
 
 
 Algorithm.Tree.Trie = class Trie extends Algorithm.Tree {
+    BACKGROUND_COLOR = "white";
     TRUE_COLOR = "#CCEE99"; // Light green
-    FALSE_COLOR = "white";
+    FALSE_COLOR = this.BACKGROUND_COLOR;
 
     NODE_SIZE = 30;
     HIGHLIGHT_CIRCLE_WIDTH = this.NODE_SIZE;
     NODE_SPACING_X = 10;
+    NEW_NODE_Y = 3 * this.TREE_ROOT_Y;
 
     INSERT_MANY_VALUES = [
         "I TOO TEND TO INGEST TEA IN INNS",
@@ -52,7 +54,7 @@ Algorithm.Tree.Trie = class Trie extends Algorithm.Tree {
 
     constructor(am) {
         super();
-        this.init(am);
+        if (am) this.init(am);
     }
 
     resetAction() {
@@ -204,24 +206,19 @@ Algorithm.Tree.Trie = class Trie extends Algorithm.Tree {
     }
 
     cleanupAfterDelete(node) {
-        if (node.numChildren() > 0 || node.isword) return;
+        if (!node.isLeaf() || node.isword) return;
         this.cmd("SetText", this.messageNextID, ["Deletion left us with a \"False\" leaf", "Removing false leaf"]);
         this.cmd("SetHighlight", node.graphicID, 1);
         this.cmd("Step");
         this.cmd("SetHighlight", node.graphicID, 0);
         if (node.parent) {
-            let index = 0;
-            while (node.parent.children[index] !== node) {
-                index++;
-            }
+            const index = this.getParentIndex(node);
             this.cmd("Disconnect", node.parent.graphicID, node.graphicID);
             this.removeTreeNode(node);
-            // this.cmd("Delete", tree.graphicID, 0);
             node.parent.children[index] = null;
             this.cleanupAfterDelete(node.parent);
         } else {
             this.removeTreeNode(node);
-            // this.cmd("Delete", tree.graphicID, 0);
             this.treeRoot = null;
         }
     }
@@ -274,7 +271,7 @@ Algorithm.Tree.Trie = class Trie extends Algorithm.Tree {
             child = this.createTreeNode(nodeID, this.NEW_NODE_X, this.NEW_NODE_Y, s.charAt(0));
             node.children[this.getIndex(s)] = child;
             child.parent = node;
-            this.cmd("Connect", node.graphicID, nodeID, this.FOREGROUND_COLOR, 0, false, s.charAt(0));
+            this.cmd("Connect", node.graphicID, nodeID, this.FOREGROUND_COLOR, 0, true, s.charAt(0));
             this.cmd("Step");
             this.resizeTree();
             this.cmd("Step");
@@ -282,7 +279,6 @@ Algorithm.Tree.Trie = class Trie extends Algorithm.Tree {
         }
         this.cmd("SetAlpha", this.highlightID, 1);
         this.cmd("SetPosition", this.highlightID, node.x, node.y);
-        this.cmd("SetWidth", this.highlightID, this.NODE_SIZE);
         this.cmd("SetText", this.messageNextID, [`Making recursive call to ${s.charAt(0)} child,`, `passing in "${s.substring(1)}"`]);
         this.cmd("Step");
         this.cmd("SetHighlight", node.graphicID, 0);
@@ -312,7 +308,7 @@ Algorithm.Tree.Trie = class Trie extends Algorithm.Tree {
 
     resizeWidths(node) {
         if (!node) return 0;
-        if (node.numChildren() === 0) {
+        if (node.isLeaf()) {
             node.width = this.NODE_SIZE + this.getSpacingX();
         } else {
             node.width = 0;
@@ -332,7 +328,7 @@ Algorithm.Tree.Trie = class Trie extends Algorithm.Tree {
         this.cmd("CreateCircle", elemID, value, x, y);
         this.cmd("SetWidth", elemID, this.NODE_SIZE);
         this.cmd("SetForegroundColor", elemID, this.FOREGROUND_COLOR);
-        this.cmd("SetBackgroundColor", elemID, this.FALSE_COLOR);
+        this.cmd("SetBackgroundColor", elemID, this.BACKGROUND_COLOR);
         return node;
     }
 
@@ -340,8 +336,19 @@ Algorithm.Tree.Trie = class Trie extends Algorithm.Tree {
         this.cmd("Delete", node.graphicID);
     }
 
-    getIndex(s) {
-        return s.charCodeAt(0) - "A".charCodeAt(0);
+    getIndex(s, offset = 0) {
+        return s.charCodeAt(offset) - "A".charCodeAt(0);
+    }
+
+    getParentIndex(node) {
+        const parent = node.parent;
+        if (!parent) return -1;
+        for (let i = 0; i < parent.children.length; i++) {
+            if (parent.children[i] === node) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     TrieNode = class TrieNode {
@@ -364,6 +371,10 @@ Algorithm.Tree.Trie = class Trie extends Algorithm.Tree {
 
         numChildren() {
             return this.getChildren().length;
+        }
+
+        isLeaf() {
+            return this.numChildren() === 0;
         }
     };
 };
