@@ -53,7 +53,7 @@ Algorithm.Tree.RedBlack = class RedBlackTree extends Algorithm.Tree.BST {
 
     showNullLeavesCallback() {
         this.animationManager.setAllLayers(
-            this.showNullLeaves.checked ? [0, 1] : [0]
+            this.showNullLeaves.checked ? [0, 1] : [0],
         );
     }
 
@@ -77,14 +77,14 @@ Algorithm.Tree.RedBlack = class RedBlackTree extends Algorithm.Tree.BST {
 
         const pibling = node.parent.getSibling();
         if (this.getBlackLevel(pibling) === 0) {
-            this.cmd("SetText", this.messageID, "Node, parent and parent's sibling are all red:\nPush blackness down from grandparent");
+            this.cmd("SetText", this.messageID, ["Node, parent and parent's sibling are all red:", "Push blackness down from grandparent"]);
             this.cmd("Step");
             this.setBlackLevel(pibling, 1);
             this.setBlackLevel(node.parent, 1);
             this.setBlackLevel(pibling.parent, 0);
             this.cmd("Step");
             this.fixDoubleRed(pibling.parent);
-            return
+            return;
         }
 
         let side = node.isLeftChild() ? "left" : "right";
@@ -177,10 +177,10 @@ Algorithm.Tree.RedBlack = class RedBlackTree extends Algorithm.Tree.BST {
             this.cmd("Step");
             this.fixDoubleBlack(newParent[dir][dir]);
         } else if (this.getBlackLevel(sibling[sibDir]) > 0) {
-            this.cmd("SetText", this.messageID, 
-                `Double black node is a ${dir} child, and has a black sibling whose ${sibDir} child is black:\n` +
-                `Rotate ${sibDir} to make opposite child red`
-            );
+            this.cmd("SetText", this.messageID, [
+                `Double black node is a ${dir} child, and has a black sibling whose ${sibDir} child is black:`,
+                `Rotate ${sibDir} to make opposite child red`,
+            ]);
             this.cmd("Step");
             const newSibling = isLeftChild ? this.singleRotateRight(sibling) : this.singleRotateLeft(sibling);
             this.setBlackLevel(newSibling, 1);
@@ -188,10 +188,10 @@ Algorithm.Tree.RedBlack = class RedBlackTree extends Algorithm.Tree.BST {
             this.cmd("Step");
             this.fixDoubleBlackChild(parent, isLeftChild);
         } else {
-            this.cmd("SetText", this.messageID, 
-                `Double black node is a ${dir} child, and has a black sibling whose ${sibDir} child is red:\n` +
-                `One ${dir} rotation can fix double-blackness`
-            );
+            this.cmd("SetText", this.messageID, [
+                `Double black node is a ${dir} child, and has a black sibling whose ${sibDir} child is red:`,
+                `One ${dir} rotation can fix double-blackness`,
+            ]);
             this.cmd("Step");
             const oldBlackLevel = this.getBlackLevel(parent);
             const newParent = isLeftChild ? this.singleRotateLeft(parent) : this.singleRotateRight(parent);

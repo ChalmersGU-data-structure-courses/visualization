@@ -171,7 +171,6 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
         }
 
         const found = i < node.numLabels() && this.compare(node.labels[i], value) === 0;
-        console.log(findLeaf, i, found, node.deepString())
         if (node.isLeaf() || (found && !findLeaf)) {
             if (found) this.cmd("SetTextColor", nodeID, this.HIGHLIGHT_COLOR, i);
             this.cmd("Step");
@@ -311,7 +310,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
         const risingLabel = node.labels[this.getSplitIndex()];
         const risingLabelX = this.getLabelX(node, this.getSplitIndex());
 
-        const rightNodeID = this.nextIndex++
+        const rightNodeID = this.nextIndex++;
         const rightNode = this.createTreeNode(rightNodeID, node.x, node.y, "");
 
         let rightSplit = this.getSplitIndex() + 1;
@@ -342,7 +341,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
         if (!node.isLeaf()) {
             for (let i = rightSplit; i < node.numChildren(); i++) {
                 const j = i - rightSplit;
-                let child = node.children[i];
+                const child = node.children[i];
                 rightNode.children[j] = child;
                 this.cmd("Disconnect", nodeID, child.graphicID);
                 this.cmd("Connect", rightNodeID, child.graphicID, this.FOREGROUND_COLOR, 0, false, "", j);
@@ -501,7 +500,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
         const parentID = parent.graphicID;
         const parentIndex = this.getParentIndex(node);
         const rightSib = parent.children[parentIndex + 1];
-        this.cmd("SetText", this.messageID, `Merging nodes: \n${node} + [${parent.labels[parentIndex]}] + ${rightSib}`);
+        this.cmd("SetText", this.messageID, [`Merging nodes:`, `${node} + [${parent.labels[parentIndex]}] + ${rightSib}`]);
         this.cmd("SetHighlight", nodeID, 1);
         this.cmd("SetHighlight", parentID, 1);
         this.cmd("SetHighlight", rightSib.graphicID, 1);
@@ -588,7 +587,10 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
             rightLabel = rightSib.labels[1];
             rightLabelX = this.getLabelX(rightSib, 1);
         }
-        this.cmd("SetText", this.messageID, `Stealing from right sibling: \n${node} ← [${leftLabel}] ← [${rightLabel}] / ${node.isBPlusLeaf()}`);
+        this.cmd("SetText", this.messageID, [
+            `Stealing from right sibling:`, 
+            `${node} ← [${leftLabel}] ← [${rightLabel}] / ${node.isBPlusLeaf()}`,
+        ]);
         this.cmd("Step");
 
         if (node.isBPlusLeaf()) {
@@ -674,7 +676,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
             rightLabelX = leftLabelX;
             rightLabelY = leftLabelY;
         }
-        this.cmd("SetText", this.messageID, `Stealing from left sibling: \n[${leftLabel}] → [${rightLabel}] → ${node}`);
+        this.cmd("SetText", this.messageID, [`Stealing from left sibling:`, `[${leftLabel}] → [${rightLabel}] → ${node}`]);
         this.cmd("Step");
 
         if (!node.isLeaf()) {
@@ -813,31 +815,37 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
         this.cmd("SetHighlight", nodeID, 1);
         this.cmd("SetTextColor", nodeID, this.HIGHLIGHT_COLOR, i);
         this.cmd("Step");
-        this.cmd("SetText", this.messageID, "Checking to see if tree to left of \nelement to delete has an extra key");
+        this.cmd("SetText", this.messageID, ["Checking to see if tree to left of", "element to delete has an extra key"]);
         this.cmd("SetEdgeHighlight", nodeID, node.children[i].graphicID, 1);
         this.cmd("Step");
         this.cmd("SetEdgeHighlight", nodeID, node.children[i].graphicID, 0);
         let maxNode = node.children[i];
 
         if (node.children[i].numLabels() === this.getMinKeys()) {
-            this.cmd("SetText", this.messageID,
-                "Tree to left of element to delete does not have an extra key. \nLooking to the right ...");
+            this.cmd("SetText", this.messageID, [
+                "Tree to left of element to delete does not have an extra key.", 
+                "Looking to the right ...",
+            ]);
             this.cmd("SetEdgeHighlight", nodeID, node.children[i + 1].graphicID, 1);
             this.cmd("Step");
             this.cmd("SetEdgeHighlight", nodeID, node.children[i + 1].graphicID, 0);
             // Trees to left and right of node to delete don't have enough keys
             // Do a merge, and then recursively delete the element
             if (node.children[i + 1].numLabels() === this.getMinKeys()) {
-                this.cmd("SetText", this.messageID,
-                    "Neither subtree has extra nodes. Merging around the key to delete, \nand recursively deleting ...");
+                this.cmd("SetText", this.messageID, [
+                    "Neither subtree has extra nodes. Merging around the key to delete,", 
+                    "and recursively deleting ...",
+                ]);
                 this.cmd("Step");
                 this.cmd("SetTextColor", nodeID, this.FOREGROUND_COLOR, i);
                 const nextNode = this.mergeRight(node.children[i]);
                 this.doDeleteTopdown(nextNode, value);
                 return;
             } else {
-                this.cmd("SetText", this.messageID,
-                    "Tree to right of element to delete does have an extra key. \nFinding the smallest key in that subtree ...");
+                this.cmd("SetText", this.messageID, [
+                    "Tree to right of element to delete does have an extra key.", 
+                    "Finding the smallest key in that subtree ...",
+                ]);
                 this.cmd("Step");
 
                 let minNode = node.children[i + 1];
@@ -884,8 +892,10 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
                 this.cmd("SetText", this.messageID, "");
             }
         } else {
-            this.cmd("SetText", this.messageID,
-                "Tree to left of element to delete does have an extra key. \nFinding the largest key in that subtree ...");
+            this.cmd("SetText", this.messageID, [
+                "Tree to left of element to delete does have an extra key.", 
+                "Finding the largest key in that subtree ...",
+            ]);
             this.cmd("Step");
             while (!maxNode.isLeaf()) {
                 this.cmd("SetHighlight", maxNode.graphicID, 1);
@@ -998,7 +1008,6 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
         const spacing = (node.width - node.childWidths) / node.numLabels();
         const nextY = y + this.NODE_HEIGHT + this.getSpacingY();
         for (const child of node.getChildren()) {
-            if (!child) {console.error(node.toString(), node.getChildren()); continue}
             this.setNewPositions(child, x + child.leftWidth, nextY);
             x += child.width + spacing;
         }

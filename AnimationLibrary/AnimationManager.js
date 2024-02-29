@@ -681,7 +681,8 @@ class AnimationManager extends EventListener {
                 undoBlock.push(new UndoBlock.SetAlpha(id, oldAlpha));
                 this.animatedObjects.setAlpha(id, alpha);
             } else if (cmd === "SETTEXT") {
-                const text = args.shift();
+                let text = args.shift();
+                if (text instanceof Array) text = text.join("\n");
                 const index = Number(args.shift()) || 0;
                 const oldText = this.animatedObjects.getText(id, index);
                 undoBlock.push(new UndoBlock.SetText(id, oldText, index));

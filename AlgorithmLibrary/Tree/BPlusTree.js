@@ -75,7 +75,7 @@ Algorithm.Tree.BPlusTree = class BPlusTree extends Algorithm.Tree.BTree {
     // Insert a value at a node
 
     doInsertBottomup() {
-        console.error("BPlusTree.doInsertBottomup: This should not be called")
+        console.error("BPlusTree.doInsertBottomup: This should not be called");
     }
 
     doInsertTopdown(node, value) {
@@ -127,7 +127,7 @@ Algorithm.Tree.BPlusTree = class BPlusTree extends Algorithm.Tree.BTree {
     // Delete a node
 
     doDeleteBottomup() {
-        console.error("BPlusTree.doDeleteBottumup: This should not be called")
+        console.error("BPlusTree.doDeleteBottumup: This should not be called");
     }
 
     doDeleteTopdown(node, value, foundParent = null) {
@@ -189,10 +189,10 @@ Algorithm.Tree.BPlusTree = class BPlusTree extends Algorithm.Tree.BTree {
                 } else if (node.next) {
                     nextSmallest = node.next.labels[0];
                 }
-                for (let i = 0; i < foundParent.numLabels(); i++) {
-                    if (foundParent.labels[i] === value) {
-                        foundParent.labels[i] = nextSmallest;
-                        this.cmd("SetText", foundParent.graphicID, nextSmallest, i);
+                for (let j = 0; j < foundParent.numLabels(); j++) {
+                    if (foundParent.labels[j] === value) {
+                        foundParent.labels[j] = nextSmallest;
+                        this.cmd("SetText", foundParent.graphicID, nextSmallest, j);
                         break;
                     }
                 }
@@ -215,7 +215,7 @@ Algorithm.Tree.BPlusTree = class BPlusTree extends Algorithm.Tree.BTree {
         this.cmd("SetHighlight", node.graphicID, 1);
         this.cmd("SetHighlight", parentNode.graphicID, 1);
         this.cmd("SetHighlight", rightSib.graphicID, 1);
-        this.cmd("SetText", this.messageID, `Merging nodes: \n${node} + [${parentNode.keys[parentIndex]}] + ${rightSib}`);
+        this.cmd("SetText", this.messageID, [`Merging nodes:`, `${node} + [${parentNode.keys[parentIndex]}] + ${rightSib}`]);
         this.cmd("Step");
 
         let moveLabelID;
@@ -298,7 +298,7 @@ Algorithm.Tree.BPlusTree = class BPlusTree extends Algorithm.Tree.BTree {
         this.cmd("SetHighlight", node.graphicID, 1);
         this.cmd("SetHighlight", parentNode.graphicID, 1);
         this.cmd("SetHighlight", rightSib.graphicID, 1);
-        this.cmd("SetText", this.messageID, `Stealing from right sibling: \n${node} ← [${parentNode.labels[parentIndex]}] ← ${rightSib}`);
+        this.cmd("SetText", this.messageID, [`Stealing from right sibling:`, `${node} ← [${parentNode.labels[parentIndex]}] ← ${rightSib}`]);
         this.cmd("Step");
 
         nodeNumKeys++;
@@ -386,7 +386,7 @@ Algorithm.Tree.BPlusTree = class BPlusTree extends Algorithm.Tree.BTree {
             this.cmd("SetText", node.graphicID, node.keys[i], i);
         }
         const leftSib = parentNode.children[parentIndex - 1];
-        this.cmd("SetText", this.messageID, `Stealing from left sibling: \n${leftSib} → [${parentNode.keys[parentIndex]}] → ${node}`);
+        this.cmd("SetText", this.messageID, [`Stealing from left sibling:`, `${leftSib} → [${parentNode.keys[parentIndex]}] → ${node}`]);
 
         this.cmd("SetText", node.graphicID, "", 0);
         this.cmd("SetText", parentNode.graphicID, "", parentIndex - 1);

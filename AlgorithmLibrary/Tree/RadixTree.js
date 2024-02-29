@@ -108,7 +108,7 @@ Algorithm.Tree.Radix = class RadixTree extends Algorithm.Tree {
 
     findIndexDifference(s1, s2, id, wordIndex) {
         let index = 0;
-        this.cmd("SetText", 2, "Comparing next letter in search term \n to next letter in prefix of current node");
+        this.cmd("SetText", 2, ["Comparing next letter in search term", "to next letter in prefix of current node"]);
 
         while (index < s1.length && index < s2.length) {
             this.cmd("SetHighlightIndex", 1, index);
@@ -285,7 +285,7 @@ Algorithm.Tree.Radix = class RadixTree extends Algorithm.Tree {
             this.cmd("Step");
 
             if (value.length > indexDifference) {
-                this.cmd("SetText", 2, `Recusively search remaining string  \nin the '${value.charAt(indexDifference)}' child`);
+                this.cmd("SetText", 2, [`Recusively search remaining string`, `in the '${value.charAt(indexDifference)}' child`]);
                 this.cmd("Step");
                 this.cmd("SetHighlight", tree.graphicID, 0);
                 this.cmd("SetText", 1, value.substring(indexDifference));
@@ -294,7 +294,7 @@ Algorithm.Tree.Radix = class RadixTree extends Algorithm.Tree {
                 const noChild = tree.children[index] == null;
 
                 if (noChild) {
-                    this.cmd("SetText", 2, `Child '${value.charAt(indexDifference)}' does not exit.  \nString is not in the tree.`);
+                    this.cmd("SetText", 2, [`Child '${value.charAt(indexDifference)}' does not exit.`, `String is not in the tree.`]);
                     this.cmd("Step");
                     return null;
                 } else {
@@ -329,7 +329,7 @@ Algorithm.Tree.Radix = class RadixTree extends Algorithm.Tree {
                 return null;
             }
         } else {
-            this.cmd("SetText", 2, "Reached end of search string, \nStill characters remaining at node\nString not in tree");
+            this.cmd("SetText", 2, ["Reached end of search string,", "Still characters remaining at node", "String not in tree"]);
             this.cmd("Step");
             this.cmd("SetHighlight", tree.graphicID, 0);
             this.cmd("SetText", 2, "");
@@ -408,7 +408,7 @@ Algorithm.Tree.Radix = class RadixTree extends Algorithm.Tree {
         const children = this.numChildren(tree);
 
         if (children === 0 && !tree.isword) {
-            this.cmd("SetText", 2, "Deletion left us with a \"False\" leaf\nRemoving false leaf");
+            this.cmd("SetText", 2, ['Deletion left us with a "False" leaf', "Removing false leaf"]);
             this.cmd("SetHighlight", tree.graphicID, 1);
             this.cmd("Step");
             this.cmd("SetHighlight", tree.graphicID, 0);
@@ -433,7 +433,7 @@ Algorithm.Tree.Radix = class RadixTree extends Algorithm.Tree {
                     break;
                 }
             }
-            this.cmd("SetText", 2, "Deletion left us with a \"False\" node\nContaining one child.  Combining ...");
+            this.cmd("SetText", 2, ['Deletion left us with a "False" node', "Containing one child: Combining"]);
             this.cmd("SetHighlight", tree.graphicID, 1);
             this.cmd("Step");
             this.cmd("SetHighlight", tree.graphicID, 0);
@@ -511,7 +511,7 @@ Algorithm.Tree.Radix = class RadixTree extends Algorithm.Tree {
             this.cmd("Step");
 
             if (s.length > indexDifference) {
-                this.cmd("SetText", 2, `Recusively insert remaining string  \ninto the '${s.charAt(indexDifference)}' child`);
+                this.cmd("SetText", 2, [`Recusively insert remaining string`, `into the '${s.charAt(indexDifference)}' child`]);
                 this.cmd("Step");
                 this.cmd("SetHighlight", rt.graphicID, 0);
                 this.cmd("SetText", 1, s.substring(indexDifference));
@@ -558,7 +558,7 @@ Algorithm.Tree.Radix = class RadixTree extends Algorithm.Tree {
         const firstRemainder = rt.wordRemainder.substring(0, indexDifference);
         const secondRemainder = rt.wordRemainder.substring(indexDifference);
 
-        this.cmd("SetText", 2, "Reached a mismatch in prefix. \nCreate a new node with common prefix");
+        this.cmd("SetText", 2, ["Reached a mismatch in prefix.", "Create a new node with common prefix"]);
 
         this.cmd("CreateCircle", this.nextIndex, firstRemainder, this.NEW_NODE_X, this.NEW_NODE_Y);
         this.cmd("SetForegroundColor", this.nextIndex, this.FOREGROUND_COLOR);
