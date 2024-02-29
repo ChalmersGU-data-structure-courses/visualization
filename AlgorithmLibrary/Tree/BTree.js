@@ -92,7 +92,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
     }
 
     getMaxDegree() {
-        return parseInt(this.maxDegreeSelect.value) || this.INITIAL_MAX_DEGREE;
+        return parseInt(this.maxDegreeSelect?.value) || this.INITIAL_MAX_DEGREE;
     }
 
     getMaxKeys() {
@@ -1126,4 +1126,15 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
             }
         }
     };
+};
+
+Algorithm.Tree.TwoThreeTree = class TwoThreeTree extends Algorithm.Tree.BTree {
+    MAX_DEGREES = null;
+    INITIAL_MAX_DEGREE = 3;
+    USE_PREEMPTIVE_SPLIT = false;
+
+    constructor(am) {
+        super();
+        if (am) this.init(am);
+    }
 };
