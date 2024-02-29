@@ -30,6 +30,10 @@ rules:
     "@stylistic/object-curly-spacing": [warn, never]
     "@stylistic/padded-blocks": [warn, {blocks: never, switches: never}]
     "@stylistic/brace-style": [warn, 1tbs]
+    "@stylistic/arrow-parens": [warn, always]
+    "@stylistic/no-trailing-spaces": [warn]
+    "@stylistic/no-multi-spaces": [warn, {ignoreEOLComments: false}]
+    "@stylistic/space-infix-ops": [warn]
     "@stylistic/multiline-ternary": off
     "@stylistic/operator-linebreak": off
 

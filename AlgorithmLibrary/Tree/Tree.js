@@ -43,15 +43,17 @@ Algorithm.Tree = class Tree extends Algorithm {
     NEW_NODE_Y = 2 * this.TREE_ROOT_Y;
 
     NODE_SIZE = 40;
-    NODE_SPACING = 20;
+    NODE_SPACING_X = 20;
+    NODE_SPACING_Y = this.NODE_SPACING_X;
     HIGHLIGHT_CIRCLE_WIDTH = this.NODE_SIZE;
 
     FIRST_PRINT_POS_X = 50;
     PRINT_VERTICAL_GAP = 20;
     PRINT_HORIZONTAL_GAP = 50;
 
-    MESSAGE_X = 10;
-    MESSAGE_Y = 10;
+    MESSAGE_X = 20;
+    MESSAGE_Y = 20;
+    MESSAGE_SPACING = 30;
 
     ALLOW_DUPLICATES = false;
 
@@ -63,6 +65,11 @@ Algorithm.Tree = class Tree extends Algorithm {
         "R E C U R S I O N",
         5,
     ];
+
+    ALLOWED_CHARS = "ALPHANUM";
+    INPUT_LEN = 4;
+    INPUT_MANY_LEN = 20;
+    INPUT_MAX_LEN = 10;
 
 
     constructor(am) {
@@ -80,22 +87,22 @@ Algorithm.Tree = class Tree extends Algorithm {
         this.animationManager.resetAll();
         this.commands = [];
         this.nextIndex = 0;
+        this.resetAction();
+        this.initialIndex = this.nextIndex;
+        this.animationManager.StartNewAnimation(this.commands);
+        this.animationManager.skipForward();
+        this.animationManager.clearHistory();
+    }
 
+    resetAction() {
         this.messageID = this.nextIndex++;
         this.cmd("CreateLabel", this.messageID, "", this.MESSAGE_X, this.MESSAGE_Y, 0);
-
         this.highlightID = this.nextIndex++;
         this.cmd("CreateHighlightCircle", this.highlightID, this.HIGHLIGHT_CIRCLE_COLOR, 0, 0);
         this.cmd("SetWidth", this.highlightID, this.HIGHLIGHT_CIRCLE_WIDTH);
         this.cmd("SetHighlight", this.highlightID, true);
         this.cmd("SetAlpha", this.highlightID, 0);
-
         this.treeRoot = null;
-
-        this.initialIndex = this.nextIndex;
-        this.animationManager.StartNewAnimation(this.commands);
-        this.animationManager.skipForward();
-        this.animationManager.clearHistory();
     }
 
     sizeChanged() {
@@ -107,9 +114,13 @@ Algorithm.Tree = class Tree extends Algorithm {
     }
 
     addControls() {
+        const attrs = {};
+        attrs.maxlength = this.INPUT_LEN;
+        attrs.size = Math.min(this.INPUT_LEN, this.INPUT_MAX_LEN);
+        let allowed = this.ALLOWED_CHARS;
         if (this.INSERT_MANY_VALUES?.length > 1) {
             const insertManyTexts = this.INSERT_MANY_VALUES.map(
-                (v) => isNaN(v) ? v : v + " random numbers"
+                (v) => isNaN(v) ? v : `${v} random numbers`,
             );
             this.insertSelect = this.addSelectToAlgorithmBar(
                 ["", ...this.INSERT_MANY_VALUES],
@@ -117,21 +128,27 @@ Algorithm.Tree = class Tree extends Algorithm {
             );
             this.insertSelect.value = "";
             this.insertSelect.onchange = this.insertSelectCallback.bind(this);
+            allowed += "+";
+            attrs.maxlength = this.INPUT_MANY_LEN;
+            attrs.size = Math.min(this.INPUT_MANY_LEN, this.INPUT_MAX_LEN);
         }
-        this.insertField = this.addControlToAlgorithmBar("Text", "", {maxlength: 20, size: 15});
-        this.addReturnSubmit(this.insertField, "ALPHANUM+", this.insertCallback.bind(this));
+        this.insertField = this.addControlToAlgorithmBar("Text", "", attrs);
+        this.addReturnSubmit(this.insertField, allowed, this.insertCallback.bind(this));
         this.insertButton = this.addButtonToAlgorithmBar("Insert");
         this.insertButton.onclick = this.insertCallback.bind(this);
 
+        attrs.maxlength = this.INPUT_LEN;
+        attrs.size = Math.min(this.INPUT_LEN, this.INPUT_MAX_LEN);
+
         this.addBreakToAlgorithmBar();
-        this.deleteField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
-        this.addReturnSubmit(this.deleteField, "ALPHANUM", this.deleteCallback.bind(this));
+        this.deleteField = this.addControlToAlgorithmBar("Text", "", attrs);
+        this.addReturnSubmit(this.deleteField, this.ALLOWED_CHARS, this.deleteCallback.bind(this));
         this.deleteButton = this.addButtonToAlgorithmBar("Delete");
         this.deleteButton.onclick = this.deleteCallback.bind(this);
 
         this.addBreakToAlgorithmBar();
-        this.findField = this.addControlToAlgorithmBar("Text", "", {maxlength: 4, size: 4});
-        this.addReturnSubmit(this.findField, "ALPHANUM", this.findCallback.bind(this));
+        this.findField = this.addControlToAlgorithmBar("Text", "", attrs);
+        this.addReturnSubmit(this.findField, this.ALLOWED_CHARS, this.findCallback.bind(this));
         this.findButton = this.addButtonToAlgorithmBar("Find");
         this.findButton.onclick = this.findCallback.bind(this);
 
@@ -155,8 +172,8 @@ Algorithm.Tree = class Tree extends Algorithm {
     insertSelectCallback() {
         let selected = this.insertSelect.value;
         if (!isNaN(selected)) selected = Array.from(
-            {length: selected}, 
-            (_) => 10 + Math.floor(90 * Math.random())
+            {length: selected},
+            (_) => 10 + Math.floor(90 * Math.random()),
         ).join(" ");
         this.insertField.value = selected;
         this.insertSelect.value = "";
@@ -166,7 +183,7 @@ Algorithm.Tree = class Tree extends Algorithm {
         const insertField = this.insertField.value.trim();
         this.insertField.value = "";
         if (insertField === "") return;
-        const values = insertField.split(/\s+/).map(v => this.normalizeNumber(v));
+        const values = insertField.split(/\s+/).map((v) => this.normalizeNumber(v));
         this.implementAction(this.insertAction.bind(this), ...values);
     }
 
@@ -228,7 +245,6 @@ Algorithm.Tree = class Tree extends Algorithm {
             this.printPosX = this.FIRST_PRINT_POS_X;
             this.printPosY += this.PRINT_VERTICAL_GAP;
         }
-
     }
 
     doPrint(tree) {
@@ -372,11 +388,11 @@ Algorithm.Tree = class Tree extends Algorithm {
     }
 
     getSpacingX() {
-        return this.NODE_SPACING * this.getCanvasWidth() / 1000;
+        return this.NODE_SPACING_X * this.getCanvasWidth() / 1000;
     }
 
     getSpacingY() {
-        return this.getSpacingX();
+        return this.NODE_SPACING_Y * this.getCanvasWidth() / 1000;
     }
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -394,10 +410,12 @@ Algorithm.Tree = class Tree extends Algorithm {
         if (!this.treeRoot) return;
         this.resizeWidths(this.treeRoot);
         let startingX = this.getTreeRootX();
-        if (this.treeRoot.leftWidth > startingX) {
-            startingX = this.treeRoot.leftWidth;
-        } else if (this.treeRoot.rightWidth > startingX) {
-            startingX = Math.max(this.treeRoot.leftWidth, 2 * startingX - this.treeRoot.rightWidth);
+        if (this.treeRoot.leftWidth && this.treeRoot.rightWidth) {
+            if (this.treeRoot.leftWidth > startingX) {
+                startingX = this.treeRoot.leftWidth;
+            } else if (this.treeRoot.rightWidth > startingX) {
+                startingX = Math.max(this.treeRoot.leftWidth, 2 * startingX - this.treeRoot.rightWidth);
+            }
         }
         this.setNewPositions(this.treeRoot, startingX, this.getTreeRootY());
         const cmd = animate ? "Move" : "SetPosition";

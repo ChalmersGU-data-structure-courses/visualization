@@ -26,7 +26,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // Import and export information used by the Javascript linter ESLint:
-/* globals Toolbar, EventListener, ObjectManager, UndoBlock */
+/* globals Toolbar, EventListener, ObjectManager, UndoBlock, DEBUG */
 /* exported initCanvas, AnimationManager, SingleAnimation */
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -250,9 +250,9 @@ class AnimationManager extends EventListener {
 
     updateCanvasSize() {
         const size = this.sizeSelector?.value || this.DEFAULT_CANVAS_SIZE;
-        let [w, h] = size.split(":").map(n => parseInt(n));
+        let [w, h] = size.split(":").map((n) => parseInt(n));
         if (isNaN(w) || isNaN(h)) {
-            [w, h] = this.DEFAULT_CANVAS_SIZE.split(":").map(n => parseInt(n));
+            [w, h] = this.DEFAULT_CANVAS_SIZE.split(":").map((n) => parseInt(n));
         }
         this.canvas.width = w;
         this.canvas.height = h;
@@ -606,7 +606,7 @@ class AnimationManager extends EventListener {
 
         while (this.currentAnimation < this.AnimationSteps.length && !foundBreak) {
             const args = this.AnimationSteps[this.currentAnimation].split("<;>");
-            if (debug) console.log("-->", ...args);
+            if (DEBUG) console.log("-->", ...args);
             const cmd = args.shift().toUpperCase();
             const id = Number(args.shift());
             if (cmd === "CREATECIRCLE") {
