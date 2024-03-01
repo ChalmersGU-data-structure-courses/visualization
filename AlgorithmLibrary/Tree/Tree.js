@@ -47,13 +47,12 @@ Algorithm.Tree = class Tree extends Algorithm {
     NODE_SPACING_Y = this.NODE_SPACING_X;
     HIGHLIGHT_CIRCLE_WIDTH = this.NODE_SIZE;
 
-    FIRST_PRINT_POS_X = 50;
-    PRINT_VERTICAL_GAP = 20;
-    PRINT_HORIZONTAL_GAP = 50;
-
     MESSAGE_X = 20;
     MESSAGE_Y = 20;
     MESSAGE_SPACING = 30;
+
+    FIRST_PRINT_POS_X = 50;
+    FIRST_PRINT_POS_Y = 3 * this.MESSAGE_Y;
 
     ALLOW_DUPLICATES = false;
 
@@ -216,15 +215,12 @@ Algorithm.Tree = class Tree extends Algorithm {
         if (!this.isTreeNode(this.treeRoot)) return [];
         this.commands = [];
         this.cmd("SetText", this.messageID, "Printing tree");
+        const firstLabel = this.nextIndex++;
+        this.cmd("CreateLabel", firstLabel, "Output:  ", this.FIRST_PRINT_POS_X, this.getCanvasHeight() - this.FIRST_PRINT_POS_Y);
         this.cmd("Step");
         this.cmd("SetAlpha", this.highlightID, 1);
         this.cmd("SetPosition", this.highlightID, this.treeRoot.x, this.treeRoot.y);
-        const firstLabel = this.nextIndex;
-
-        this.printPosX = this.FIRST_PRINT_POS_X;
-        this.printPosY = this.getCanvasHeight() - 3 * this.PRINT_VERTICAL_GAP;
         this.doPrint(this.treeRoot);
-
         this.cmd("SetAlpha", this.highlightID, 0);
         this.cmd("Step");
         for (let i = firstLabel; i < this.nextIndex; i++) {
@@ -235,16 +231,14 @@ Algorithm.Tree = class Tree extends Algorithm {
         return this.commands;
     }
 
-    printOneLabel(label, fromX, fromY) {
+    printOneLabel(label, fromID, toID = null) {
         const nextLabelID = this.nextIndex++;
-        this.cmd("CreateLabel", nextLabelID, label, fromX, fromY);
+        if (!toID) toID = nextLabelID - 1;
+        this.cmd("CreateLabel", nextLabelID, `${label}  `, 0, 0);
+        this.cmd("AlignMiddle", nextLabelID, fromID);
         this.cmd("SetForegroundColor", nextLabelID, this.PRINT_COLOR);
-        this.cmd("Move", nextLabelID, this.printPosX, this.printPosY);
-        this.printPosX += this.PRINT_HORIZONTAL_GAP;
-        if (this.printPosX > this.getCanvasWidth() - this.PRINT_HORIZONTAL_GAP) {
-            this.printPosX = this.FIRST_PRINT_POS_X;
-            this.printPosY += this.PRINT_VERTICAL_GAP;
-        }
+        this.cmd("MoveToAlignRight", nextLabelID, toID);
+        return nextLabelID;
     }
 
     doPrint(tree) {

@@ -57,38 +57,6 @@ Algorithm.Tree.Radix = class RadixTree extends Algorithm.Tree.Trie {
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Print the values in the tree
-
-    doPrint(node, stringSoFar) {
-        if (node.value !== "") {
-            stringSoFar += node.value;
-            const nextLabelID = this.nextIndex++;
-            this.cmd("CreateLabel", nextLabelID, node.value, node.x, node.y, 0);
-            this.cmd("MoveToAlignRight", nextLabelID, this.messageExtraID);
-            this.cmd("Step");
-            this.cmd("Delete", nextLabelID);
-            this.nextIndex--;
-            this.cmd("SetText", this.messageExtraID, stringSoFar);
-        }
-        if (node.isword) {
-            const nextLabelID = this.nextIndex++;
-            this.cmd("CreateLabel", nextLabelID, `${stringSoFar}  `, 0, 0, 0);
-            this.cmd("SetForegroundColor", nextLabelID, this.PRINT_COLOR);
-            this.cmd("AlignRight", nextLabelID, this.messageID, this.PRINT_COLOR);
-            this.cmd("MoveToAlignRight", nextLabelID, nextLabelID - 1);
-            this.cmd("Step");
-        }
-        for (const child of node.getChildren()) {
-            this.cmd("Move", this.highlightID, child.x, child.y);
-            this.cmd("Step");
-            this.doPrint(child, stringSoFar);
-            this.cmd("Move", this.highlightID, node.x, node.y);
-            this.cmd("SetText", this.messageExtraID, stringSoFar);
-            this.cmd("Step");
-        }
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////
     // Find a value in the tree
 
     doFind(node, value) {

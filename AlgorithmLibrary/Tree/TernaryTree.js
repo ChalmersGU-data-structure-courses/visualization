@@ -176,11 +176,7 @@ Algorithm.Tree.Ternary = class TernaryTree extends Algorithm.Tree.Trie {
 
     doPrint(node, stringSoFar) {
         if (node.isword) {
-            const nextLabelID = this.nextIndex++;
-            this.cmd("CreateLabel", nextLabelID, `${stringSoFar}  `, 0, 0, 0);
-            this.cmd("SetForegroundColor", nextLabelID, this.PRINT_COLOR);
-            this.cmd("AlignRight", nextLabelID, this.messageID, this.PRINT_COLOR);
-            this.cmd("MoveToAlignRight", nextLabelID, nextLabelID - 1);
+            this.printOneLabel(stringSoFar, this.messageID);
             this.cmd("Step");
         }
         if (node.left) {
@@ -191,15 +187,12 @@ Algorithm.Tree.Ternary = class TernaryTree extends Algorithm.Tree.Trie {
             this.cmd("Step");
         }
         if (node.center) {
-            const stringSoFar2 = stringSoFar + node.value;
-            const nextLabelID = this.nextIndex++;
-            this.cmd("CreateLabel", nextLabelID, node.value, node.x, node.y, 0);
-            this.cmd("SetForegroundColor", nextLabelID, this.PRINT_COLOR);
-            this.cmd("MoveToAlignRight", nextLabelID, this.messageExtraID);
+            const nextLabelID = this.printOneLabel(node.value, this.highlightID, this.messageExtraID);
             this.cmd("Move", this.highlightID, node.center.x, node.center.y);
             this.cmd("Step");
             this.cmd("Delete", nextLabelID);
             this.nextIndex--;
+            const stringSoFar2 = stringSoFar + node.value;
             this.cmd("SetText", this.messageExtraID, stringSoFar2);
             this.doPrint(node.center, stringSoFar2);
             this.cmd("Move", this.highlightID, node.x, node.y);

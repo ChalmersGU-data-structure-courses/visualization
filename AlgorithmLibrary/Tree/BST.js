@@ -45,7 +45,7 @@ Algorithm.Tree.BST = class BST extends Algorithm.Tree {
             this.cmd("Move", this.highlightID, node.x, node.y);
             this.cmd("Step");
         }
-        this.printOneLabel(node.data, node.x, node.y);
+        this.printOneLabel(node.data, node.graphicID);
         this.cmd("Step");
         if (this.isTreeNode(node.right)) {
             this.doPrint(node.right);

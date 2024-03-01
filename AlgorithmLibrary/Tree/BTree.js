@@ -114,13 +114,13 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
         this.cmd("Move", this.highlightID, this.getLabelX(node, 0), node.y);
         this.cmd("Step");
         if (node.isLeaf()) {
-            this.printOneLabel(node.labels[0], this.getLabelX(node, 0), node.y);
+            this.printOneLabel(node.labels[0], this.highlightID);
             this.cmd("Step");
             for (let i = 1; i < node.numLabels(); i++) {
                 const labelX = this.getLabelX(node, i);
                 this.cmd("Move", this.highlightID, labelX, node.y);
                 this.cmd("Step");
-                this.printOneLabel(node.labels[i], labelX, node.y);
+                this.printOneLabel(node.labels[i], this.highlightID);
                 this.cmd("Step");
             }
         } else {
@@ -132,7 +132,7 @@ Algorithm.Tree.BTree = class BTree extends Algorithm.Tree {
                     this.cmd("Step");
                 }
                 if (i < node.numLabels()) {
-                    this.printOneLabel(node.labels[i], labelX, node.y);
+                    this.printOneLabel(node.labels[i], this.highlightID);
                     this.cmd("Step");
                 }
             }

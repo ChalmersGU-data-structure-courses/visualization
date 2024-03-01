@@ -72,14 +72,16 @@ Algorithm.Tree.Trie = class Trie extends Algorithm.Tree {
     printAction() {
         if (!this.treeRoot) return [];
         this.commands = [];
-        this.cmd("SetForegroundColor", this.messageExtraID, this.PRINT_COLOR);
+        this.cmd("SetText", this.messageID, "Printing tree");
         const firstLabel = this.nextIndex++;
-        this.cmd("CreateLabel", firstLabel, "Output:  ", this.FIRST_PRINT_POS_X, this.getCanvasHeight() - 3 * this.MESSAGE_Y);
+        this.cmd("CreateLabel", firstLabel, "Output:  ", this.FIRST_PRINT_POS_X, this.getCanvasHeight() - this.FIRST_PRINT_POS_Y);
+        this.cmd("Step");
+        this.cmd("SetAlpha", this.highlightID, 1);
+        this.cmd("SetPosition", this.highlightID, this.getTreeRootX(), this.getTreeRootY());
         this.cmd("SetText", this.messageID, "Current String:  ");
         this.cmd("SetText", this.messageExtraID, "");
         this.cmd("AlignRight", this.messageExtraID, this.messageID);
-        this.cmd("SetAlpha", this.highlightID, 1);
-        this.cmd("SetPosition", this.highlightID, this.getTreeRootX(), this.getTreeRootY());
+        this.cmd("SetForegroundColor", this.messageExtraID, this.PRINT_COLOR);
         this.doPrint(this.treeRoot, "");
         this.cmd("SetAlpha", this.highlightID, 0);
         this.cmd("Step");
@@ -87,33 +89,27 @@ Algorithm.Tree.Trie = class Trie extends Algorithm.Tree {
             this.cmd("Delete", i);
         }
         this.cmd("SetForegroundColor", this.messageExtraID, this.FOREGROUND_COLOR);
-        this.nextIndex = firstLabel; // Reuse objects. Not necessary.
+        this.nextIndex = firstLabel;
         return this.commands;
     }
 
     doPrint(node, stringSoFar) {
-        if (node.isword) {
-            const nextLabelID = this.nextIndex++;
-            this.cmd("CreateLabel", nextLabelID, `${stringSoFar}  `, 0, 0, 0);
-            this.cmd("SetForegroundColor", nextLabelID, this.PRINT_COLOR);
-            this.cmd("AlignRight", nextLabelID, this.messageID, this.PRINT_COLOR);
-            this.cmd("MoveToAlignRight", nextLabelID, nextLabelID - 1);
-            this.cmd("Step");
-        }
-        for (const child of node.getChildren()) {
-            const stringSoFar2 = stringSoFar + child.value;
-            const nextLabelID = this.nextIndex++;
-            const fromX = (child.x + node.x) / 2;
-            const fromY = (child.y + node.y) / 2;
-            this.cmd("CreateLabel", nextLabelID, child.value, fromX, fromY, 0);
-            this.cmd("SetForegroundColor", nextLabelID, this.PRINT_COLOR);
-            this.cmd("MoveToAlignRight", nextLabelID, this.messageExtraID);
-            this.cmd("Move", this.highlightID, child.x, child.y);
+        if (node.value) {
+            stringSoFar += node.value;
+            const nextLabelID = this.printOneLabel(node.value, this.highlightID, this.messageExtraID);
             this.cmd("Step");
             this.cmd("Delete", nextLabelID);
             this.nextIndex--;
-            this.cmd("SetText", this.messageExtraID, stringSoFar2);
-            this.doPrint(child, stringSoFar2);
+            this.cmd("SetText", this.messageExtraID, stringSoFar);
+        }
+        if (node.isword) {
+            this.printOneLabel(stringSoFar, this.messageID);
+            this.cmd("Step");
+        }
+        for (const child of node.getChildren()) {
+            this.cmd("Move", this.highlightID, child.x, child.y);
+            this.cmd("Step");
+            this.doPrint(child, stringSoFar);
             this.cmd("Move", this.highlightID, node.x, node.y);
             this.cmd("SetText", this.messageExtraID, stringSoFar);
             this.cmd("Step");
