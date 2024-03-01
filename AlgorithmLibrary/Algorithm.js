@@ -198,11 +198,10 @@ class Algorithm {
     // Helper method to create a command string from a bunch of arguments
     cmd(...args) {
         if (this.recordAnimation) {
-            if (args[0].toUpperCase() === "SETTEXT" && args[2]) {
+            if (args[0].toUpperCase() === "SETTEXT") {
                 if (args[2] instanceof Array) args[2] = args[2].join("\n");
-                if (args[1] === this.messageID) console.log(args[2]);
             }
-            this.commands.push(args.join("<;>"));
+            this.commands.push(args);
         }
     }
 

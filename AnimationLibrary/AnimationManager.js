@@ -172,17 +172,24 @@ class AnimationManager extends EventListener {
         return (to - from) * percent + from;
     }
 
-    parseBool(str, defaultValue) {
-        if (str == null) return defaultValue;
-        const uppercase = str.trim().toUpperCase();
-        const returnVal = !(uppercase === "FALSE" || uppercase === "F" || uppercase === "0" || uppercase === "");
-        return returnVal;
+    parseBool(value, defaultValue) {
+        if (value == null) return defaultValue;
+        if (typeof value === "string") {
+            const uppercase = value.trim().toUpperCase();
+            value = !(uppercase === "FALSE" || uppercase === "F" || uppercase === "0" || uppercase === "");
+        }
+        return Boolean(value);
     }
 
     parseColor(color, defaultColor) {
         if (!color) return defaultColor;
         if (color.startsWith("0x")) return `#${color.substring(2)}`;
         return color;
+    }
+
+    parseText(text) {
+        if (text instanceof Array) text = text.join("\n");
+        return text.toString();
     }
 
     getCookie(cookieName) {
@@ -605,12 +612,17 @@ class AnimationManager extends EventListener {
         let anyAnimations = false;
 
         while (this.currentAnimation < this.AnimationSteps.length && !foundBreak) {
-            const args = this.AnimationSteps[this.currentAnimation].split("<;>");
+            let args = this.AnimationSteps[this.currentAnimation];
+            if (typeof args === "string") {
+                args = args.split("<;>");
+            } else {
+                args = [...args]; // Make a shallow copy so to not accidentally modify the original list
+            }
             if (DEBUG) console.log("-->", ...args);
             const cmd = args.shift().toUpperCase();
             const id = Number(args.shift());
             if (cmd === "CREATECIRCLE") {
-                const label = args.shift();
+                const label = this.parseText(args.shift());
                 const x = Number(args.shift());
                 const y = Number(args.shift());
                 undoBlock.push(new UndoBlock.Create(id));
@@ -626,7 +638,7 @@ class AnimationManager extends EventListener {
                 undoBlock.push(new UndoBlock.Connection(id, toID, false));
                 this.animatedObjects.connectEdge(id, toID, color, curve, directed, label, connectionPoint);
             } else if (cmd === "CREATERECTANGLE") {
-                const label = args.shift();
+                const label = this.parseText(args.shift());
                 const width = Number(args.shift());
                 const height = Number(args.shift());
                 const x = Number(args.shift());
@@ -681,9 +693,9 @@ class AnimationManager extends EventListener {
                 undoBlock.push(new UndoBlock.SetAlpha(id, oldAlpha));
                 this.animatedObjects.setAlpha(id, alpha);
             } else if (cmd === "SETTEXT") {
-                let text = args.shift();
-                if (text instanceof Array) text = text.join("\n");
+                const text = this.parseText(args.shift());
                 const index = Number(args.shift()) || 0;
+                if (id === 0 && DEBUG) console.warn(text); // We abuse warnings to make messages show in the console
                 const oldText = this.animatedObjects.getText(id, index);
                 undoBlock.push(new UndoBlock.SetText(id, oldText, index));
                 this.animatedObjects.setText(id, text, index);
@@ -705,7 +717,7 @@ class AnimationManager extends EventListener {
                     this.animatedObjects.setNodePosition(id, x, y);
                 }
             } else if (cmd === "CREATELABEL") {
-                const label = args.shift();
+                const label = this.parseText(args.shift());
                 const x = Number(args.shift());
                 const y = Number(args.shift());
                 const centering = this.parseBool(args.shift(), true);
@@ -742,7 +754,7 @@ class AnimationManager extends EventListener {
                 // TODO: Add undo information here
                 this.animatedObjects.setLayer(id, layer);
             } else if (cmd === "CREATELINKEDLIST") {
-                const label = args.shift();
+                const label = this.parseText(args.shift());
                 const width = Number(args.shift());
                 const height = Number(args.shift());
                 const x = Number(args.shift());
